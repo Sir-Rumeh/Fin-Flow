@@ -82,7 +82,7 @@ const adminRoutes = [
 	{
 		name: "Profile Management",
 		layout: `/${BASE_ROUTES.ADMIN}`,
-		path: "mandate-management",
+		path: "profile-management",
 		icon: <ProfileIcon />,
 		component: <AdminProfileManagement />,
 	},

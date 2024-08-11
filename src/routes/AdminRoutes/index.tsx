@@ -9,6 +9,15 @@ function AdminRoutes() {
 				if (route.hasChildren) {
 					return (
 						<Route>
+							<Route
+								path={`/${route.path}`}
+								element={
+									<Navigate
+										to={`${route.layout}/${route.path}/${route.children?.[0].path}`}
+										replace
+									/>
+								}
+							/>
 							{route.children?.map((child) => {
 								return (
 									<Route

@@ -1,4 +1,3 @@
-/* eslint-disable */
 import { HiX } from "react-icons/hi";
 import Links from "./Links";
 import { adminRoutes, merchantRoutes } from "routes/appRoutes";
