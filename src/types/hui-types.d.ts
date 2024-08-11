@@ -6,6 +6,13 @@ declare global {
 	 * Now declare things that go in the global namespace,
 	 * or augment existing declarations in the global namespace.
 	 */
+
+	interface RoutesChildren {
+		name: string;
+		path: string;
+		component: JSX.Element;
+	}
+
 	interface RoutesType {
 		name: string;
 		layout: string;
@@ -14,6 +21,6 @@ declare global {
 		path: string;
 		secondary?: booleant;
 		hasChildren?: boolean;
-		children?: any[];
+		children?: RoutesChildren[];
 	}
 }

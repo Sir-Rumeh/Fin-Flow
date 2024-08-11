@@ -1,5 +1,5 @@
 import React from "react";
-import { ReactComponent as ArrowRight } from "assets/icons/ArrowRight.svg";
+import ArrowRight from "assets/icons/ArrowRight";
 import { Link } from "react-router-dom";
 
 interface FormCardProps {
@@ -19,7 +19,7 @@ const FormCard = ({ children }: FormCardProps) => {
 					<div className="loginActionContent  left-[0]  h-auto p-4">
 						<Link to="" className="flex w-full justify-between">
 							<p className="loginActionTitle">Admin Login</p>
-							<ArrowRight className="my-auto cursor-pointer" />
+							<ArrowRight />
 						</Link>
 					</div>
 				</div>
@@ -29,7 +29,7 @@ const FormCard = ({ children }: FormCardProps) => {
 					<div className="loginActionContent  left-[0] h-auto p-4">
 						<Link to="" className="flex w-full justify-between">
 							<p className="loginActionTitle">Merchant Login</p>
-							<ArrowRight className="my-auto cursor-pointer" />
+							<ArrowRight />
 						</Link>
 					</div>
 				</div>

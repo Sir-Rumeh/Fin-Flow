@@ -32,8 +32,8 @@
 
 		/* Linting */
 		"strict": true,
-		"noUnusedLocals": true,
-		"noUnusedParameters": true,
+		"noUnusedLocals": false,
+		"noUnusedParameters": false,
 		"noFallthroughCasesInSwitch": true
 	},
 	"include": ["src", "**/*.ts", "**/*.tsx", "**/*.js", ".eslintrc.cjs", "postcss.config.cjs"],

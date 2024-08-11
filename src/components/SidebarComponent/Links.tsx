@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { Link, useLocation } from "react-router-dom";
-import { ReactComponent as DashIcon } from "assets/icons/DashIcon.svg";
+import DashIcon from "assets/icons/DashIcon";
 
 export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
 	// Chakra color mode
@@ -28,7 +28,7 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
 									: "relative mb-3 px-2 py-4 flex hover:cursor-pointer"
 							}`}
 						>
-							<li className="my-[3px] flex cursor-pointer items-center px-8">
+							<li className="my-[3px] flex cursor-pointer items-center px-5">
 								<span
 									className={`${
 										isRouteActive ? "font-bold text-white" : "font-medium text-white"

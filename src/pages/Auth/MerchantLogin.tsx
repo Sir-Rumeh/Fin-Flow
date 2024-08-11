@@ -1,9 +1,5 @@
 const MerchantLogin = () => {
-	return (
-		<>
-			<div>Merchant Login</div>
-		</>
-	);
+	return <div className="w-full h-screen bg-blackSecondary">Merchant Login Page</div>;
 };
 
 export default MerchantLogin;

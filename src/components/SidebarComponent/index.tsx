@@ -2,8 +2,8 @@
 import { HiX } from "react-icons/hi";
 import Links from "./Links";
 import { adminRoutes, merchantRoutes } from "routes/appRoutes";
-import { ReactComponent as FcmbIcon } from "assets/icons/FcmbIcon.svg";
-import { ReactComponent as SignoutIcon } from "assets/icons/SignoutIcon.svg";
+import FcmbIcon from "assets/icons//FcmbIcon";
+import SignoutIcon from "assets/icons/SignoutIcon";
 import { Role } from "utils/enums";
 
 const Sidebar = (props: { open: boolean; onClose: React.MouseEventHandler<HTMLSpanElement>; userRole: string }) => {
@@ -14,7 +14,7 @@ const Sidebar = (props: { open: boolean; onClose: React.MouseEventHandler<HTMLSp
 
 	return (
 		<div
-			className={`sm:none font-circular-std lg:w-72 duration-175 linear fixed !z-50 flex min-h-full flex-col bg-purplePrimary pb-10 shadow-2xl shadow-white/5 transition-all md:!z-50 lg:!z-50 xl:!z-0 ${
+			className={`sm:none font-circular-std lg:w-[20vw] duration-175 linear fixed !z-50 flex min-h-full flex-col bg-purplePrimary shadow-2xl shadow-white/5 transition-all md:!z-50 lg:!z-50 xl:!z-0 ${
 				open ? "translate-x-0" : "-translate-x-96"
 			}`}
 		>
@@ -25,33 +25,32 @@ const Sidebar = (props: { open: boolean; onClose: React.MouseEventHandler<HTMLSp
 				<HiX />
 			</span>
 
-			<div className={`mx-[45px] mt-[45px] flex items-center`}>
+			<div className={`mx-[25px] mt-[25px] flex items-center`}>
 				<div className="w-full flex items-center pr-6">
 					<FcmbIcon />
-					<p className="pl-4 font-medium text-white text-base">
-						DDI <span className="flex">Fixed Deposit</span>
-					</p>
+					<p className="pl-4 font-medium text-white text-base">DDI Portal</p>
 				</div>
 			</div>
 			<div className="mt-[40px] mb-7 h-px" />
 			{/* Nav item */}
-
+			{/* <div className="flex flex-col items-center justify-between"> */}
 			<ul className="mb-auto pt-1">
 				{userRole === Role.Admin && <Links routes={adminRoutes} />}
 				{userRole === Role.Merchant && <Links routes={merchantRoutes} />}
 			</ul>
-			<ul className="mb-auto pt-1 mt-6 xl:mt-10">
-				<button>
-					<div className="relative mb-3 px-2 py-4 flex hover:cursor-pointer">
-						<li className="my-[3px] flex cursor-pointer items-center px-8">
+			<ul className="mt-auto pt-1 border-t border-gray-50 flex items-center justify-start">
+				<div className="">
+					<button className="relative px-2 mb-3 py-4 flex hover:cursor-pointer">
+						<li className="my-[3px] flex cursor-pointer items-center justify-center px-5 w-full">
 							<span className="font-medium text-white">
 								<SignoutIcon />
 							</span>
-							<p className="font-medium text-[#DC2626] ml-4">Sign Out</p>
+							<p className="font-medium md:font-lg text-[#DC2626] ml-4">Sign Out</p>
 						</li>
-					</div>
-				</button>
+					</button>
+				</div>
 			</ul>
+			{/* </div> */}
 		</div>
 	);
 };

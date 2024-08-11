@@ -1,13 +1,16 @@
-import { ReactComponent as DashboardIcon } from "assets/icons/DashboardIcon.svg";
-import { ReactComponent as RequestIcon } from "assets/icons/RequestsIcon.svg";
-import { ReactComponent as MerchantIcon } from "assets/icons/MerchantIcon.svg";
-import { ReactComponent as MandateIcon } from "assets/icons/MandateIcon.svg";
-import { ReactComponent as ProfileIcon } from "assets/icons/ProfileIcon.svg";
-import { ReactComponent as AccountIcon } from "assets/icons/AccountIcon.svg";
-import { ReactComponent as AuditIcon } from "assets/icons/AuditIcon.svg";
-import { ReactComponent as ReportIcon } from "assets/icons/ReportIcon.svg";
+import DashboardIcon from "assets/icons/DashboardIcon";
+import RequestIcon from "assets/icons/RequestsIcon";
+import MerchantIcon from "assets/icons/MerchantIcon";
+import MandateIcon from "assets/icons/MandateIcon";
+import ProfileIcon from "assets/icons/ProfileIcon";
+import AccountIcon from "assets/icons/AccountIcon";
+import AuditIcon from "assets/icons/AuditIcon";
+import ReportIcon from "assets/icons/ReportIcon";
 import AdminDashboard from "pages/Admin/Dashboard";
-import AdminRequests from "pages/Admin/Requests";
+import AdminMerchantRequests from "pages/Admin/Requests/MerchantRequests";
+import AdminMandateRequests from "pages/Admin/Requests/MandateRequests";
+import AdminAccountRequests from "pages/Admin/Requests/AccountRequests";
+import AdminProfileRequests from "pages/Admin/Requests/ProfileRequests";
 import AdminMerchantManagement from "pages/Admin/MerchantManagement";
 import AdminMandateManagement from "pages/Admin/MandatetManagement";
 import AdminProfileManagement from "pages/Admin/ProfileManagement";
@@ -29,36 +32,36 @@ const adminRoutes = [
 		name: "Dashboard",
 		layout: `/${BASE_ROUTES.ADMIN}`,
 		path: "dashboard",
-		icon: <DashboardIcon className="h-6 w-6" />,
+		icon: <DashboardIcon />,
 		component: <AdminDashboard />,
 	},
 	{
 		name: "Requests",
 		layout: `/${BASE_ROUTES.ADMIN}`,
 		path: "requests",
-		icon: <RequestIcon className="h-6 w-6" />,
-		component: <AdminRequests />,
+		icon: <RequestIcon />,
+		component: <AdminMerchantRequests />,
 		hasChildren: true,
 		children: [
 			{
 				name: "Merchant Requests",
-				path: "requests/merchants",
-				component: <AdminRequests />,
+				path: "merchants",
+				component: <AdminMerchantRequests />,
 			},
 			{
 				name: "Mandate Requests",
-				path: "requests/mandates",
-				component: <AdminRequests />,
-			},
-			{
-				name: "Profile Requests",
-				path: "requests/profiles",
-				component: <AdminRequests />,
+				path: "mandates",
+				component: <AdminMandateRequests />,
 			},
 			{
 				name: "Account Requests",
-				path: "requests/accounts",
-				component: <AdminRequests />,
+				path: "accounts",
+				component: <AdminAccountRequests />,
+			},
+			{
+				name: "Profile Requests",
+				path: "profiles",
+				component: <AdminProfileRequests />,
 			},
 		],
 	},
@@ -66,42 +69,42 @@ const adminRoutes = [
 		name: "Merchant Management",
 		layout: `/${BASE_ROUTES.ADMIN}`,
 		path: "merchant-management",
-		icon: <MerchantIcon className="h-6 w-6" />,
+		icon: <MerchantIcon />,
 		component: <AdminMerchantManagement />,
 	},
 	{
 		name: "Mandate Management",
 		layout: `/${BASE_ROUTES.ADMIN}`,
 		path: "mandate-management",
-		icon: <MandateIcon className="h-6 w-6" />,
+		icon: <MandateIcon />,
 		component: <AdminMandateManagement />,
 	},
 	{
 		name: "Profile Management",
 		layout: `/${BASE_ROUTES.ADMIN}`,
 		path: "mandate-management",
-		icon: <ProfileIcon className="h-6 w-6" />,
+		icon: <ProfileIcon />,
 		component: <AdminProfileManagement />,
 	},
 	{
 		name: "Account Management",
 		layout: `/${BASE_ROUTES.ADMIN}`,
 		path: "account-management",
-		icon: <AccountIcon className="h-6 w-6" />,
+		icon: <AccountIcon />,
 		component: <AdminAccountManagement />,
 	},
 	{
 		name: "Audit Trail",
 		layout: `/${BASE_ROUTES.ADMIN}`,
 		path: "audit-trail",
-		icon: <AuditIcon className="h-6 w-6" />,
+		icon: <AuditIcon />,
 		component: <AdminAuditTrail />,
 	},
 	{
 		name: "Reports",
 		layout: `/${BASE_ROUTES.ADMIN}`,
 		path: "reports",
-		icon: <ReportIcon className="h-6 w-6" />,
+		icon: <ReportIcon />,
 		component: <AdminReports />,
 	},
 ];
@@ -111,42 +114,42 @@ const merchantRoutes = [
 		name: "Dashboard",
 		layout: `/${BASE_ROUTES.MERCHANT}`,
 		path: "dashboard",
-		icon: <DashboardIcon className="h-6 w-6" />,
+		icon: <DashboardIcon />,
 		component: <MerchantDashboard />,
 	},
 	{
 		name: "Requests",
 		layout: `/${BASE_ROUTES.MERCHANT}`,
-		path: "requests",
-		icon: <RequestIcon className="h-6 w-6" />,
+		path: "requests/mandates",
+		icon: <RequestIcon />,
 		component: <MerchantRequests />,
 	},
 	{
 		name: "Mandate Management",
 		layout: `/${BASE_ROUTES.MERCHANT}`,
 		path: "mandate-management",
-		icon: <MandateIcon className="h-6 w-6" />,
+		icon: <MandateIcon />,
 		component: <MerchantMandateManagement />,
 	},
 	{
 		name: "User Management",
 		layout: `/${BASE_ROUTES.MERCHANT}`,
 		path: "user-management",
-		icon: <ProfileIcon className="h-6 w-6" />,
+		icon: <ProfileIcon />,
 		component: <MerchantUserManagement />,
 	},
 	{
 		name: "Audit Trail",
 		layout: `/${BASE_ROUTES.MERCHANT}`,
 		path: "audit-trail",
-		icon: <AuditIcon className="h-6 w-6" />,
+		icon: <AuditIcon />,
 		component: <MerchantAuditTrail />,
 	},
 	{
 		name: "Reports",
 		layout: `/${BASE_ROUTES.MERCHANT}`,
 		path: "reports",
-		icon: <ReportIcon className="h-6 w-6" />,
+		icon: <ReportIcon />,
 		component: <MerchantReports />,
 	},
 ];
