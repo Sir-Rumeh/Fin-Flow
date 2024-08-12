@@ -5,7 +5,27 @@ module.exports = {
 	theme: {
 		extend: {
 			fontFamily: {
-				"circular-std": ["Circular Std", "sans-serif"],
+				// gotham: ["gotham", "sans-serif"],
+			},
+			colors: {
+				white: "#ffffff",
+				purplePrimary: "#2F0248",
+				purpleSecondary: "#D597F817",
+				yellowPrimary: "#FFB81C",
+				backgroundColor: "#F4F4F4",
+				purpleGradient: "linear-gradient(89.92deg, #60088C 0.07%, #A11E90 92.22%)",
+				blackPrimary: "#222823",
+				redSecondary: "#F34E4E",
+				modalBackground: "#808080",
+				grayText: "rgb(107 114 128)",
+				blackSecondary: "#262833",
+				blackInput: "#535353",
+				greenPrimary: "#09B47C",
+				redPrimary: "#F34E4E",
+				brownPrimary: "#B87E00",
+				shadow: {
+					500: "rgba(112, 144, 176, 0.08)",
+				},
 			},
 			boxShadow: {
 				"3xl": "14px 17px 40px 4px",
@@ -32,24 +52,5 @@ module.exports = {
 			"4xl": "1850px",
 			"4xl-max": { max: "1850px" },
 		},
-		colors: () => ({
-			white: "#ffffff",
-			purplePrimary: "#2F0248",
-			purpleSecondary: "#D597F817",
-			backgroundColor: "#F7F7F8",
-			purpleGradient: "linear-gradient(89.92deg, #60088C 0.07%, #A11E90 92.22%)",
-			blackPrimary: "#222823",
-			redSecondary: "#F34E4E",
-			modalBackground: "#808080",
-			grayText: "rgb(107 114 128)",
-			blackSecondary: "#262833",
-			blackInput: "#535353",
-			greenPrimary: "#09B47C",
-			redPrimary: "#F34E4E",
-			brownPrimary: "#B87E00",
-			shadow: {
-				500: "rgba(112, 144, 176, 0.08)",
-			},
-		}),
 	},
 };

@@ -2,71 +2,131 @@
 @tailwind components;
 @tailwind utilities;
 
-/* :root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+@layer components {
+	.details-info-cus {
+		@apply flex w-full flex-col items-center justify-center;
+	}
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+	.notification-modal-to-cus-content {
+		@apply text-sm font-normal text-black_text_sec;
+	}
+	.font-w-s-500 {
+		@apply font-medium not-italic;
+	}
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+	.approval-access-custome {
+		@apply not-italic font-medium text-sm;
+	}
+	.container.dropzone-parent-bg {
+		flex: 1;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		padding: 20px;
+		border-width: 2px;
+		border-radius: 2px;
+		border-color: #eeeeee;
+		border-style: dashed;
+		background-color: transparent;
+		/* color: #bdbdbd; */
+		outline: none;
+		transition: border 0.24s ease-in-out;
+	}
+
+	.acceptbut {
+		padding: 0.75rem 1rem;
+		border: none;
+		font-size: 0.875rem;
+		font-weight: 500;
+		color: white;
+		border-radius: 0.375rem;
+	}
+	.acceptbut.acceptbut__activities {
+		padding: 0.55rem 1rem !important;
+	}
+	.headerTitle {
+		@apply text-xl font-[500];
+	}
+
+	.loginActionTitle {
+		@apply text-purplePrimary text-[20px] font-semibold;
+	}
+
+	.subTitle {
+		@apply text-blackInput text-[14px];
+	}
+
+	/* text-[#222823] */
+	.passwordStr {
+		@apply text-grayText text-sm font-[400];
+	}
+
+	.loginActionContent {
+		@apply w-full h-full absolute top-[0] left-[0];
+	}
+
+	.loginActionWrapper {
+		background: linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #5c068c;
+		opacity: 0.3;
+		/* Purple/Primary */
+
+		border: 1px solid #5c068c;
+		border-radius: 5px;
+	}
+
+	.loginActionWrapperInput {
+		background: linear-gradient(0deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.9)), #5c068c;
+		opacity: 1;
+	}
+
+	.loginActionContentInput {
+		@apply h-full absolute top-[0] right-[0];
+	}
+
+	input.custom-checkbox:checked + div {
+		@apply border-primary;
+	}
+	input.custom-checkbox:checked + div svg {
+		display: block !important;
+	}
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
-}
-
-body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+.loader {
+	position: fixed;
+	top: 0;
+	bottom: 0;
+	right: 0;
+	left: 0;
+	background: rgba(0, 0, 0, 0.4);
+	z-index: 9999;
+	height: 100vh;
+	display: flex;
+	justify-content: center;
+	align-items: center;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+.loader img {
+	max-width: 50px;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.action-loader {
+	width: 58px;
+	height: 58px;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-} */
+.action-loader img {
+	max-width: 50px;
+}
+
+/* custom sty;ling for background */
+@media (min-width: 1280px) and (max-width: 1300px) {
+	.effect-1 svg {
+		position: absolute;
+		right: -40px;
+	}
+
+	.effect-2 svg {
+		position: absolute;
+		right: -380px;
+	}
+}

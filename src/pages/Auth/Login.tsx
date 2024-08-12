@@ -1,12 +1,11 @@
-import React from "react";
+// import React from "react";
 import FormCard from "components/Onboarding/FormCard";
 import FormCardHeader from "components/Onboarding/FormCardHeader";
 import TitleBar from "components/Onboarding/TitleBar";
-import errorInfo from "assets/images/error_info_logo.png";
 
 const Login = () => {
 	return (
-		<div className="light-bg min-h-screen">
+		<div className="bg-backgroundColor min-h-screen">
 			<div className="flex h-screen flex-col items-center justify-center">
 				<TitleBar showTitle />
 				{/* min-h-[60vh] */}
@@ -24,17 +23,7 @@ const Login = () => {
 						</FormCardHeader>
 
 						<section className="mb-2">
-							<FormCard>
-								<section className="flex justify-center py-6">
-									<div className="mx-3 flex">
-										<img className="h-[20px] w-[20px]" src={errorInfo} alt="info-login" />
-										<span className="px-3 text-[12px] text-black_text">
-											Select other members if you’re not a staff of{" "}
-											<abbr title="First City Monument Bank">FCMB</abbr>
-										</span>
-									</div>
-								</section>
-							</FormCard>
+							<FormCard />
 						</section>
 					</section>
 				</section>
