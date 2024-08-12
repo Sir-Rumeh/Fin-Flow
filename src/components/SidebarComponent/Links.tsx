@@ -1,6 +1,6 @@
 /* eslint-disable */
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
-import DashIcon from 'assets/icons/DashIcon';
+import ArrowDownIcon from 'assets/icons/ArrowDownIcon';
 import { useEffect, useState } from 'react';
 
 const NestedLink = ({ route }: { route: RoutesType }) => {
@@ -52,7 +52,7 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
                   isParentRouteActive ? 'font-bold text-white' : 'font-medium text-white'
                 }`}
               >
-                {route.icon ? route.icon : <DashIcon />}{' '}
+                {route.icon ? route.icon : <ArrowDownIcon />}{' '}
               </span>
               <p
                 className={`leading-1 ml-4 flex ${
@@ -68,7 +68,7 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
                   isParentRouteActive ? 'font-bold text-white' : 'font-medium text-white'
                 }`}
               >
-                <DashIcon />
+                <ArrowDownIcon />
               </span>
             </div>
           </div>
@@ -139,7 +139,7 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
                       isRouteActive ? 'font-bold text-white' : 'font-medium text-white'
                     }`}
                   >
-                    {route.icon ? route.icon : <DashIcon />}{' '}
+                    {route.icon ? route.icon : <ArrowDownIcon />}{' '}
                   </span>
                   <p
                     className={`leading-1 ml-4 flex ${

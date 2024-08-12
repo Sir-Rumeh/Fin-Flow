@@ -24,29 +24,28 @@ type Props = {
 
 const FormInput = (props: Props) => {
   return (
-    <div>
-      <TextField
-        label={props.label}
-        required={props.required}
-        disabled={props.disabled}
-        id={props.id}
-        name={props.name}
-        value={props.value}
-        color="secondary"
-        placeholder={props.placeholder}
-        sx={{
-          width: props.width,
-          height: props.height ? props.height : '3rem',
-        }}
-        tabIndex={0}
-        InputProps={{ readOnly: props.readonly, style: { borderRadius: '6px' } }}
-        onChange={props.onChange}
-        error={props.error}
-        fullWidth={props.fullWidth}
-        helperText={props.helperText}
-        type={props.type}
-      />
-    </div>
+    <TextField
+      label={props.label}
+      required={props.required}
+      disabled={props.disabled}
+      id={props.id}
+      name={props.name}
+      value={props.value}
+      color="secondary"
+      placeholder={props.placeholder}
+      sx={{
+        width: props.width,
+        maxHeight: props.height ? props.height : '3rem',
+        marginBottom: '0.5rem',
+      }}
+      tabIndex={0}
+      InputProps={{ readOnly: props.readonly, style: { borderRadius: '6px' } }}
+      onChange={props.onChange}
+      error={props.error}
+      fullWidth={props.fullWidth}
+      helperText={props.helperText}
+      type={props.type}
+    />
   );
 };
 
