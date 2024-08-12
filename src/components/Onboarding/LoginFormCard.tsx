@@ -22,9 +22,7 @@ interface Props {
 const LoginFormCard = ({
 	children,
 	formik,
-	// buttonText = "Continue",
 	bottomSectionClass = "",
-	// bgDisbled,
 	redirectToSignIn = false,
 	linkBack = "",
 	actionBTNClass = "px-3",
