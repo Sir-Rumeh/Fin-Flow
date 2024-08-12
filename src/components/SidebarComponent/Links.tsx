@@ -19,18 +19,12 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
 			const isRouteActive = activeRoute(route.path);
 
 			if (isRouteValid) {
-				if (route.hasChildren) {
+				if (route.children && route.children.length > 0) {
 					return (
-						// <Link key={route.layout + route.path} to={route.layout + "/" + route.path}></Link>
 						<>
-							<Link
+							<div
 								key={route.layout + route.path}
-								// onClick={(e) => {
-								// 	isRouteActive = true;
-								// 	isChildrenOpen = !isChildrenOpen;
-								// 	console.log("isChildrenOpen", isChildrenOpen);
-								// }}
-								to={route.layout + "/" + route.path}
+								// to={route.layout + "/" + route.path}
 								className={`${
 									isRouteActive
 										? "relative mb px-2 py-4 flex hover:cursor-pointer bg-[linear-gradient(89.92deg,_#60088C_0.07%,_#A11E90_92.22%)]"
@@ -75,10 +69,10 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
 										<div className="absolute right-0 top-px h-9 w-1 rounded-lg bg-purpleGradient" />
 									) : null}
 								</div>
-							</Link>
+							</div>
 							{isRouteActive && (
 								<div className="p-1 mb-3">
-									<div className="p-4 bg-purpleSecondary pb-8 pl-8 mb-3 flex flex-col justify-center items-start gap-y-2">
+									<div className="pt-4 bg-purpleSecondary pb-8 px-6 mb-3 flex flex-col justify-center items-start gap-y-2">
 										{route.children?.map((childRoute) => {
 											const isChildRouteActive = activeRoute(childRoute.path);
 
@@ -96,7 +90,7 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
 														isChildRouteActive
 															? "bg-yellowPrimary text-black"
 															: "text-white"
-													} w-full  p-3 hover:bg-yellowPrimary hover:text-black rounded-md`}
+													} w-full p-3 pl-6 hover:bg-yellowPrimary hover:text-black rounded-md`}
 												>
 													{childRoute.name}
 												</Link>

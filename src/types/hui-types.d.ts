@@ -22,5 +22,6 @@ declare global {
 		secondary?: booleant;
 		hasChildren?: boolean;
 		children?: RoutesChildren[];
+		rolesWithAccess?: string[];
 	}
 }

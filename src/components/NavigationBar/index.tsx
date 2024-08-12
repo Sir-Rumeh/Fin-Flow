@@ -26,7 +26,7 @@ const Navbar = (props: { onOpenSidenav: () => void }) => {
 				</div>
 				<div className="flex items-center flex-shrink-0 space-x-6">
 					<div className="flex">
-						<div className="flex justify-center items-center pr-6 bg-grayText">
+						<div className="flex justify-center items-center p-1 pr-6 bg-grayText">
 							<ProfileIcon />
 							<p className="font-normal text-sm text-blackPrimary pl-4">Firstname Lastname</p>
 						</div>

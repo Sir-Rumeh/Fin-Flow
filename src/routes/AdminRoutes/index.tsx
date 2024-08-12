@@ -6,7 +6,7 @@ function AdminRoutes() {
 	const getAdminRoutes = (adminRoutes: RoutesType[]) => {
 		return adminRoutes.map((route) => {
 			if (route.layout === "/admin") {
-				if (route.hasChildren) {
+				if (route.children && route.children.length > 0) {
 					return (
 						<Route>
 							<Route

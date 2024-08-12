@@ -3,7 +3,7 @@ import Links from "./Links";
 import { adminRoutes, merchantRoutes } from "routes/appRoutes";
 import FcmbIcon from "assets/icons//FcmbIcon";
 import SignoutIcon from "assets/icons/SignoutIcon";
-import { Role } from "utils/enums";
+import { Roles } from "utils/enums";
 
 const Sidebar = (props: { open: boolean; onClose: React.MouseEventHandler<HTMLSpanElement>; userRole: string }) => {
 	const { open, onClose, userRole } = props;
@@ -34,8 +34,8 @@ const Sidebar = (props: { open: boolean; onClose: React.MouseEventHandler<HTMLSp
 			{/* Nav item */}
 			{/* <div className="flex flex-col items-center justify-between"> */}
 			<ul className="mb-auto pt-1">
-				{userRole === Role.Admin && <Links routes={adminRoutes} />}
-				{userRole === Role.Merchant && <Links routes={merchantRoutes} />}
+				{userRole === Roles.Admin && <Links routes={adminRoutes} />}
+				{userRole === Roles.Merchant && <Links routes={merchantRoutes} />}
 			</ul>
 			<ul className="mt-auto pt-1 border-t border-gray-50 flex items-center justify-start">
 				<div className="">

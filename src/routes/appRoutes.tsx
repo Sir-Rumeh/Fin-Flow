@@ -24,7 +24,7 @@ import MerchantMandateManagement from "pages/Merchant/MandatetManagement";
 import MerchantUserManagement from "pages/Merchant/UserManagement";
 import MerchantAuditTrail from "pages/Merchant/AuditTrail";
 import MerchantReports from "pages/Merchant/Reports";
-
+import { Roles } from "utils/enums";
 import { BASE_ROUTES } from "utils/constants/routes";
 
 const adminRoutes = [
@@ -34,6 +34,7 @@ const adminRoutes = [
 		path: "dashboard",
 		icon: <DashboardIcon />,
 		component: <AdminDashboard />,
+		rolesWithAccess: [Roles.Admin],
 	},
 	{
 		name: "Requests",
@@ -41,7 +42,7 @@ const adminRoutes = [
 		path: "requests",
 		icon: <RequestIcon />,
 		component: <AdminMerchantRequests />,
-		hasChildren: true,
+		rolesWithAccess: [Roles.Admin],
 		children: [
 			{
 				name: "Merchant Requests",
@@ -71,6 +72,7 @@ const adminRoutes = [
 		path: "merchant-management",
 		icon: <MerchantIcon />,
 		component: <AdminMerchantManagement />,
+		rolesWithAccess: [Roles.Admin],
 	},
 	{
 		name: "Mandate Management",
@@ -78,6 +80,7 @@ const adminRoutes = [
 		path: "mandate-management",
 		icon: <MandateIcon />,
 		component: <AdminMandateManagement />,
+		rolesWithAccess: [Roles.Admin],
 	},
 	{
 		name: "Profile Management",
@@ -85,6 +88,7 @@ const adminRoutes = [
 		path: "profile-management",
 		icon: <ProfileIcon />,
 		component: <AdminProfileManagement />,
+		rolesWithAccess: [Roles.Admin],
 	},
 	{
 		name: "Account Management",
@@ -92,6 +96,7 @@ const adminRoutes = [
 		path: "account-management",
 		icon: <AccountIcon />,
 		component: <AdminAccountManagement />,
+		rolesWithAccess: [Roles.Admin],
 	},
 	{
 		name: "Audit Trail",
@@ -99,6 +104,7 @@ const adminRoutes = [
 		path: "audit-trail",
 		icon: <AuditIcon />,
 		component: <AdminAuditTrail />,
+		rolesWithAccess: [Roles.Admin],
 	},
 	{
 		name: "Reports",
@@ -106,6 +112,7 @@ const adminRoutes = [
 		path: "reports",
 		icon: <ReportIcon />,
 		component: <AdminReports />,
+		rolesWithAccess: [Roles.Admin],
 	},
 ];
 
@@ -116,6 +123,7 @@ const merchantRoutes = [
 		path: "dashboard",
 		icon: <DashboardIcon />,
 		component: <MerchantDashboard />,
+		rolesWithAccess: [Roles.Merchant],
 	},
 	{
 		name: "Requests",
@@ -123,6 +131,7 @@ const merchantRoutes = [
 		path: "requests/mandates",
 		icon: <RequestIcon />,
 		component: <MerchantRequests />,
+		rolesWithAccess: [Roles.Merchant],
 	},
 	{
 		name: "Mandate Management",
@@ -130,6 +139,7 @@ const merchantRoutes = [
 		path: "mandate-management",
 		icon: <MandateIcon />,
 		component: <MerchantMandateManagement />,
+		rolesWithAccess: [Roles.Merchant],
 	},
 	{
 		name: "User Management",
@@ -137,6 +147,7 @@ const merchantRoutes = [
 		path: "user-management",
 		icon: <ProfileIcon />,
 		component: <MerchantUserManagement />,
+		rolesWithAccess: [Roles.Merchant],
 	},
 	{
 		name: "Audit Trail",
@@ -144,6 +155,7 @@ const merchantRoutes = [
 		path: "audit-trail",
 		icon: <AuditIcon />,
 		component: <MerchantAuditTrail />,
+		rolesWithAccess: [Roles.Merchant],
 	},
 	{
 		name: "Reports",
@@ -151,6 +163,7 @@ const merchantRoutes = [
 		path: "reports",
 		icon: <ReportIcon />,
 		component: <MerchantReports />,
+		rolesWithAccess: [Roles.Merchant],
 	},
 ];
 

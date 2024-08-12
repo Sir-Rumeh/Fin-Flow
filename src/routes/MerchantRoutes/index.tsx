@@ -6,7 +6,7 @@ function MerchantRoutes() {
 	const getMerchantRoutes = (adminRoutes: RoutesType[]) => {
 		return adminRoutes.map((route) => {
 			if (route.layout === "/merchant") {
-				if (route.hasChildren) {
+				if (route.children && route.children.length > 0) {
 					return (
 						<Route>
 							{route.children?.map((child) => {
