@@ -8,39 +8,9 @@ import { PaginationChangeRowsPerPage } from 'react-data-table-component/dist/Dat
 import { DataTableState, MerchantDataRow } from 'utils/interfaces';
 import { handleNextPageChange, handlePreviousPageChange } from 'utils/helpers';
 import TableFilter from 'components/TableFilter';
+import { merchantsList } from 'utils/constants';
 
 const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string }) => {
-  const merchantsList: MerchantDataRow[] = [
-    {
-      id: 1,
-      merchantName: 'string',
-      cifNumber: 'string',
-      status: 'string',
-      dateRequested: '2015-03-25T12:00:00-06:30',
-    },
-    {
-      id: 2,
-      merchantName: 'string',
-      cifNumber: 'string',
-      status: 'string',
-      dateRequested: '2015-03-25T12:00:00-06:30',
-    },
-    {
-      id: 3,
-      merchantName: 'string',
-      cifNumber: 'string',
-      status: 'string',
-      dateRequested: '2015-03-25T12:00:00-06:30',
-    },
-    {
-      id: 4,
-      merchantName: 'string',
-      cifNumber: 'string',
-      status: 'string',
-      dateRequested: '2015-03-25T12:00:00-06:30',
-    },
-  ];
-
   const [viewMerchant, setViewMerchant] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [merchantDetails, setMerchantDetails] = useState<number>();
@@ -51,7 +21,7 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
     pageNumber: 1,
   });
 
-  const activePortfolioColumn: TableColumn<MerchantDataRow>[] = [
+  const merchantTableColumn: TableColumn<MerchantDataRow>[] = [
     {
       name: 'Merchant ID',
       id: 'merchantId',
@@ -106,7 +76,7 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
       id: 'dateRequested',
       selector: (row) =>
         row.dateRequested
-          ? `${dayjs(row.dateRequested).format('DD/MM/YYYY')} | ${dayjs(row.dateRequested).format('HH:mm:ss')}`
+          ? `${dayjs(row.dateRequested).format('DD/MM/YYYY')} | ${dayjs(row.dateRequested).format('hh:mm:ss A')}`
           : 'NA',
       style: {
         fontWeight: 300,
@@ -151,7 +121,7 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
               />
             </div>
             <DataTableBase
-              columns={activePortfolioColumn}
+              columns={merchantTableColumn}
               data={merchantsList}
               pointerOnHover
               onRowClicked={(row: MerchantDataRow) => {

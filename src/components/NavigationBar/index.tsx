@@ -25,7 +25,7 @@ const Navbar = (props: { onOpenSidenav: () => void }) => {
               {dayjs()
                 .format('LLLL')
                 .replace(/\d{1,2}:\d{1,2}(\s)?.*/gm, '')}{' '}
-              | {dayjs().format('HH:mm:ss')}
+              | {dayjs().format('hh:mm:ss A')}
             </p>
           </div>
         </div>
