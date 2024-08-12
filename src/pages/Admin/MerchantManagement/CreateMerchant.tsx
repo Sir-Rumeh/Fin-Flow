@@ -1,5 +1,5 @@
 const CreateMerchant = () => {
-	return <div>CreateMerchant</div>;
+  return <div>CreateMerchant</div>;
 };
 
 export default CreateMerchant;

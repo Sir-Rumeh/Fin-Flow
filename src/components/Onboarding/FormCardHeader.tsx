@@ -1,11 +1,11 @@
-import React from "react";
+import React from 'react';
 
 interface FormCardHeaderProps {
-	children: React.ReactNode;
+  children: React.ReactNode;
 }
 
 const FormCardHeader = ({ children }: FormCardHeaderProps) => {
-	return <div>{children}</div>;
+  return <div>{children}</div>;
 };
 
 export default FormCardHeader;

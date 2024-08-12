@@ -1,5 +1,5 @@
 const EditMerchant = () => {
-	return <div>EditMerchant</div>;
+  return <div>EditMerchant</div>;
 };
 
 export default EditMerchant;

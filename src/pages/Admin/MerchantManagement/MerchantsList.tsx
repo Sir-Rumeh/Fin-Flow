@@ -1,5 +1,5 @@
 const MerchantsList = () => {
-	return <div>MerchantsList</div>;
+  return <div>MerchantsList</div>;
 };
 
 export default MerchantsList;

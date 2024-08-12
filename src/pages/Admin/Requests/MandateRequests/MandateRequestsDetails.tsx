@@ -1,9 +1,9 @@
 const MandateRequestsDetails = () => {
-	return (
-		<>
-			<div>MandateRequestsDetails</div>
-		</>
-	);
+  return (
+    <>
+      <div>MandateRequestsDetails</div>
+    </>
+  );
 };
 
 export default MandateRequestsDetails;

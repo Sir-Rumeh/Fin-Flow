@@ -1,5 +1,5 @@
 const CreateMandate = () => {
-	return <div>CreateMandate</div>;
+  return <div>CreateMandate</div>;
 };
 
 export default CreateMandate;

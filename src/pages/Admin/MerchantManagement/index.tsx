@@ -1,9 +1,9 @@
 const MerchantManagement = () => {
-	return (
-		<>
-			<div>MerchantManagement</div>
-		</>
-	);
+  return (
+    <>
+      <div>MerchantManagement</div>
+    </>
+  );
 };
 
 export default MerchantManagement;

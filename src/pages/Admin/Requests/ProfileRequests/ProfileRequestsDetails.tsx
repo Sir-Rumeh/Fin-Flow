@@ -1,9 +1,9 @@
 const ProfileRequestsDetails = () => {
-	return (
-		<>
-			<div>ProfileRequestsDetails</div>
-		</>
-	);
+  return (
+    <>
+      <div>ProfileRequestsDetails</div>
+    </>
+  );
 };
 
 export default ProfileRequestsDetails;
