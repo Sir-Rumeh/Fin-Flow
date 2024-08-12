@@ -78,7 +78,7 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
         </div>
       </Link>
       {isChildrenOpen && isParentRouteActive && (
-        <div className="mb-3 p-1">
+        <div className="slide-down mb-3 p-1">
           <div className="mb-3 flex flex-col items-start justify-center gap-y-2 bg-purpleSecondary px-6 pb-8 pt-4">
             {route.children?.map((childRoute: any) => {
               const isChildRouteActive = activeRoute(childRoute.path);

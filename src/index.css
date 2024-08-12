@@ -130,6 +130,23 @@
 	max-width: 50px;
 }
 
+
+@keyframes slideDown {
+	0% {
+	  opacity: 0;
+	  transform: translateY(-10px);
+	}
+	100% {
+	  opacity: 1;
+	  transform: translateY(0);
+	}
+ }
+
+ .slide-down {
+	animation: slideDown 0.3s ease forwards;
+ }
+
+
 /* MERCHANT TABLE COLUMNS */
 [data-column-id="action"].rdt_TableCol {
 	padding-left: 3rem;
