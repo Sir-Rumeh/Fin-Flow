@@ -28,9 +28,7 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
       cell: (row) =>
         useMemo(
           () => (
-            <div className="flex w-[100px] items-center justify-center">
-              {row.id ? row.id : 'NA'}
-            </div>
+            <p className="flex w-[100px] items-center justify-center">{row.id ? row.id : 'NA'}</p>
           ),
           [row.id],
         ),
@@ -74,10 +72,13 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
     {
       name: 'Date Requested',
       id: 'dateRequested',
-      selector: (row) =>
-        row.dateRequested
-          ? `${dayjs(row.dateRequested).format('DD/MM/YYYY')} | ${dayjs(row.dateRequested).format('hh:mm:ss A')}`
-          : 'NA',
+      cell: (row) =>
+        useMemo(
+          () => (
+            <p className="flex -translate-x-5 items-center justify-center">{`${row.dateRequested ? `${dayjs(row.dateRequested).format('DD/MM/YYYY')} | ${dayjs(row.dateRequested).format('hh:mm:ss A')}` : 'NA'} `}</p>
+          ),
+          [row.id],
+        ),
       style: {
         fontWeight: 300,
         fontSize: '16px',
