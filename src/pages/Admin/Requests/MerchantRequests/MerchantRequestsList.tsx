@@ -1,9 +1,9 @@
 const MerchantRequestsList = () => {
-	return (
-		<>
-			<div>MerchantRequestsList</div>
-		</>
-	);
+  return (
+    <>
+      <div>MerchantRequestsList</div>
+    </>
+  );
 };
 
 export default MerchantRequestsList;

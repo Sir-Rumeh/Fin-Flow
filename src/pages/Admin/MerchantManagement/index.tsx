@@ -1,9 +1,11 @@
+import MerchantsTab from './MerchantsTab';
+
 const MerchantManagement = () => {
-	return (
-		<>
-			<div>MerchantManagement</div>
-		</>
-	);
+  return (
+    <>
+      <MerchantsTab />
+    </>
+  );
 };
 
 export default MerchantManagement;

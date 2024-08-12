@@ -1,9 +1,9 @@
 const AccountRequestsTable = () => {
-	return (
-		<>
-			<div>AccountRequestsTable</div>
-		</>
-	);
+  return (
+    <>
+      <div>AccountRequestsTable</div>
+    </>
+  );
 };
 
 export default AccountRequestsTable;

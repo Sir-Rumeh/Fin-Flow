@@ -1,9 +1,9 @@
 const MerchantRequestsTable = () => {
-	return (
-		<>
-			<div>MerchantRequestsTable</div>
-		</>
-	);
+  return (
+    <>
+      <div>MerchantRequestsTable</div>
+    </>
+  );
 };
 
 export default MerchantRequestsTable;

@@ -5,17 +5,19 @@ module.exports = {
 	theme: {
 		extend: {
 			fontFamily: {
-				// gotham: ["gotham", "sans-serif"],
+				gotham: ["gotham", "sans-serif"],
 			},
 			colors: {
 				white: "#ffffff",
 				purplePrimary: "#2F0248",
 				purpleSecondary: "#D597F817",
+				lightPurple: "#5C068C",
 				yellowPrimary: "#FFB81C",
 				backgroundColor: "#F4F4F4",
 				purpleGradient: "linear-gradient(89.92deg, #60088C 0.07%, #A11E90 92.22%)",
 				blackPrimary: "#222823",
 				redSecondary: "#F34E4E",
+				lightRed: "#FBE9E9",
 				modalBackground: "#808080",
 				grayText: "rgb(107 114 128)",
 				blackSecondary: "#262833",

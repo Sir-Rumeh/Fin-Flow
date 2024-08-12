@@ -1,5 +1,5 @@
 const MerchantDetails = () => {
-	return <div>MerchantDetails</div>;
+  return <div>MerchantDetails</div>;
 };
 
 export default MerchantDetails;

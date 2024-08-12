@@ -1,5 +1,5 @@
 const MandatesList = () => {
-	return <div>MandatesList</div>;
+  return <div>MandatesList</div>;
 };
 
 export default MandatesList;
