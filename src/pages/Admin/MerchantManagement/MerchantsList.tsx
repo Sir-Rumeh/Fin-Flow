@@ -54,7 +54,16 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
   const activePortfolioColumn: TableColumn<MerchantDataRow>[] = [
     {
       name: 'Merchant ID',
-      selector: (row) => (row.id ? row.id : 'NA'),
+      id: 'merchantId',
+      cell: (row) =>
+        useMemo(
+          () => (
+            <div className="flex w-[100px] items-center justify-center">
+              {row.id ? row.id : 'NA'}
+            </div>
+          ),
+          [row.id],
+        ),
       style: {
         fontWeight: 300,
         fontSize: '16px',
@@ -63,6 +72,7 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
     },
     {
       name: 'Merchant Name',
+      id: 'merchantName',
       selector: (row) => (row.merchantName ? `${row.merchantName}` : 'NA'),
       style: {
         fontWeight: 300,
@@ -72,6 +82,7 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
     },
     {
       name: 'CIF Number',
+      id: 'cifNumber',
       selector: (row) => (row.cifNumber ? row.cifNumber : 'NA'),
       style: {
         fontWeight: 300,
@@ -81,6 +92,7 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
     },
     {
       name: 'Status',
+      id: 'status',
       selector: (row) => (row.status ? row.status : 'NA'),
       style: {
         fontWeight: 300,
@@ -91,7 +103,11 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
     },
     {
       name: 'Date Requested',
-      selector: (row) => (row.dateRequested ? dayjs(row.dateRequested).format('DD/MM/YYYY') : 'NA'),
+      id: 'dateRequested',
+      selector: (row) =>
+        row.dateRequested
+          ? `${dayjs(row.dateRequested).format('DD/MM/YYYY')} | ${dayjs(row.dateRequested).format('HH:mm:ss')}`
+          : 'NA',
       style: {
         fontWeight: 300,
         fontSize: '16px',
@@ -100,21 +116,31 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
     },
     {
       name: 'Action',
+      id: 'action',
       style: {
         fontWeight: 300,
         fontSize: '16px',
-        justifyContent: 'start',
+        justifyContent: 'center',
       },
-
-      cell: (row) => useMemo(() => <div>{row.id}</div>, [row.id]),
+      cell: (row) =>
+        useMemo(
+          () => (
+            <div className="flex w-[100px] flex-col items-start justify-between rounded-md bg-backgroundColor p-2">
+              <button className="p-1" onClick={() => {}}>
+                {row.id}
+              </button>
+            </div>
+          ),
+          [row.id],
+        ),
     },
   ];
   return (
     <>
       <div>
         {merchantsList?.length > 0 ? (
-          <div className="px-1">
-            <div className="my-8">
+          <div className="">
+            <div className="my-8 px-2">
               <TableFilter
                 name={'merchantsFilter'}
                 placeholder={'Search Merchant'}

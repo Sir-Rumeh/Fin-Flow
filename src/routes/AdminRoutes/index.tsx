@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import AdminDashboardLayout from 'layouts/AdminLayout';
 import { adminRoutes } from 'routes/appRoutes';
+import NotFoundPage from 'pages/NotFoundPage';
 
 function AdminRoutes() {
   const getAdminRoutes = (adminRoutes: RoutesType[]) => {
@@ -18,6 +19,8 @@ function AdminRoutes() {
                   />
                 }
               />
+              <Route path="*" element={<NotFoundPage />} />
+
               {route.children?.map((child) => {
                 return (
                   <Route
@@ -48,6 +51,7 @@ function AdminRoutes() {
       <Route element={<AdminDashboardLayout />}>
         <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
         {getAdminRoutes(adminRoutes)}
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );

@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { Children, ReactNode } from 'react';
 import DataTable, { TableProps } from 'react-data-table-component';
 import { Checkbox } from '@mui/material';
 import ArrowDownIcon from 'assets/icons/ArrowDownIcon';
@@ -29,7 +29,7 @@ function DataTableBase<T>(props: TableProps<T>): JSX.Element {
     },
     cells: {
       style: {
-        paddingLeft: '18px',
+        paddingLeft: '4px',
         paddingRight: '8px',
         paddingTop: '20px',
         paddingBottom: '20px',

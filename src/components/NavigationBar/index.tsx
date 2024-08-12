@@ -18,13 +18,14 @@ const Navbar = (props: { onOpenSidenav: () => void }) => {
           <FiAlignJustify className="h-5 w-5 text-blackSecondary" />
         </span>
         <div className="flex items-center justify-between">
-          <div className="flex flex-col items-start text-lg font-semibold">
+          <div className="flex flex-col items-start text-sm font-semibold">
             <p className="text-lightPurple">First name, Last Name (1209)</p>
 
             <p className="hidden flex-1 justify-start text-[#78350F] md:flex lg:mr-32">
               {dayjs()
                 .format('LLLL')
-                .replace(/\d{1,2}:\d{1,2}(\s)?.*/gm, '')}
+                .replace(/\d{1,2}:\d{1,2}(\s)?.*/gm, '')}{' '}
+              | {dayjs().format('HH:mm:ss')}
             </p>
           </div>
         </div>

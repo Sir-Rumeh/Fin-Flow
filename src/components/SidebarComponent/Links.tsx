@@ -40,7 +40,7 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
         }}
         className={`${isParentRouteActive && !isChildrenOpen ? 'mb-3' : ''} ${
           isParentRouteActive
-            ? 'relative flex bg-[linear-gradient(89.92deg,_#60088C_0.07%,_#A11E90_92.22%)] px-2 py-4 hover:cursor-pointer'
+            ? 'relative flex border-r-[5px] border-yellowPrimary bg-[linear-gradient(89.92deg,_#60088C_0.07%,_#A11E90_92.22%)] px-2 py-4 hover:cursor-pointer'
             : 'relative mb-3 flex px-2 py-4 hover:cursor-pointer'
         }`}
       >
@@ -56,7 +56,7 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
               </span>
               <p
                 className={`leading-1 ml-4 flex ${
-                  isParentRouteActive ? 'font-bold text-white' : 'font-medium text-white'
+                  isParentRouteActive ? 'font-semibold text-white' : 'font-normal text-white'
                 }`}
               >
                 {route.name}
@@ -129,7 +129,7 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
               <div
                 className={`${
                   isRouteActive
-                    ? 'relative mb-3 flex bg-[linear-gradient(89.92deg,_#60088C_0.07%,_#A11E90_92.22%)] px-2 py-4 hover:cursor-pointer'
+                    ? 'relative mb-3 flex border-r-[5px] border-yellowPrimary bg-[linear-gradient(89.92deg,_#60088C_0.07%,_#A11E90_92.22%)] px-2 py-4 hover:cursor-pointer'
                     : 'relative mb-3 flex px-2 py-4 hover:cursor-pointer'
                 }`}
               >
@@ -143,7 +143,7 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
                   </span>
                   <p
                     className={`leading-1 ml-4 flex ${
-                      isRouteActive ? 'font-bold text-white' : 'font-medium text-white'
+                      isRouteActive ? 'font-semibold text-white' : 'font-normal text-white'
                     }`}
                   >
                     {route.name}

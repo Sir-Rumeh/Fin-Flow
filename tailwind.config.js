@@ -5,7 +5,7 @@ module.exports = {
 	theme: {
 		extend: {
 			fontFamily: {
-				// gotham: ["gotham", "sans-serif"],
+				gotham: ["gotham", "sans-serif"],
 			},
 			colors: {
 				white: "#ffffff",

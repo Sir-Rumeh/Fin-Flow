@@ -1,6 +1,7 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 import MerchantDashboardLayout from 'layouts/MerchantLayout';
 import { merchantRoutes } from 'routes/appRoutes';
+import NotFoundPage from 'pages/NotFoundPage';
 
 function MerchantRoutes() {
   const getMerchantRoutes = (adminRoutes: RoutesType[]) => {
@@ -9,6 +10,17 @@ function MerchantRoutes() {
         if (route.children && route.children.length > 0) {
           return (
             <Route>
+              <Route
+                path={`/${route.path}`}
+                element={
+                  <Navigate
+                    to={`${route.layout}/${route.path}/${route.children?.[0].path}`}
+                    replace
+                  />
+                }
+              />
+              <Route path="*" element={<NotFoundPage />} />
+
               {route.children?.map((child) => {
                 return (
                   <Route
@@ -39,6 +51,7 @@ function MerchantRoutes() {
       <Route element={<MerchantDashboardLayout />}>
         <Route path="/" element={<Navigate to="/merchant/dashboard" replace />} />
         {getMerchantRoutes(merchantRoutes)}
+        <Route path="*" element={<NotFoundPage />} />
       </Route>
     </Routes>
   );

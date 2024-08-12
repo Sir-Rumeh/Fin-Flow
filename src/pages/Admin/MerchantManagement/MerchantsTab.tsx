@@ -13,7 +13,7 @@ const MerchantsTab = () => {
           </div>
         </section>
         <section>
-          <div className="mt-6 bg-white px-5 py-6">
+          <div className="mt-4 bg-white px-5 py-3">
             <BasicTabs
               initialIndex={state?.tabIndex}
               tabList={['Pending', 'Approved Portfolio', 'Rejected']}

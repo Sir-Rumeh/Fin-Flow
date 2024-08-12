@@ -4,12 +4,15 @@ import { adminRoutes, merchantRoutes } from 'routes/appRoutes';
 import FcmbIcon from 'assets/icons//FcmbIcon';
 import SignoutIcon from 'assets/icons/SignoutIcon';
 import { Roles } from 'utils/enums';
+import { useNavigate } from 'react-router-dom';
+import { BASE_ROUTES } from 'utils/constants/routes';
 
 const Sidebar = (props: {
   open: boolean;
   onClose: React.MouseEventHandler<HTMLSpanElement>;
   userRole: string;
 }) => {
+  const navigate = useNavigate();
   const { open, onClose, userRole } = props;
   return (
     <div
@@ -29,23 +32,26 @@ const Sidebar = (props: {
           <p className="pl-4 text-base font-medium text-white">DDI Portal</p>
         </div>
       </div>
-      <div className="mb-7 mt-[40px] h-px" />
+      <div className="mb-7 mt-[10px]" />
       <ul className="no-scrollbar mb-auto h-[70vh] overflow-y-scroll pt-1">
         {userRole === Roles.Admin && <Links routes={adminRoutes} />}
         {userRole === Roles.Merchant && <Links routes={merchantRoutes} />}
       </ul>
       <div className="mt-auto flex h-full flex-col">
         <ul className="mt-auto flex items-center justify-start border-t border-gray-50 pt-1">
-          <div className="">
-            <button className="relative mb-3 flex px-2 py-4 hover:cursor-pointer">
-              <li className="my-[3px] flex w-full cursor-pointer items-center justify-center px-5">
-                <span className="font-medium text-white">
-                  <SignoutIcon />
-                </span>
-                <p className="md:font-lg ml-4 font-medium text-[#DC2626]">Sign Out</p>
-              </li>
-            </button>
-          </div>
+          <button
+            className="relative mb-3 flex px-2 py-4 hover:cursor-pointer"
+            onClick={() => {
+              navigate(`${BASE_ROUTES.LOGIN}`);
+            }}
+          >
+            <li className="my-[3px] flex w-full cursor-pointer items-center justify-center px-5">
+              <span className="font-medium text-white">
+                <SignoutIcon />
+              </span>
+              <p className="md:font-lg ml-4 font-medium text-[#DC2626]">Sign Out</p>
+            </li>
+          </button>
         </ul>
       </div>
     </div>

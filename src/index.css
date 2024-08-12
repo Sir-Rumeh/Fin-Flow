@@ -130,15 +130,9 @@
 	max-width: 50px;
 }
 
-/* custom sty;ling for background */
-@media (min-width: 1280px) and (max-width: 1300px) {
-	.effect-1 svg {
-		position: absolute;
-		right: -40px;
+/* MERCHANT TABLE COLUMNS */
+[data-column-id="action"].rdt_TableCol {
+	padding-left: 3rem;
 	}
 
-	.effect-2 svg {
-		position: absolute;
-		right: -380px;
-	}
-}
+	
