@@ -1,8 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import React from "react";
 import { Link } from "react-router-dom";
-// import { notifySuccess } from 'utils/helpers/toastHelper';
-// import errorInfo from '../assets/images/error_info_logo.png';
 import Button from "../FormElements/Button";
 
 interface Props {
@@ -36,15 +34,6 @@ const LoginFormCard = ({
 	handleResetOTP = () => {},
 	OTPbtnDisabled = false,
 }: Props) => {
-	// const navigate = useNavigate();
-
-	// formik.handleSubmit
-	/* const handleFormSubmit = (event: any, cb: any) => {
-        event.preventDefault();
-        cb();
-    };
-    */
-
 	const handleOTPBTN = (e: React.MouseEvent<HTMLButtonElement>) => {
 		e.preventDefault();
 		handleResetOTP(true);
@@ -52,8 +41,6 @@ const LoginFormCard = ({
 
 	return (
 		<>
-			{/* form contents here */}
-
 			<div className={` ${classesParentDiv} flex h-full flex-1 flex-col rounded-xl px-4 md:px-10`}>
 				<form className="mb-2  mt-3  flex flex-1 flex-col px-4" onSubmit={formik.handleSubmit}>
 					{children}
@@ -74,8 +61,6 @@ const LoginFormCard = ({
 								<div className="flex justify-center  py-3 ">
 									<Link
 										to={linkBack}
-										// href={`${linkBack}`}
-										// onClick={() => navigate(linkBack)}
 										className="cursor-pointer text-[12px] text-primary-700"
 									>
 										Take me back to sign in
@@ -85,25 +70,10 @@ const LoginFormCard = ({
 
 							{resendOTPTag && (
 								<div className="flex justify-center py-3">
-									{/* <Link
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            // notifySuccess('OTP will be resent');
-                                            alert('hi')
-                                             handleResetOTP(true)
-                                        }}
-                                        
-                                        type='button'
-                                        to={linkBack}
-                                        className="cursor-pointer text-xs text-primary"
-                                    >
-                                        Click to Resend?
-                                    </Link> */}
 									<button
 										onClick={(e) => handleOTPBTN(e)}
 										type="button"
 										disabled={OTPbtnDisabled}
-										// to={linkBack}
 										className={`cursor-pointer text-xs ${
 											OTPbtnDisabled ? "text-gray-400" : "text-primary"
 										} `}
@@ -113,9 +83,6 @@ const LoginFormCard = ({
 									<span className="cursor-pointer px-3 text-xs text-black/40">
 										Resend available
 									</span>
-									{/* <span className="cursor-pointer text-xs text-primary-700">
-                                        in 02:30s
-                                    </span> */}
 									{resendOTPContent}
 								</div>
 							)}

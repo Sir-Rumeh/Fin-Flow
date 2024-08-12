@@ -3,10 +3,6 @@
 @tailwind utilities;
 
 @layer components {
-	/* start  custom_pagination*/
-
-	/* end custom_pagination*/
-
 	.details-info-cus {
 		@apply flex w-full flex-col items-center justify-center;
 	}

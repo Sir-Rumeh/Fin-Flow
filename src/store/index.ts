@@ -22,4 +22,3 @@ export const useAppDispatch: () => AppDispatch = useDispatch;
 
 export default store;
 export const persistor = persistStore(store);
-//

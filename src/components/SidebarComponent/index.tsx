@@ -7,10 +7,6 @@ import { Roles } from "utils/enums";
 
 const Sidebar = (props: { open: boolean; onClose: React.MouseEventHandler<HTMLSpanElement>; userRole: string }) => {
 	const { open, onClose, userRole } = props;
-
-	// const navigate = useNavigate();
-	// const dispatch = useAppDispatch();
-
 	return (
 		<div
 			className={`sm:none font-circular-std lg:w-[20vw] duration-175 linear fixed !z-50 flex min-h-full flex-col bg-purplePrimary shadow-2xl shadow-white/5 transition-all md:!z-50 lg:!z-50 xl:!z-0 ${
@@ -32,7 +28,6 @@ const Sidebar = (props: { open: boolean; onClose: React.MouseEventHandler<HTMLSp
 			</div>
 			<div className="mt-[40px] mb-7 h-px" />
 			{/* Nav item */}
-			{/* <div className="flex flex-col items-center justify-between"> */}
 			<ul className="mb-auto pt-1">
 				{userRole === Roles.Admin && <Links routes={adminRoutes} />}
 				{userRole === Roles.Merchant && <Links routes={merchantRoutes} />}

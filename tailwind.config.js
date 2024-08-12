@@ -5,7 +5,7 @@ module.exports = {
 	theme: {
 		extend: {
 			fontFamily: {
-				"circular-std": ["Circular Std", "sans-serif"],
+				// gotham: ["gotham", "sans-serif"],
 			},
 			colors: {
 				white: "#ffffff",

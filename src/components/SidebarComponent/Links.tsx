@@ -1,10 +1,13 @@
 /* eslint-disable */
-import { Link, useLocation } from "react-router-dom";
+import { Link, Navigate, useLocation, useNavigate } from "react-router-dom";
 import DashIcon from "assets/icons/DashIcon";
 import { useEffect, useState } from "react";
 
 const NestedLink = ({ route }: { route: RoutesType }) => {
+	const navigate = useNavigate();
 	const [isChildrenOpen, setIsChildrenOpen] = useState(false);
+	const [pathToMaintain, setPathToMaintain] = useState("");
+	const initialRoute = route.layout + "/" + route.path;
 
 	const activeRoute = (routeName: string) => {
 		return location.pathname.includes(routeName);
@@ -12,6 +15,7 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
 	const isParentRouteActive = activeRoute(route.path);
 
 	useEffect(() => {
+		setPathToMaintain(location.pathname);
 		if (!location.pathname.includes(route.path)) {
 			setIsChildrenOpen(false);
 		}
@@ -21,9 +25,18 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
 		<>
 			<Link
 				key={route.layout + route.path}
-				to={route.layout + "/" + route.path}
+				to={isParentRouteActive ? pathToMaintain : initialRoute}
 				onClick={() => {
 					setIsChildrenOpen(!isChildrenOpen);
+					if (isParentRouteActive) {
+						const firstChildPath = route.children?.[0].path;
+						if (firstChildPath) {
+							const isFirstChildRouteActive = location.pathname.includes(firstChildPath);
+							if (!isFirstChildRouteActive) {
+								navigate(`/admin`);
+							}
+						}
+					}
 				}}
 				className={`${isParentRouteActive && !isChildrenOpen ? "mb-3" : ""} ${
 					isParentRouteActive
@@ -90,12 +103,10 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
 };
 
 export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
-	// Chakra color mode
 	let location = useLocation();
 
 	const { routes } = props;
 
-	// verifies if routeName is the one active (in browser input)
 	const activeRoute = (routeName: string) => {
 		return location.pathname.includes(routeName);
 	};

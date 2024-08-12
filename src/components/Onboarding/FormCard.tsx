@@ -4,16 +4,9 @@ import { Link } from "react-router-dom";
 import { BASE_ROUTES } from "utils/constants/routes";
 import errorInfo from "assets/images/error_info_logo.png";
 
-// interface FormCardProps {
-// 	children: React.ReactNode | null;
-// }
-
-// const FormCard = ({ children }: FormCardProps) => {
 const FormCard = () => {
 	return (
 		<>
-			{/* form contents here */}
-
 			<p className="subTitle py-6 text-center ">Kindly select a login method</p>
 
 			<div className="my-5 flex h-full flex-col rounded-xl px-4 gap-y-10">

@@ -4,6 +4,7 @@ import FcmbLogo from "assets/icons/FcmbIcon";
 import { useNavigate } from "react-router-dom";
 import { useFormik } from "formik";
 import { BASE_ROUTES } from "utils/constants/routes";
+import { userLoginValidationSchema } from "utils/formValidators";
 
 const MerchantLogin = () => {
 	const navigate = useNavigate();
@@ -13,9 +14,8 @@ const MerchantLogin = () => {
 			email: "",
 			password: "",
 		},
-		// validationSchema: userLoginValidationSchema,
-		onSubmit: (values: { email: string; password: string }) => {
-			console.log(values);
+		validationSchema: userLoginValidationSchema,
+		onSubmit: () => {
 			navigate(`/${BASE_ROUTES.MERCHANT}`);
 		},
 	});

@@ -1,12 +1,6 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 export {};
 
 declare global {
-	/**
-	 * Now declare things that go in the global namespace,
-	 * or augment existing declarations in the global namespace.
-	 */
-
 	interface RoutesChildren {
 		name: string;
 		path: string;

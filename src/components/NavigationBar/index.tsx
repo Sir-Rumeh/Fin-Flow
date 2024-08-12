@@ -6,12 +6,10 @@ import LocalizedTime from "dayjs/plugin/localizedFormat";
 const Navbar = (props: { onOpenSidenav: () => void }) => {
 	dayjs.extend(LocalizedTime);
 
-	// const { userName } = useAppSelector((state:RootState) => state.auth);
-
 	const { onOpenSidenav } = props;
 
 	return (
-		<header className="z-40 py-4 shadow-bottom ">
+		<header className="z-40 py-4 shadow-bottom pl-8 pr-2 bg-white">
 			<div className="container flex items-center justify-between h-full  mx-auto text-blackPrimary">
 				<span
 					className="flex items-center cursor-pointer text-xl xl:hidden text-blackInput"
