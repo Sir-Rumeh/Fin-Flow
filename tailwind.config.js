@@ -25,6 +25,9 @@ module.exports = {
 				greenPrimary: "#09B47C",
 				redPrimary: "#F34E4E",
 				brownPrimary: "#B87E00",
+				grayPrimary: "#F8F8F9",
+				graySecondary: "#F0F0F0",
+				yellowNeutral: "#78350F",
 				shadow: {
 					500: "rgba(112, 144, 176, 0.08)",
 				},
