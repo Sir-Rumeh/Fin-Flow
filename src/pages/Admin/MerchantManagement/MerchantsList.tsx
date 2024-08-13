@@ -9,6 +9,7 @@ import { DataTableState, MerchantDataRow } from 'utils/interfaces';
 import { handleNextPageChange, handlePreviousPageChange } from 'utils/helpers';
 import TableFilter from 'components/TableFilter';
 import { merchantsList } from 'utils/constants';
+import DarkArrowDown from 'assets/icons/DarkArrowDown';
 
 const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string }) => {
   const [viewMerchant, setViewMerchant] = useState(false);
@@ -33,7 +34,6 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
           [row.id],
         ),
       style: {
-        fontWeight: 300,
         fontSize: '16px',
         justifyContent: 'start',
       },
@@ -41,9 +41,16 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
     {
       name: 'Merchant Name',
       id: 'merchantName',
-      selector: (row) => (row.merchantName ? `${row.merchantName}` : 'NA'),
+      cell: (row) =>
+        useMemo(
+          () => (
+            <p className="flex w-[100px] items-center justify-center">
+              {row.merchantName ? `${row.merchantName}` : 'NA'}
+            </p>
+          ),
+          [row.id],
+        ),
       style: {
-        fontWeight: 300,
         fontSize: '16px',
         justifyContent: 'start',
       },
@@ -53,7 +60,6 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
       id: 'cifNumber',
       selector: (row) => (row.cifNumber ? row.cifNumber : 'NA'),
       style: {
-        fontWeight: 300,
         fontSize: '16px',
         justifyContent: 'start',
       },
@@ -63,7 +69,6 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
       id: 'status',
       selector: (row) => (row.status ? row.status : 'NA'),
       style: {
-        fontWeight: 300,
         fontSize: '16px',
         justifyContent: 'start',
         overflow: 'visible',
@@ -80,7 +85,6 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
           [row.id],
         ),
       style: {
-        fontWeight: 300,
         fontSize: '16px',
         justifyContent: 'start',
       },
@@ -89,17 +93,20 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
       name: 'Action',
       id: 'action',
       style: {
-        fontWeight: 300,
         fontSize: '16px',
-        justifyContent: 'center',
+        justifyContent: 'start',
       },
       cell: (row) =>
         useMemo(
           () => (
-            <div className="flex w-[100px] flex-col items-start justify-between rounded-md bg-backgroundColor p-2">
-              <button className="p-1" onClick={() => {}}>
-                {row.id}
+            <div className="flex w-[100px] flex-col items-center justify-between">
+              <button
+                className="flex items-center justify-center gap-x-1 rounded-md bg-backgroundColor p-2"
+                onClick={() => {}}
+              >
+                Actions <DarkArrowDown />
               </button>
+              <></>
             </div>
           ),
           [row.id],

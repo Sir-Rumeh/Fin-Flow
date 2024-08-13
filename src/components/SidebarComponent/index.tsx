@@ -33,7 +33,7 @@ const Sidebar = (props: {
         </div>
       </div>
       <div className="mb-7 mt-[10px]" />
-      <ul className="no-scrollbar mb-auto h-[70vh] overflow-y-scroll pt-1">
+      <ul className="no-scrollbar mb-auto h-[75vh] overflow-y-scroll pt-1">
         {userRole === Roles.Admin && <Links routes={adminRoutes} />}
         {userRole === Roles.Merchant && <Links routes={merchantRoutes} />}
       </ul>

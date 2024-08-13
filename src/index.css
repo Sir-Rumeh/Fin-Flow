@@ -142,8 +142,22 @@
 	}
  }
 
+ @keyframes fadeInRight {
+	0% {
+	  opacity: 0;
+	  transform: translateX(-10px);
+	}
+	100% {
+	  opacity: 1;
+	  transform: translateX(0);
+	}
+ }
+
  .slide-down {
 	animation: slideDown 0.3s ease forwards;
+ }
+ .fade-in-right {
+	animation: fadeInRight 0.2s ease forwards;
  }
 
 

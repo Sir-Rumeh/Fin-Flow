@@ -40,8 +40,8 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
         }}
         className={`${isParentRouteActive && !isChildrenOpen ? 'mb-3' : ''} ${
           isParentRouteActive
-            ? 'relative flex border-r-[5px] border-yellowPrimary bg-[linear-gradient(89.92deg,_#60088C_0.07%,_#A11E90_92.22%)] px-2 py-4 hover:cursor-pointer'
-            : 'relative mb-3 flex px-2 py-4 hover:cursor-pointer'
+            ? 'fade-in-right relative flex border-r-[5px] border-yellowPrimary bg-[linear-gradient(89.92deg,_#60088C_0.07%,_#A11E90_92.22%)] px-2 py-3 hover:cursor-pointer'
+            : 'relative mb-3 flex px-2 py-3 hover:cursor-pointer'
         }`}
       >
         <div className="w-full">
@@ -79,7 +79,7 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
       </Link>
       {isChildrenOpen && isParentRouteActive && (
         <div className="slide-down mb-3 p-1">
-          <div className="mb-3 flex flex-col items-start justify-center gap-y-2 bg-purpleSecondary px-6 pb-8 pt-4">
+          <div className="mb-3 flex flex-col items-start justify-center gap-y-1 bg-purpleSecondary px-6 pb-4 pt-2">
             {route.children?.map((childRoute: any) => {
               const isChildRouteActive = activeRoute(childRoute.path);
 
@@ -89,7 +89,7 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
                   to={route.layout + '/' + route.path + '/' + childRoute.path}
                   className={`${
                     isChildRouteActive ? 'bg-yellowPrimary text-black' : 'text-white'
-                  } w-full rounded-md p-3 pl-6 hover:bg-yellowPrimary hover:text-black`}
+                  } w-full rounded-md px-3 py-2 pl-6 hover:bg-yellowPrimary hover:text-black`}
                 >
                   {childRoute.name}
                 </Link>
@@ -120,7 +120,7 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
         if (route.children && route.children.length > 0) {
           return (
             <>
-              <NestedLink route={route} />
+              <NestedLink route={route} key={route.layout + route.path + 'nested'} />
             </>
           );
         } else {
@@ -129,8 +129,8 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
               <div
                 className={`${
                   isRouteActive
-                    ? 'relative mb-3 flex border-r-[5px] border-yellowPrimary bg-[linear-gradient(89.92deg,_#60088C_0.07%,_#A11E90_92.22%)] px-2 py-4 hover:cursor-pointer'
-                    : 'relative mb-3 flex px-2 py-4 hover:cursor-pointer'
+                    ? 'fade-in-right relative mb-3 flex border-r-[5px] border-yellowPrimary bg-[linear-gradient(89.92deg,_#60088C_0.07%,_#A11E90_92.22%)] px-2 py-3 hover:cursor-pointer'
+                    : 'relative mb-3 flex px-2 py-3 hover:cursor-pointer'
                 }`}
               >
                 <li className="my-[3px] flex cursor-pointer items-center px-5">

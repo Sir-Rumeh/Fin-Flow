@@ -9,7 +9,7 @@ function AdminRoutes() {
       if (route.layout === '/admin') {
         if (route.children && route.children.length > 0) {
           return (
-            <Route>
+            <Route key={route.layout + route.path}>
               <Route
                 path={`/${route.path}`}
                 element={
@@ -18,8 +18,9 @@ function AdminRoutes() {
                     replace
                   />
                 }
+                key={route.layout + route.path + route.children?.[0].path}
               />
-              <Route path="*" element={<NotFoundPage />} />
+              <Route path="*" element={<NotFoundPage />} key={route.layout + route.path + '*'} />
 
               {route.children?.map((child) => {
                 return (

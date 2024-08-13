@@ -9,7 +9,7 @@ function MerchantRoutes() {
       if (route.layout === '/merchant') {
         if (route.children && route.children.length > 0) {
           return (
-            <Route>
+            <Route key={route.layout + route.path}>
               <Route
                 path={`/${route.path}`}
                 element={
