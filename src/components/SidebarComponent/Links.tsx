@@ -41,7 +41,7 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
         className={`${isParentRouteActive && !isChildrenOpen ? 'mb-3' : ''} ${
           isParentRouteActive
             ? 'fade-in-right relative flex border-r-[5px] border-yellowPrimary bg-[linear-gradient(89.92deg,_#60088C_0.07%,_#A11E90_92.22%)] px-2 py-3 hover:cursor-pointer'
-            : 'relative mb-3 flex px-2 py-3 hover:cursor-pointer'
+            : 'relative mb-3 flex px-2 py-3 hover:cursor-pointer hover:bg-[#69397a]'
         }`}
       >
         <div className="w-full">
@@ -78,7 +78,7 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
         </div>
       </Link>
       {isChildrenOpen && isParentRouteActive && (
-        <div className="slide-down mb-3 p-1">
+        <div className="fade-in-down mb-3 p-1">
           <div className="mb-3 flex flex-col items-start justify-center gap-y-1 bg-purpleSecondary px-6 pb-4 pt-2">
             {route.children?.map((childRoute: any) => {
               const isChildRouteActive = activeRoute(childRoute.path);
@@ -130,7 +130,7 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
                 className={`${
                   isRouteActive
                     ? 'fade-in-right relative mb-3 flex border-r-[5px] border-yellowPrimary bg-[linear-gradient(89.92deg,_#60088C_0.07%,_#A11E90_92.22%)] px-2 py-3 hover:cursor-pointer'
-                    : 'relative mb-3 flex px-2 py-3 hover:cursor-pointer'
+                    : 'relative mb-3 flex px-2 py-3 hover:cursor-pointer hover:bg-[#69397a]'
                 }`}
               >
                 <li className="my-[3px] flex cursor-pointer items-center px-5">

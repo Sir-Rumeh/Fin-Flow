@@ -115,10 +115,10 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
   ];
   return (
     <>
-      <div>
+      <div className="">
         {merchantsList?.length > 0 ? (
-          <div className="">
-            <div className="my-8 px-2">
+          <div className="relative bg-white">
+            <div className="slide-down mb-6 mt-2 flex items-center justify-between px-2 lg:max-w-[50%]">
               <TableFilter
                 name={'merchantsFilter'}
                 placeholder={'Search Merchant'}
@@ -128,61 +128,63 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
                 setSearch={setSearchTerm}
               />
             </div>
-            <DataTableBase
-              columns={merchantTableColumn}
-              data={merchantsList}
-              pointerOnHover
-              onRowClicked={(row: MerchantDataRow) => {
-                setMerchantDetails(row.id);
-                setViewMerchant(true);
-              }}
-              subHeader={null}
-              subHeaderComponent={null}
-              selectableRowsHighlight
-              paginationServer
-              paginationIconFirstPage={null}
-              paginationIconLastPage={null}
-              // paginationTotalRows={merchantsList?.totalNumberOfItems}
-              // pagination={merchantsList?.totalNumberOfItems >= 11}
-              paginationResetDefaultPage={dataTableState.resetPaginationToggle}
-              onChangeRowsPerPage={(newPerPage: any) => {
-                setDataTableState?.((prev) => {
-                  return {
-                    ...prev,
-                    pageNumber: 1,
-                    pageSize: newPerPage as number,
-                    resetPaginationToggle: !prev.resetPaginationToggle,
-                  };
-                }) as unknown as PaginationChangeRowsPerPage;
-              }}
-              paginationIconNext={
-                <span
-                  role="none"
-                  className="flex h-full w-full items-center justify-center hover:scale-[150%]"
-                  onClick={() =>
-                    handleNextPageChange(
-                      dataTableState.pageNumber + 1,
-                      dataTableState,
-                      setDataTableState,
-                      merchantsList,
-                    )
-                  }
-                >
-                  <IoIosArrowDropright className="text-primary text-6xl disabled:opacity-25" />
-                </span>
-              }
-              paginationIconPrevious={
-                <span
-                  role="none"
-                  className="flex h-full w-full items-center justify-center hover:scale-[150%]"
-                  onClick={() =>
-                    handlePreviousPageChange(dataTableState.pageNumber - 1, setDataTableState)
-                  }
-                >
-                  <IoIosArrowDropleft className="text-primary text-6xl disabled:opacity-25" />
-                </span>
-              }
-            />
+            <div className="fade-in-down">
+              <DataTableBase
+                columns={merchantTableColumn}
+                data={merchantsList}
+                pointerOnHover
+                onRowClicked={(row: MerchantDataRow) => {
+                  setMerchantDetails(row.id);
+                  setViewMerchant(true);
+                }}
+                subHeader={null}
+                subHeaderComponent={null}
+                selectableRowsHighlight
+                paginationServer
+                paginationIconFirstPage={null}
+                paginationIconLastPage={null}
+                // paginationTotalRows={merchantsList?.totalNumberOfItems}
+                // pagination={merchantsList?.totalNumberOfItems >= 11}
+                paginationResetDefaultPage={dataTableState.resetPaginationToggle}
+                onChangeRowsPerPage={(newPerPage: any) => {
+                  setDataTableState?.((prev) => {
+                    return {
+                      ...prev,
+                      pageNumber: 1,
+                      pageSize: newPerPage as number,
+                      resetPaginationToggle: !prev.resetPaginationToggle,
+                    };
+                  }) as unknown as PaginationChangeRowsPerPage;
+                }}
+                paginationIconNext={
+                  <span
+                    role="none"
+                    className="flex h-full w-full items-center justify-center hover:scale-[150%]"
+                    onClick={() =>
+                      handleNextPageChange(
+                        dataTableState.pageNumber + 1,
+                        dataTableState,
+                        setDataTableState,
+                        merchantsList,
+                      )
+                    }
+                  >
+                    <IoIosArrowDropright className="text-primary text-6xl disabled:opacity-25" />
+                  </span>
+                }
+                paginationIconPrevious={
+                  <span
+                    role="none"
+                    className="flex h-full w-full items-center justify-center hover:scale-[150%]"
+                    onClick={() =>
+                      handlePreviousPageChange(dataTableState.pageNumber - 1, setDataTableState)
+                    }
+                  >
+                    <IoIosArrowDropleft className="text-primary text-6xl disabled:opacity-25" />
+                  </span>
+                }
+              />
+            </div>
           </div>
         ) : (
           <div className="mt-8 flex h-[65vh] flex-col items-center justify-center p-4">
@@ -190,7 +192,7 @@ const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string
               <img src={TableLogo} alt="group_logo" />
             </div>
             <div className="mt-8 text-center">
-              <h3 className="text-2xl font-bold">Oops! No Active Portfolio</h3>
+              <h3 className="text-2xl font-bold">Oops! No Active Merchants</h3>
             </div>
           </div>
         )}

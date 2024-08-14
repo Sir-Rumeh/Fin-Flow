@@ -8,14 +8,14 @@ const MerchantManagement = () => {
   return (
     <>
       <section className="mt-4 p-2 md:p-4">
-        <section className="flex items-center justify-between pb-4">
+        <div className="fade-in-down flex items-center justify-between">
           <div>
-            <h2 className="text-2xl font-semibold">Merchant Management</h2>
+            <h1 className="text-2xl font-semibold">Merchant Management</h1>
           </div>
-        </section>
-        <section>
-          <div className="mt-4 bg-white px-5 py-3">
-            <BasicTabs
+        </div>
+        <div className="">
+          <div className="mt-5 bg-white px-5 py-3">
+            {/* <BasicTabs
               initialIndex={state?.tabIndex}
               tabList={[`Pending`, 'Approved', 'Rejected']}
               tabPanel={[
@@ -23,9 +23,10 @@ const MerchantManagement = () => {
                 <MerchantsList key="approved" merchantStatus="approved" />,
                 <MerchantsList key="rejected" merchantStatus="rejected" />,
               ]}
-            />
+            /> */}
+            <MerchantsList key="pending" merchantStatus="all" />,
           </div>
-        </section>
+        </div>
       </section>
     </>
   );
