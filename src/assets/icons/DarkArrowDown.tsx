@@ -1,7 +1,7 @@
 export default function DarkArrowDown() {
   return (
     <svg
-      className="mt-1"
+      className=""
       width="16"
       height="16"
       viewBox="0 0 16 16"

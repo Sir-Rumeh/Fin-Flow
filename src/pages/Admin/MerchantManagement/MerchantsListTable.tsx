@@ -11,7 +11,7 @@ import TableFilter from 'components/TableFilter';
 import { merchantsList } from 'utils/constants';
 import DarkArrowDown from 'assets/icons/DarkArrowDown';
 
-const MerchantsList = ({
+const MerchantsListTable = ({
   merchantStatus = 'approved',
 }: {
   merchantStatus: 'pending' | 'approved' | 'rejected' | 'all';
@@ -205,4 +205,4 @@ const MerchantsList = ({
   );
 };
 
-export default MerchantsList;
+export default MerchantsListTable;

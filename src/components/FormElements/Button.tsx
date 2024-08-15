@@ -15,11 +15,12 @@ type Props = {
   hoverColor?: string;
   backgroundColor?: string;
   hoverBackgroundColor?: string;
+  title: string;
 };
 
 const ButtonComponent = (props: Props) => {
   return (
-    <div>
+    <div className="flex h-full flex-col items-center justify-center">
       <Button
         disabled={props.disabled}
         onClick={props.onClick}
@@ -38,12 +39,17 @@ const ButtonComponent = (props: Props) => {
           border: props.border,
           textTransform: 'capitalize',
           fontSize: 16,
+          display: 'flex',
+          alignContent: 'center',
+          justifyContent: 'flex',
+          rowGap: '2px',
+          padding: '5px',
         }}
         fullWidth={props.fullWidth}
         startIcon={props.startIcon}
         color="primary"
       >
-        {props.children}
+        {props.title} {props.children}
       </Button>
     </div>
   );

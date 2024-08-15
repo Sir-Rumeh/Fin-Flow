@@ -1,6 +1,6 @@
 import { useLocation } from 'react-router';
 import BasicTabs from 'hoc/Tab';
-import MerchantsList from './MerchantsList';
+import MerchantsListTable from './MerchantsListTable';
 
 const MerchantManagement = () => {
   const { state } = useLocation();
@@ -15,7 +15,7 @@ const MerchantManagement = () => {
         </div>
         <div className="">
           <div className="mt-5 bg-white px-5 py-3">
-            <MerchantsList key="all" merchantStatus="all" />,
+            <MerchantsListTable key="all" merchantStatus="all" />,
           </div>
         </div>
       </section>

@@ -1,4 +1,4 @@
-import { MerchantDataRow } from 'utils/interfaces';
+import { MerchantDataRow, DashboardMerchantDataRow } from 'utils/interfaces';
 
 export const merchantsList: MerchantDataRow[] = [
   {
@@ -84,5 +84,92 @@ export const merchantsList: MerchantDataRow[] = [
     cifNumber: '1267378',
     status: 'Active',
     dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+];
+
+export const muiDashboardMerchantsList: DashboardMerchantDataRow[] = [
+  {
+    id: '1234',
+    merchantName: 'Fair Money',
+    accountNumber: '1234567890',
+    phoneNumber: '0810283789',
+    dateRequested: '2024-03-25T12:00:00-06:30',
+  },
+  {
+    id: '1234',
+    merchantName: 'Fair Money',
+    accountNumber: '1234567890',
+    phoneNumber: '0810283789',
+    dateRequested: '2024-03-25T12:00:00-06:30',
+  },
+  {
+    id: '1234',
+    merchantName: 'Fair Money',
+    accountNumber: '1234567890',
+    phoneNumber: '0810283789',
+    dateRequested: '2024-03-25T12:00:00-06:30',
+  },
+  {
+    id: '1234',
+    merchantName: 'Fair Money',
+    accountNumber: '1234567890',
+    phoneNumber: '0810283789',
+    dateRequested: '2024-03-25T12:00:00-06:30',
+  },
+  {
+    id: '1234',
+    merchantName: 'Fair Money',
+    accountNumber: '1234567890',
+    phoneNumber: '0810283789',
+    dateRequested: '2024-03-25T12:00:00-06:30',
+  },
+  {
+    id: '1234',
+    merchantName: 'Fair Money',
+    accountNumber: '1234567890',
+    phoneNumber: '0810283789',
+    dateRequested: '2024-03-25T12:00:00-06:30',
+  },
+  {
+    id: '1234',
+    merchantName: 'Fair Money',
+    accountNumber: '1234567890',
+    phoneNumber: '0810283789',
+    dateRequested: '2024-03-25T12:00:00-06:30',
+  },
+  {
+    id: '1234',
+    merchantName: 'Fair Money',
+    accountNumber: '1234567890',
+    phoneNumber: '0810283789',
+    dateRequested: '2024-03-25T12:00:00-06:30',
+  },
+  {
+    id: '1234',
+    merchantName: 'Fair Money',
+    accountNumber: '1234567890',
+    phoneNumber: '0810283789',
+    dateRequested: '2024-03-25T12:00:00-06:30',
+  },
+  {
+    id: '1234',
+    merchantName: 'Fair Money',
+    accountNumber: '1234567890',
+    phoneNumber: '0810283789',
+    dateRequested: '2024-03-25T12:00:00-06:30',
+  },
+  {
+    id: '1234',
+    merchantName: 'Fair Money',
+    accountNumber: '1234567890',
+    phoneNumber: '0810283789',
+    dateRequested: '2024-03-25T12:00:00-06:30',
+  },
+  {
+    id: '1234',
+    merchantName: 'Fair Money',
+    accountNumber: '1234567890',
+    phoneNumber: '0810283789',
+    dateRequested: '2024-03-25T12:00:00-06:30',
   },
 ];

@@ -2,6 +2,7 @@ import { Dispatch } from 'react';
 import { AdminDashboardPageType } from 'utils/enums';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
+import DashboardListTable from './DashboardListTable';
 
 interface AdminDashboardProps {
   setPageAction: React.Dispatch<React.SetStateAction<AdminDashboardPageType>>;
@@ -74,8 +75,8 @@ const AdminDashboard = ({ setPageAction, setSelectedItem }: AdminDashboardProps)
           />
         </div>
       </div>
-      <div className="fade-in-down relative mt-5 flex items-center justify-center rounded-md bg-white p-4">
-        Table
+      <div className="slide-down relative mt-5 flex items-center justify-center rounded-md bg-white p-2 md:p-4">
+        <DashboardListTable />
       </div>
     </div>
   );

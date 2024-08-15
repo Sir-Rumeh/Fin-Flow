@@ -28,9 +28,9 @@ const TableFilter = ({
           variant="outlined"
           height="3rem"
           onClick={handleFilter}
-        >
-          Filter By
-        </ButtonComponent>
+          title="Filter By"
+        />
+
         <FormInput
           name={name}
           placeholder={placeholder}

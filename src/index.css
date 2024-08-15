@@ -178,3 +178,17 @@
 	}
 
 	
+/* MUI TABLE STYLING */
+	.ad-thead {
+		background-color: #F4F4F4;
+		font-size: 15px;
+  }
+  
+  .ag-thead {
+	background-color: #F4F4F4;
+	font-size: 17px;
+  }
+  
+  .bold-header {
+	font-weight: bold;
+  }
