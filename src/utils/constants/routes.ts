@@ -11,7 +11,10 @@ export const appRoutes = {
   adminLogin: BASE_ROUTES.ADMINLOGIN,
   merchantLogin: BASE_ROUTES.MERCHANTLOGIN,
   adminDashboard: {
-    index: `${BASE_ROUTES.ADMIN}`,
+    dashboard: {
+      index: `${BASE_ROUTES.ADMIN}`,
+      merchantDetails: `${BASE_ROUTES.ADMIN}/merchant-details`,
+    },
     requests: {
       index: `${BASE_ROUTES.ADMIN}/requests/merchants`,
       merchantRequests: `${BASE_ROUTES.ADMIN}/requests/merchants`,
@@ -21,6 +24,7 @@ export const appRoutes = {
     },
     merchantManagement: {
       index: `${BASE_ROUTES.ADMIN}/merchant-management`,
+      merchantDetails: `${BASE_ROUTES.ADMIN}/merchant-management/merchant-details`,
     },
     mandateManagement: {
       index: `${BASE_ROUTES.ADMIN}/mandate-management`,
@@ -39,7 +43,10 @@ export const appRoutes = {
     },
   },
   merchantDashboard: {
-    index: `${BASE_ROUTES.MERCHANT}`,
+    dashboard: {
+      index: `${BASE_ROUTES.MERCHANT}`,
+      mandateDetails: `${BASE_ROUTES.MERCHANT}/mandate-details`,
+    },
     requests: {
       index: `${BASE_ROUTES.MERCHANT}/requests/mandates`,
     },

@@ -10,16 +10,25 @@ function AdminRoutes() {
         if (route.children && route.children.length > 0) {
           return (
             <Route key={route.layout + route.path}>
-              <Route
-                path={`/${route.path}`}
-                element={
-                  <Navigate
-                    to={`${route.layout}/${route.path}/${route.children?.[0].path}`}
-                    replace
-                  />
-                }
-                key={route.layout + route.path + route.children?.[0].path}
-              />
+              {route.willChildLinkShow ? (
+                <Route
+                  path={`/${route.path}`}
+                  element={
+                    <Navigate
+                      to={`${route.layout}/${route.path}/${route.children?.[0].path}`}
+                      replace
+                    />
+                  }
+                  key={route.layout + route.path + route.children?.[0].path}
+                />
+              ) : (
+                <Route
+                  path={`/${route.path}`}
+                  element={route.component}
+                  key={route.layout + route.path}
+                />
+              )}
+
               <Route path="*" element={<NotFoundPage />} key={route.layout + route.path + '*'} />
 
               {route.children?.map((child) => {

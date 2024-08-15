@@ -1,59 +1,65 @@
-import type { Dispatch, SetStateAction } from 'react';
-import CloseIcon from 'assets/icons/CloseIcon';
-import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
-import Modal from '@mui/material/Modal';
+import { SetStateAction, Dispatch } from 'react';
+import Modal from 'hoc/ModalWrapper/CustomModal';
+import ButtonComponent from 'components/FormElements/Button';
 
-interface Props {
-  title?: string;
+interface PopupProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  children?: React.ReactNode;
-  width?: string;
+  title: string;
+  info: string;
+  icon: JSX.Element;
+  type: string;
+  proceedAction?: () => void;
 }
 
-const CustomModal = ({ title, isOpen, setIsOpen, children, width = 'w-[700px]' }: Props) => {
-  const boxStyle = {
-    position: 'absolute',
-    display: 'flex',
-    flexDirection: 'column',
-    top: '50%',
-    left: '50%',
-    transform: 'translate(-50%, -50%)',
-    width: width,
-    bgcolor: 'white',
-    borderRadius: '1rem',
-    boxShadow: 24,
-    px: 5,
-    py: 6,
-  };
-  const handleClose = () => setIsOpen(false);
+export const ModalWrapper = ({
+  isOpen,
+  setIsOpen,
+  title,
+  info,
+  icon,
+  type,
+  proceedAction,
+}: PopupProps) => {
   return (
     <>
-      <Modal
-        className="z-10"
-        open={isOpen}
-        onClose={handleClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <Box sx={boxStyle}>
-          <div className="flex flex-col space-y-6">
-            <div className="flex items-center justify-between">
-              <Typography id="modal-modal-description" sx={{ fontSize: 20, fontWeight: 600 }}>
-                {title}
-              </Typography>
-              <button type="button" className="mr-3" onClick={() => setIsOpen(false)}>
-                <CloseIcon />
-              </button>
-            </div>
-            <div className="px-5">{children}</div>
+      <Modal isOpen={isOpen} setIsOpen={setIsOpen} width="w-[595px]">
+        <div className="mb-4 text-center">
+          <div className="mb-6 flex flex-col items-center justify-center gap-y-3">
+            {icon}
+            <h2 className="text-2xl font-bold">{title}</h2>
           </div>
-        </Box>
+          <h2 className="mb-8 text-xl tracking-wider">{info}</h2>
+
+          {type === 'confirmation' && (
+            <div className="mb-6 mt-8 flex items-center justify-center gap-x-5">
+              <ButtonComponent
+                color="red"
+                width="15rem"
+                onClick={() => setIsOpen(false)}
+                title="No, Cancel"
+              />
+
+              <ButtonComponent
+                color="white"
+                width="15rem"
+                variant="contained"
+                onClick={() => proceedAction?.()}
+                title="Yes Proceed"
+              />
+            </div>
+          )}
+          {type === 'completed' && (
+            <ButtonComponent
+              variant="contained"
+              color="white"
+              type="button"
+              title="Okay"
+              onClick={() => setIsOpen(false)}
+            />
+          )}
+        </div>
       </Modal>
-      {/*  */}
     </>
   );
 };
-
-export default CustomModal;

@@ -88,8 +88,10 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
                   key={childRoute.path}
                   to={route.layout + '/' + route.path + '/' + childRoute.path}
                   className={`${
-                    isChildRouteActive ? 'bg-yellowPrimary text-black' : 'text-white'
-                  } w-full rounded-md px-3 py-2 pl-6 hover:bg-yellowPrimary hover:text-black`}
+                    isChildRouteActive
+                      ? 'slide-right blur:none bg-yellowPrimary font-semibold text-black opacity-[100%]'
+                      : 'text-white'
+                  } w-full rounded-md px-3 py-2 pl-6 opacity-[100%] hover:bg-yellowPrimary hover:text-black`}
                 >
                   {childRoute.name}
                 </Link>
@@ -117,7 +119,9 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
       const isRouteActive = activeRoute(route.path);
 
       if (isRouteValid) {
-        if (route.children && route.children.length > 0) {
+        const conditionToShowNestedLinks =
+          route.willChildLinkShow && route.children && route.children.length > 0;
+        if (conditionToShowNestedLinks) {
           return (
             <>
               <NestedLink route={route} key={route.layout + route.path + 'nested'} />

@@ -1,13 +1,18 @@
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import ButtonComponent from 'components/FormElements/Button';
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import { muiDashboardMerchantsList } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
 import TableLogo from 'assets/images/table_logo.png';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
+import { useState } from 'react';
+import { ModalWrapper } from 'hoc/ModalWrapper';
+import RedAlertIcon from 'assets/icons/RedAlertIcon';
 
 const DashboardListTable = () => {
+  const [confirmDisableModal, setConfirmDisableModal] = useState(false);
+
   const navigate = useNavigate();
   const id = '1';
   const columns: GridColDef[] = [
@@ -53,36 +58,33 @@ const DashboardListTable = () => {
             search: `?${createSearchParams({ id })}`,
           });
         };
-
         return (
-          <div className="-ml-5 h-full">
+          <div className="-ml-1 h-full border-none">
             <CustomPopover
               popoverId={params?.row.id}
               buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-20}
-              translationY={40}
+              translationX={-40}
+              translationY={50}
             >
               <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
-                <button
-                  onClick={() => {}}
-                  type="button"
+                <Link
+                  to={`/${appRoutes.adminDashboard.merchantManagement.merchantDetails}`}
                   className="w-full px-3 py-2 text-start font-bold opacity-75 hover:bg-purpleSecondary"
                 >
                   View Details
-                </button>
-                <button
-                  onClick={() => {}}
-                  type="button"
+                </Link>
+                <Link
+                  to={`/${appRoutes.adminDashboard.merchantManagement.merchantDetails}`}
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
                   Edit Details
-                </button>
+                </Link>
                 <button
-                  onClick={() => {}}
+                  onClick={() => setConfirmDisableModal(true)}
                   type="button"
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
-                  Delete
+                  Disable
                 </button>
               </div>
             </CustomPopover>
@@ -92,30 +94,33 @@ const DashboardListTable = () => {
     },
   ];
   return (
-    <div className="w-full">
-      {muiDashboardMerchantsList?.length > 0 ? (
-        <DataGrid
-          rows={muiDashboardMerchantsList}
-          columns={columns}
-          sx={{
-            border: 0,
-          }}
-          rowHeight={70}
-          columnHeaderHeight={70}
-          disableRowSelectionOnClick
-          disableColumnMenu
-        />
-      ) : (
-        <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
-          <div>
-            <img src={TableLogo} alt="group_logo" />
+    <>
+      <div className="w-full">
+        {muiDashboardMerchantsList?.length > 0 ? (
+          <DataGrid
+            rows={muiDashboardMerchantsList}
+            columns={columns}
+            sx={{
+              border: 0,
+            }}
+            rowHeight={70}
+            columnHeaderHeight={70}
+            disableRowSelectionOnClick
+            disableColumnMenu
+            pagination
+          />
+        ) : (
+          <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
+            <div>
+              <img src={TableLogo} alt="group_logo" />
+            </div>
+            <div className="mt-8 text-center">
+              <h3 className="text-2xl font-bold">Oops! No Active Merchants</h3>
+            </div>
           </div>
-          <div className="mt-8 text-center">
-            <h3 className="text-2xl font-bold">Oops! No Active Merchants</h3>
-          </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 };
 

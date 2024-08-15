@@ -19,7 +19,7 @@ const Dashboard = () => {
       case AdminDashboardPageType.DashboardIndex:
         return <AdminDashboard setPageAction={setPageAction} setSelectedItem={setSelectedItem} />;
       case AdminDashboardPageType.ViewMerchantDetails:
-        return <MerchantDetails setPageAction={setPageAction} selectedItem={selectedItem} />;
+        return <MerchantDetails />;
       case AdminDashboardPageType.EditMerchantDetails:
         return <EditMerchant setPageAction={setPageAction} selectedItem={selectedItem} />;
       default:

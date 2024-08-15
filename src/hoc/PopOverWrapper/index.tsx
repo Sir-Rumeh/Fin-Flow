@@ -26,7 +26,7 @@ const CustomPopover = ({ popoverId, buttonIcon, children, translationX, translat
 
   return (
     <div className="">
-      <Button aria-describedby={id} onClick={handleClick} className="normal-case">
+      <Button aria-describedby={id} onClick={handleClick} className="w-full normal-case">
         {buttonIcon}
       </Button>
       <Popover
