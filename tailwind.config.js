@@ -28,6 +28,7 @@ module.exports = {
 				grayPrimary: "#F8F8F9",
 				graySecondary: "#F0F0F0",
 				yellowNeutral: "#78350F",
+				darkgray: "#74677B",
 				shadow: {
 					500: "rgba(112, 144, 176, 0.08)",
 				},

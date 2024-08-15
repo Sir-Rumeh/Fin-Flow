@@ -7,6 +7,7 @@ import {
 import dayjs from 'dayjs';
 import { useMemo } from 'react';
 import DataTable, { TableColumn } from 'react-data-table-component';
+import { Link } from 'react-router-dom';
 import { MandateDataRow } from 'utils/interfaces';
 
 const customStyles = {
@@ -19,7 +20,9 @@ const customStyles = {
   },
 };
 
-const MandateTableColumn: TableColumn<MandateDataRow>[] = [
+const MandateTableColumn: (
+  setView: React.Dispatch<React.SetStateAction<number>>,
+) => TableColumn<MandateDataRow>[] = (setView) => [
   {
     name: 'Account ID',
     selector: (row) => row.accountId,
@@ -58,7 +61,7 @@ const MandateTableColumn: TableColumn<MandateDataRow>[] = [
         return (
           <div className="flex items-center gap-2">
             <DisableRequestIcon />
-            <span className="text-yellowNeutral mb-[1px]">{row.requestType}</span>
+            <span className="mb-[1px] text-yellowNeutral">{row.requestType}</span>
           </div>
         );
       } else if (row.requestType === 'Deletion') {
@@ -87,11 +90,11 @@ const MandateTableColumn: TableColumn<MandateDataRow>[] = [
     cell: (row) =>
       useMemo(
         () => (
-          <button className="font-semibold text-lightPurple" onClick={() => {}}>
+          <div className="cursor-pointer font-semibold text-lightPurple" onClick={() => setView(2)}>
             View Details
-          </button>
+          </div>
         ),
-        [row.id],
+        [row.id, setView],
       ),
   },
 ];
@@ -207,9 +210,18 @@ const data = [
   },
 ];
 
-const MandateList = () => {
+type MandateListProps = {
+  setView: React.Dispatch<React.SetStateAction<number>>;
+};
+
+const MandateList = ({ setView }: MandateListProps) => {
   return (
-    <DataTable columns={MandateTableColumn} data={data} customStyles={customStyles} pagination />
+    <DataTable
+      columns={MandateTableColumn(setView)}
+      data={data}
+      customStyles={customStyles}
+      pagination
+    />
   );
 };
 
