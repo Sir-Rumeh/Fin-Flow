@@ -11,7 +11,11 @@ import TableFilter from 'components/TableFilter';
 import { merchantsList } from 'utils/constants';
 import DarkArrowDown from 'assets/icons/DarkArrowDown';
 
-const MerchantsList = ({ merchantStatus = 'approved' }: { merchantStatus: string }) => {
+const MerchantsList = ({
+  merchantStatus = 'approved',
+}: {
+  merchantStatus: 'pending' | 'approved' | 'rejected' | 'all';
+}) => {
   const [viewMerchant, setViewMerchant] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [merchantDetails, setMerchantDetails] = useState<number>();

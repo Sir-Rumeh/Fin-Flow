@@ -29,7 +29,7 @@ const Dashboard = () => {
 
   return (
     <>
-      <section className="">{pageDisplay()}</section>;{}
+      <section className="">{pageDisplay()}</section>
     </>
   );
 };

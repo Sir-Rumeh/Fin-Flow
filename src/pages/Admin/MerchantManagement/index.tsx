@@ -15,16 +15,7 @@ const MerchantManagement = () => {
         </div>
         <div className="">
           <div className="mt-5 bg-white px-5 py-3">
-            {/* <BasicTabs
-              initialIndex={state?.tabIndex}
-              tabList={[`Pending`, 'Approved', 'Rejected']}
-              tabPanel={[
-                <MerchantsList key="pending" merchantStatus="pending" />,
-                <MerchantsList key="approved" merchantStatus="approved" />,
-                <MerchantsList key="rejected" merchantStatus="rejected" />,
-              ]}
-            /> */}
-            <MerchantsList key="pending" merchantStatus="all" />,
+            <MerchantsList key="all" merchantStatus="all" />,
           </div>
         </div>
       </section>
