@@ -39,14 +39,6 @@ const CustomModal = ({ title, isOpen, setIsOpen, children, width = 'w-[700px]' }
       >
         <Box sx={boxStyle}>
           <div className="flex flex-col space-y-6">
-            <div className="flex items-center justify-between">
-              <Typography id="modal-modal-description" sx={{ fontSize: 20, fontWeight: 600 }}>
-                {title}
-              </Typography>
-              <button type="button" className="mr-3" onClick={() => setIsOpen(false)}>
-                <CloseIcon />
-              </button>
-            </div>
             <div className="px-5">{children}</div>
           </div>
         </Box>

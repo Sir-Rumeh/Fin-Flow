@@ -75,7 +75,7 @@ const DashboardListTable = () => {
                 </Link>
                 <Link
                   to={`/${appRoutes.adminDashboard.merchantManagement.merchantDetails}`}
-                  className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
+                  className="w-full px-3 py-2 text-start font-bold opacity-75 hover:bg-purpleSecondary"
                 >
                   Edit Details
                 </Link>
@@ -120,6 +120,17 @@ const DashboardListTable = () => {
           </div>
         )}
       </div>
+      {confirmDisableModal && (
+        <ModalWrapper
+          isOpen={confirmDisableModal}
+          setIsOpen={setConfirmDisableModal}
+          title={'Disable Merchant?'}
+          info={'You are about to disable this merchant, would you want to proceed with this?'}
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
+          proceedAction={() => {}}
+        />
+      )}
     </>
   );
 };

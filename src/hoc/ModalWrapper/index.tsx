@@ -34,7 +34,9 @@ export const ModalWrapper = ({
           {type === 'confirmation' && (
             <div className="mb-6 mt-8 flex items-center justify-center gap-x-5">
               <ButtonComponent
-                color="red"
+                color="#5C068C"
+                borderColor="#5C068C"
+                border={0.5}
                 width="15rem"
                 onClick={() => setIsOpen(false)}
                 title="No, Cancel"
