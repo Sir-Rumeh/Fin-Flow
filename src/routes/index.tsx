@@ -14,8 +14,11 @@ export default function Routing() {
         <Route path={appRoutes.login} element={<LoginPage />} />
         <Route path={`${appRoutes.adminLogin}`} element={<AdminLogin />} />
         <Route path={`${appRoutes.merchantLogin}`} element={<MerchantLogin />} />
-        <Route path={`${appRoutes.adminDashboard.index}/*`} element={<AdminRoutes />} />
-        <Route path={`${appRoutes.merchantDashboard.index}/*`} element={<MerchantRoutes />} />
+        <Route path={`${appRoutes.adminDashboard.dashboard.index}/*`} element={<AdminRoutes />} />
+        <Route
+          path={`${appRoutes.merchantDashboard.dashboard.index}/*`}
+          element={<MerchantRoutes />}
+        />
       </Routes>
     </BrowserRouter>
   );

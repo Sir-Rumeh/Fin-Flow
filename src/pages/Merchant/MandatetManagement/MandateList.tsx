@@ -20,9 +20,7 @@ const customStyles = {
   },
 };
 
-const MandateTableColumn: (
-  setView: React.Dispatch<React.SetStateAction<number>>,
-) => TableColumn<MandateDataRow>[] = (setView) => [
+const MandateTableColumn: TableColumn<MandateDataRow>[] = [
   {
     name: 'Account ID',
     selector: (row) => row.accountId,
@@ -43,35 +41,25 @@ const MandateTableColumn: (
     name: 'Request Type',
     selector: (row) => row.requestType,
     cell: (row) => {
-      if (row.requestType === 'Creation') {
-        return (
-          <div className="flex items-center gap-2">
-            <CreationRequestIcon />
-            <span className="mb-[1px] text-greenPrimary">{row.requestType}</span>
-          </div>
-        );
-      } else if (row.requestType === 'Update') {
-        return (
-          <div className="flex items-center gap-2">
-            <UpdateRequestIcon />
-            <span className="mb-[1px] text-lightPurple">{row.requestType}</span>
-          </div>
-        );
-      } else if (row.requestType === 'Disable') {
-        return (
-          <div className="flex items-center gap-2">
-            <DisableRequestIcon />
-            <span className="mb-[1px] text-yellowNeutral">{row.requestType}</span>
-          </div>
-        );
-      } else if (row.requestType === 'Deletion') {
-        return (
-          <div className="flex items-center gap-2">
-            <DeleteRequestIcon />
-            <span className="mb-[1px] text-redSecondary">{row.requestType}</span>
-          </div>
-        );
-      } else return <span>{row.requestType}</span>;
+      const renderIcon = (IconComponent: React.ComponentType, colorClass: string) => (
+        <div className="flex items-center gap-2">
+          <IconComponent />
+          <span className={`mb-[1px] ${colorClass}`}>{row.requestType}</span>
+        </div>
+      );
+
+      switch (row.requestType) {
+        case 'Creation':
+          return renderIcon(CreationRequestIcon, 'text-greenPrimary');
+        case 'Update':
+          return renderIcon(UpdateRequestIcon, 'text-lightPurple');
+        case 'Disable':
+          return renderIcon(DisableRequestIcon, 'text-yellowNeutral');
+        case 'Deletion':
+          return renderIcon(DeleteRequestIcon, 'text-redSecondary');
+        default:
+          return <span>{row.requestType}</span>;
+      }
     },
   },
   {
@@ -80,9 +68,13 @@ const MandateTableColumn: (
     cell: (row) =>
       useMemo(
         () => (
-          <>{`${row.dateRequested ? `${dayjs(row.dateRequested).format('DD/MM/YYYY')} | ${dayjs(row.dateRequested).format('hh:mm:ss A')}` : 'NA'} `}</>
+          <>
+            {row.dateRequested
+              ? `${dayjs(row.dateRequested).format('DD/MM/YYYY')} | ${dayjs(row.dateRequested).format('hh:mm:ss A')}`
+              : 'NA'}
+          </>
         ),
-        [row.id],
+        [row.dateRequested],
       ),
   },
   {
@@ -90,11 +82,14 @@ const MandateTableColumn: (
     cell: (row) =>
       useMemo(
         () => (
-          <div className="cursor-pointer font-semibold text-lightPurple" onClick={() => setView(2)}>
+          <Link
+            to={`/merchant/dashboard/mandate-details`}
+            className="cursor-pointer font-semibold text-lightPurple"
+          >
             View Details
-          </div>
+          </Link>
         ),
-        [row.id, setView],
+        [row.id],
       ),
   },
 ];
@@ -210,18 +205,9 @@ const data = [
   },
 ];
 
-type MandateListProps = {
-  setView: React.Dispatch<React.SetStateAction<number>>;
-};
-
-const MandateList = ({ setView }: MandateListProps) => {
+const MandateList = () => {
   return (
-    <DataTable
-      columns={MandateTableColumn(setView)}
-      data={data}
-      customStyles={customStyles}
-      pagination
-    />
+    <DataTable columns={MandateTableColumn} data={data} customStyles={customStyles} pagination />
   );
 };
 

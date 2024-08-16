@@ -3,7 +3,7 @@ import FormInput from 'components/FormElements/FormInput';
 import FcmbLogo from 'assets/icons/FcmbIcon';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import { BASE_ROUTES } from 'utils/constants/routes';
+import appRoutes, { BASE_ROUTES } from 'utils/constants/routes';
 import { userLoginValidationSchema } from 'utils/formValidators';
 
 const MerchantLogin = () => {
@@ -16,7 +16,7 @@ const MerchantLogin = () => {
     },
     validationSchema: userLoginValidationSchema,
     onSubmit: () => {
-      navigate(`/${BASE_ROUTES.MERCHANT}`);
+      navigate(`/${appRoutes.merchantDashboard.dashboard.index}`);
     },
   });
 
@@ -76,9 +76,8 @@ const MerchantLogin = () => {
                 type="submit"
                 width="26.187rem"
                 height="3rem"
-              >
-                Sign In
-              </ButtonComponent>
+                title="Sign In"
+              />
             </form>
 
             <div className="mb-20 flex items-center"></div>

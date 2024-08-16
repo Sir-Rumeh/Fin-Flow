@@ -8,6 +8,14 @@ export interface MerchantDataRow {
   action?: any;
 }
 
+export interface DashboardMerchantDataRow {
+  id: any;
+  merchantName: string;
+  accountNumber: string;
+  phoneNumber: string;
+  dateRequested: string;
+}
+
 export interface MandateDataRow {
   id: number;
   accountId: number;

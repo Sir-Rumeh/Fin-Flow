@@ -36,7 +36,7 @@ function DataTableBase<T>(props: TableProps<T>): JSX.Element {
         height: '70px',
         color: '#222823',
         opacity: '90%',
-        fontWeight: 600,
+        fontWeight: 400,
       },
     },
   };

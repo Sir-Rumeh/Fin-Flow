@@ -131,7 +131,7 @@
 }
 
 
-@keyframes slideDown {
+@keyframes fadeInDown {
 	0% {
 	  opacity: 0;
 	  transform: translateY(-10px);
@@ -141,9 +141,47 @@
 	  transform: translateY(0);
 	}
  }
+@keyframes slideDown {
+	0% {
+	  transform: translateY(-10px);
+	}
+	100% {
+	  transform: translateY(0);
+	}
+ }
 
+ @keyframes fadeInRight {
+	0% {
+	  /* opacity: 0; */
+	  transform: translateX(-10px);
+	}
+	100% {
+	  /* opacity: 1; */
+	  transform: translateX(0);
+	}
+ }
+
+ @keyframes slideRight {
+	0% {
+	  transform: translateX(-10px);
+	}
+	100% {
+	  transform: translateX(0);
+	}
+ }
+
+ .fade-in-down {
+	animation: fadeInDown 0.3s ease forwards;
+ }
  .slide-down {
 	animation: slideDown 0.3s ease forwards;
+ }
+ .fade-in-right {
+	animation: fadeInRight 0.2s ease forwards;
+ }
+
+ .slide-right {
+	animation: slideRight 0.4s ease forwards;
  }
 
 
@@ -153,3 +191,17 @@
 	}
 
 	
+/* MUI TABLE STYLING */
+	.ad-thead {
+		background-color: #F4F4F4;
+		font-size: 15px;
+  }
+  
+  .ag-thead {
+	background-color: #F4F4F4;
+	font-size: 17px;
+  }
+  
+  .bold-header {
+	font-weight: bold;
+  }

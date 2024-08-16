@@ -3,7 +3,7 @@ import Links from './Links';
 import { adminRoutes, merchantRoutes } from 'routes/appRoutes';
 import FcmbIcon from 'assets/icons//FcmbIcon';
 import SignoutIcon from 'assets/icons/SignoutIcon';
-import { Roles } from 'utils/enums';
+import { UserLoginRoles } from 'utils/enums';
 import { useNavigate } from 'react-router-dom';
 import { BASE_ROUTES } from 'utils/constants/routes';
 
@@ -33,9 +33,9 @@ const Sidebar = (props: {
         </div>
       </div>
       <div className="mb-7 mt-[10px]" />
-      <ul className="no-scrollbar mb-auto h-[70vh] overflow-y-scroll pt-1">
-        {userRole === Roles.Admin && <Links routes={adminRoutes} />}
-        {userRole === Roles.Merchant && <Links routes={merchantRoutes} />}
+      <ul className="no-scrollbar mb-auto h-[75vh] overflow-y-scroll pt-1">
+        {userRole === UserLoginRoles.Admin && <Links routes={adminRoutes} />}
+        {userRole === UserLoginRoles.Merchant && <Links routes={merchantRoutes} />}
       </ul>
       <div className="mt-auto flex h-full flex-col">
         <ul className="mt-auto flex items-center justify-start border-t border-gray-50 pt-1">

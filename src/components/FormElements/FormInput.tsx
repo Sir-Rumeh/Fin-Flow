@@ -33,10 +33,15 @@ const FormInput = (props: Props) => {
       value={props.value}
       color="secondary"
       placeholder={props.placeholder}
+      size="small"
       sx={{
         width: props.width,
         maxHeight: props.height ? props.height : '3rem',
-        marginBottom: '0.5rem',
+        height: props.height ? props.height : '3rem',
+        '& .MuiInputBase-root': {
+          height: '100%',
+          padding: '0',
+        },
       }}
       tabIndex={0}
       InputProps={{ readOnly: props.readonly, style: { borderRadius: '6px' } }}
