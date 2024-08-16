@@ -63,7 +63,8 @@ const AdminDashboard = ({ setPageAction, setSelectedItem }: AdminDashboardProps)
           </div>
         </div>
         <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[300px_1fr]">
-          <div className="slide-down rounded-md border bg-white p-4">
+          {/* <div className="mt-5 flex flex-col  gap-4 "> */}
+          <div className="slide-down w-full rounded-md border bg-white p-4 sm:w-[300px]">
             <div className="border-b pb-2">
               <h3 className="text-md font-semibold md:text-lg">Onboarded Merchant</h3>
             </div>
@@ -76,7 +77,10 @@ const AdminDashboard = ({ setPageAction, setSelectedItem }: AdminDashboardProps)
                   translationX={10}
                   translationY={50}
                 >
-                  <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm"></div>
+                  <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
+                    <div>Merchant</div>
+                    <div>Merchant</div>
+                  </div>
                 </CustomPopover>
               </h3>
             </div>

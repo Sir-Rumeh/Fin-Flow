@@ -93,7 +93,7 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
                       : 'text-white'
                   } w-full rounded-md px-3 py-2 pl-6 opacity-[100%] hover:bg-yellowPrimary hover:text-black`}
                 >
-                  {childRoute.name}
+                  <p className="z-[999]">{childRoute.name}</p>
                 </Link>
               );
             })}

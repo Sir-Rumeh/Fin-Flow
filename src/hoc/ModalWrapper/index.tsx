@@ -8,7 +8,7 @@ interface PopupProps {
   title: string;
   info: any;
   icon: JSX.Element;
-  type: string;
+  type: 'confirmation' | 'completed';
   proceedAction?: () => void;
 }
 
@@ -31,56 +31,37 @@ export const ModalWrapper = ({
           </div>
           <h2 className="mb-8 text-xl tracking-wider">{info}</h2>
 
-          {type === 'confirmation' && (
-            <div className="mb-6 mt-8 flex items-center justify-center gap-x-5">
-              <ButtonComponent
-                color="#5C068C"
-                borderColor="#5C068C"
-                border={0.5}
-                width="15rem"
-                onClick={() => setIsOpen(false)}
-                title="No, Cancel"
-              />
+          <div className="mt-[3rem]">
+            {type === 'confirmation' && (
+              <div className="mb-6 mt-8 flex items-center justify-center gap-x-5">
+                <ButtonComponent
+                  color="#5C068C"
+                  borderColor="#5C068C"
+                  border={0.5}
+                  width="15rem"
+                  onClick={() => setIsOpen(false)}
+                  title="No, Cancel"
+                />
 
+                <ButtonComponent
+                  color="white"
+                  width="15rem"
+                  variant="contained"
+                  onClick={() => proceedAction?.()}
+                  title="Yes Proceed"
+                />
+              </div>
+            )}
+            {type === 'completed' && (
               <ButtonComponent
-                color="white"
-                width="15rem"
                 variant="contained"
-                onClick={() => proceedAction?.()}
-                title="Yes Proceed"
-              />
-            </div>
-          )}
-          {type === 'reject' && (
-            <div className="flex w-full items-center justify-between">
-              <ButtonComponent
-                color="#5C068C"
-                borderColor="#5C068C"
-                border={0.5}
-                width="19rem"
+                color="white"
+                type="button"
+                title="Okay"
                 onClick={() => setIsOpen(false)}
-                title="No, Cancel"
               />
-
-              <ButtonComponent
-                color="white"
-                backgroundColor="#F34E4E"
-                width="19rem"
-                variant="contained"
-                onClick={() => proceedAction?.()}
-                title="Yes Proceed"
-              />
-            </div>
-          )}
-          {type === 'completed' && (
-            <ButtonComponent
-              variant="contained"
-              color="white"
-              type="button"
-              title="Okay"
-              onClick={() => setIsOpen(false)}
-            />
-          )}
+            )}
+          </div>
         </div>
       </Modal>
     </>
