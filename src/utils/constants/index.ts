@@ -1,4 +1,4 @@
-import { MerchantDataRow, DashboardMerchantDataRow } from 'utils/interfaces';
+import { MerchantDataRow, DashboardMerchantDataRow, MandateDataRow } from 'utils/interfaces';
 
 export const merchantsList: MerchantDataRow[] = [
   {
@@ -171,5 +171,44 @@ export const muiDashboardMerchantsList: DashboardMerchantDataRow[] = [
     accountNumber: '1234567890',
     phoneNumber: '0810283789',
     dateRequested: '2024-03-25T12:00:00-06:30',
+  },
+];
+
+export const mandateList: MandateDataRow[] = [
+  {
+    id: 1,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Creation',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 2,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Update',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 3,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Disable',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 4,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Deletion',
+    dateRequested: '2015-03-25T12:00:00-06:30',
   },
 ];

@@ -16,6 +16,16 @@ export interface DashboardMerchantDataRow {
   dateRequested: string;
 }
 
+export interface MandateDataRow {
+  id: number;
+  accountId: number;
+  merchantId: number;
+  mandateCode: number;
+  mandateType: string;
+  requestType: string;
+  dateRequested: string;
+}
+
 export interface DataTableState {
   resetPaginationToggle: boolean;
   pageSize: number;
