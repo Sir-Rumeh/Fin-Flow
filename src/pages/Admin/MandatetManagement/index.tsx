@@ -1,7 +1,7 @@
 const MandatetManagement = () => {
   return (
     <>
-      <div>MandatetManagement</div>
+      <div>MandateManagement</div>
     </>
   );
 };

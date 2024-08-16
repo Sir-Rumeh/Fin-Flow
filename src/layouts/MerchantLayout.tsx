@@ -26,7 +26,7 @@ export default function MerchantLayout() {
         <main className={`flex-none transition-all`}>
           <div className="">
             <Navbar onOpenSidenav={() => setOpen(true)} />
-            <div className="mx-auto mb-auto min-h-[93vh] bg-backgroundColor md:p-2">
+            <div className="no-scrollbar mx-auto mb-auto h-[90vh] bg-backgroundColor md:p-2">
               <Outlet />
             </div>
           </div>

@@ -15,7 +15,8 @@ declare global {
     path: string;
     secondary?: booleant;
     hasChildren?: boolean;
-    children?: RoutesChildren[];
     rolesWithAccess?: string[];
+    willChildLinkShow: boolean;
+    children?: RoutesChildren[];
   }
 }

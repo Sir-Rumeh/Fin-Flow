@@ -24,17 +24,20 @@ import MerchantMandateManagement from 'pages/Merchant/MandatetManagement';
 import MerchantUserManagement from 'pages/Merchant/UserManagement';
 import MerchantAuditTrail from 'pages/Merchant/AuditTrail';
 import MerchantReports from 'pages/Merchant/Reports';
-import { Roles } from 'utils/enums';
+import { UserLoginRoles } from 'utils/enums';
 import { BASE_ROUTES } from 'utils/constants/routes';
+import MerchantDetails from 'pages/Admin/MerchantManagement/MerchantDetails';
+import MerchantDashboardMandateDetails from 'pages/Merchant/Dashboard/MerchantDashboardMandateDetails';
 
-const adminRoutes = [
+const adminRoutes: RoutesType[] = [
   {
     name: 'Dashboard',
     layout: `/${BASE_ROUTES.ADMIN}`,
     path: 'dashboard',
     icon: <DashboardIcon />,
     component: <AdminDashboard />,
-    rolesWithAccess: [Roles.Admin],
+    rolesWithAccess: [UserLoginRoles.Admin],
+    willChildLinkShow: false,
   },
   {
     name: 'Requests',
@@ -42,7 +45,8 @@ const adminRoutes = [
     path: 'requests',
     icon: <RequestIcon />,
     component: <AdminMerchantRequests />,
-    rolesWithAccess: [Roles.Admin],
+    rolesWithAccess: [UserLoginRoles.Admin],
+    willChildLinkShow: true,
     children: [
       {
         name: 'Merchant Requests',
@@ -72,7 +76,15 @@ const adminRoutes = [
     path: 'merchant-management',
     icon: <MerchantIcon />,
     component: <AdminMerchantManagement />,
-    rolesWithAccess: [Roles.Admin],
+    rolesWithAccess: [UserLoginRoles.Admin],
+    willChildLinkShow: false,
+    children: [
+      {
+        name: 'Merchant Details',
+        path: 'merchant-details',
+        component: <MerchantDetails />,
+      },
+    ],
   },
   {
     name: 'Mandate Management',
@@ -80,7 +92,8 @@ const adminRoutes = [
     path: 'mandate-management',
     icon: <MandateIcon />,
     component: <AdminMandateManagement />,
-    rolesWithAccess: [Roles.Admin],
+    rolesWithAccess: [UserLoginRoles.Admin],
+    willChildLinkShow: false,
   },
   {
     name: 'Profile Management',
@@ -88,7 +101,8 @@ const adminRoutes = [
     path: 'profile-management',
     icon: <ProfileIcon />,
     component: <AdminProfileManagement />,
-    rolesWithAccess: [Roles.Admin],
+    rolesWithAccess: [UserLoginRoles.Admin],
+    willChildLinkShow: false,
   },
   {
     name: 'Account Management',
@@ -96,7 +110,8 @@ const adminRoutes = [
     path: 'account-management',
     icon: <AccountIcon />,
     component: <AdminAccountManagement />,
-    rolesWithAccess: [Roles.Admin],
+    rolesWithAccess: [UserLoginRoles.Admin],
+    willChildLinkShow: false,
   },
   {
     name: 'Audit Trail',
@@ -104,7 +119,8 @@ const adminRoutes = [
     path: 'audit-trail',
     icon: <AuditIcon />,
     component: <AdminAuditTrail />,
-    rolesWithAccess: [Roles.Admin],
+    rolesWithAccess: [UserLoginRoles.Admin],
+    willChildLinkShow: false,
   },
   {
     name: 'Reports',
@@ -112,18 +128,27 @@ const adminRoutes = [
     path: 'reports',
     icon: <ReportIcon />,
     component: <AdminReports />,
-    rolesWithAccess: [Roles.Admin],
+    rolesWithAccess: [UserLoginRoles.Admin],
+    willChildLinkShow: false,
   },
 ];
 
-const merchantRoutes = [
+const merchantRoutes: RoutesType[] = [
   {
     name: 'Dashboard',
     layout: `/${BASE_ROUTES.MERCHANT}`,
     path: 'dashboard',
     icon: <DashboardIcon />,
     component: <MerchantDashboard />,
-    rolesWithAccess: [Roles.Merchant],
+    rolesWithAccess: [UserLoginRoles.Merchant],
+    willChildLinkShow: false,
+    children: [
+      {
+        name: 'Mandate Details',
+        path: 'mandate-details',
+        component: <MerchantDashboardMandateDetails />,
+      },
+    ],
   },
   {
     name: 'Requests',
@@ -131,7 +156,8 @@ const merchantRoutes = [
     path: 'requests/mandates',
     icon: <RequestIcon />,
     component: <MerchantRequests />,
-    rolesWithAccess: [Roles.Merchant],
+    rolesWithAccess: [UserLoginRoles.Merchant],
+    willChildLinkShow: false,
   },
   {
     name: 'Mandate Management',
@@ -139,7 +165,8 @@ const merchantRoutes = [
     path: 'mandate-management',
     icon: <MandateIcon />,
     component: <MerchantMandateManagement />,
-    rolesWithAccess: [Roles.Merchant],
+    rolesWithAccess: [UserLoginRoles.Merchant],
+    willChildLinkShow: false,
   },
   {
     name: 'User Management',
@@ -147,7 +174,8 @@ const merchantRoutes = [
     path: 'user-management',
     icon: <ProfileIcon />,
     component: <MerchantUserManagement />,
-    rolesWithAccess: [Roles.Merchant],
+    rolesWithAccess: [UserLoginRoles.Merchant],
+    willChildLinkShow: false,
   },
   {
     name: 'Audit Trail',
@@ -155,7 +183,8 @@ const merchantRoutes = [
     path: 'audit-trail',
     icon: <AuditIcon />,
     component: <MerchantAuditTrail />,
-    rolesWithAccess: [Roles.Merchant],
+    rolesWithAccess: [UserLoginRoles.Merchant],
+    willChildLinkShow: false,
   },
   {
     name: 'Reports',
@@ -163,7 +192,8 @@ const merchantRoutes = [
     path: 'reports',
     icon: <ReportIcon />,
     component: <MerchantReports />,
-    rolesWithAccess: [Roles.Merchant],
+    rolesWithAccess: [UserLoginRoles.Merchant],
+    willChildLinkShow: false,
   },
 ];
 

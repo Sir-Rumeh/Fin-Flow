@@ -6,7 +6,8 @@ type Props = {
   children?: JSX.Element | string;
   width?: string;
   height?: string;
-  border?: string;
+  border?: number;
+  borderColor?: string;
   variant?: 'contained' | 'outlined' | 'text';
   type?: 'button' | 'submit' | 'reset';
   fullWidth?: boolean;
@@ -15,11 +16,12 @@ type Props = {
   hoverColor?: string;
   backgroundColor?: string;
   hoverBackgroundColor?: string;
+  title: string;
 };
 
 const ButtonComponent = (props: Props) => {
   return (
-    <div>
+    <div className="flex h-full flex-col items-center justify-center">
       <Button
         disabled={props.disabled}
         onClick={props.onClick}
@@ -36,14 +38,20 @@ const ButtonComponent = (props: Props) => {
           },
           background: props.backgroundColor,
           border: props.border,
+          borderColor: props.borderColor,
           textTransform: 'capitalize',
           fontSize: 16,
+          display: 'flex',
+          alignContent: 'center',
+          justifyContent: 'flex',
+          rowGap: '2px',
+          padding: '5px',
         }}
         fullWidth={props.fullWidth}
         startIcon={props.startIcon}
         color="primary"
       >
-        {props.children}
+        {props.title} {props.children}
       </Button>
     </div>
   );

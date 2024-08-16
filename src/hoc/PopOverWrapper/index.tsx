@@ -25,8 +25,8 @@ const CustomPopover = ({ popoverId, buttonIcon, children, translationX, translat
   const id = open ? `simple-popover${popoverId.toString()}` : undefined;
 
   return (
-    <div>
-      <Button aria-describedby={id} onClick={handleClick}>
+    <div className="">
+      <Button aria-describedby={id} onClick={handleClick} className="w-full normal-case">
         {buttonIcon}
       </Button>
       <Popover
