@@ -28,6 +28,9 @@ import { UserLoginRoles } from 'utils/enums';
 import { BASE_ROUTES } from 'utils/constants/routes';
 import MerchantDetails from 'pages/Admin/MerchantManagement/MerchantDetails';
 import MerchantDashboardMandateDetails from 'pages/Merchant/Dashboard/MerchantDashboardMandateDetails';
+import CreationRequestDetails from 'pages/Merchant/Requests/request-details/CreationRequestDetails';
+import UpdateRequestDetails from 'pages/Merchant/Requests/request-details/UpdateRequestDetails';
+import DisableRequestDetails from 'pages/Merchant/Requests/request-details/DisableRequestDetails';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -158,6 +161,23 @@ const merchantRoutes: RoutesType[] = [
     component: <MerchantRequests />,
     rolesWithAccess: [UserLoginRoles.Merchant],
     willChildLinkShow: false,
+    children: [
+      {
+        name: 'Create Request Details',
+        path: 'creation-request-details',
+        component: <CreationRequestDetails />,
+      },
+      {
+        name: 'Update Request Details',
+        path: 'update-request-details',
+        component: <UpdateRequestDetails />,
+      },
+      {
+        name: 'Disable Request Details',
+        path: 'disable-request-details',
+        component: <DisableRequestDetails />,
+      },
+    ],
   },
   {
     name: 'Mandate Management',

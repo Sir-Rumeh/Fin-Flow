@@ -49,6 +49,9 @@ export const appRoutes = {
     },
     requests: {
       index: `${BASE_ROUTES.MERCHANT}/requests/mandates`,
+      createRequestDetails: `${BASE_ROUTES.MERCHANT}/requests/mandates/creation-request-details`,
+      updateRequestDetails: `${BASE_ROUTES.MERCHANT}/requests/mandates/update-request-details`,
+      disableRequestDetails: `${BASE_ROUTES.MERCHANT}/requests/mandates/disable-request-details`,
     },
     mandateManagement: {
       index: `${BASE_ROUTES.ADMIN}/mandate-management`,
