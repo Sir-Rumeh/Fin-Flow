@@ -13,6 +13,9 @@ const MerchantDetails = () => {
   const { pathname } = useLocation();
 
   const isDashboardRoute = checkRoute(pathname, 'dashboard');
+  const isRequestRoute = checkRoute(pathname, 'requests');
+
+  const isItemUpdated = true;
 
   const ApproverIcon = () => {
     return (
@@ -52,6 +55,7 @@ const MerchantDetails = () => {
               textColor="text-purplePrimary"
               icon={<SubTitleIconGreen />}
               route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
+              // navigate to MerchantAccounts which will import table from Account Management
             />
             <DashboardCard
               title="Total Profiles"
@@ -60,6 +64,7 @@ const MerchantDetails = () => {
               textColor="text-purplePrimary"
               icon={<SubTitleIconYellow />}
               route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
+              // navigate to MerchantProfiles which will import table from Profile Management
             />
             <DashboardCard
               title="Total Mandates"
@@ -68,6 +73,7 @@ const MerchantDetails = () => {
               textColor="text-purplePrimary"
               icon={<SubTitleIconYellow />}
               route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
+              // navigate to MerchantMandates  which will import table from Mandate  Management
             />
           </div>
         </div>
@@ -113,6 +119,21 @@ const MerchantDetails = () => {
             </div>
           </ItemDetailsContainer>
         </div>
+        {isItemUpdated && isRequestRoute && (
+          <div className="mt-10">
+            <ItemDetailsContainer title="Requested By">
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="ID" content="9344243" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Requested By" content="John Doe" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Date Requested" content="12/12/2024 : 03:00pm" />
+              </div>
+            </ItemDetailsContainer>
+          </div>
+        )}
       </div>
     </div>
   );

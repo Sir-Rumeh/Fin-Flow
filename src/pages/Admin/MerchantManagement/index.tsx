@@ -8,7 +8,7 @@ const MerchantManagement = () => {
   return (
     <>
       <section className="p-2 md:p-4">
-        <div className="fade-in-down flex items-center justify-between">
+        <div className="fade-in-down my-2 flex items-center justify-between">
           <div>
             <h1 className="text-lg font-semibold md:text-2xl">Merchant Management</h1>
           </div>

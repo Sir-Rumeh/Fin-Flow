@@ -1,5 +1,5 @@
 const MerchantAccounts = () => {
-  return <div>MerchantAccounts</div>;
+  return <div>Import Accounts Table component here</div>;
 };
 
 export default MerchantAccounts;

@@ -1,5 +1,5 @@
 const MerchantProfileDetails = () => {
-  return <div>MerchantProfileDetails</div>;
+  return <div>Import Profile Details component here</div>;
 };
 
 export default MerchantProfileDetails;

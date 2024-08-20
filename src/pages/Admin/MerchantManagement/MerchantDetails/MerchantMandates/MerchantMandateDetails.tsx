@@ -1,5 +1,5 @@
 const MerchantMandateDetails = () => {
-  return <div>MerchantMandateDetails</div>;
+  return <div>Import Mandate Details component here</div>;
 };
 
 export default MerchantMandateDetails;

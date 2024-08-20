@@ -7,7 +7,7 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
   const navigate = useNavigate();
   const [isChildrenOpen, setIsChildrenOpen] = useState(false);
   const [pathToMaintain, setPathToMaintain] = useState('');
-  const initialRoute = route.layout + '/' + route.path;
+  const initialRoute = route.layout + '/' + route.path.replace('/*', '');
 
   const activeRoute = (routeName: string) => {
     return location.pathname.includes(routeName);
@@ -23,25 +23,15 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
 
   return (
     <>
-      <Link
+      <div
         key={route.layout + route.path}
-        to={isParentRouteActive ? pathToMaintain : initialRoute}
         onClick={() => {
           setIsChildrenOpen(!isChildrenOpen);
-          if (isParentRouteActive) {
-            const firstChildPath = route.children?.[0].path;
-            if (firstChildPath) {
-              const isFirstChildRouteActive = location.pathname.includes(firstChildPath);
-              if (!isFirstChildRouteActive) {
-                navigate(`/admin`);
-              }
-            }
-          }
         }}
-        className={`${isParentRouteActive && !isChildrenOpen ? 'mb-3' : ''} ${
+        className={`${isChildrenOpen ? '' : 'mb-3'} ${
           isParentRouteActive
             ? 'fade-in-right relative flex border-r-[5px] border-yellowPrimary bg-[linear-gradient(89.92deg,_#60088C_0.07%,_#A11E90_92.22%)] px-2 py-3 hover:cursor-pointer'
-            : 'relative mb-3 flex px-2 py-3 hover:cursor-pointer hover:bg-[#69397a]'
+            : 'relative flex px-2 py-3 hover:cursor-pointer hover:bg-[#69397a]'
         }`}
       >
         <div className="w-full">
@@ -76,17 +66,17 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
             <div className="absolute right-0 top-px h-9 w-1 rounded-lg bg-purpleGradient" />
           ) : null}
         </div>
-      </Link>
-      {isChildrenOpen && isParentRouteActive && (
+      </div>
+      {isChildrenOpen && (
         <div className="fade-in-down mb-3 p-1">
           <div className="mb-3 flex flex-col items-start justify-center gap-y-1 bg-purpleSecondary px-6 pb-4 pt-2">
             {route.children?.map((childRoute: any) => {
-              const isChildRouteActive = activeRoute(childRoute.path);
+              const isChildRouteActive = activeRoute(childRoute.path.replace('/*', ''));
 
               return (
                 <Link
                   key={childRoute.path}
-                  to={route.layout + '/' + route.path + '/' + childRoute.path}
+                  to={route.layout + '/' + route.path + '/' + childRoute.path.replace('/*', '')}
                   className={`${
                     isChildRouteActive
                       ? 'slide-right blur:none bg-yellowPrimary font-semibold text-black opacity-[100%]'

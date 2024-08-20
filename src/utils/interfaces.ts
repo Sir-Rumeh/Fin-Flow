@@ -14,6 +14,10 @@ export interface DashboardMerchantDataRow {
   accountNumber: string;
   phoneNumber: string;
   dateRequested: string;
+  dateUpdated: string;
+  status: string;
+  requestType: string;
+  cif: string;
 }
 
 export interface MandateDataRow {

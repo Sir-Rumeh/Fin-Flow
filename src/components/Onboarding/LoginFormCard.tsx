@@ -50,6 +50,7 @@ const LoginFormCard = ({
                     color="white"
                     width="15rem"
                     variant="contained"
+                    title=""
                     onClick={() => formik.handleSubmit()}
                   />
                 </div>

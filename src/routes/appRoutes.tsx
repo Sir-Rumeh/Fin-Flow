@@ -25,7 +25,7 @@ import MerchantUserManagement from 'pages/Merchant/UserManagement';
 import MerchantAuditTrail from 'pages/Merchant/AuditTrail';
 import MerchantReports from 'pages/Merchant/Reports';
 import { UserLoginRoles } from 'utils/enums';
-import { BASE_ROUTES } from 'utils/constants/routes';
+import appRoutes, { BASE_ROUTES } from 'utils/constants/routes';
 import MerchantDetails from 'pages/Admin/MerchantManagement/MerchantDetails';
 import MerchantDashboardMandateDetails from 'pages/Merchant/Dashboard/MerchantDashboardMandateDetails';
 import CreationRequestDetails from 'pages/Merchant/Requests/request-details/CreationRequestDetails';
@@ -34,6 +34,7 @@ import DisableRequestDetails from 'pages/Merchant/Requests/request-details/Disab
 import DeletionRequestDetails from 'pages/Merchant/Requests/request-details/DeletionRequestDetails';
 import AdminDashboardMerchantDetails from 'pages/Admin/Dashboard/DashboardMerchantDetails';
 import AdminDashboardEditMerchant from 'pages/Admin/Dashboard/DashboardEditMerchant';
+import MerchantRequestsRoutes from 'pages/Admin/Requests/MerchantRequests/MerchantRequestsRoutes';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -68,8 +69,8 @@ const adminRoutes: RoutesType[] = [
     children: [
       {
         name: 'Merchant Requests',
-        path: 'merchants',
-        component: <AdminMerchantRequests />,
+        path: `merchants/*`,
+        component: <MerchantRequestsRoutes />,
       },
       {
         name: 'Mandate Requests',

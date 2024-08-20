@@ -139,7 +139,7 @@ const DashboardListTable = () => {
 
   return (
     <>
-      <div className="w-full">
+      <div className="slide-down w-full">
         {muiDashboardMerchantsList?.length > 0 ? (
           <DataGrid
             rows={muiDashboardMerchantsList}
@@ -160,13 +160,13 @@ const DashboardListTable = () => {
             disableColumnMenu
             pagination
             onPaginationModelChange={handlePageSizeChange}
-            pageSizeOptions={[5, 10, 20, 30]}
+            pageSizeOptions={[10, 20, 30]}
             paginationModel={{ page: tableData.pageNumber, pageSize: tableData.pageSize }}
             paginationMode="server"
             rowCount={100}
           />
         ) : (
-          <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
+          <div className="slide-down mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
             <div>
               <img src={TableLogo} alt="group_logo" />
             </div>

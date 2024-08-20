@@ -18,7 +18,13 @@ export const appRoutes = {
     },
     requests: {
       index: `${BASE_ROUTES.ADMIN}/requests/merchants`,
-      merchantRequests: `${BASE_ROUTES.ADMIN}/requests/merchants`,
+      merchantRequests: {
+        index: `${BASE_ROUTES.ADMIN}/requests/merchants`,
+        merchantCreationRequest: `${BASE_ROUTES.ADMIN}/requests/merchants/creation-request-details`,
+        merchantDeletionRequest: `${BASE_ROUTES.ADMIN}/requests/merchants/deletion-request-details`,
+        merchantUpdateRequest: `${BASE_ROUTES.ADMIN}/requests/merchants/update-request-details`,
+        merchantDisableRequest: `${BASE_ROUTES.ADMIN}/requests/merchants/disable-request-details`,
+      },
       mandateRequests: `${BASE_ROUTES.ADMIN}/requests/mandates`,
       accountRequests: `${BASE_ROUTES.ADMIN}/requests/accounts`,
       profileRequests: `${BASE_ROUTES.ADMIN}/requests/profiles`,

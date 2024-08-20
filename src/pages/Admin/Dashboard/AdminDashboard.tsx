@@ -1,13 +1,9 @@
-import { Dispatch, useState } from 'react';
-import { AdminDashboardPageType } from 'utils/enums';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import DashboardListTable from './DashboardListTable';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
-import { Link } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
-import ArrowRightIcon from 'assets/icons/ArrowRight';
 import DashboardCard from 'components/common/DashboardCards/DashboardCard';
 
 const AdminDashboard = () => {
@@ -50,8 +46,8 @@ const AdminDashboard = () => {
 
   return (
     <>
-      <div className="p-2 md:p-4">
-        <div className="fade-in-down flex items-center justify-between">
+      <section className="p-2 md:p-4">
+        <div className="fade-in-down my-2 flex items-center justify-between">
           <div>
             <h1 className="text-lg font-semibold md:text-2xl">Welcome Back, Anita!</h1>
           </div>
@@ -112,10 +108,10 @@ const AdminDashboard = () => {
             />
           </div>
         </div>
-        <div className="slide-down relative mt-5 flex items-center justify-center rounded-md bg-white p-2 md:p-4">
+        <div className="relative mt-5 flex items-center justify-center rounded-md bg-white p-2 md:p-4">
           <DashboardListTable />
         </div>
-      </div>
+      </section>
     </>
   );
 };
