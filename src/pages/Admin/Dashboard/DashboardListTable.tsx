@@ -1,4 +1,4 @@
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { DataGrid, gridClasses, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import ButtonComponent from 'components/FormElements/Button';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import { muiDashboardMerchantsList } from 'utils/constants';
@@ -14,9 +14,12 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 const DashboardListTable = () => {
   const [confirmDisableModal, setConfirmDisableModal] = useState(false);
   const [actionSuccessfulModal, setActionSuccessfulModal] = useState(false);
+  const [tableData, setTableData] = useState({
+    pageNumber: 0,
+    pageSize: 10,
+  });
 
   const navigate = useNavigate();
-  const id = '1';
   const columns: GridColDef[] = [
     {
       field: 'merchantName',
@@ -57,7 +60,7 @@ const DashboardListTable = () => {
         const handleClick = () => {
           navigate({
             pathname: appRoutes.adminDashboard.merchantManagement.index,
-            search: `?${createSearchParams({ id })}`,
+            search: `?${createSearchParams({ id: params?.row.id })}`,
           });
         };
         return (
@@ -85,7 +88,7 @@ const DashboardListTable = () => {
                   onClick={() =>
                     navigate({
                       pathname: `/${appRoutes.adminDashboard.dashboard.editMerchant}`,
-                      search: `?${createSearchParams({ id })}`,
+                      search: `?${createSearchParams({ id: params?.row.id })}`,
                     })
                   }
                   type="button"
@@ -100,6 +103,12 @@ const DashboardListTable = () => {
                 >
                   Disable
                 </button>
+                <button
+                  type="button"
+                  className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
+                >
+                  Delete
+                </button>
               </div>
             </CustomPopover>
           </div>
@@ -107,6 +116,27 @@ const DashboardListTable = () => {
       },
     },
   ];
+
+  const handlePageSizeChange = (newPageSize: { page: number; pageSize: number }) => {
+    if (newPageSize.pageSize !== tableData.pageSize) {
+      setTableData((prev) => {
+        return {
+          ...prev,
+          pageSize: newPageSize.pageSize,
+          pageNumber: 0,
+        };
+      });
+    } else {
+      setTableData((prev) => {
+        return {
+          ...prev,
+          pageSize: newPageSize.pageSize,
+          pageNumber: newPageSize.page,
+        };
+      });
+    }
+  };
+
   return (
     <>
       <div className="w-full">
@@ -116,12 +146,24 @@ const DashboardListTable = () => {
             columns={columns}
             sx={{
               border: 0,
+              [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]: {
+                outline: 'none',
+              },
+              [`& .${gridClasses.columnHeader}:focus, & .${gridClasses.columnHeader}:focus-within`]:
+                {
+                  outline: 'none',
+                },
             }}
             rowHeight={70}
             columnHeaderHeight={70}
             disableRowSelectionOnClick
             disableColumnMenu
             pagination
+            onPaginationModelChange={handlePageSizeChange}
+            pageSizeOptions={[5, 10, 20, 30]}
+            paginationModel={{ page: tableData.pageNumber, pageSize: tableData.pageSize }}
+            paginationMode="server"
+            rowCount={100}
           />
         ) : (
           <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">

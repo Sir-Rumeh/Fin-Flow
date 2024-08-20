@@ -147,8 +147,6 @@ const MerchantsListTable = ({
                 paginationServer
                 paginationIconFirstPage={null}
                 paginationIconLastPage={null}
-                // paginationTotalRows={merchantsList?.totalNumberOfItems}
-                // pagination={merchantsList?.totalNumberOfItems >= 11}
                 paginationResetDefaultPage={dataTableState.resetPaginationToggle}
                 onChangeRowsPerPage={(newPerPage: any) => {
                   setDataTableState?.((prev) => {

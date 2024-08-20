@@ -1,5 +1,7 @@
+import EditMerchant from '../MerchantManagement/EditMerchant';
+
 const DashboardEditMerchant = () => {
-  return <div>DashboardEditMerchant</div>;
+  return <EditMerchant />;
 };
 
 export default DashboardEditMerchant;

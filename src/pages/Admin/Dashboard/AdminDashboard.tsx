@@ -83,6 +83,7 @@ const AdminDashboard = () => {
                 title="Total Onboarded Merchants"
                 numberOfRequest={1200}
                 backgroundColor="bg-extraLightPurple"
+                textColor="text-purplePrimary"
                 route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
               />
             </div>
