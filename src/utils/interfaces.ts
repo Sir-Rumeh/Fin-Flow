@@ -1,3 +1,9 @@
+export interface TabsProps {
+  tabIndex: number;
+  tabName: string;
+  tabTotal: number;
+}
+
 export interface MerchantDataRow {
   id: number;
   merchantName: string;

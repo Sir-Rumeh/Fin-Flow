@@ -33,7 +33,7 @@ const ButtonComponent = (props: Props) => {
         variant={props.variant}
         type={props.type}
         sx={{
-          width: props.width ? props.width : '26.187rem',
+          width: props.width ? props.width : '100%',
           height: props.height ? props.height : '3rem',
           borderRadius: '6px',
           color: props.color,

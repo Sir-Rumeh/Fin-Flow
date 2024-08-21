@@ -1,23 +1,18 @@
-import { DataGrid, gridClasses, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import ButtonComponent from 'components/FormElements/Button';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import { muiDashboardMerchantsList } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
-import TableLogo from 'assets/images/table_logo.png';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
 import { useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
+import CustomTable from 'components/CustomTable';
 
 const DashboardListTable = () => {
-  const [confirmDisableModal, setConfirmDisableModal] = useState(false);
+  const [confirmDisableMerchant, setConfirmDisableMerchant] = useState(false);
   const [actionSuccessfulModal, setActionSuccessfulModal] = useState(false);
-  const [tableData, setTableData] = useState({
-    pageNumber: 0,
-    pageSize: 10,
-  });
 
   const navigate = useNavigate();
   const columns: GridColDef[] = [
@@ -34,6 +29,7 @@ const DashboardListTable = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      sortable: false,
     },
     {
       field: 'phoneNumber',
@@ -41,6 +37,7 @@ const DashboardListTable = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      sortable: false,
     },
 
     {
@@ -97,7 +94,7 @@ const DashboardListTable = () => {
                   Edit Details
                 </button>
                 <button
-                  onClick={() => setConfirmDisableModal(true)}
+                  onClick={() => setConfirmDisableMerchant(true)}
                   type="button"
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
@@ -117,75 +114,21 @@ const DashboardListTable = () => {
     },
   ];
 
-  const handlePageSizeChange = (newPageSize: { page: number; pageSize: number }) => {
-    if (newPageSize.pageSize !== tableData.pageSize) {
-      setTableData((prev) => {
-        return {
-          ...prev,
-          pageSize: newPageSize.pageSize,
-          pageNumber: 0,
-        };
-      });
-    } else {
-      setTableData((prev) => {
-        return {
-          ...prev,
-          pageSize: newPageSize.pageSize,
-          pageNumber: newPageSize.page,
-        };
-      });
-    }
-  };
-
   return (
     <>
-      <div className="slide-down w-full">
-        {muiDashboardMerchantsList?.length > 0 ? (
-          <DataGrid
-            rows={muiDashboardMerchantsList}
-            columns={columns}
-            sx={{
-              border: 0,
-              [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]: {
-                outline: 'none',
-              },
-              [`& .${gridClasses.columnHeader}:focus, & .${gridClasses.columnHeader}:focus-within`]:
-                {
-                  outline: 'none',
-                },
-            }}
-            rowHeight={70}
-            columnHeaderHeight={70}
-            disableRowSelectionOnClick
-            disableColumnMenu
-            pagination
-            onPaginationModelChange={handlePageSizeChange}
-            pageSizeOptions={[10, 20, 30]}
-            paginationModel={{ page: tableData.pageNumber, pageSize: tableData.pageSize }}
-            paginationMode="server"
-            rowCount={100}
-          />
-        ) : (
-          <div className="slide-down mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
-            <div>
-              <img src={TableLogo} alt="group_logo" />
-            </div>
-            <div className="mt-8 text-center">
-              <h3 className="text-2xl font-bold">Oops! No Active Merchants</h3>
-            </div>
-          </div>
-        )}
+      <div className="w-full">
+        <CustomTable tableData={muiDashboardMerchantsList} columns={columns} rowCount={20} />
       </div>
-      {confirmDisableModal && (
+      {confirmDisableMerchant && (
         <ModalWrapper
-          isOpen={confirmDisableModal}
-          setIsOpen={setConfirmDisableModal}
+          isOpen={confirmDisableMerchant}
+          setIsOpen={setConfirmDisableMerchant}
           title={'Disable Merchant?'}
           info={'You are about to disable this merchant, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            setConfirmDisableModal(false);
+            setConfirmDisableMerchant(false);
             setActionSuccessfulModal(true);
           }}
         />

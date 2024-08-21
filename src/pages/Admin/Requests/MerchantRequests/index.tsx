@@ -3,12 +3,8 @@ import MerchantRequestsListTable from './MerchantRequestsListTable';
 import { pendingDashboardMerchantsList } from 'utils/constants';
 import ButtonComponent from 'components/FormElements/Button';
 import TableFilter from 'components/TableFilter';
-
-interface TabsProps {
-  tabIndex: number;
-  tabName: string;
-  tabTotal: number;
-}
+import { TabsProps } from 'utils/interfaces';
+import CustomTabs from 'hoc/CustomTabs';
 
 const MerchantRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -41,48 +37,21 @@ const MerchantRequests = () => {
         </div>
         <div className="">
           <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-4">
-            <div className="flex w-full flex-col items-center justify-between border-b pb-3 md:flex-row">
-              <div className="flex w-[50%] items-center justify-start gap-8">
-                {tabs?.map((tab) => {
-                  return (
-                    <div className={`relative flex items-center`} key={tab.tabIndex}>
-                      <ButtonComponent
-                        width="9rem"
-                        height="3rem"
-                        onClick={() => {
-                          if (!(activeTab === tab.tabName)) {
-                            setActiveTab(tab.tabName);
-                          }
-                        }}
-                        textSize={40}
-                      >
-                        <span
-                          className={`flex w-full items-center justify-start gap-2 py-3 text-base ${activeTab === tab.tabName ? 'border-b-2 border-purplePrimary' : ''}`}
-                        >
-                          <span
-                            className={`flex items-center font-semibold ${activeTab === tab.tabName ? '' : 'text-blackInput'}`}
-                          >
-                            {tab.tabName}
-                          </span>
-
-                          <span className="rounded-2xl border border-purpleSecondary bg-purple-100 px-2">
-                            {tab.tabTotal}
-                          </span>
-                        </span>
-                      </ButtonComponent>
-                    </div>
-                  );
-                })}
+            <div className="flex w-full flex-col items-center justify-between gap-y-4 border-b pb-3 lg:flex-row">
+              <div className="flex w-full items-center justify-start gap-8 lg:w-[50%]">
+                <CustomTabs tabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
               </div>
-              <div className="flex w-[50%] items-center justify-start">
-                <TableFilter
-                  name={'searchMerchantName'}
-                  placeholder={'Search Merchant Name'}
-                  label={'Search Merchant'}
-                  value={searchTerm}
-                  handleFilter={() => setSearchTerm('')}
-                  setSearch={setSearchTerm}
-                />
+              <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-end">
+                <div className="">
+                  <TableFilter
+                    name={'searchMerchantName'}
+                    placeholder={'Search Merchant Name'}
+                    label={'Search Merchant'}
+                    value={searchTerm}
+                    handleFilter={() => setSearchTerm('')}
+                    setSearch={setSearchTerm}
+                  />
+                </div>
               </div>
             </div>
 
