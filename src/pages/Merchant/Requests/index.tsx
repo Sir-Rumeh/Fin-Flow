@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import {
@@ -9,12 +9,13 @@ import {
   UpdateRequestIcon,
 } from 'assets/icons';
 import { BiSearch } from 'react-icons/bi';
-import { mandateList, muiDashboardMerchantsList } from 'utils/constants';
+import { approvedMandateList, pendingMandateList, rejectedMandateList } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
 import TableLogo from 'assets/images/table_logo.png';
+import { useTabContext } from '../../../context/TabContext';
 
 const MandateRequests = () => {
-  const [tab, setTab] = useState(1);
+  const { tab, setTab } = useTabContext();
 
   const MandateTableColumn: GridColDef[] = [
     {
@@ -92,9 +93,11 @@ const MandateRequests = () => {
             ? appRoutes.merchantDashboard.requests.createRequestDetails
             : params.row.requestType === 'Update'
               ? appRoutes.merchantDashboard.requests.updateRequestDetails
-              : params.row.requestType === 'DIsable'
+              : params.row.requestType === 'Disable'
                 ? appRoutes.merchantDashboard.requests.disableRequestDetails
-                : null;
+                : params.row.requestType === 'Deletion'
+                  ? appRoutes.merchantDashboard.requests.deletionRequestDetails
+                  : null;
 
         if (!route) return <span>View Details</span>;
 
@@ -106,6 +109,19 @@ const MandateRequests = () => {
       },
     },
   ];
+
+  const getCurrentMandateList = () => {
+    switch (tab) {
+      case 1:
+        return pendingMandateList;
+      case 2:
+        return approvedMandateList;
+      case 3:
+        return rejectedMandateList;
+      default:
+        return [];
+    }
+  };
 
   return (
     <>
@@ -165,9 +181,9 @@ const MandateRequests = () => {
           </div>
           <div className="mt-4 h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-6 w-full">
-            {muiDashboardMerchantsList?.length > 0 ? (
+            {getCurrentMandateList()?.length > 0 ? (
               <DataGrid
-                rows={mandateList}
+                rows={getCurrentMandateList()}
                 columns={MandateTableColumn}
                 sx={{
                   border: 0,

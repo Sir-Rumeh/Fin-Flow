@@ -31,6 +31,7 @@ import MerchantDashboardMandateDetails from 'pages/Merchant/Dashboard/MerchantDa
 import CreationRequestDetails from 'pages/Merchant/Requests/request-details/CreationRequestDetails';
 import UpdateRequestDetails from 'pages/Merchant/Requests/request-details/UpdateRequestDetails';
 import DisableRequestDetails from 'pages/Merchant/Requests/request-details/DisableRequestDetails';
+import DeletionRequestDetails from 'pages/Merchant/Requests/request-details/DeletionRequestDetails';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -176,6 +177,11 @@ const merchantRoutes: RoutesType[] = [
         name: 'Disable Request Details',
         path: 'disable-request-details',
         component: <DisableRequestDetails />,
+      },
+      {
+        name: 'Deletion Request Details',
+        path: 'deletion-request-details',
+        component: <DeletionRequestDetails />,
       },
     ],
   },

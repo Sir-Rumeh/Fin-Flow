@@ -54,9 +54,7 @@ module.exports = {
          '@typescript-eslint/no-explicit-any':'off',
          'react/require-default-props': 'off',
          'no-undef': 'off',
-         "@typescript-eslint/no-explicit-any": "off",
          'react/react-in-jsx-scope': 'off',
- 
          'arrow-body-style': 'off',
        },
      },

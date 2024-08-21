@@ -174,7 +174,112 @@ export const muiDashboardMerchantsList: DashboardMerchantDataRow[] = [
   },
 ];
 
-export const mandateList: MandateDataRow[] = [
+export const pendingMandateList: MandateDataRow[] = [
+  {
+    id: 1,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Creation',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 2,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Update',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 3,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Disable',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 4,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Deletion',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 5,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Disable',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+];
+
+export const approvedMandateList: MandateDataRow[] = [
+  {
+    id: 1,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Creation',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 2,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Update',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 3,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Disable',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 4,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Deletion',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 5,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Disable',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 5,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Disable',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+];
+
+export const rejectedMandateList: MandateDataRow[] = [
   {
     id: 1,
     accountId: 126473,

@@ -1,14 +1,22 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { SuccessModalIcon, UpdateRequestIcon } from 'assets/icons';
+import {
+  CreationRequestIcon,
+  DeleteRequestIcon,
+  SuccessModalIcon,
+  UpdateRequestIcon,
+} from 'assets/icons';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import ButtonComponent from 'components/FormElements/Button';
 import { BiChevronRight } from 'react-icons/bi';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import appRoutes from 'utils/constants/routes';
+import { useTabContext } from '../../../../context/TabContext';
 
 const UpdateRequestDetails = () => {
+  const { tab } = useTabContext();
+
   const [confirmApproveModal, setConfirmApproveModal] = useState(false);
   const [confirmRejectModal, setConfirmRejectModal] = useState(false);
   const [approveSuccessModal, setApproveSuccessModal] = useState(false);
@@ -44,24 +52,36 @@ const UpdateRequestDetails = () => {
       </div>
       <div className="mt-4 flex items-center justify-between">
         <h2 className="mt-3 text-xl font-semibold">Request ID : Req123456</h2>
-        <div className="flex items-center gap-4">
+        {tab === 1 && (
+          <div className="flex items-center gap-4">
+            <ButtonComponent
+              onClick={() => setConfirmRejectModal(true)}
+              title="Reject"
+              color="#5C068C"
+              border={2}
+              width="150px"
+              height="50px"
+            />
+            <ButtonComponent
+              onClick={() => setConfirmApproveModal(true)}
+              title="Approve"
+              backgroundColor="#5C068C"
+              color="white"
+              width="150px"
+              height="50px"
+            />
+          </div>
+        )}
+        {tab === 2 && (
           <ButtonComponent
-            onClick={() => setConfirmRejectModal(true)}
-            title="Reject"
-            color="#5C068C"
-            border={2}
-            width="150px"
-            height="50px"
-          />
-          <ButtonComponent
-            onClick={() => setConfirmApproveModal(true)}
-            title="Approve"
+            onClick={() => {}}
+            title="View Request Details"
             backgroundColor="#5C068C"
             color="white"
-            width="150px"
+            width="200px"
             height="50px"
           />
-        </div>
+        )}
       </div>
       <div className="mt-5 rounded-lg bg-white px-5 py-10">
         <div className="flex flex-col items-center justify-between gap-10 md:flex-row">
@@ -196,6 +216,56 @@ const UpdateRequestDetails = () => {
             </div>
           </div>
         </div>
+        {tab === 2 && (
+          <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+            <div className="flex items-center justify-between">
+              <p className="my-3 text-lg font-semibold">Account Approval Details</p>
+              <div className="flex items-center gap-2">
+                <CreationRequestIcon />
+                <p className="text-greenPrimary">Variable</p>
+              </div>
+            </div>
+            <div className="h-[2px] w-full bg-grayPrimary"></div>
+            <div className="mt-4 flex flex-col justify-between gap-5 md:flex-row md:gap-0">
+              <div className="flex w-[300px] flex-col gap-8">
+                <DetailsCard title="ID" content="12345678" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-8">
+                <DetailsCard title="Approved By" content="Vekee James Ventures" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-8">
+                <DetailsCard title="Date Approved" content="15/11/2023 - 12:12:12" />
+              </div>
+            </div>
+          </div>
+        )}
+        {tab === 3 && (
+          <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+            <div className="flex items-center justify-between">
+              <p className="my-3 text-lg font-semibold">Rejected By</p>
+              <div className="flex items-center gap-2">
+                <DeleteRequestIcon />
+                <p className="text-greenPrimary">Rejected</p>
+              </div>
+            </div>
+            <div className="h-[2px] w-full bg-grayPrimary"></div>
+            <div className="mt-4 flex flex-col justify-between gap-5 md:flex-row md:gap-0">
+              <div className="flex w-[300px] flex-col gap-8">
+                <DetailsCard title="ID" content="12345678" />
+                <DetailsCard
+                  title="Reason for Rejection"
+                  content="Any reason for rejection can be here"
+                />
+              </div>
+              <div className="flex w-[300px] flex-col gap-8">
+                <DetailsCard title="Rejected By" content="Vekee James Ventures" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-8">
+                <DetailsCard title="Date Rejected" content="15/11/2023 - 12:12:12" />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       {confirmRejectModal && (
         <ModalWrapper

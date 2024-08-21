@@ -45,13 +45,14 @@ export const appRoutes = {
   merchantDashboard: {
     dashboard: {
       index: `${BASE_ROUTES.MERCHANT}`,
-      mandateDetails: `${BASE_ROUTES.MERCHANT}/mandate-details`,
+      mandateDetails: `${BASE_ROUTES.MERCHANT}/dashboard/mandate-details`,
     },
     requests: {
       index: `${BASE_ROUTES.MERCHANT}/requests/mandates`,
       createRequestDetails: `${BASE_ROUTES.MERCHANT}/requests/mandates/creation-request-details`,
       updateRequestDetails: `${BASE_ROUTES.MERCHANT}/requests/mandates/update-request-details`,
       disableRequestDetails: `${BASE_ROUTES.MERCHANT}/requests/mandates/disable-request-details`,
+      deletionRequestDetails: `${BASE_ROUTES.MERCHANT}/requests/mandates/deletion-request-details`,
     },
     mandateManagement: {
       index: `${BASE_ROUTES.ADMIN}/mandate-management`,

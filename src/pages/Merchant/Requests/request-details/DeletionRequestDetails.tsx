@@ -9,7 +9,7 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import appRoutes from 'utils/constants/routes';
 import { useTabContext } from '../../../../context/TabContext';
 
-const DisableRequestDetails = () => {
+const DeletionRequestDetails = () => {
   const { tab } = useTabContext();
 
   const [confirmApproveModal, setConfirmApproveModal] = useState(false);
@@ -276,4 +276,4 @@ const DisableRequestDetails = () => {
   );
 };
 
-export default DisableRequestDetails;
+export default DeletionRequestDetails;
