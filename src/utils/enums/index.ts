@@ -8,3 +8,10 @@ export enum AdminDashboardPageType {
   ViewMerchantDetails = 'ViewMerchantDetails',
   EditMerchantDetails = 'EditMerchantDetails',
 }
+
+export enum RequestType {
+  Creation = 'Creation',
+  Update = 'Update',
+  Disable = 'Disable',
+  Deletion = 'Deletion',
+}

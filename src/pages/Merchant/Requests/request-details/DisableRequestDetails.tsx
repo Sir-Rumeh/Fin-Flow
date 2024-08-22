@@ -12,10 +12,20 @@ import { useTabContext } from '../../../../context/TabContext';
 const DisableRequestDetails = () => {
   const { tab } = useTabContext();
 
-  const [confirmApproveModal, setConfirmApproveModal] = useState(false);
-  const [confirmRejectModal, setConfirmRejectModal] = useState(false);
-  const [approveSuccessModal, setApproveSuccessModal] = useState(false);
-  const [rejectSuccessModal, setRejectSuccessModal] = useState(false);
+  const [modals, setModals] = useState({
+    confirmApprove: false,
+    confirmReject: false,
+    approveSuccess: false,
+    rejectSuccess: false,
+  });
+
+  const openModal = (modalName: keyof typeof modals) => {
+    setModals((prev) => ({ ...prev, [modalName]: true }));
+  };
+
+  const closeModal = (modalName: keyof typeof modals) => {
+    setModals((prev) => ({ ...prev, [modalName]: false }));
+  };
 
   const RejectInfo = (
     <>
@@ -50,7 +60,7 @@ const DisableRequestDetails = () => {
         {tab === 1 && (
           <div className="flex items-center gap-4">
             <ButtonComponent
-              onClick={() => setConfirmRejectModal(true)}
+              onClick={() => openModal('confirmReject')}
               title="Reject"
               color="#5C068C"
               border={2}
@@ -58,7 +68,7 @@ const DisableRequestDetails = () => {
               height="50px"
             />
             <ButtonComponent
-              onClick={() => setConfirmApproveModal(true)}
+              onClick={() => openModal('confirmApprove')}
               title="Approve"
               backgroundColor="#5C068C"
               color="white"
@@ -218,58 +228,54 @@ const DisableRequestDetails = () => {
           </div>
         )}
       </div>
-      {confirmRejectModal && (
+      {modals.confirmReject && (
         <ModalWrapper
-          isOpen={confirmRejectModal}
-          setIsOpen={setConfirmRejectModal}
+          isOpen={modals.confirmReject}
+          setIsOpen={() => closeModal('confirmReject')}
           title={'Reject Request?'}
           info={RejectInfo}
           icon={<RedAlertIcon />}
           type={'reject'}
           proceedAction={() => {
-            setConfirmRejectModal(false);
-            setRejectSuccessModal(true);
+            closeModal('confirmReject');
+            openModal('rejectSuccess');
           }}
         />
       )}
-      {confirmApproveModal && (
+      {modals.confirmApprove && (
         <ModalWrapper
-          isOpen={confirmApproveModal}
-          setIsOpen={setConfirmApproveModal}
+          isOpen={modals.confirmApprove}
+          setIsOpen={() => closeModal('confirmApprove')}
           title={'Approve Request?'}
           info={'You are about to approve this request, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            setConfirmApproveModal(false);
-            setApproveSuccessModal(true);
+            closeModal('confirmApprove');
+            openModal('approveSuccess');
           }}
         />
       )}
-      {approveSuccessModal && (
+      {modals.approveSuccess && (
         <ModalWrapper
-          isOpen={approveSuccessModal}
-          setIsOpen={setApproveSuccessModal}
+          isOpen={modals.approveSuccess}
+          setIsOpen={() => closeModal('approveSuccess')}
           title={'Success!!'}
           info={'You have successfully approved this new request'}
           icon={<SuccessModalIcon />}
           type={'completed'}
-          proceedAction={() => {
-            setApproveSuccessModal(false);
-          }}
+          proceedAction={() => closeModal('approveSuccess')}
         />
       )}
-      {rejectSuccessModal && (
+      {modals.rejectSuccess && (
         <ModalWrapper
-          isOpen={rejectSuccessModal}
-          setIsOpen={setRejectSuccessModal}
+          isOpen={modals.rejectSuccess}
+          setIsOpen={() => closeModal('rejectSuccess')}
           title={'Success!!'}
           info={'You have successfully rejected this new request'}
           icon={<SuccessModalIcon />}
           type={'completed'}
-          proceedAction={() => {
-            setRejectSuccessModal(false);
-          }}
+          proceedAction={() => closeModal('rejectSuccess')}
         />
       )}
     </div>

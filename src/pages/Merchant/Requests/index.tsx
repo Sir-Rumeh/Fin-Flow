@@ -1,5 +1,4 @@
-import { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import {
   CreationRequestIcon,
@@ -13,6 +12,8 @@ import { approvedMandateList, pendingMandateList, rejectedMandateList } from 'ut
 import appRoutes from 'utils/constants/routes';
 import TableLogo from 'assets/images/table_logo.png';
 import { useTabContext } from '../../../context/TabContext';
+import { RequestType } from 'utils/enums';
+import Tab from 'components/Tabs';
 
 const MandateRequests = () => {
   const { tab, setTab } = useTabContext();
@@ -61,13 +62,13 @@ const MandateRequests = () => {
         );
 
         switch (params.value) {
-          case 'Creation':
+          case RequestType.Creation:
             return renderIcon(CreationRequestIcon, 'text-greenPrimary');
-          case 'Update':
+          case RequestType.Update:
             return renderIcon(UpdateRequestIcon, 'text-lightPurple');
-          case 'Disable':
+          case RequestType.Disable:
             return renderIcon(DisableRequestIcon, 'text-yellowNeutral');
-          case 'Deletion':
+          case RequestType.Deletion:
             return renderIcon(DeleteRequestIcon, 'text-redSecondary');
           default:
             return <span>{params.value}</span>;
@@ -130,39 +131,30 @@ const MandateRequests = () => {
         <div className="mt-5 rounded-lg bg-white px-5 py-5">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-10">
-              <div className="flex cursor-pointer flex-col gap-2" onClick={() => setTab(1)}>
-                <div className="flex items-center gap-2">
-                  <p className={`font-semibold ${tab === 1 ? 'text-blue-500' : 'text-yellow-500'}`}>
-                    Pending
-                  </p>
-                  <span className="rounded-[20px] bg-graySecondary px-3 py-[1px] text-sm text-blue-500">
-                    20
-                  </span>
-                </div>
-                <div className={tab === 1 ? 'h-[2px] w-full bg-blue-500' : ''}></div>
-              </div>
-              <div className="flex cursor-pointer flex-col gap-2" onClick={() => setTab(2)}>
-                <div className="flex items-center gap-2">
-                  <p className={`font-semibold ${tab === 2 ? 'text-blue-500' : 'text-green-500'}`}>
-                    Approved
-                  </p>
-                  <span className="rounded-[20px] bg-graySecondary px-3 py-[1px] text-sm text-blue-500">
-                    20
-                  </span>
-                </div>
-                <div className={tab === 2 ? 'h-[2px] w-full bg-blue-500' : ''}></div>
-              </div>
-              <div className="flex cursor-pointer flex-col gap-2" onClick={() => setTab(3)}>
-                <div className="flex items-center gap-2">
-                  <p className={`font-semibold ${tab === 3 ? 'text-blue-500' : 'text-red-500'} `}>
-                    Rejected
-                  </p>
-                  <span className="rounded-[20px] bg-graySecondary px-3 py-[1px] text-sm text-blue-500">
-                    20
-                  </span>
-                </div>
-                <div className={tab === 3 ? 'h-[2px] w-full bg-blue-500' : ''}></div>
-              </div>
+              <Tab
+                label="Pending"
+                count={20}
+                isActive={tab === 1}
+                onClick={() => setTab(1)}
+                activeColor="blue-500"
+                inactiveColor="yellow-500"
+              />
+              <Tab
+                label="Approved"
+                count={20}
+                isActive={tab === 2}
+                onClick={() => setTab(2)}
+                activeColor="blue-500"
+                inactiveColor="green-500"
+              />
+              <Tab
+                label="Rejected"
+                count={20}
+                isActive={tab === 3}
+                onClick={() => setTab(3)}
+                activeColor="blue-500"
+                inactiveColor="red-500"
+              />
             </div>
             <div className="flex items-center gap-3">
               <button className="flex cursor-pointer items-center gap-3 rounded-lg border border-lightPurple px-4 py-2 text-lightPurple">
