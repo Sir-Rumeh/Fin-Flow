@@ -12,7 +12,7 @@ interface Props {
   width?: string;
 }
 
-const CustomModal = ({ title, isOpen, setIsOpen, children, width = 'w-[700px]' }: Props) => {
+const CustomModal = ({ title, isOpen, setIsOpen, children, width = '700px' }: Props) => {
   const boxStyle = {
     position: 'absolute',
     display: 'flex',

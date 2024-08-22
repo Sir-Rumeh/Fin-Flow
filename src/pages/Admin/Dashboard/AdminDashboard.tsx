@@ -8,15 +8,9 @@ import PopoverTitle from 'components/common/PopoverTitle';
 import { Link } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
 import ArrowRightIcon from 'assets/icons/ArrowRight';
+import DashboardCard from 'components/common/DashboardCards/DashboardCard';
 
-// import CustomModal from 'hoc/ModalWrapper';
-
-interface AdminDashboardProps {
-  setPageAction: React.Dispatch<React.SetStateAction<AdminDashboardPageType>>;
-  setSelectedItem: Dispatch<React.SetStateAction<number | string>>;
-}
-
-const AdminDashboard = ({ setPageAction, setSelectedItem }: AdminDashboardProps) => {
+const AdminDashboard = () => {
   const barAxisX = [
     'JAN',
     'FEB',
@@ -85,18 +79,12 @@ const AdminDashboard = ({ setPageAction, setSelectedItem }: AdminDashboardProps)
               </h3>
             </div>
             <div className="mt-6 flex items-center justify-start gap-x-4">
-              <div className="bg-extraLightPurple h-[160px] w-[340px] rounded-[8px] px-4 py-3">
-                <p className="my-1 text-lg font-semibold">Total Onboarded Merchants</p>
-                <p className="text-[35px] font-bold">1200</p>
-                <div className="mt-4 h-[2px] w-full bg-gray-200"></div>
-                <Link
-                  to={`/${appRoutes.adminDashboard.merchantManagement.index}`}
-                  className="mt-2 flex items-center gap-3"
-                >
-                  <span className="text-lightPurple">View all</span>
-                  <ArrowRightIcon />
-                </Link>
-              </div>
+              <DashboardCard
+                title="Total Onboarded Merchants"
+                numberOfRequest={1200}
+                backgroundColor="bg-extraLightPurple"
+                route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
+              />
             </div>
           </div>
           <div className="slide-down relative overflow-x-scroll rounded-md border bg-white p-4 lg:overflow-hidden">
@@ -112,7 +100,7 @@ const AdminDashboard = ({ setPageAction, setSelectedItem }: AdminDashboardProps)
                   label: 'Month',
                   colorMap: {
                     type: 'piecewise',
-                    thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
+                    thresholds: [],
                     colors: ['#FFE3A4'],
                   },
                 },

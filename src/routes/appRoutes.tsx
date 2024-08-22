@@ -32,6 +32,8 @@ import CreationRequestDetails from 'pages/Merchant/Requests/request-details/Crea
 import UpdateRequestDetails from 'pages/Merchant/Requests/request-details/UpdateRequestDetails';
 import DisableRequestDetails from 'pages/Merchant/Requests/request-details/DisableRequestDetails';
 import DeletionRequestDetails from 'pages/Merchant/Requests/request-details/DeletionRequestDetails';
+import AdminDashboardMerchantDetails from 'pages/Admin/Dashboard/DashboardMerchantDetails';
+import AdminDashboardEditMerchant from 'pages/Admin/Dashboard/DashboardEditMerchant';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -42,6 +44,18 @@ const adminRoutes: RoutesType[] = [
     component: <AdminDashboard />,
     rolesWithAccess: [UserLoginRoles.Admin],
     willChildLinkShow: false,
+    children: [
+      {
+        name: 'Merchant Details',
+        path: 'merchant-details',
+        component: <AdminDashboardMerchantDetails />,
+      },
+      {
+        name: 'Edit Merchant',
+        path: 'edit-merchant',
+        component: <AdminDashboardEditMerchant />,
+      },
+    ],
   },
   {
     name: 'Requests',

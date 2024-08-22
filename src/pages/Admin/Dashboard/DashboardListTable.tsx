@@ -9,9 +9,11 @@ import PopoverTitle from 'components/common/PopoverTitle';
 import { useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
+import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 
 const DashboardListTable = () => {
   const [confirmDisableModal, setConfirmDisableModal] = useState(false);
+  const [actionSuccessfulModal, setActionSuccessfulModal] = useState(false);
 
   const navigate = useNavigate();
   const id = '1';
@@ -67,18 +69,30 @@ const DashboardListTable = () => {
               translationY={50}
             >
               <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
-                <Link
-                  to={`/${appRoutes.adminDashboard.merchantManagement.merchantDetails}`}
-                  className="w-full px-3 py-2 text-start font-bold opacity-75 hover:bg-purpleSecondary"
+                <button
+                  onClick={() =>
+                    navigate({
+                      pathname: `/${appRoutes.adminDashboard.dashboard.merchantDetails}`,
+                      search: `?${createSearchParams({ id: params?.row.id })}`,
+                    })
+                  }
+                  type="button"
+                  className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
                 >
                   View Details
-                </Link>
-                <Link
-                  to={`/${appRoutes.adminDashboard.merchantManagement.merchantDetails}`}
-                  className="w-full px-3 py-2 text-start font-bold opacity-75 hover:bg-purpleSecondary"
+                </button>
+                <button
+                  onClick={() =>
+                    navigate({
+                      pathname: `/${appRoutes.adminDashboard.dashboard.editMerchant}`,
+                      search: `?${createSearchParams({ id })}`,
+                    })
+                  }
+                  type="button"
+                  className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
                 >
                   Edit Details
-                </Link>
+                </button>
                 <button
                   onClick={() => setConfirmDisableModal(true)}
                   type="button"
@@ -128,7 +142,23 @@ const DashboardListTable = () => {
           info={'You are about to disable this merchant, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
-          proceedAction={() => {}}
+          proceedAction={() => {
+            setConfirmDisableModal(false);
+            setActionSuccessfulModal(true);
+          }}
+        />
+      )}
+      {actionSuccessfulModal && (
+        <ModalWrapper
+          isOpen={actionSuccessfulModal}
+          setIsOpen={setActionSuccessfulModal}
+          title={'Success!!'}
+          info={'You have successfully disabled this merchant'}
+          icon={<ActionSuccessIcon />}
+          type={'completed'}
+          proceedAction={() => {
+            setActionSuccessfulModal(false);
+          }}
         />
       )}
     </>

@@ -13,7 +13,8 @@ export const appRoutes = {
   adminDashboard: {
     dashboard: {
       index: `${BASE_ROUTES.ADMIN}`,
-      merchantDetails: `${BASE_ROUTES.ADMIN}/merchant-details`,
+      merchantDetails: `${BASE_ROUTES.ADMIN}/dashboard/merchant-details`,
+      editMerchant: `${BASE_ROUTES.ADMIN}/dashboard/edit-merchant`,
     },
     requests: {
       index: `${BASE_ROUTES.ADMIN}/requests/merchants`,
