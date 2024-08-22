@@ -12,6 +12,7 @@ import FormInput from 'components/FormElements/FormInput';
 import { useFormik } from 'formik';
 import { reasonForRejectionSchema } from 'utils/formValidators';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
+import { UpdateRequestIcon } from 'assets/icons';
 
 const MandateUpdateRequestDetails = () => {
   const [confirmApproveRequest, setConfirmApproveRequest] = useState(false);
@@ -32,13 +33,13 @@ const MandateUpdateRequestDetails = () => {
       <div className="px-5 py-1">
         <div className="slide-down flex items-center gap-2 text-lg">
           <Link
-            to={`/${appRoutes.adminDashboard.requests.merchantRequests.index}`}
+            to={`/${appRoutes.adminDashboard.requests.mandateRequests.index}`}
             className="cursor-pointer text-darkgray"
           >
-            Merchant Requests
+            Mandate Requests
           </Link>{' '}
           <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
-          <span className="text-lightPurple">Merchant Update Request Details</span>
+          <span className="text-lightPurple">Mandate Update Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
           <h2 className="text-lg font-semibold md:text-2xl">Request ID : Req123456</h2>
@@ -77,23 +78,113 @@ const MandateUpdateRequestDetails = () => {
           <div className="">
             <ItemDetailsContainer title="Old Information">
               <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Merchant Name" content="Fair Money" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="CIF Number" content="12345" />
+                <DetailsCard title="Old Amount" content="N50,000" />
               </div>
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="New Information">
               <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Merchant Name" content="Fair Money" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="CIF Number" content="12345" />
+                <DetailsCard title="Old Amount" content="N100,000" />
               </div>
             </ItemDetailsContainer>
           </div>
+          <div className="mt-10">
+            <ItemDetailsContainer
+              title="Mandate Creation Details"
+              titleExtension={
+                <>
+                  <div className="flex items-center justify-end gap-2">
+                    <p className="text-sm text-darkgray">Mandate Type</p>
+                    <UpdateRequestIcon />
+                    <p className="mb-[1px] font-semibold text-lightPurple">Variable</p>
+                  </div>
+                </>
+              }
+            >
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Account ID" content="1234545" />
+                <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
+                <DetailsCard title="Effective Date" content="12/12/2024" />
+                <DetailsCard title="Frequency" content="Monthly" />
+                <DetailsCard title="Account Number" content="0909887674" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Merchant ID" content="1234545" />
+                <DetailsCard title="Merchant ID" content="1234545" />
+                <DetailsCard title="End Date" content="12/12/2024" />
+                <DetailsCard title="Service" content="Life Insurance" />
+                <DetailsCard title="Account Name" content="Fair Money" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Merchant Code" content="1234545" />
+                <DetailsCard title="Amount" content="N5,000,000" />
+                <DetailsCard title="Day to Apply" content="13th" />
+                <DetailsCard title="Narration" content="Mandate Narration" />
+                <DetailsCard title="Bank Code" content="1234545" />
+              </div>
+            </ItemDetailsContainer>
+          </div>
+
+          <div className="mt-10">
+            <ItemDetailsContainer title="Payer Details">
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Payer Name" content="Ugobest Venture" />
+                <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Email Address" content="ugobest@gmal.com" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Phone Number" content="09093874628" />
+              </div>
+            </ItemDetailsContainer>
+          </div>
+          <div className="mt-10">
+            <ItemDetailsContainer title="Payee Details">
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Payer Name" content="Ugobest Venture" />
+                <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Email Address" content="ugobest@gmal.com" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Phone Number" content="09093874628" />
+              </div>
+            </ItemDetailsContainer>
+          </div>
+          <div className="mt-10">
+            <ItemDetailsContainer title="Biller Details">
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Biller Account Number" content="9093874628" />
+                <DetailsCard title="Biller Code" content="123545" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Bank Name" content="Access" />
+                <DetailsCard title="Bank Code" content=";74628" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Account Name" content="Ugobest Venture" />
+              </div>
+            </ItemDetailsContainer>
+          </div>
+
+          <div className="mt-10">
+            <ItemDetailsContainer title="Creator Details">
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="ID" content="9344243" />
+                <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Created By" content="John Doe" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
+              </div>
+            </ItemDetailsContainer>
+          </div>
+
           <div className="mt-10">
             <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
               <div className="flex w-[300px] flex-col gap-10">
@@ -126,9 +217,9 @@ const MandateUpdateRequestDetails = () => {
         <ModalWrapper
           isOpen={confirmApproveRequest}
           setIsOpen={setConfirmApproveRequest}
-          title={'Approve Merchant Request?'}
+          title={'Approve Mandate Request?'}
           info={
-            'You are about to approve this merchant update request, would you want to proceed with this?'
+            'You are about to approve this Mandate update request, would you want to proceed with this?'
           }
           icon={<RedAlertIcon />}
           type={'confirmation'}
@@ -144,7 +235,7 @@ const MandateUpdateRequestDetails = () => {
           isOpen={approveSuccessfulModal}
           setIsOpen={setApproveSuccessfulModal}
           title={'Success!!'}
-          info={'You have successfully approved this merchant update request'}
+          info={'You have successfully approved this Mandate update request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -158,9 +249,9 @@ const MandateUpdateRequestDetails = () => {
           isOpen={confirmRejectRequest}
           width="700px"
           setIsOpen={setConfirmRejectRequest}
-          title={'Reject Merchant Request?'}
+          title={'Reject Mandate Request?'}
           info={
-            'You are about to reject this merchant update request, would you want to proceed with this?'
+            'You are about to reject this Mandate update request, would you want to proceed with this?'
           }
           feedback={
             <div className="w-full px-9">
@@ -198,7 +289,7 @@ const MandateUpdateRequestDetails = () => {
           isOpen={rejectSuccessfulModal}
           setIsOpen={setRejectSuccessfulModal}
           title={'Success!!'}
-          info={'You have successfully rejected this merchant update request'}
+          info={'You have successfully rejected this Mandate update request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
