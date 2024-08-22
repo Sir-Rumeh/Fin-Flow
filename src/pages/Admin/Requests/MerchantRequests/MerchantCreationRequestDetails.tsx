@@ -84,7 +84,7 @@ const MerchantCreationRequestDetails = () => {
             <ItemDetailsContainer title="Merchant Details">
               <div className="flex w-[300px] flex-col gap-10">
                 <DetailsCard title="Merchant ID" content="12345" />
-                <DetailsCard title="CIF" content="12345" />
+                <DetailsCard title="CIF Number" content="12345" />
               </div>
               <div className="flex w-[300px] flex-col gap-10">
                 <DetailsCard title="Merchant Name" content="Fair Money" />
@@ -143,7 +143,9 @@ const MerchantCreationRequestDetails = () => {
           isOpen={confirmApproveRequest}
           setIsOpen={setConfirmApproveRequest}
           title={'Approve Merchant Request?'}
-          info={'You are about to approve this request, would you want to proceed with this?'}
+          info={
+            'You are about to approve this new merchant creation request, would you want to proceed with this?'
+          }
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
@@ -173,7 +175,9 @@ const MerchantCreationRequestDetails = () => {
           width="700px"
           setIsOpen={setConfirmRejectRequest}
           title={'Reject Merchant Request?'}
-          info={'You are about to reject this request, would you want to proceed with this?'}
+          info={
+            'You are about to reject this merchant creation request, would you want to proceed with this?'
+          }
           feedback={
             <div className="w-full px-9">
               <FormInput
@@ -210,7 +214,7 @@ const MerchantCreationRequestDetails = () => {
           isOpen={rejectSuccessfulModal}
           setIsOpen={setRejectSuccessfulModal}
           title={'Success!!'}
-          info={'You have successfully rejected this new merchant request'}
+          info={'You have successfully rejected this merchant creation request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {

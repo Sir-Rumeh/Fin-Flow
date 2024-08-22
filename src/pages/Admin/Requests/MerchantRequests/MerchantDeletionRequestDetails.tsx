@@ -29,6 +29,7 @@ const MerchantDeletionRequestDetails = () => {
     validationSchema: reasonForRejectionSchema,
     onSubmit: () => {},
   });
+
   return (
     <>
       <div className="px-5 py-1">
@@ -112,7 +113,7 @@ const MerchantDeletionRequestDetails = () => {
             <ItemDetailsContainer title="Merchant Details">
               <div className="flex w-[300px] flex-col gap-10">
                 <DetailsCard title="Merchant ID" content="12345" />
-                <DetailsCard title="CIF" content="12345" />
+                <DetailsCard title="CIF Number" content="12345" />
               </div>
               <div className="flex w-[300px] flex-col gap-10">
                 <DetailsCard title="Merchant Name" content="Fair Money" />
@@ -172,7 +173,7 @@ const MerchantDeletionRequestDetails = () => {
           setIsOpen={setConfirmApproveRequest}
           title={'Approve Merchant Request?'}
           info={
-            'You are about to approve this  merchant deletion request, would you want to proceed with this?'
+            'You are about to approve this merchant deletion request, would you want to proceed with this?'
           }
           icon={<RedAlertIcon />}
           type={'confirmation'}
