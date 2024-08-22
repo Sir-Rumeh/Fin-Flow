@@ -41,7 +41,7 @@ const MerchantCreationRequestDetails = () => {
             to={`/${appRoutes.adminDashboard.requests.merchantRequests.index}`}
             className="cursor-pointer text-darkgray"
           >
-            Merchant Request
+            Merchant Requests
           </Link>{' '}
           <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
           <span className="text-lightPurple">Merchant Creation Request Details</span>
@@ -81,7 +81,7 @@ const MerchantCreationRequestDetails = () => {
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
           <div className="">
-            <ItemDetailsContainer title="Merchant Details">
+            <ItemDetailsContainer title="Merchant Creation Details">
               <div className="flex w-[300px] flex-col gap-10">
                 <DetailsCard title="Merchant ID" content="12345" />
                 <DetailsCard title="CIF Number" content="12345" />

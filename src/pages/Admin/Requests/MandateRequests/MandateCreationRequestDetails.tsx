@@ -11,12 +11,11 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import FormInput from 'components/FormElements/FormInput';
 import { useFormik } from 'formik';
 import { reasonForRejectionSchema } from 'utils/formValidators';
+import { checkRoute } from 'utils/helpers';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
-import DashboardCard from 'components/common/DashboardCards/DashboardCard';
-import SubTitleIconGreen from 'assets/icons/SubTitleIconGreen';
-import SubTitleIconYellow from 'assets/icons/SubTitleIconYellow';
+import { UpdateRequestIcon } from 'assets/icons';
 
-const MerchantDisableRequestDetails = () => {
+const MandateCreationRequestDetails = () => {
   const [confirmApproveRequest, setConfirmApproveRequest] = useState(false);
   const [approveSuccessfulModal, setApproveSuccessfulModal] = useState(false);
   const [confirmRejectRequest, setConfirmRejectRequest] = useState(false);
@@ -29,18 +28,19 @@ const MerchantDisableRequestDetails = () => {
     validationSchema: reasonForRejectionSchema,
     onSubmit: () => {},
   });
+
   return (
     <>
       <div className="px-5 py-1">
         <div className="slide-down flex items-center gap-2 text-lg">
           <Link
-            to={`/${appRoutes.adminDashboard.requests.merchantRequests.index}`}
+            to={`/${appRoutes.adminDashboard.requests.mandateRequests.index}`}
             className="cursor-pointer text-darkgray"
           >
-            Merchant Requests
+            Mandate Requests
           </Link>{' '}
           <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
-          <span className="text-lightPurple">Disable Merchant Request Details</span>
+          <span className="text-lightPurple">Mandate Creation Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
           <h2 className="text-lg font-semibold md:text-2xl">Request ID : Req123456</h2>
@@ -76,53 +76,87 @@ const MerchantDisableRequestDetails = () => {
           </div>
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
-          <div className="bg-lilacPurple rounded-lg px-6 py-4">
-            <h3 className="text-md font-semibold md:text-xl">Merchant Accounts</h3>
-            <div className="mt-4 flex flex-col items-center justify-between gap-6 gap-x-4 md:flex-row">
-              <DashboardCard
-                title="Total Accounts"
-                numberOfRequest={1200}
-                backgroundColor="bg-white"
-                textColor="text-purplePrimary"
-                icon={<SubTitleIconGreen />}
-                route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
-                // navigate to MerchantAccounts which will import table from Account Management
-              />
-              <DashboardCard
-                title="Total Profiles"
-                numberOfRequest={1200}
-                backgroundColor="bg-white"
-                textColor="text-purplePrimary"
-                icon={<SubTitleIconYellow />}
-                route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
-                // navigate to MerchantProfiles which will import table from Profile Management
-              />
-              <DashboardCard
-                title="Total Mandates"
-                numberOfRequest={1200}
-                backgroundColor="bg-white"
-                textColor="text-purplePrimary"
-                icon={<SubTitleIconYellow />}
-                route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
-                // navigate to MerchantMandates  which will import table from Mandate  Management
-              />
-            </div>
-          </div>
-          <div className="mt-10">
-            <ItemDetailsContainer title="Merchant Details">
+          <div className="">
+            <ItemDetailsContainer
+              title="Mandate Creation Details"
+              titleExtension={
+                <>
+                  <div className="flex items-center justify-end gap-2">
+                    <p className="text-sm text-darkgray">Mandate Type</p>
+                    <UpdateRequestIcon />
+                    <p className="mb-[1px] font-semibold text-lightPurple">Variable</p>
+                  </div>
+                </>
+              }
+            >
               <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Merchant ID" content="12345" />
-                <DetailsCard title="CIF Number" content="12345" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Merchant Name" content="Fair Money" />
+                <DetailsCard title="Account ID" content="1234545" />
                 <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
+                <DetailsCard title="Effective Date" content="12/12/2024" />
+                <DetailsCard title="Frequency" content="Monthly" />
+                <DetailsCard title="Account Number" content="0909887674" />
               </div>
               <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Merchant Code" content="12345" />
+                <DetailsCard title="Merchant ID" content="1234545" />
+                <DetailsCard title="Merchant ID" content="1234545" />
+                <DetailsCard title="End Date" content="12/12/2024" />
+                <DetailsCard title="Service" content="Life Insurance" />
+                <DetailsCard title="Account Name" content="Fair Money" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Merchant Code" content="1234545" />
+                <DetailsCard title="Amount" content="N5,000,000" />
+                <DetailsCard title="Day to Apply" content="13th" />
+                <DetailsCard title="Narration" content="Mandate Narration" />
+                <DetailsCard title="Bank Code" content="1234545" />
               </div>
             </ItemDetailsContainer>
           </div>
+
+          <div className="mt-10">
+            <ItemDetailsContainer title="Payer Details">
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Payer Name" content="Ugobest Venture" />
+                <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Email Address" content="ugobest@gmal.com" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Phone Number" content="09093874628" />
+              </div>
+            </ItemDetailsContainer>
+          </div>
+          <div className="mt-10">
+            <ItemDetailsContainer title="Payee Details">
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Payer Name" content="Ugobest Venture" />
+                <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Email Address" content="ugobest@gmal.com" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Phone Number" content="09093874628" />
+              </div>
+            </ItemDetailsContainer>
+          </div>
+          <div className="mt-10">
+            <ItemDetailsContainer title="Biller Details">
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Biller Account Number" content="9093874628" />
+                <DetailsCard title="Biller Code" content="123545" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Bank Name" content="Access" />
+                <DetailsCard title="Bank Code" content=";74628" />
+              </div>
+              <div className="flex w-[300px] flex-col gap-10">
+                <DetailsCard title="Account Name" content="Ugobest Venture" />
+              </div>
+            </ItemDetailsContainer>
+          </div>
+
           <div className="mt-10">
             <ItemDetailsContainer title="Creator Details">
               <div className="flex w-[300px] flex-col gap-10">
@@ -170,9 +204,9 @@ const MerchantDisableRequestDetails = () => {
         <ModalWrapper
           isOpen={confirmApproveRequest}
           setIsOpen={setConfirmApproveRequest}
-          title={'Approve Merchant Request?'}
+          title={'Approve mandate Request?'}
           info={
-            'You are about to approve this disable merchant request, would you want to proceed with this?'
+            'You are about to approve this new mandate creation request, would you want to proceed with this?'
           }
           icon={<RedAlertIcon />}
           type={'confirmation'}
@@ -188,7 +222,7 @@ const MerchantDisableRequestDetails = () => {
           isOpen={approveSuccessfulModal}
           setIsOpen={setApproveSuccessfulModal}
           title={'Success!!'}
-          info={'You have successfully approved this disable merchant request'}
+          info={'You have successfully approved this new mandate request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -202,9 +236,9 @@ const MerchantDisableRequestDetails = () => {
           isOpen={confirmRejectRequest}
           width="700px"
           setIsOpen={setConfirmRejectRequest}
-          title={'Reject Merchant Request?'}
+          title={'Reject mandate Request?'}
           info={
-            'You are about to reject this disable merchant request, would you want to proceed with this?'
+            'You are about to reject this mandate creation request, would you want to proceed with this?'
           }
           feedback={
             <div className="w-full px-9">
@@ -242,7 +276,7 @@ const MerchantDisableRequestDetails = () => {
           isOpen={rejectSuccessfulModal}
           setIsOpen={setRejectSuccessfulModal}
           title={'Success!!'}
-          info={'You have successfully rejected this disable merchant request'}
+          info={'You have successfully rejected this mandate creation request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -254,4 +288,4 @@ const MerchantDisableRequestDetails = () => {
   );
 };
 
-export default MerchantDisableRequestDetails;
+export default MandateCreationRequestDetails;

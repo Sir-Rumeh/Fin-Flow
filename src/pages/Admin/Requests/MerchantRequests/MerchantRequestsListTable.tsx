@@ -1,9 +1,6 @@
-import { DataGrid, gridClasses, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
-import { muiDashboardMerchantsList, pendingDashboardMerchantsList } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
-import TableLogo from 'assets/images/table_logo.png';
-import { useState } from 'react';
 import {
   CreationRequestIcon,
   DeleteRequestIcon,
@@ -80,13 +77,6 @@ const MerchantRequestsListTable = ({ rowData }: { rowData: DashboardMerchantData
       headerClassName: 'ag-thead ',
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
-        const handleClick = () => {
-          navigate({
-            pathname: appRoutes.adminDashboard.merchantManagement.index,
-            search: `?${createSearchParams({ id: params?.row.id })}`,
-          });
-        };
-
         const route =
           params?.row.requestType === RequestTypes.Creation
             ? `/${appRoutes.adminDashboard.requests.merchantRequests.merchantCreationRequest}`
@@ -117,7 +107,7 @@ const MerchantRequestsListTable = ({ rowData }: { rowData: DashboardMerchantData
   return (
     <>
       <div className="w-full">
-        <CustomTable tableData={muiDashboardMerchantsList} columns={columns} rowCount={20} />
+        <CustomTable tableData={rowData} columns={columns} rowCount={20} />
       </div>
     </>
   );

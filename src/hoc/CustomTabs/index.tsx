@@ -1,11 +1,12 @@
 import ButtonComponent from 'components/FormElements/Button';
 import { Dispatch } from 'react';
+import { TabsListTabNames } from 'utils/enums';
 import { TabsProps } from 'utils/interfaces';
 
 interface CustomTabProps {
   tabs: TabsProps[];
   activeTab: string;
-  setActiveTab: Dispatch<React.SetStateAction<string>>;
+  setActiveTab: Dispatch<React.SetStateAction<TabsListTabNames>>;
 }
 
 const CustomTabs = ({ tabs, activeTab, setActiveTab }: CustomTabProps) => {

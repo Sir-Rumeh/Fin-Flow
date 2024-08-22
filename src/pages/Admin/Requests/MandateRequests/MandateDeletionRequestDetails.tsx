@@ -16,7 +16,7 @@ import DashboardCard from 'components/common/DashboardCards/DashboardCard';
 import SubTitleIconGreen from 'assets/icons/SubTitleIconGreen';
 import SubTitleIconYellow from 'assets/icons/SubTitleIconYellow';
 
-const MerchantDisableRequestDetails = () => {
+const MandateDeletionRequestDetails = () => {
   const [confirmApproveRequest, setConfirmApproveRequest] = useState(false);
   const [approveSuccessfulModal, setApproveSuccessfulModal] = useState(false);
   const [confirmRejectRequest, setConfirmRejectRequest] = useState(false);
@@ -29,6 +29,7 @@ const MerchantDisableRequestDetails = () => {
     validationSchema: reasonForRejectionSchema,
     onSubmit: () => {},
   });
+
   return (
     <>
       <div className="px-5 py-1">
@@ -40,7 +41,7 @@ const MerchantDisableRequestDetails = () => {
             Merchant Requests
           </Link>{' '}
           <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
-          <span className="text-lightPurple">Disable Merchant Request Details</span>
+          <span className="text-lightPurple">Merchant Deletion Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
           <h2 className="text-lg font-semibold md:text-2xl">Request ID : Req123456</h2>
@@ -172,7 +173,7 @@ const MerchantDisableRequestDetails = () => {
           setIsOpen={setConfirmApproveRequest}
           title={'Approve Merchant Request?'}
           info={
-            'You are about to approve this disable merchant request, would you want to proceed with this?'
+            'You are about to approve this merchant deletion request, would you want to proceed with this?'
           }
           icon={<RedAlertIcon />}
           type={'confirmation'}
@@ -188,7 +189,7 @@ const MerchantDisableRequestDetails = () => {
           isOpen={approveSuccessfulModal}
           setIsOpen={setApproveSuccessfulModal}
           title={'Success!!'}
-          info={'You have successfully approved this disable merchant request'}
+          info={'You have successfully approved this merchant deletion request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -204,7 +205,7 @@ const MerchantDisableRequestDetails = () => {
           setIsOpen={setConfirmRejectRequest}
           title={'Reject Merchant Request?'}
           info={
-            'You are about to reject this disable merchant request, would you want to proceed with this?'
+            'You are about to reject this merchant deletion request, would you want to proceed with this?'
           }
           feedback={
             <div className="w-full px-9">
@@ -242,7 +243,7 @@ const MerchantDisableRequestDetails = () => {
           isOpen={rejectSuccessfulModal}
           setIsOpen={setRejectSuccessfulModal}
           title={'Success!!'}
-          info={'You have successfully rejected this disable merchant request'}
+          info={'You have successfully rejected this merchant deletion request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -254,4 +255,4 @@ const MerchantDisableRequestDetails = () => {
   );
 };
 
-export default MerchantDisableRequestDetails;
+export default MandateDeletionRequestDetails;

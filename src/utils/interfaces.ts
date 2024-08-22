@@ -1,6 +1,8 @@
+import { TabsListTabNames } from './enums';
+
 export interface TabsProps {
   tabIndex: number;
-  tabName: string;
+  tabName: TabsListTabNames;
   tabTotal: number;
 }
 

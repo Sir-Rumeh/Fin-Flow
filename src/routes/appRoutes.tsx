@@ -35,6 +35,7 @@ import DeletionRequestDetails from 'pages/Merchant/Requests/request-details/Dele
 import AdminDashboardMerchantDetails from 'pages/Admin/Dashboard/DashboardMerchantDetails';
 import AdminDashboardEditMerchant from 'pages/Admin/Dashboard/DashboardEditMerchant';
 import MerchantRequestsRoutes from 'pages/Admin/Requests/MerchantRequests/MerchantRequestsRoutes';
+import MandateRequestsRoutes from 'pages/Admin/Requests/MandateRequests/MandateRequestsRoutes';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -74,17 +75,17 @@ const adminRoutes: RoutesType[] = [
       },
       {
         name: 'Mandate Requests',
-        path: 'mandates',
-        component: <AdminMandateRequests />,
+        path: 'mandates/*',
+        component: <MandateRequestsRoutes />,
       },
       {
         name: 'Account Requests',
-        path: 'accounts',
+        path: 'accounts/*',
         component: <AdminAccountRequests />,
       },
       {
         name: 'Profile Requests',
-        path: 'profiles',
+        path: 'profiles/*',
         component: <AdminProfileRequests />,
       },
     ],

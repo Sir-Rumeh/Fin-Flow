@@ -38,7 +38,7 @@ const MerchantDeletionRequestDetails = () => {
             to={`/${appRoutes.adminDashboard.requests.merchantRequests.index}`}
             className="cursor-pointer text-darkgray"
           >
-            Merchant Request
+            Merchant Requests
           </Link>{' '}
           <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
           <span className="text-lightPurple">Merchant Deletion Request Details</span>

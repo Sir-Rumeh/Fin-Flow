@@ -9,6 +9,11 @@ export enum RequestTypes {
   Update = 'Update',
   Disable = 'Disable',
 }
+export enum TabsListTabNames {
+  Approved = 'Approved',
+  Pending = 'Pending',
+  Rejected = 'Rejected',
+}
 
 export enum AdminDashboardPageType {
   DashboardIndex = 'DashboardIndex',

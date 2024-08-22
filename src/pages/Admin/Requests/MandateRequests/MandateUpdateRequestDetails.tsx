@@ -12,11 +12,8 @@ import FormInput from 'components/FormElements/FormInput';
 import { useFormik } from 'formik';
 import { reasonForRejectionSchema } from 'utils/formValidators';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
-import DashboardCard from 'components/common/DashboardCards/DashboardCard';
-import SubTitleIconGreen from 'assets/icons/SubTitleIconGreen';
-import SubTitleIconYellow from 'assets/icons/SubTitleIconYellow';
 
-const MerchantDisableRequestDetails = () => {
+const MandateUpdateRequestDetails = () => {
   const [confirmApproveRequest, setConfirmApproveRequest] = useState(false);
   const [approveSuccessfulModal, setApproveSuccessfulModal] = useState(false);
   const [confirmRejectRequest, setConfirmRejectRequest] = useState(false);
@@ -29,6 +26,7 @@ const MerchantDisableRequestDetails = () => {
     validationSchema: reasonForRejectionSchema,
     onSubmit: () => {},
   });
+
   return (
     <>
       <div className="px-5 py-1">
@@ -40,7 +38,7 @@ const MerchantDisableRequestDetails = () => {
             Merchant Requests
           </Link>{' '}
           <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
-          <span className="text-lightPurple">Disable Merchant Request Details</span>
+          <span className="text-lightPurple">Merchant Update Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
           <h2 className="text-lg font-semibold md:text-2xl">Request ID : Req123456</h2>
@@ -76,68 +74,26 @@ const MerchantDisableRequestDetails = () => {
           </div>
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
-          <div className="bg-lilacPurple rounded-lg px-6 py-4">
-            <h3 className="text-md font-semibold md:text-xl">Merchant Accounts</h3>
-            <div className="mt-4 flex flex-col items-center justify-between gap-6 gap-x-4 md:flex-row">
-              <DashboardCard
-                title="Total Accounts"
-                numberOfRequest={1200}
-                backgroundColor="bg-white"
-                textColor="text-purplePrimary"
-                icon={<SubTitleIconGreen />}
-                route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
-                // navigate to MerchantAccounts which will import table from Account Management
-              />
-              <DashboardCard
-                title="Total Profiles"
-                numberOfRequest={1200}
-                backgroundColor="bg-white"
-                textColor="text-purplePrimary"
-                icon={<SubTitleIconYellow />}
-                route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
-                // navigate to MerchantProfiles which will import table from Profile Management
-              />
-              <DashboardCard
-                title="Total Mandates"
-                numberOfRequest={1200}
-                backgroundColor="bg-white"
-                textColor="text-purplePrimary"
-                icon={<SubTitleIconYellow />}
-                route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
-                // navigate to MerchantMandates  which will import table from Mandate  Management
-              />
-            </div>
-          </div>
-          <div className="mt-10">
-            <ItemDetailsContainer title="Merchant Details">
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Merchant ID" content="12345" />
-                <DetailsCard title="CIF Number" content="12345" />
-              </div>
+          <div className="">
+            <ItemDetailsContainer title="Old Information">
               <div className="flex w-[300px] flex-col gap-10">
                 <DetailsCard title="Merchant Name" content="Fair Money" />
-                <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
               </div>
               <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Merchant Code" content="12345" />
+                <DetailsCard title="CIF Number" content="12345" />
               </div>
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
-            <ItemDetailsContainer title="Creator Details">
+            <ItemDetailsContainer title="New Information">
               <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="ID" content="9344243" />
-                <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
+                <DetailsCard title="Merchant Name" content="Fair Money" />
               </div>
               <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Created By" content="John Doe" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
+                <DetailsCard title="CIF Number" content="12345" />
               </div>
             </ItemDetailsContainer>
           </div>
-
           <div className="mt-10">
             <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
               <div className="flex w-[300px] flex-col gap-10">
@@ -172,7 +128,7 @@ const MerchantDisableRequestDetails = () => {
           setIsOpen={setConfirmApproveRequest}
           title={'Approve Merchant Request?'}
           info={
-            'You are about to approve this disable merchant request, would you want to proceed with this?'
+            'You are about to approve this merchant update request, would you want to proceed with this?'
           }
           icon={<RedAlertIcon />}
           type={'confirmation'}
@@ -188,7 +144,7 @@ const MerchantDisableRequestDetails = () => {
           isOpen={approveSuccessfulModal}
           setIsOpen={setApproveSuccessfulModal}
           title={'Success!!'}
-          info={'You have successfully approved this disable merchant request'}
+          info={'You have successfully approved this merchant update request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -204,7 +160,7 @@ const MerchantDisableRequestDetails = () => {
           setIsOpen={setConfirmRejectRequest}
           title={'Reject Merchant Request?'}
           info={
-            'You are about to reject this disable merchant request, would you want to proceed with this?'
+            'You are about to reject this merchant update request, would you want to proceed with this?'
           }
           feedback={
             <div className="w-full px-9">
@@ -242,7 +198,7 @@ const MerchantDisableRequestDetails = () => {
           isOpen={rejectSuccessfulModal}
           setIsOpen={setRejectSuccessfulModal}
           title={'Success!!'}
-          info={'You have successfully rejected this disable merchant request'}
+          info={'You have successfully rejected this merchant update request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -254,4 +210,4 @@ const MerchantDisableRequestDetails = () => {
   );
 };
 
-export default MerchantDisableRequestDetails;
+export default MandateUpdateRequestDetails;

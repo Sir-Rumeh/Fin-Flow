@@ -16,7 +16,7 @@ import DashboardCard from 'components/common/DashboardCards/DashboardCard';
 import SubTitleIconGreen from 'assets/icons/SubTitleIconGreen';
 import SubTitleIconYellow from 'assets/icons/SubTitleIconYellow';
 
-const MerchantDisableRequestDetails = () => {
+const MandateDisableRequestDetails = () => {
   const [confirmApproveRequest, setConfirmApproveRequest] = useState(false);
   const [approveSuccessfulModal, setApproveSuccessfulModal] = useState(false);
   const [confirmRejectRequest, setConfirmRejectRequest] = useState(false);
@@ -254,4 +254,4 @@ const MerchantDisableRequestDetails = () => {
   );
 };
 
-export default MerchantDisableRequestDetails;
+export default MandateDisableRequestDetails;

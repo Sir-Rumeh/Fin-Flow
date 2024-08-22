@@ -1,4 +1,10 @@
-import { MerchantDataRow, DashboardMerchantDataRow, MandateDataRow } from 'utils/interfaces';
+import { TabsListTabNames } from 'utils/enums';
+import {
+  MerchantDataRow,
+  DashboardMerchantDataRow,
+  MandateDataRow,
+  TabsProps,
+} from 'utils/interfaces';
 
 export const merchantsList: MerchantDataRow[] = [
   {
@@ -83,6 +89,99 @@ export const merchantsList: MerchantDataRow[] = [
     merchantName: 'Fair Money',
     cifNumber: '1267378',
     status: 'Active',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+];
+
+export const mandateRequestsList: MandateDataRow[] = [
+  {
+    id: 1,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Creation',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 2,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Fixed',
+    requestType: 'Update',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 3,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Disable',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 4,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Fixed',
+    requestType: 'Deletion',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 5,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Deletion',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 6,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Fixed',
+    requestType: 'Deletion',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 7,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Deletion',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 8,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Fixed',
+    requestType: 'Deletion',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 9,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Deletion',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 10,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Fixed',
+    requestType: 'Deletion',
     dateRequested: '2015-03-25T12:00:00-06:30',
   },
 ];
