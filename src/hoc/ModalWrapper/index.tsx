@@ -6,7 +6,7 @@ interface PopupProps {
   isOpen: boolean;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   title: string;
-  info: string;
+  info: any;
   icon: JSX.Element;
   type: string;
   proceedAction?: () => void;
@@ -45,6 +45,27 @@ export const ModalWrapper = ({
               <ButtonComponent
                 color="white"
                 width="15rem"
+                variant="contained"
+                onClick={() => proceedAction?.()}
+                title="Yes Proceed"
+              />
+            </div>
+          )}
+          {type === 'reject' && (
+            <div className="flex w-full items-center justify-between">
+              <ButtonComponent
+                color="#5C068C"
+                borderColor="#5C068C"
+                border={0.5}
+                width="19rem"
+                onClick={() => setIsOpen(false)}
+                title="No, Cancel"
+              />
+
+              <ButtonComponent
+                color="white"
+                backgroundColor="#F34E4E"
+                width="19rem"
                 variant="contained"
                 onClick={() => proceedAction?.()}
                 title="Yes Proceed"

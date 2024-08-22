@@ -6,7 +6,7 @@ type DetailsCardProps = {
 
 const DetailsCard = ({ title, content, contentClassName }: DetailsCardProps) => {
   return (
-    <div className="flex flex-col">
+    <div className="flex flex-col gap-1 py-3">
       <p className="text-sm text-darkgray">{title}</p>
       <p className={contentClassName}>{content}</p>
     </div>

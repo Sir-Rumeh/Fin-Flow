@@ -1,54 +1,58 @@
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import {
   UpdateRequestIcon,
   CreationRequestIcon,
   DisableRequestIcon,
   DeleteRequestIcon,
 } from 'assets/icons';
-import dayjs from 'dayjs';
-import { useMemo } from 'react';
-import DataTable, { TableColumn } from 'react-data-table-component';
 import { Link } from 'react-router-dom';
-import { MandateDataRow } from 'utils/interfaces';
+import appRoutes from 'utils/constants/routes';
+import TableLogo from 'assets/images/table_logo.png';
 
-const customStyles = {
-  headCells: {
-    style: {
-      backgroundColor: '#F8F8F9',
-      fontWeight: 'bold',
-      border: 'none',
-    },
-  },
-};
-
-const MandateTableColumn: TableColumn<MandateDataRow>[] = [
+const MandateTableColumn: GridColDef[] = [
   {
-    name: 'Account ID',
-    selector: (row) => row.accountId,
+    field: 'accountId',
+    headerName: 'Account ID',
+    width: screen.width < 1000 ? 200 : undefined,
+    flex: screen.width >= 1000 ? 1 : undefined,
+    headerClassName: 'ag-thead',
   },
   {
-    name: 'Merchant ID',
-    selector: (row) => row.merchantId,
+    field: 'merchantId',
+    headerName: 'Merchant ID',
+    width: screen.width < 1000 ? 200 : undefined,
+    flex: screen.width >= 1000 ? 1 : undefined,
+    headerClassName: 'ag-thead',
   },
   {
-    name: 'Merchant Code',
-    selector: (row) => row.mandateCode,
+    field: 'mandateCode',
+    headerName: 'Mandate Code',
+    width: screen.width < 1000 ? 200 : undefined,
+    flex: screen.width >= 1000 ? 1 : undefined,
+    headerClassName: 'ag-thead',
   },
   {
-    name: 'Merchant Type',
-    selector: (row) => row.mandateType,
+    field: 'mandateType',
+    headerName: 'Mandate Type',
+    width: screen.width < 1000 ? 200 : undefined,
+    flex: screen.width >= 1000 ? 1 : undefined,
+    headerClassName: 'ag-thead',
   },
   {
-    name: 'Request Type',
-    selector: (row) => row.requestType,
-    cell: (row) => {
-      const renderIcon = (IconComponent: React.ComponentType, colorClass: string) => (
+    field: 'requestType',
+    headerName: 'Request Type',
+    width: screen.width < 1000 ? 200 : undefined,
+    flex: screen.width >= 1000 ? 1 : undefined,
+    headerClassName: 'ag-thead',
+    renderCell: (params) => {
+      const renderIcon = (IconComponent: any, colorClass: any) => (
         <div className="flex items-center gap-2">
           <IconComponent />
-          <span className={`mb-[1px] ${colorClass}`}>{row.requestType}</span>
+          <span className={`mb-[1px] ${colorClass}`}>{params.value}</span>
         </div>
       );
 
-      switch (row.requestType) {
+      switch (params.value) {
         case 'Creation':
           return renderIcon(CreationRequestIcon, 'text-greenPrimary');
         case 'Update':
@@ -58,39 +62,33 @@ const MandateTableColumn: TableColumn<MandateDataRow>[] = [
         case 'Deletion':
           return renderIcon(DeleteRequestIcon, 'text-redSecondary');
         default:
-          return <span>{row.requestType}</span>;
+          return <span>{params.value}</span>;
       }
     },
   },
   {
-    name: 'Date Requested',
-    selector: (row) => row.dateRequested,
-    cell: (row) =>
-      useMemo(
-        () => (
-          <>
-            {row.dateRequested
-              ? `${dayjs(row.dateRequested).format('DD/MM/YYYY')} | ${dayjs(row.dateRequested).format('hh:mm:ss A')}`
-              : 'NA'}
-          </>
-        ),
-        [row.dateRequested],
-      ),
+    field: 'dateRequested',
+    headerName: 'Date Requested',
+    width: screen.width < 1000 ? 50 : 50,
+    flex: screen.width >= 1000 ? 1 : undefined,
+    headerClassName: 'ag-thead',
+    valueGetter: (params: any) => new Date(params).toLocaleDateString(),
   },
   {
-    name: 'Action',
-    cell: (row) =>
-      useMemo(
-        () => (
-          <Link
-            to={`/merchant/dashboard/mandate-details`}
-            className="cursor-pointer font-semibold text-lightPurple"
-          >
-            View Details
-          </Link>
-        ),
-        [row.id],
-      ),
+    field: 'action',
+    headerName: 'Action',
+    width: 150,
+    headerClassName: 'ag-thead',
+    renderCell: (params) => {
+      return (
+        <Link
+          to={`/${appRoutes.merchantDashboard.dashboard.mandateDetails}`}
+          className="cursor-pointer font-medium text-lightPurple"
+        >
+          View Details
+        </Link>
+      );
+    },
   },
 ];
 
@@ -207,7 +205,31 @@ const data = [
 
 const MandateList = () => {
   return (
-    <DataTable columns={MandateTableColumn} data={data} customStyles={customStyles} pagination />
+    <>
+      {data?.length > 0 ? (
+        <DataGrid
+          rows={data}
+          columns={MandateTableColumn}
+          sx={{
+            border: 0,
+          }}
+          rowHeight={70}
+          columnHeaderHeight={70}
+          disableRowSelectionOnClick
+          disableColumnMenu
+          pagination
+        />
+      ) : (
+        <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
+          <div>
+            <img src={TableLogo} alt="group_logo" />
+          </div>
+          <div className="mt-8 text-center">
+            <h3 className="text-2xl font-bold">Oops! No Active Mandates</h3>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

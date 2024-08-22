@@ -2,12 +2,16 @@ import { Link } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import { UpdateRequestIcon } from 'assets/icons';
 import { BiChevronRight } from 'react-icons/bi';
+import appRoutes from 'utils/constants/routes';
 
 const MerchantDashboardMandateDetails = () => {
   return (
     <div className="px-5 py-5">
       <div className="flex items-center gap-2">
-        <Link to="/merchant/dashboard" className="cursor-pointer text-sm text-darkgray">
+        <Link
+          to={`/${appRoutes.merchantDashboard.dashboard.index}`}
+          className="cursor-pointer text-sm text-darkgray"
+        >
           All Requests
         </Link>{' '}
         <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
