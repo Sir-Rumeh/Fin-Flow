@@ -36,6 +36,14 @@ export interface AccountDataRow {
   requestType: string;
   dateRequested: string;
 }
+export interface ProfileDataRow {
+  id: number;
+  accountId: string;
+  userName: string;
+  email: string;
+  requestType: string;
+  dateRequested: string;
+}
 
 export interface MandateDataRow {
   id: number;

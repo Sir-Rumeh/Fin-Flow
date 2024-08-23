@@ -81,13 +81,13 @@ const AccountRequestsListTable = ({ rowData }: { rowData: AccountDataRow[] }) =>
       renderCell: (params: GridRenderCellParams) => {
         const route =
           params?.row.requestType === RequestTypes.Creation
-            ? `/${appRoutes.adminDashboard.requests.accountRequests.AccountCreationRequest}`
+            ? `/${appRoutes.adminDashboard.requests.accountRequests.accountCreationRequest}`
             : params?.row.requestType === RequestTypes.Deletion
-              ? `/${appRoutes.adminDashboard.requests.accountRequests.AccountDeletionRequest}`
+              ? `/${appRoutes.adminDashboard.requests.accountRequests.accountDeletionRequest}`
               : params?.row.requestType === RequestTypes.Update
-                ? `/${appRoutes.adminDashboard.requests.accountRequests.AccountUpdateRequest}`
+                ? `/${appRoutes.adminDashboard.requests.accountRequests.accountUpdateRequest}`
                 : params?.row.requestType === RequestTypes.Disable
-                  ? `/${appRoutes.adminDashboard.requests.accountRequests.AccountDisableRequest}`
+                  ? `/${appRoutes.adminDashboard.requests.accountRequests.accountDisableRequest}`
                   : undefined;
         return (
           <div className="">

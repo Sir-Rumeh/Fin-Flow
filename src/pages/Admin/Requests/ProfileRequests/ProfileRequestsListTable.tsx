@@ -7,11 +7,11 @@ import {
   DisableRequestIcon,
   UpdateRequestIcon,
 } from 'assets/icons';
-import { MandateDataRow } from 'utils/interfaces';
+import { ProfileDataRow } from 'utils/interfaces';
 import { RequestTypes } from 'utils/enums';
 import CustomTable from 'components/CustomTable';
 
-const MandateRequestsListTable = ({ rowData }: { rowData: MandateDataRow[] }) => {
+const ProfileRequestsListTable = ({ rowData }: { rowData: ProfileDataRow[] }) => {
   const columns: GridColDef[] = [
     {
       field: 'accountId',
@@ -22,28 +22,21 @@ const MandateRequestsListTable = ({ rowData }: { rowData: MandateDataRow[] }) =>
       sortable: false,
     },
     {
-      field: 'merchantId',
-      headerName: 'Merchant ID',
+      field: 'userName',
+      headerName: 'User Name',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
+    {
+      field: 'email',
+      headerName: 'Email',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       sortable: false,
     },
-    {
-      field: 'mandateCode',
-      headerName: 'Mandate Code',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-      sortable: false,
-    },
-    {
-      field: 'mandateType',
-      headerName: 'Mandate Type',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-    },
+
     {
       field: 'requestType',
       headerName: 'Request Type',
@@ -87,13 +80,13 @@ const MandateRequestsListTable = ({ rowData }: { rowData: MandateDataRow[] }) =>
       renderCell: (params: GridRenderCellParams) => {
         const route =
           params?.row.requestType === RequestTypes.Creation
-            ? `/${appRoutes.adminDashboard.requests.mandateRequests.mandateCreationRequest}`
+            ? `/${appRoutes.adminDashboard.requests.profileRequests.profileCreationRequest}`
             : params?.row.requestType === RequestTypes.Deletion
-              ? `/${appRoutes.adminDashboard.requests.mandateRequests.mandateDeletionRequest}`
+              ? `/${appRoutes.adminDashboard.requests.profileRequests.profileDeletionRequest}`
               : params?.row.requestType === RequestTypes.Update
-                ? `/${appRoutes.adminDashboard.requests.mandateRequests.mandateUpdateRequest}`
+                ? `/${appRoutes.adminDashboard.requests.profileRequests.profileUpdateRequest}`
                 : params?.row.requestType === RequestTypes.Disable
-                  ? `/${appRoutes.adminDashboard.requests.mandateRequests.mandateDisableRequest}`
+                  ? `/${appRoutes.adminDashboard.requests.profileRequests.profileDisableRequest}`
                   : undefined;
         return (
           <div className="">
@@ -120,4 +113,4 @@ const MandateRequestsListTable = ({ rowData }: { rowData: MandateDataRow[] }) =>
   );
 };
 
-export default MandateRequestsListTable;
+export default ProfileRequestsListTable;

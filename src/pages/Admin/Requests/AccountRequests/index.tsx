@@ -1,5 +1,4 @@
 import { useState } from 'react';
-import MerchantRequestsListTable from './MerchantRequestsListTable';
 import TableFilter from 'components/TableFilter';
 import { TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
