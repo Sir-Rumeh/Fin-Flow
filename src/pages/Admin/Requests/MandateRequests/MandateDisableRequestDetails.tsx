@@ -77,7 +77,7 @@ const MandateDisableRequestDetails = () => {
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
           <div className="">
             <ItemDetailsContainer
-              title="Mandate Creation Details"
+              title="Request Details"
               titleExtension={
                 <>
                   <div className="flex items-center justify-end gap-2">

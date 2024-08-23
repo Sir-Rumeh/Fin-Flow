@@ -109,7 +109,7 @@ const MerchantDisableRequestDetails = () => {
             </div>
           </div>
           <div className="mt-10">
-            <ItemDetailsContainer title="Merchant Details">
+            <ItemDetailsContainer title="Request Details">
               <div className="flex w-[300px] flex-col gap-10">
                 <DetailsCard title="Merchant ID" content="12345" />
                 <DetailsCard title="CIF Number" content="12345" />

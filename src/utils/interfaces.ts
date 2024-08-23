@@ -28,6 +28,15 @@ export interface DashboardMerchantDataRow {
   cif: string;
 }
 
+export interface AccountDataRow {
+  id: number;
+  merchantId: string;
+  accountNumber: string;
+  cif: string;
+  requestType: string;
+  dateRequested: string;
+}
+
 export interface MandateDataRow {
   id: number;
   accountId: number;

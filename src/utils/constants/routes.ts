@@ -32,7 +32,13 @@ export const appRoutes = {
         MandateUpdateRequest: `${BASE_ROUTES.ADMIN}/requests/mandates/update-request-details`,
         MandateDisableRequest: `${BASE_ROUTES.ADMIN}/requests/mandates/disable-request-details`,
       },
-      accountRequests: `${BASE_ROUTES.ADMIN}/requests/accounts`,
+      accountRequests: {
+        index: `${BASE_ROUTES.ADMIN}/requests/accounts`,
+        AccountCreationRequest: `${BASE_ROUTES.ADMIN}/requests/accounts/creation-request-details`,
+        AccountDeletionRequest: `${BASE_ROUTES.ADMIN}/requests/accounts/deletion-request-details`,
+        AccountUpdateRequest: `${BASE_ROUTES.ADMIN}/requests/accounts/update-request-details`,
+        AccountDisableRequest: `${BASE_ROUTES.ADMIN}/requests/accounts/disable-request-details`,
+      },
       profileRequests: `${BASE_ROUTES.ADMIN}/requests/profiles`,
     },
     merchantManagement: {

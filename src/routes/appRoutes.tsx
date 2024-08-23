@@ -36,6 +36,7 @@ import AdminDashboardMerchantDetails from 'pages/Admin/Dashboard/DashboardMercha
 import AdminDashboardEditMerchant from 'pages/Admin/Dashboard/DashboardEditMerchant';
 import MerchantRequestsRoutes from 'pages/Admin/Requests/MerchantRequests/MerchantRequestsRoutes';
 import MandateRequestsRoutes from 'pages/Admin/Requests/MandateRequests/MandateRequestsRoutes';
+import AccountRequestsRoutes from 'pages/Admin/Requests/AccountRequests/AccountRequestsRoutes';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -81,7 +82,7 @@ const adminRoutes: RoutesType[] = [
       {
         name: 'Account Requests',
         path: 'accounts/*',
-        component: <AdminAccountRequests />,
+        component: <AccountRequestsRoutes />,
       },
       {
         name: 'Profile Requests',

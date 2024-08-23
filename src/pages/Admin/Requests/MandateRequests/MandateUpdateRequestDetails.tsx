@@ -91,7 +91,7 @@ const MandateUpdateRequestDetails = () => {
           </div>
           <div className="mt-10">
             <ItemDetailsContainer
-              title="Mandate Creation Details"
+              title="Request Details"
               titleExtension={
                 <>
                   <div className="flex items-center justify-end gap-2">
