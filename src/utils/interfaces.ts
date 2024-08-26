@@ -1,3 +1,11 @@
+import { TabsListTabNames } from './enums';
+
+export interface TabsProps {
+  tabIndex: number;
+  tabName: TabsListTabNames;
+  tabTotal: number;
+}
+
 export interface MerchantDataRow {
   id: number;
   merchantName: string;
@@ -13,6 +21,27 @@ export interface DashboardMerchantDataRow {
   merchantName: string;
   accountNumber: string;
   phoneNumber: string;
+  dateRequested: string;
+  dateUpdated: string;
+  status: string;
+  requestType: string;
+  cif: string;
+}
+
+export interface AccountDataRow {
+  id: number;
+  merchantId: string;
+  accountNumber: string;
+  cif: string;
+  requestType: string;
+  dateRequested: string;
+}
+export interface ProfileDataRow {
+  id: number;
+  accountId: string;
+  userName: string;
+  email: string;
+  requestType: string;
   dateRequested: string;
 }
 

@@ -8,3 +8,6 @@ export const userLoginValidationSchema = Yup.object().shape({
     'Invalid password format, please follow the password requirements',
   ),
 });
+export const reasonForRejectionSchema = Yup.object().shape({
+  reasonForRejection: Yup.string().required('Please enter reason for rejecting'),
+});

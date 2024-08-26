@@ -15,7 +15,7 @@ function AdminRoutes() {
                   path={`/${route.path}`}
                   element={
                     <Navigate
-                      to={`${route.layout}/${route.path}/${route.children?.[0].path}`}
+                      to={`${route.layout}/${route.path}/${route.children?.[0].path.replace('/*', '')}`}
                       replace
                     />
                   }

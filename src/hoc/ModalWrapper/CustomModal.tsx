@@ -12,7 +12,7 @@ interface Props {
   width?: string;
 }
 
-const CustomModal = ({ title, isOpen, setIsOpen, children, width = 'w-[700px]' }: Props) => {
+const CustomModal = ({ title, isOpen, setIsOpen, children, width = '700px' }: Props) => {
   const boxStyle = {
     position: 'absolute',
     display: 'flex',
@@ -21,6 +21,7 @@ const CustomModal = ({ title, isOpen, setIsOpen, children, width = 'w-[700px]' }
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: width,
+
     bgcolor: 'white',
     borderRadius: '1rem',
     boxShadow: 24,

@@ -35,7 +35,7 @@ const FormInput = (props: Props) => {
       placeholder={props.placeholder}
       size="small"
       sx={{
-        width: props.width,
+        width: props.width ? props.width : '100%',
         maxHeight: props.height ? props.height : '3rem',
         height: props.height ? props.height : '3rem',
         '& .MuiInputBase-root': {

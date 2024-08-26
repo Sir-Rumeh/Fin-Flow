@@ -1,22 +1,12 @@
-import { Dispatch, useState } from 'react';
-import { AdminDashboardPageType } from 'utils/enums';
 import { BarChart } from '@mui/x-charts/BarChart';
 import { axisClasses } from '@mui/x-charts/ChartsAxis';
 import DashboardListTable from './DashboardListTable';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
-import { Link } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
-import ArrowRightIcon from 'assets/icons/ArrowRight';
+import DashboardCard from 'components/common/DashboardCards/DashboardCard';
 
-// import CustomModal from 'hoc/ModalWrapper';
-
-interface AdminDashboardProps {
-  setPageAction: React.Dispatch<React.SetStateAction<AdminDashboardPageType>>;
-  setSelectedItem: Dispatch<React.SetStateAction<number | string>>;
-}
-
-const AdminDashboard = ({ setPageAction, setSelectedItem }: AdminDashboardProps) => {
+const AdminDashboard = () => {
   const barAxisX = [
     'JAN',
     'FEB',
@@ -56,14 +46,15 @@ const AdminDashboard = ({ setPageAction, setSelectedItem }: AdminDashboardProps)
 
   return (
     <>
-      <div className="p-2 md:p-4">
-        <div className="fade-in-down flex items-center justify-between">
+      <section className="p-2 md:p-4">
+        <div className="fade-in-down my-2 flex items-center justify-between">
           <div>
             <h1 className="text-lg font-semibold md:text-2xl">Welcome Back, Anita!</h1>
           </div>
         </div>
         <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[300px_1fr]">
-          <div className="slide-down rounded-md border bg-white p-4">
+          {/* <div className="mt-5 flex flex-col  gap-4 "> */}
+          <div className="slide-down w-full rounded-md border bg-white p-4 sm:w-[300px]">
             <div className="border-b pb-2">
               <h3 className="text-md font-semibold md:text-lg">Onboarded Merchant</h3>
             </div>
@@ -76,23 +67,21 @@ const AdminDashboard = ({ setPageAction, setSelectedItem }: AdminDashboardProps)
                   translationX={10}
                   translationY={50}
                 >
-                  <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm"></div>
+                  <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
+                    <div>Merchant</div>
+                    <div>Merchant</div>
+                  </div>
                 </CustomPopover>
               </h3>
             </div>
             <div className="mt-6 flex items-center justify-start gap-x-4">
-              <div className="h-[160px] w-[340px] rounded-[8px] bg-extraLightPurple px-4 py-3">
-                <p className="my-1 text-lg font-semibold">Total Onboarded Merchants</p>
-                <p className="text-[35px] font-bold">1200</p>
-                <div className="mt-4 h-[2px] w-full bg-gray-200"></div>
-                <Link
-                  to={`/${appRoutes.adminDashboard.merchantManagement.index}`}
-                  className="mt-2 flex items-center gap-3"
-                >
-                  <span className="text-lightPurple">View all</span>
-                  <ArrowRightIcon />
-                </Link>
-              </div>
+              <DashboardCard
+                title="Total Onboarded Merchants"
+                numberOfRequest={1200}
+                backgroundColor="bg-extraLightPurple"
+                textColor="text-purplePrimary"
+                route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
+              />
             </div>
           </div>
           <div className="slide-down relative overflow-x-scroll rounded-md border bg-white p-4 lg:overflow-hidden">
@@ -108,7 +97,7 @@ const AdminDashboard = ({ setPageAction, setSelectedItem }: AdminDashboardProps)
                   label: 'Month',
                   colorMap: {
                     type: 'piecewise',
-                    thresholds: [new Date(2010, 0, 1), new Date(2024, 11, 31)],
+                    thresholds: [],
                     colors: ['#FFE3A4'],
                   },
                 },
@@ -119,10 +108,10 @@ const AdminDashboard = ({ setPageAction, setSelectedItem }: AdminDashboardProps)
             />
           </div>
         </div>
-        <div className="slide-down relative mt-5 flex items-center justify-center rounded-md bg-white p-2 md:p-4">
+        <div className="relative mt-5 flex items-center justify-center rounded-md bg-white p-2 md:p-4">
           <DashboardListTable />
         </div>
-      </div>
+      </section>
     </>
   );
 };
