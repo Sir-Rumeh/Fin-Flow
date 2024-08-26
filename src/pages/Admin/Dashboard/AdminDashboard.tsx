@@ -81,7 +81,7 @@ const AdminDashboard = ({ setPageAction, setSelectedItem }: AdminDashboardProps)
               </h3>
             </div>
             <div className="mt-6 flex items-center justify-start gap-x-4">
-              <div className="bg-extraLightPurple h-[160px] w-[340px] rounded-[8px] px-4 py-3">
+              <div className="h-[160px] w-[340px] rounded-[8px] bg-extraLightPurple px-4 py-3">
                 <p className="my-1 text-lg font-semibold">Total Onboarded Merchants</p>
                 <p className="text-[35px] font-bold">1200</p>
                 <div className="mt-4 h-[2px] w-full bg-gray-200"></div>
@@ -108,7 +108,7 @@ const AdminDashboard = ({ setPageAction, setSelectedItem }: AdminDashboardProps)
                   label: 'Month',
                   colorMap: {
                     type: 'piecewise',
-                    thresholds: [new Date(2021, 1, 1), new Date(2023, 1, 1)],
+                    thresholds: [new Date(2010, 0, 1), new Date(2024, 11, 31)],
                     colors: ['#FFE3A4'],
                   },
                 },

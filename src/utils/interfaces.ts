@@ -26,6 +26,13 @@ export interface MandateDataRow {
   dateRequested: string;
 }
 
+export interface TransactionsDataRow {
+  id: number;
+  accountId: number;
+  amount: string;
+  date: string;
+}
+
 export interface DataTableState {
   resetPaginationToggle: boolean;
   pageSize: number;

@@ -55,16 +55,17 @@ export const appRoutes = {
       deletionRequestDetails: `${BASE_ROUTES.MERCHANT}/requests/mandates/deletion-request-details`,
     },
     mandateManagement: {
-      index: `${BASE_ROUTES.ADMIN}/mandate-management`,
+      index: `${BASE_ROUTES.MERCHANT}/mandate-management`,
+      mandateDetails: `${BASE_ROUTES.MERCHANT}/mandate-management/mandate-details`,
     },
     userManagement: {
-      index: `${BASE_ROUTES.ADMIN}/user-management`,
+      index: `${BASE_ROUTES.MERCHANT}/user-management`,
     },
     auditTrail: {
-      index: `${BASE_ROUTES.ADMIN}/audit-trail`,
+      index: `${BASE_ROUTES.MERCHANT}/audit-trail`,
     },
     reports: {
-      index: `${BASE_ROUTES.ADMIN}/reports`,
+      index: `${BASE_ROUTES.MERCHANT}/reports`,
     },
   },
 };

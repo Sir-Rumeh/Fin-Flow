@@ -14,4 +14,6 @@ export enum RequestType {
   Update = 'Update',
   Disable = 'Disable',
   Deletion = 'Deletion',
+  Enabled = 'Enabled',
+  Disabled = 'Disabled',
 }

@@ -32,6 +32,7 @@ import CreationRequestDetails from 'pages/Merchant/Requests/request-details/Crea
 import UpdateRequestDetails from 'pages/Merchant/Requests/request-details/UpdateRequestDetails';
 import DisableRequestDetails from 'pages/Merchant/Requests/request-details/DisableRequestDetails';
 import DeletionRequestDetails from 'pages/Merchant/Requests/request-details/DeletionRequestDetails';
+import MandateDetails from 'pages/Merchant/MandatetManagement/MandateDetails';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -193,6 +194,13 @@ const merchantRoutes: RoutesType[] = [
     component: <MerchantMandateManagement />,
     rolesWithAccess: [UserLoginRoles.Merchant],
     willChildLinkShow: false,
+    children: [
+      {
+        name: 'Mandate Details',
+        path: 'mandate-details',
+        component: <MandateDetails />,
+      },
+    ],
   },
   {
     name: 'User Management',

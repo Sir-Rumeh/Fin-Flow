@@ -1,4 +1,9 @@
-import { MerchantDataRow, DashboardMerchantDataRow, MandateDataRow } from 'utils/interfaces';
+import {
+  MerchantDataRow,
+  DashboardMerchantDataRow,
+  MandateDataRow,
+  TransactionsDataRow,
+} from 'utils/interfaces';
 
 export const merchantsList: MerchantDataRow[] = [
   {
@@ -174,6 +179,54 @@ export const muiDashboardMerchantsList: DashboardMerchantDataRow[] = [
   },
 ];
 
+export const mandateList: MandateDataRow[] = [
+  {
+    id: 1,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Enabled',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 2,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Enabled',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 3,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Disabled',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 4,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Disabled',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 5,
+    accountId: 126473,
+    merchantId: 123455,
+    mandateCode: 123890,
+    mandateType: 'Variable',
+    requestType: 'Enabled',
+    dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+];
+
 export const pendingMandateList: MandateDataRow[] = [
   {
     id: 1,
@@ -315,5 +368,32 @@ export const rejectedMandateList: MandateDataRow[] = [
     mandateType: 'Variable',
     requestType: 'Deletion',
     dateRequested: '2015-03-25T12:00:00-06:30',
+  },
+];
+
+export const transactionHistory: TransactionsDataRow[] = [
+  {
+    id: 1,
+    accountId: 126473,
+    amount: '50,000',
+    date: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 2,
+    accountId: 126474,
+    amount: '50,000',
+    date: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 3,
+    accountId: 126475,
+    amount: '50,000',
+    date: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 4,
+    accountId: 126476,
+    amount: '50,000',
+    date: '2015-03-25T12:00:00-06:30',
   },
 ];
