@@ -13,14 +13,39 @@ export const appRoutes = {
   adminDashboard: {
     dashboard: {
       index: `${BASE_ROUTES.ADMIN}`,
-      merchantDetails: `${BASE_ROUTES.ADMIN}/merchant-details`,
+      merchantDetails: `${BASE_ROUTES.ADMIN}/dashboard/merchant-details`,
+      editMerchant: `${BASE_ROUTES.ADMIN}/dashboard/edit-merchant`,
     },
     requests: {
       index: `${BASE_ROUTES.ADMIN}/requests/merchants`,
-      merchantRequests: `${BASE_ROUTES.ADMIN}/requests/merchants`,
-      mandateRequests: `${BASE_ROUTES.ADMIN}/requests/mandates`,
-      accountRequests: `${BASE_ROUTES.ADMIN}/requests/accounts`,
-      profileRequests: `${BASE_ROUTES.ADMIN}/requests/profiles`,
+      merchantRequests: {
+        index: `${BASE_ROUTES.ADMIN}/requests/merchants`,
+        merchantCreationRequest: `${BASE_ROUTES.ADMIN}/requests/merchants/creation-request-details`,
+        merchantDeletionRequest: `${BASE_ROUTES.ADMIN}/requests/merchants/deletion-request-details`,
+        merchantUpdateRequest: `${BASE_ROUTES.ADMIN}/requests/merchants/update-request-details`,
+        merchantDisableRequest: `${BASE_ROUTES.ADMIN}/requests/merchants/disable-request-details`,
+      },
+      mandateRequests: {
+        index: `${BASE_ROUTES.ADMIN}/requests/mandates`,
+        mandateCreationRequest: `${BASE_ROUTES.ADMIN}/requests/mandates/creation-request-details`,
+        mandateDeletionRequest: `${BASE_ROUTES.ADMIN}/requests/mandates/deletion-request-details`,
+        mandateUpdateRequest: `${BASE_ROUTES.ADMIN}/requests/mandates/update-request-details`,
+        mandateDisableRequest: `${BASE_ROUTES.ADMIN}/requests/mandates/disable-request-details`,
+      },
+      accountRequests: {
+        index: `${BASE_ROUTES.ADMIN}/requests/accounts`,
+        accountCreationRequest: `${BASE_ROUTES.ADMIN}/requests/accounts/creation-request-details`,
+        accountDeletionRequest: `${BASE_ROUTES.ADMIN}/requests/accounts/deletion-request-details`,
+        accountUpdateRequest: `${BASE_ROUTES.ADMIN}/requests/accounts/update-request-details`,
+        accountDisableRequest: `${BASE_ROUTES.ADMIN}/requests/accounts/disable-request-details`,
+      },
+      profileRequests: {
+        index: `${BASE_ROUTES.ADMIN}/requests/profiles`,
+        profileCreationRequest: `${BASE_ROUTES.ADMIN}/requests/profiles/creation-request-details`,
+        profileDeletionRequest: `${BASE_ROUTES.ADMIN}/requests/profiles/deletion-request-details`,
+        profileUpdateRequest: `${BASE_ROUTES.ADMIN}/requests/profiles/update-request-details`,
+        profileDisableRequest: `${BASE_ROUTES.ADMIN}/requests/profiles/disable-request-details`,
+      },
     },
     merchantManagement: {
       index: `${BASE_ROUTES.ADMIN}/merchant-management`,

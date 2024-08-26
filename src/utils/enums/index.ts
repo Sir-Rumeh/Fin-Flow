@@ -3,6 +3,18 @@ export enum UserLoginRoles {
   Merchant = 'Merchant',
 }
 
+export enum RequestTypes {
+  Creation = 'Creation',
+  Deletion = 'Deletion',
+  Update = 'Update',
+  Disable = 'Disable',
+}
+export enum TabsListTabNames {
+  Approved = 'Approved',
+  Pending = 'Pending',
+  Rejected = 'Rejected',
+}
+
 export enum AdminDashboardPageType {
   DashboardIndex = 'DashboardIndex',
   ViewMerchantDetails = 'ViewMerchantDetails',

@@ -1,20 +1,20 @@
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import ButtonComponent from 'components/FormElements/Button';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import { muiDashboardMerchantsList } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
-import TableLogo from 'assets/images/table_logo.png';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
 import { useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
+import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
+import CustomTable from 'components/CustomTable';
 
 const DashboardListTable = () => {
-  const [confirmDisableModal, setConfirmDisableModal] = useState(false);
+  const [confirmDisableMerchant, setConfirmDisableMerchant] = useState(false);
+  const [actionSuccessfulModal, setActionSuccessfulModal] = useState(false);
 
   const navigate = useNavigate();
-  const id = '1';
   const columns: GridColDef[] = [
     {
       field: 'merchantName',
@@ -29,6 +29,7 @@ const DashboardListTable = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      sortable: false,
     },
     {
       field: 'phoneNumber',
@@ -36,6 +37,7 @@ const DashboardListTable = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      sortable: false,
     },
 
     {
@@ -55,7 +57,7 @@ const DashboardListTable = () => {
         const handleClick = () => {
           navigate({
             pathname: appRoutes.adminDashboard.merchantManagement.index,
-            search: `?${createSearchParams({ id })}`,
+            search: `?${createSearchParams({ id: params?.row.id })}`,
           });
         };
         return (
@@ -67,24 +69,42 @@ const DashboardListTable = () => {
               translationY={50}
             >
               <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
-                <Link
-                  to={`/${appRoutes.adminDashboard.merchantManagement.merchantDetails}`}
-                  className="w-full px-3 py-2 text-start font-bold opacity-75 hover:bg-purpleSecondary"
+                <button
+                  onClick={() =>
+                    navigate({
+                      pathname: `/${appRoutes.adminDashboard.dashboard.merchantDetails}`,
+                      search: `?${createSearchParams({ id: params?.row.id })}`,
+                    })
+                  }
+                  type="button"
+                  className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
                 >
                   View Details
-                </Link>
-                <Link
-                  to={`/${appRoutes.adminDashboard.merchantManagement.merchantDetails}`}
-                  className="w-full px-3 py-2 text-start font-bold opacity-75 hover:bg-purpleSecondary"
+                </button>
+                <button
+                  onClick={() =>
+                    navigate({
+                      pathname: `/${appRoutes.adminDashboard.dashboard.editMerchant}`,
+                      search: `?${createSearchParams({ id: params?.row.id })}`,
+                    })
+                  }
+                  type="button"
+                  className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
                 >
                   Edit Details
-                </Link>
+                </button>
                 <button
-                  onClick={() => setConfirmDisableModal(true)}
+                  onClick={() => setConfirmDisableMerchant(true)}
                   type="button"
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
                   Disable
+                </button>
+                <button
+                  type="button"
+                  className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
+                >
+                  Delete
                 </button>
               </div>
             </CustomPopover>
@@ -93,42 +113,37 @@ const DashboardListTable = () => {
       },
     },
   ];
+
   return (
     <>
       <div className="w-full">
-        {muiDashboardMerchantsList?.length > 0 ? (
-          <DataGrid
-            rows={muiDashboardMerchantsList}
-            columns={columns}
-            sx={{
-              border: 0,
-            }}
-            rowHeight={70}
-            columnHeaderHeight={70}
-            disableRowSelectionOnClick
-            disableColumnMenu
-            pagination
-          />
-        ) : (
-          <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
-            <div>
-              <img src={TableLogo} alt="group_logo" />
-            </div>
-            <div className="mt-8 text-center">
-              <h3 className="text-2xl font-bold">Oops! No Active Merchants</h3>
-            </div>
-          </div>
-        )}
+        <CustomTable tableData={muiDashboardMerchantsList} columns={columns} rowCount={20} />
       </div>
-      {confirmDisableModal && (
+      {confirmDisableMerchant && (
         <ModalWrapper
-          isOpen={confirmDisableModal}
-          setIsOpen={setConfirmDisableModal}
+          isOpen={confirmDisableMerchant}
+          setIsOpen={setConfirmDisableMerchant}
           title={'Disable Merchant?'}
           info={'You are about to disable this merchant, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
-          proceedAction={() => {}}
+          proceedAction={() => {
+            setConfirmDisableMerchant(false);
+            setActionSuccessfulModal(true);
+          }}
+        />
+      )}
+      {actionSuccessfulModal && (
+        <ModalWrapper
+          isOpen={actionSuccessfulModal}
+          setIsOpen={setActionSuccessfulModal}
+          title={'Success!!'}
+          info={'You have successfully disabled this merchant'}
+          icon={<ActionSuccessIcon />}
+          type={'completed'}
+          proceedAction={() => {
+            setActionSuccessfulModal(false);
+          }}
         />
       )}
     </>

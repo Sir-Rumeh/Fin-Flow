@@ -7,9 +7,13 @@ interface PopupProps {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   title: string;
   info: any;
+  feedback?: React.ReactNode;
   icon: JSX.Element;
-  type: string;
+  type: 'confirmation' | 'completed';
+  width?: string;
   proceedAction?: () => void;
+  proceedBackgroundColor?: string;
+  hoverBackgroundColor?: string;
 }
 
 export const ModalWrapper = ({
@@ -17,70 +21,57 @@ export const ModalWrapper = ({
   setIsOpen,
   title,
   info,
+  feedback,
   icon,
   type,
+  width = '650px',
   proceedAction,
+  proceedBackgroundColor,
+  hoverBackgroundColor,
 }: PopupProps) => {
   return (
     <>
-      <Modal isOpen={isOpen} setIsOpen={setIsOpen} width="w-[595px]">
-        <div className="mb-4 text-center">
+      <Modal isOpen={isOpen} setIsOpen={setIsOpen} width={width}>
+        <div className="mb-4 w-full p-1 text-center">
           <div className="mb-6 flex flex-col items-center justify-center gap-y-3">
             {icon}
             <h2 className="text-2xl font-bold">{title}</h2>
           </div>
-          <h2 className="mb-8 text-xl tracking-wider">{info}</h2>
+          <div className="mb-8 text-xl tracking-wider">{info}</div>
+          <div className="mt-6 w-full">{feedback}</div>
+          <div className="mt-[3rem]">
+            {type === 'confirmation' && (
+              <div className="flex items-center justify-center gap-x-5">
+                <ButtonComponent
+                  color="#5C068C"
+                  borderColor="#5C068C"
+                  border={0.5}
+                  width="15rem"
+                  onClick={() => setIsOpen(false)}
+                  title="No, Cancel"
+                />
 
-          {type === 'confirmation' && (
-            <div className="mb-6 mt-8 flex items-center justify-center gap-x-5">
+                <ButtonComponent
+                  color="white"
+                  width="15rem"
+                  variant="contained"
+                  backgroundColor={proceedBackgroundColor ? proceedBackgroundColor : ''}
+                  hoverBackgroundColor={hoverBackgroundColor ? hoverBackgroundColor : ''}
+                  onClick={() => proceedAction?.()}
+                  title="Yes, Proceed"
+                />
+              </div>
+            )}
+            {type === 'completed' && (
               <ButtonComponent
-                color="#5C068C"
-                borderColor="#5C068C"
-                border={0.5}
-                width="15rem"
-                onClick={() => setIsOpen(false)}
-                title="No, Cancel"
-              />
-
-              <ButtonComponent
-                color="white"
-                width="15rem"
                 variant="contained"
-                onClick={() => proceedAction?.()}
-                title="Yes Proceed"
-              />
-            </div>
-          )}
-          {type === 'reject' && (
-            <div className="flex w-full items-center justify-between">
-              <ButtonComponent
-                color="#5C068C"
-                borderColor="#5C068C"
-                border={0.5}
-                width="19rem"
-                onClick={() => setIsOpen(false)}
-                title="No, Cancel"
-              />
-
-              <ButtonComponent
                 color="white"
-                backgroundColor="#F34E4E"
-                width="19rem"
-                variant="contained"
-                onClick={() => proceedAction?.()}
-                title="Yes Proceed"
+                type="button"
+                title="Okay"
+                onClick={() => setIsOpen(false)}
               />
-            </div>
-          )}
-          {type === 'completed' && (
-            <ButtonComponent
-              variant="contained"
-              color="white"
-              type="button"
-              title="Okay"
-              onClick={() => setIsOpen(false)}
-            />
-          )}
+            )}
+          </div>
         </div>
       </Modal>
     </>

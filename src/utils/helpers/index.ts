@@ -1,5 +1,11 @@
 import { DataTableState } from 'utils/interfaces';
 
+export const checkRoute = (pathname: string, pathToCheck: string) => {
+  if (pathname.includes(pathToCheck)) {
+    return true;
+  }
+};
+
 export const handleNextPageChange = (
   newPageNumber: number,
   dataTableState: DataTableState,
