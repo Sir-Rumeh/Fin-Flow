@@ -6,8 +6,6 @@ import { useEffect, useState } from 'react';
 const NestedLink = ({ route }: { route: RoutesType }) => {
   const navigate = useNavigate();
   const [isChildrenOpen, setIsChildrenOpen] = useState(false);
-  const [pathToMaintain, setPathToMaintain] = useState('');
-  const initialRoute = route.layout + '/' + route.path.replace('/*', '');
 
   const activeRoute = (routeName: string) => {
     return location.pathname.includes(routeName);
@@ -15,7 +13,6 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
   const isParentRouteActive = activeRoute(route.path);
 
   useEffect(() => {
-    setPathToMaintain(location.pathname);
     if (!location.pathname.includes(route.path)) {
       setIsChildrenOpen(false);
     }
@@ -72,11 +69,11 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
           <div className="mb-3 flex flex-col items-start justify-center gap-y-1 bg-purpleSecondary px-6 pb-4 pt-2">
             {route.children?.map((childRoute: any) => {
               const isChildRouteActive = activeRoute(childRoute.path.replace('/*', ''));
-
+              const linkTo = `${route.layout}/${route.path}/${childRoute.path.replace('/*', '')}`;
               return (
                 <Link
                   key={childRoute.path}
-                  to={route.layout + '/' + route.path + '/' + childRoute.path.replace('/*', '')}
+                  to={linkTo}
                   className={`${
                     isChildRouteActive
                       ? 'slide-right blur:none bg-yellowPrimary font-semibold text-black opacity-[100%]'
