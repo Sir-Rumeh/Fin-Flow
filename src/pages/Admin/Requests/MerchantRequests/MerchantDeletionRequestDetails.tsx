@@ -17,11 +17,20 @@ import SubTitleIconGreen from 'assets/icons/SubTitleIconGreen';
 import SubTitleIconYellow from 'assets/icons/SubTitleIconYellow';
 
 const MerchantDeletionRequestDetails = () => {
-  const [confirmApproveRequest, setConfirmApproveRequest] = useState(false);
-  const [approveSuccessfulModal, setApproveSuccessfulModal] = useState(false);
-  const [confirmRejectRequest, setConfirmRejectRequest] = useState(false);
-  const [rejectSuccessfulModal, setRejectSuccessfulModal] = useState(false);
+  const [modals, setModals] = useState({
+    confirmApproveRequest: false,
+    confirmRejectRequest: false,
+    approveSuccessfulModal: false,
+    rejectSuccessfulModal: false,
+  });
 
+  const openModal = (modalName: keyof typeof modals) => {
+    setModals((prev) => ({ ...prev, [modalName]: true }));
+  };
+
+  const closeModal = (modalName: keyof typeof modals) => {
+    setModals((prev) => ({ ...prev, [modalName]: false }));
+  };
   const formik = useFormik({
     initialValues: {
       reasonForRejection: '',
@@ -55,7 +64,7 @@ const MerchantDeletionRequestDetails = () => {
                 title="Reject"
                 customPaddingX="3rem"
                 onClick={() => {
-                  setConfirmRejectRequest(true);
+                  openModal('confirmRejectRequest');
                 }}
               />
             </div>
@@ -70,7 +79,7 @@ const MerchantDeletionRequestDetails = () => {
                 title="Approve"
                 customPaddingX="3rem"
                 onClick={() => {
-                  setConfirmApproveRequest(true);
+                  openModal('confirmApproveRequest');
                 }}
               />
             </div>
@@ -167,10 +176,10 @@ const MerchantDeletionRequestDetails = () => {
           </div>
         </div>
       </div>
-      {confirmApproveRequest && (
+      {modals.confirmApproveRequest && (
         <ModalWrapper
-          isOpen={confirmApproveRequest}
-          setIsOpen={setConfirmApproveRequest}
+          isOpen={modals.confirmApproveRequest}
+          setIsOpen={() => closeModal('confirmApproveRequest')}
           title={'Approve Merchant Request?'}
           info={
             'You are about to approve this merchant deletion request, would you want to proceed with this?'
@@ -178,31 +187,31 @@ const MerchantDeletionRequestDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            setConfirmApproveRequest(false);
-            setApproveSuccessfulModal(true);
+            closeModal('confirmApproveRequest');
+            openModal('approveSuccessfulModal');
           }}
         />
       )}
 
-      {approveSuccessfulModal && (
+      {modals.approveSuccessfulModal && (
         <ModalWrapper
-          isOpen={approveSuccessfulModal}
-          setIsOpen={setApproveSuccessfulModal}
+          isOpen={modals.approveSuccessfulModal}
+          setIsOpen={() => closeModal('approveSuccessfulModal')}
           title={'Success!!'}
           info={'You have successfully approved this merchant deletion request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
-            setApproveSuccessfulModal(false);
+            closeModal('approveSuccessfulModal');
           }}
         />
       )}
 
-      {confirmRejectRequest && (
+      {modals.confirmRejectRequest && (
         <ModalWrapper
-          isOpen={confirmRejectRequest}
+          isOpen={modals.confirmRejectRequest}
           width="700px"
-          setIsOpen={setConfirmRejectRequest}
+          setIsOpen={() => closeModal('confirmRejectRequest')}
           title={'Reject Merchant Request?'}
           info={
             'You are about to reject this merchant deletion request, would you want to proceed with this?'
@@ -233,21 +242,21 @@ const MerchantDeletionRequestDetails = () => {
           proceedBackgroundColor="#F34E4E"
           hoverBackgroundColor="#8B0000"
           proceedAction={() => {
-            setConfirmRejectRequest(false);
-            setRejectSuccessfulModal(true);
+            closeModal('confirmRejectRequest');
+            openModal('rejectSuccessfulModal');
           }}
         />
       )}
-      {rejectSuccessfulModal && (
+      {modals.rejectSuccessfulModal && (
         <ModalWrapper
-          isOpen={rejectSuccessfulModal}
-          setIsOpen={setRejectSuccessfulModal}
+          isOpen={modals.rejectSuccessfulModal}
+          setIsOpen={() => closeModal('rejectSuccessfulModal')}
           title={'Success!!'}
           info={'You have successfully rejected this merchant deletion request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
-            setRejectSuccessfulModal(false);
+            closeModal('rejectSuccessfulModal');
           }}
         />
       )}
