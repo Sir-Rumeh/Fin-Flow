@@ -1,11 +1,6 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  CreationRequestIcon,
-  DeleteRequestIcon,
-  SuccessModalIcon,
-  UpdateRequestIcon,
-} from 'assets/icons';
+import { CreationRequestIcon, SuccessModalIcon, UpdateRequestIcon } from 'assets/icons';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import ButtonComponent from 'components/FormElements/Button';
 import { BiChevronDown, BiChevronRight, BiSearch } from 'react-icons/bi';
@@ -21,8 +16,6 @@ import { LiaTimesSolid } from 'react-icons/lia';
 import Tab from 'components/Tabs';
 import { FiDownload } from 'react-icons/fi';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
-import CustomPopover from 'hoc/PopOverWrapper';
-import PopoverTitle from 'components/common/PopoverTitle';
 import { transactionHistory } from 'utils/constants';
 import TableLogo from 'assets/images/table_logo.png';
 import { Popover } from '@mui/material';
@@ -105,12 +98,12 @@ const MandateDetails = () => {
     },
   ];
 
-  const buttonTitle = 'Disable';
+  let buttonTitle = 'Disable';
 
   const selectModal = () => {
-    if (buttonTitle === 'Disable') {
+    if (buttonTitle === 'Enable') {
       return openModal('openEnableMandate');
-    } else {
+    } else if (buttonTitle === 'Disable') {
       return openModal('openDisableMandate');
     }
   };
@@ -153,51 +146,6 @@ const MandateDetails = () => {
             width="150px"
             height="50px"
           />
-          {/* <CustomPopover
-            popoverId={1}
-            buttonIcon={<PopoverTitle title="Actions" />}
-            translationX={-40}
-            translationY={50}
-
-          >
-            <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
-              <Link
-                to={`/${appRoutes.merchantDashboard.mandateManagement.mandateDetails}`}
-                className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
-              >
-                View Details
-              </Link>
-              <button
-                type="button"
-                onClick={() => openModal('openTransactionHistory')}
-                className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
-              >
-                View Transactions
-              </button>
-              <button
-                type="button"
-                onClick={() => openModal('openModifyMandate')}
-                className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
-              >
-                Update Amount
-              </button>
-              <button
-                type="button"
-                onClick={() => selectModal()}
-                className={`w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary`}
-                // className={`w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary ${buttonColorClass}`}
-              >
-                {buttonTitle}
-              </button>
-              <button
-                type="button"
-                className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
-                onClick={() => openModal('openDeleteProfile')}
-              >
-                Delete
-              </button>
-            </div>
-          </CustomPopover> */}
         </div>
         <div className="mt-5 rounded-lg bg-white px-5 py-10">
           <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
@@ -512,7 +460,7 @@ const MandateDetails = () => {
           title={'Disable Mandate?'}
           info={'You are about to disable this mandate, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
-          type={'reject'}
+          type={'confirmation'}
           proceedAction={() => {
             openModal('confirmDisableMandate');
             closeModal('openDisableMandate');
@@ -584,7 +532,7 @@ const MandateDetails = () => {
             <button
               type="button"
               onClick={() => selectModal()}
-              className={`w-full px-3 py-2 text-start font-semibold text-redSecondary opacity-75 hover:bg-purpleSecondary`}
+              className={`w-full px-3 py-2 text-start font-semibold ${buttonTitle === 'Disable' ? 'text-redSecondary' : 'text-greenPrimary'} opacity-75 hover:bg-purpleSecondary`}
               // className={`w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary ${buttonColorClass}`}
             >
               {buttonTitle}

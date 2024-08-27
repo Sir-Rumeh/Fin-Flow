@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import {
   CreationRequestIcon,
@@ -56,6 +56,8 @@ const MandatetManagement = () => {
     openDeleteProfile: false,
     confirmDeleteProfile: false,
   });
+
+  const navigate = useNavigate();
 
   const openModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: true }));
@@ -260,7 +262,9 @@ const MandatetManagement = () => {
         <div className="flex items-center justify-between">
           <h2 className="text-2xl font-semibold">Mandate Management</h2>
           <ButtonComponent
-            onClick={() => {}}
+            onClick={() =>
+              navigate(`/${appRoutes.merchantDashboard.mandateManagement.createMandate}`)
+            }
             title="Create Mandate"
             backgroundColor="#5C068C"
             color="white"
@@ -503,7 +507,7 @@ const MandatetManagement = () => {
           title={'Disable Mandate?'}
           info={'You are about to disable this mandate, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
-          type={'reject'}
+          type={'confirmation'}
           proceedAction={() => {
             openModal('confirmDisableMandate');
             closeModal('openDisableMandate');

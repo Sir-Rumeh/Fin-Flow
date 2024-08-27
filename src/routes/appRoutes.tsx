@@ -39,6 +39,7 @@ import MandateRequestsRoutes from 'pages/Admin/Requests/MandateRequests/MandateR
 import AccountRequestsRoutes from 'pages/Admin/Requests/AccountRequests/AccountRequestsRoutes';
 import ProfileRequestsRoutes from 'pages/Admin/Requests/ProfileRequests/ProfileRequestsRoutes';
 import MandateDetails from 'pages/Merchant/MandatetManagement/MandateDetails';
+import CreateMandate from 'pages/Merchant/MandatetManagement/CreateMandate';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -217,6 +218,11 @@ const merchantRoutes: RoutesType[] = [
         name: 'Mandate Details',
         path: 'mandate-details',
         component: <MandateDetails />,
+      },
+      {
+        name: 'Create Mandate',
+        path: 'create-mandate',
+        component: <CreateMandate />,
       },
     ],
   },

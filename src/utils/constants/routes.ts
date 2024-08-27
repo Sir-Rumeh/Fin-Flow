@@ -82,6 +82,7 @@ export const appRoutes = {
     mandateManagement: {
       index: `${BASE_ROUTES.MERCHANT}/mandate-management`,
       mandateDetails: `${BASE_ROUTES.MERCHANT}/mandate-management/mandate-details`,
+      createMandate: `${BASE_ROUTES.MERCHANT}/mandate-management/create-mandate`,
     },
     userManagement: {
       index: `${BASE_ROUTES.MERCHANT}/user-management`,
