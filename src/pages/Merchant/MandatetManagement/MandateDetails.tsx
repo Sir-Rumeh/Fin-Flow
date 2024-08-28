@@ -121,6 +121,8 @@ const MandateDetails = () => {
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
+  const containerClass = 'flex w-[300px] flex-col gap-8';
+
   return (
     <>
       <div className="px-5 py-5">
@@ -194,14 +196,14 @@ const MandateDetails = () => {
             </div>
             <div className="h-[2px] w-full bg-grayPrimary"></div>
             <div className="mt-4 flex flex-col justify-between gap-5 md:flex-row md:gap-0">
-              <div className="flex w-[300px] flex-col gap-8">
+              <div className={containerClass}>
                 <DetailsCard title="Payer Name" content="Vekee James Ventures" />
                 <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
               </div>
-              <div className="flex w-[300px] flex-col gap-8">
+              <div className={containerClass}>
                 <DetailsCard title="Email Address" content="vekee@gmail.com" />
               </div>
-              <div className="flex w-[300px] flex-col gap-8">
+              <div className={containerClass}>
                 <DetailsCard title="Phone Number" content="09028272009" />
               </div>
             </div>
@@ -212,14 +214,14 @@ const MandateDetails = () => {
             </div>
             <div className="h-[2px] w-full bg-grayPrimary"></div>
             <div className="mt-4 flex flex-col justify-between gap-5 md:flex-row md:gap-0">
-              <div className="flex w-[300px] flex-col gap-8">
+              <div className={containerClass}>
                 <DetailsCard title="Payer Name" content="Vekee James Ventures" />
                 <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
               </div>
-              <div className="flex w-[300px] flex-col gap-8">
+              <div className={containerClass}>
                 <DetailsCard title="Email Address" content="vekee@gmail.com" />
               </div>
-              <div className="flex w-[300px] flex-col gap-8">
+              <div className={containerClass}>
                 <DetailsCard title="Phone Number" content="09028272009" />
               </div>
             </div>
@@ -234,14 +236,14 @@ const MandateDetails = () => {
             </div>
             <div className="h-[2px] w-full bg-grayPrimary"></div>
             <div className="mt-4 flex flex-col justify-between gap-5 md:flex-row md:gap-0">
-              <div className="flex w-[300px] flex-col gap-8">
+              <div className={containerClass}>
                 <DetailsCard title="Biller Account Number" content="12345678" />
                 <DetailsCard title="Bank Name" content="Access Bank" />
               </div>
-              <div className="flex w-[300px] flex-col gap-8">
+              <div className={containerClass}>
                 <DetailsCard title="Account Name" content="Vekee James Ventures" />
               </div>
-              <div className="flex w-[300px] flex-col gap-8">
+              <div className={containerClass}>
                 <DetailsCard title="Bank Code" content="09028272009" />
               </div>
             </div>
@@ -252,10 +254,10 @@ const MandateDetails = () => {
             </div>
             <div className="h-[2px] w-full bg-grayPrimary"></div>
             <div className="mt-4 flex flex-col justify-between gap-5 md:flex-row md:gap-0">
-              <div className="flex w-[300px] flex-col gap-8">
+              <div className={containerClass}>
                 <DetailsCard title="ID" content="12345678" />
               </div>
-              <div className="flex w-[300px] flex-col gap-8">
+              <div className={containerClass}>
                 <DetailsCard title="Created By" content="Vekee James Ventures" />
               </div>
             </div>
@@ -270,13 +272,13 @@ const MandateDetails = () => {
             </div>
             <div className="h-[2px] w-full bg-grayPrimary"></div>
             <div className="mt-4 flex flex-col justify-between gap-5 md:flex-row md:gap-0">
-              <div className="flex w-[300px] flex-col gap-8">
+              <div className={containerClass}>
                 <DetailsCard title="ID" content="12345678" />
               </div>
-              <div className="flex w-[300px] flex-col gap-8">
+              <div className={containerClass}>
                 <DetailsCard title="Approved By" content="Vekee James Ventures" />
               </div>
-              <div className="flex w-[300px] flex-col gap-8">
+              <div className={containerClass}>
                 <DetailsCard title="Date Approved" content="15/11/2023 - 12:12:12" />
               </div>
             </div>
@@ -533,7 +535,6 @@ const MandateDetails = () => {
               type="button"
               onClick={() => selectModal()}
               className={`w-full px-3 py-2 text-start font-semibold ${buttonTitle === 'Disable' ? 'text-redSecondary' : 'text-greenPrimary'} opacity-75 hover:bg-purpleSecondary`}
-              // className={`w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary ${buttonColorClass}`}
             >
               {buttonTitle}
             </button>

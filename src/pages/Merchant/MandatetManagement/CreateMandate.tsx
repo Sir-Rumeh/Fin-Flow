@@ -412,20 +412,22 @@ const CreateMandate = () => {
         {tab === 2 && (
           <div className="mt-5 rounded-lg bg-white px-5 py-10">
             <div className="flex items-center justify-around rounded-[5px] border-[3px] border-dashed border-gray-200 px-6 py-10">
-              <div className="flex h-[150px] w-[500px] items-center justify-around rounded-md bg-[#F0F0F0]">
+              <div className="flex h-auto w-auto items-center justify-around rounded-md bg-[#F0F0F0] px-40 py-10">
+                {/* <div className="flex min-h-[150px] min-w-[500px] items-center justify-around rounded-md bg-[#F0F0F0]"> */}
                 <section>
                   <div {...getRootProps({ className: 'dropzone' })}>
                     <input {...getInputProps()} />
-                    <p className="font-semibold">Drag and drop excel sheet</p>
+                    <p className="text-center font-semibold">Drag and drop excel sheet</p>
                     <p className="text-center font-semibold">or</p>
-                    <button className="mt-2 flex items-center gap-2 rounded-lg border border-lightPurple px-4 py-2 text-lightPurple">
-                      <BiDownload className="h-5 w-5" /> Browse Document
-                    </button>
+                    <div className="flex items-center justify-around">
+                      <button className="mt-2 flex items-center gap-2 rounded-lg border border-lightPurple px-4 py-2 text-center text-lightPurple">
+                        <BiDownload className="h-5 w-5" /> Browse Document
+                      </button>
+                    </div>
                   </div>
-                  {/* <aside>
-                    <h4>Files</h4>
-                    <ul>{files}</ul>
-                  </aside> */}
+                  <aside className="mt-4 flex flex-col">
+                    <div className="text-sm text-lightPurple">{files}</div>
+                  </aside>
                 </section>
               </div>
             </div>
