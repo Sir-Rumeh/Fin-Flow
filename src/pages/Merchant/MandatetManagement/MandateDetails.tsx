@@ -1,22 +1,13 @@
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import {
-  CreationRequestIcon,
-  DeleteRequestIcon,
-  DisableRequestIcon,
-  SuccessModalIcon,
-  UpdateRequestIcon,
-} from 'assets/icons';
-import { BiChevronDown, BiSearch } from 'react-icons/bi';
-import { mandateList, transactionHistory } from 'utils/constants';
-import appRoutes from 'utils/constants/routes';
-import TableLogo from 'assets/images/table_logo.png';
-import { RequestType } from 'utils/enums';
+import { Link } from 'react-router-dom';
+import { CreationRequestIcon, SuccessModalIcon, UpdateRequestIcon } from 'assets/icons';
+import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import ButtonComponent from 'components/FormElements/Button';
-import { IoFilter } from 'react-icons/io5';
-import CustomPopover from 'hoc/PopOverWrapper';
-import PopoverTitle from 'components/common/PopoverTitle';
+import { BiChevronDown, BiChevronRight, BiSearch } from 'react-icons/bi';
+import { ModalWrapper } from 'hoc/ModalWrapper';
+import RedAlertIcon from 'assets/icons/RedAlertIcon';
+import appRoutes from 'utils/constants/routes';
+import { useTabContext } from '../../../context/TabContext';
 
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -24,8 +15,10 @@ import Modal from '@mui/material/Modal';
 import { LiaTimesSolid } from 'react-icons/lia';
 import Tab from 'components/Tabs';
 import { FiDownload } from 'react-icons/fi';
-import { ModalWrapper } from 'hoc/ModalWrapper';
-import RedAlertIcon from 'assets/icons/RedAlertIcon';
+import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { transactionHistory } from 'utils/constants';
+import TableLogo from 'assets/images/table_logo.png';
+import { Popover } from '@mui/material';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -41,8 +34,8 @@ const style = {
   fontFamily: 'sans-serif',
 };
 
-const MandatetManagement = () => {
-  const [tab, setTab] = useState(1);
+const MandateDetails = () => {
+  const { tab, setTab } = useTabContext();
 
   const [modals, setModals] = useState({
     openTransactionHistory: false,
@@ -57,8 +50,6 @@ const MandatetManagement = () => {
     confirmDeleteProfile: false,
   });
 
-  const navigate = useNavigate();
-
   const openModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: true }));
   };
@@ -66,155 +57,6 @@ const MandatetManagement = () => {
   const closeModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
-
-  const MandateTableColumn: GridColDef[] = [
-    {
-      field: 'accountId',
-      headerName: 'Account ID',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-    },
-    {
-      field: 'merchantId',
-      headerName: 'Merchant ID',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-    },
-    {
-      field: 'mandateCode',
-      headerName: 'Mandate Code',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-    },
-    {
-      field: 'mandateType',
-      headerName: 'Mandate Type',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-    },
-    {
-      field: 'requestType',
-      headerName: 'Request Type',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-      renderCell: (params) => {
-        const renderIcon = (IconComponent: any, colorClass: any) => (
-          <div className="flex items-center gap-2">
-            <IconComponent />
-            <span className={`mb-0 ${colorClass}`}>{params.value}</span>
-          </div>
-        );
-
-        const getIconAndColor = (requestType: RequestType) => {
-          switch (requestType) {
-            case RequestType.Creation:
-            case RequestType.Enabled:
-              return { IconComponent: CreationRequestIcon, colorClass: 'text-greenPrimary' };
-            case RequestType.Update:
-              return { IconComponent: UpdateRequestIcon, colorClass: 'text-lightPurple' };
-            case RequestType.Disable:
-              return { IconComponent: DisableRequestIcon, colorClass: 'text-yellowNeutral' };
-            case RequestType.Deletion:
-            case RequestType.Disabled:
-              return { IconComponent: DeleteRequestIcon, colorClass: 'text-redSecondary' };
-            default:
-              return null;
-          }
-        };
-
-        const iconAndColor = getIconAndColor(params.value);
-
-        if (iconAndColor) {
-          return renderIcon(iconAndColor.IconComponent, iconAndColor.colorClass);
-        }
-
-        return <span>{params.value}</span>;
-      },
-    },
-    {
-      field: 'dateRequested',
-      headerName: 'Date Requested',
-      width: screen.width < 1000 ? 50 : 50,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-      valueGetter: (params: any) => new Date(params).toLocaleDateString(),
-    },
-    {
-      field: 'actions',
-      headerName: 'Action',
-      headerClassName: 'ag-thead ',
-      sortable: false,
-      renderCell: (params: GridRenderCellParams) => {
-        const requestType = params.row.requestType;
-
-        const isEnabled = requestType === RequestType.Enabled;
-
-        const buttonTitle = isEnabled ? 'Disable' : 'Enable';
-        const buttonColorClass = isEnabled ? 'text-red-400' : 'text-greenPrimary';
-
-        const selectModal = () => {
-          if (buttonTitle === 'Enable') {
-            return openModal('openEnableMandate');
-          } else {
-            return openModal('openDisableMandate');
-          }
-        };
-
-        return (
-          <div className="-ml-1 h-full border-none">
-            <CustomPopover
-              popoverId={params?.row.id}
-              buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-40}
-              translationY={50}
-            >
-              <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
-                <Link
-                  to={`/${appRoutes.merchantDashboard.mandateManagement.mandateDetails}`}
-                  className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
-                >
-                  View Details
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => openModal('openTransactionHistory')}
-                  className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
-                >
-                  View Transactions
-                </button>
-                <button
-                  type="button"
-                  onClick={() => openModal('openModifyMandate')}
-                  className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
-                >
-                  Update Amount
-                </button>
-                <button
-                  type="button"
-                  onClick={() => selectModal()}
-                  className={`w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary ${buttonColorClass}`}
-                >
-                  {buttonTitle}
-                </button>
-                <button
-                  type="button"
-                  className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
-                  onClick={() => openModal('openDeleteProfile')}
-                >
-                  Delete
-                </button>
-              </div>
-            </CustomPopover>
-          </div>
-        );
-      },
-    },
-  ];
 
   const TransactionsTableColumn: GridColDef[] = [
     {
@@ -256,81 +98,154 @@ const MandatetManagement = () => {
     },
   ];
 
+  let buttonTitle = 'Disable';
+
+  const selectModal = () => {
+    if (buttonTitle === 'Enable') {
+      return openModal('openEnableMandate');
+    } else if (buttonTitle === 'Disable') {
+      return openModal('openDisableMandate');
+    }
+  };
+
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const open = Boolean(anchorEl);
+  const id = open ? 'simple-popover' : undefined;
+
   return (
     <>
       <div className="px-5 py-5">
-        <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold">Mandate Management</h2>
+        <div className="flex items-center gap-2">
+          <Link
+            to={`/${appRoutes.merchantDashboard.mandateManagement.index}`}
+            className="cursor-pointer text-sm text-darkgray"
+          >
+            Mandate Management
+          </Link>{' '}
+          <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
+          <span className="text-sm text-lightPurple">Request Details</span>
+        </div>
+        <div className="mt-4 flex items-center justify-between">
+          <h2 className="mt-3 text-xl font-semibold">Request ID : Req123456</h2>
           <ButtonComponent
-            onClick={() =>
-              navigate(`/${appRoutes.merchantDashboard.mandateManagement.createMandate}`)
-            }
-            title="Create Mandate"
+            onClick={(e) => handleClick(e)}
+            title="Actions"
+            children={<BiChevronDown className="mb-[1px] ml-2 h-8 w-8" />}
             backgroundColor="#5C068C"
+            hoverBackgroundColor="#5C067C"
             color="white"
-            width="200px"
+            width="150px"
             height="50px"
           />
         </div>
-        <div className="mt-5 rounded-lg bg-white px-5 py-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <ButtonComponent
-                onClick={() => {}}
-                title="Filter by"
-                children={<IoFilter className="mb-[1px] ml-3 h-5 w-5" />}
-                color="#5C068C"
-                border={1}
-                width="150px"
-                height="45px"
-              />
-              <div className="flex h-[45px] w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2">
-                <BiSearch className="h-6 w-6" />
-                <input
-                  type="text"
-                  className="w-full border-none focus:border-none focus:outline-none"
-                  placeholder="Search"
-                />
+        <div className="mt-5 rounded-lg bg-white px-5 py-10">
+          <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+            <div className="flex items-center justify-between">
+              <p className="my-3 text-lg font-semibold">Request Details</p>
+              <div className="flex items-center gap-2">
+                <p>Mandate Type</p>
+                <div className="flex items-center gap-2">
+                  <UpdateRequestIcon />
+                  <p className="text-lightPurple">Variable</p>
+                </div>
               </div>
             </div>
-            <ButtonComponent
-              onClick={() => {}}
-              title="Export"
-              children={<BiChevronDown className="mb-[1px] ml-2 h-8 w-8" />}
-              color="#5C068C"
-              border={1}
-              width="150px"
-              height="45px"
-            />
+            <div className="h-[2px] w-full bg-grayPrimary"></div>
+            <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+              <DetailsCard title="Account ID" content="12345" />
+              <DetailsCard title="Date Created" content="12/12/2024 - 03:00pm" />
+              <DetailsCard title="Effective Date" content="12/12/2024" />
+              <DetailsCard title="Frequency" content="Monthly" />
+              <DetailsCard title="Account Number" content="1234567" />
+              <DetailsCard title="Merchant ID" content="12345" />
+              <DetailsCard title="Product ID" content="12345" />
+              <DetailsCard title="End Date" content="12/12/2024" />
+              <DetailsCard title="Service" content="Life Insurance" />
+              <DetailsCard title="Account Name" content="Fair Money" />
+              <DetailsCard title="Merchant Code" content="12345" />
+              <DetailsCard title="Amount" content="N 500,000" contentClassName="text-lightPurple" />
+              <DetailsCard title="Day to apply" content="10/12/2024" />
+              <DetailsCard title="Narration" content="Any narration can be here" />
+              <DetailsCard title="Bank Code" content="787878" />
+            </div>
           </div>
-          <div className="mt-4 h-[2px] w-full bg-grayPrimary"></div>
-          <div className="mt-6 w-full">
-            {mandateList.length > 0 ? (
-              <DataGrid
-                rows={mandateList}
-                columns={MandateTableColumn}
-                sx={{
-                  border: 0,
-                }}
-                rowHeight={70}
-                columnHeaderHeight={70}
-                disableRowSelectionOnClick
-                disableColumnMenu
-                pagination
-              />
-            ) : (
-              <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
-                <div>
-                  <img src={TableLogo} alt="group_logo" />
-                </div>
-                <div className="mt-8 text-center">
-                  <h3 className="text-2xl font-bold">Oops! No Active Mandates</h3>
-                </div>
+          <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+            <div className="">
+              <p className="my-3 text-lg font-semibold">Payer Details</p>
+            </div>
+            <div className="h-[2px] w-full bg-grayPrimary"></div>
+            <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+              <DetailsCard title="Payer Name" content="Vekee James Ventures" />
+              <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
+              <DetailsCard title="Email Address" content="vekee@gmail.com" />
+              <DetailsCard title="Phone Number" content="09028272009" />
+            </div>
+          </div>
+          <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+            <div className="">
+              <p className="my-3 text-lg font-semibold">Payee Details</p>
+            </div>
+            <div className="h-[2px] w-full bg-grayPrimary"></div>
+            <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+              <DetailsCard title="Payer Name" content="Vekee James Ventures" />
+              <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
+              <DetailsCard title="Email Address" content="vekee@gmail.com" />
+              <DetailsCard title="Phone Number" content="09028272009" />
+            </div>
+          </div>
+          <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+            <div className="flex items-center justify-between">
+              <p className="my-3 text-lg font-semibold">Biller Details</p>
+              <div className="flex items-center gap-2">
+                <p>Biller Code :</p>
+                <p>12344</p>
               </div>
-            )}
+            </div>
+            <div className="h-[2px] w-full bg-grayPrimary"></div>
+            <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+              <DetailsCard title="Biller Account Number" content="12345678" />
+              <DetailsCard title="Bank Name" content="Access Bank" />
+              <DetailsCard title="Account Name" content="Vekee James Ventures" />
+              <DetailsCard title="Bank Code" content="09028272009" />
+            </div>
+          </div>
+          <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+            <div className="flex items-center justify-between">
+              <p className="my-3 text-lg font-semibold">Creator Details</p>
+            </div>
+            <div className="h-[2px] w-full bg-grayPrimary"></div>
+            <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+              <DetailsCard title="ID" content="12345678" />
+              <DetailsCard title="Created By" content="Vekee James Ventures" />
+            </div>
+          </div>
+          <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+            <div className="flex items-center justify-between">
+              <p className="my-3 text-lg font-semibold">Account Approval Details</p>
+              <div className="flex items-center gap-2">
+                <CreationRequestIcon />
+                <p className="text-greenPrimary">Approved</p>
+              </div>
+            </div>
+            <div className="h-[2px] w-full bg-grayPrimary"></div>
+            <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+              <DetailsCard title="ID" content="12345678" />
+              <DetailsCard title="Approved By" content="Vekee James Ventures" />
+              <DetailsCard title="Date Approved" content="15/11/2023 - 12:12:12" />
+            </div>
           </div>
         </div>
       </div>
+
       {modals.openTransactionHistory && (
         <Modal
           open={modals.openTransactionHistory}
@@ -550,8 +465,51 @@ const MandatetManagement = () => {
           proceedAction={() => closeModal('confirmDeleteProfile')}
         />
       )}
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+      >
+        <Typography sx={{ p: 2 }}>
+          <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
+            <button
+              type="button"
+              onClick={() => openModal('openTransactionHistory')}
+              className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
+            >
+              View Transactions
+            </button>
+            <button
+              type="button"
+              onClick={() => openModal('openModifyMandate')}
+              className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
+            >
+              Update Amount
+            </button>
+            <button
+              type="button"
+              onClick={() => selectModal()}
+              className={`w-full px-3 py-2 text-start font-semibold ${buttonTitle === 'Disable' ? 'text-redSecondary' : 'text-greenPrimary'} opacity-75 hover:bg-purpleSecondary`}
+            >
+              {buttonTitle}
+            </button>
+            <button
+              type="button"
+              className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
+              onClick={() => openModal('openDeleteProfile')}
+            >
+              Delete
+            </button>
+          </div>
+        </Typography>
+      </Popover>
     </>
   );
 };
 
-export default MandatetManagement;
+export default MandateDetails;

@@ -235,7 +235,7 @@ const DisableRequestDetails = () => {
           title={'Reject Request?'}
           info={RejectInfo}
           icon={<RedAlertIcon />}
-          type={'reject'}
+          type={'confirmation'}
           proceedAction={() => {
             closeModal('confirmReject');
             openModal('rejectSuccess');

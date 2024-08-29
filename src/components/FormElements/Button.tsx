@@ -1,7 +1,8 @@
 import { Button } from '@mui/material';
+import { MouseEvent } from 'react';
 
 type Props = {
-  onClick?: () => void;
+  onClick?: ((event: MouseEvent<HTMLButtonElement>) => void) | (() => void);
   disabled?: boolean;
   children?: JSX.Element | string;
   width?: string;

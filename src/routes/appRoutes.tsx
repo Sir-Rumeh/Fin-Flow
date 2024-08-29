@@ -38,6 +38,8 @@ import MerchantRequestsRoutes from 'pages/Admin/Requests/MerchantRequests/Mercha
 import MandateRequestsRoutes from 'pages/Admin/Requests/MandateRequests/MandateRequestsRoutes';
 import AccountRequestsRoutes from 'pages/Admin/Requests/AccountRequests/AccountRequestsRoutes';
 import ProfileRequestsRoutes from 'pages/Admin/Requests/ProfileRequests/ProfileRequestsRoutes';
+import MandateDetails from 'pages/Merchant/MandatetManagement/MandateDetails';
+import CreateMandate from 'pages/Merchant/MandatetManagement/CreateMandate';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -211,6 +213,18 @@ const merchantRoutes: RoutesType[] = [
     component: <MerchantMandateManagement />,
     rolesWithAccess: [UserLoginRoles.Merchant],
     willChildLinkShow: false,
+    children: [
+      {
+        name: 'Mandate Details',
+        path: 'mandate-details',
+        component: <MandateDetails />,
+      },
+      {
+        name: 'Create Mandate',
+        path: 'create-mandate',
+        component: <CreateMandate />,
+      },
+    ],
   },
   {
     name: 'User Management',
