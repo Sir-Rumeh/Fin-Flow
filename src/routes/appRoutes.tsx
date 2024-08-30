@@ -40,6 +40,8 @@ import AccountRequestsRoutes from 'pages/Admin/Requests/AccountRequests/AccountR
 import ProfileRequestsRoutes from 'pages/Admin/Requests/ProfileRequests/ProfileRequestsRoutes';
 import MandateDetails from 'pages/Merchant/MandatetManagement/MandateDetails';
 import CreateMandate from 'pages/Merchant/MandatetManagement/CreateMandate';
+import EditMerchant from 'pages/Admin/MerchantManagement/EditMerchant';
+import CreateMerchant from 'pages/Admin/MerchantManagement/CreateMerchant';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -107,6 +109,16 @@ const adminRoutes: RoutesType[] = [
         name: 'Merchant Details',
         path: 'merchant-details',
         component: <MerchantDetails />,
+      },
+      {
+        name: 'Onboard Merchant',
+        path: 'onboard-merchant',
+        component: <CreateMerchant />,
+      },
+      {
+        name: 'Edit Merchant',
+        path: 'edit-merchant',
+        component: <EditMerchant />,
       },
     ],
   },

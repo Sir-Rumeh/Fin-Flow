@@ -97,113 +97,71 @@ const MandateDeletionRequestDetails = () => {
                 </>
               }
             >
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Account ID" content="1234545" />
-                <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
-                <DetailsCard title="Effective Date" content="12/12/2024" />
-                <DetailsCard title="Frequency" content="Monthly" />
-                <DetailsCard title="Account Number" content="0909887674" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Merchant ID" content="1234545" />
-                <DetailsCard title="Merchant ID" content="1234545" />
-                <DetailsCard title="End Date" content="12/12/2024" />
-                <DetailsCard title="Service" content="Life Insurance" />
-                <DetailsCard title="Account Name" content="Fair Money" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Merchant Code" content="1234545" />
-                <DetailsCard title="Amount" content="N5,000,000" />
-                <DetailsCard title="Day to Apply" content="13th" />
-                <DetailsCard title="Narration" content="Mandate Narration" />
-                <DetailsCard title="Bank Code" content="1234545" />
-              </div>
+              <DetailsCard title="Account ID" content="1234545" />
+              <DetailsCard title="Merchant ID" content="1234545" />
+              <DetailsCard title="Merchant Code" content="1234545" />
+              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
+              <DetailsCard title="Merchant ID" content="1234545" />
+              <DetailsCard title="Amount" content="N5,000,000" />
+              <DetailsCard title="Effective Date" content="12/12/2024" />
+              <DetailsCard title="End Date" content="12/12/2024" />
+              <DetailsCard title="Day to Apply" content="13th" />
+              <DetailsCard title="Frequency" content="Monthly" />
+              <DetailsCard title="Service" content="Life Insurance" />
+              <DetailsCard title="Narration" content="Mandate Narration" />
+              <DetailsCard title="Account Number" content="0909887674" />
+              <DetailsCard title="Account Name" content="Fair Money" />
+              <DetailsCard title="Bank Code" content="1234545" />
             </ItemDetailsContainer>
           </div>
 
           <div className="mt-10">
             <ItemDetailsContainer title="Payer Details">
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Payer Name" content="Ugobest Venture" />
-                <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Email Address" content="ugobest@gmal.com" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Phone Number" content="09093874628" />
-              </div>
+              <DetailsCard title="Payer Name" content="Ugobest Venture" />
+              <DetailsCard title="Email Address" content="ugobest@gmal.com" />
+              <DetailsCard title="Phone Number" content="09093874628" />
+              <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Payee Details">
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Payer Name" content="Ugobest Venture" />
-                <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Email Address" content="ugobest@gmal.com" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Phone Number" content="09093874628" />
-              </div>
+              <DetailsCard title="Payee Name" content="Ugobest Venture" />
+              <DetailsCard title="Email Address" content="ugobest@gmal.com" />
+              <DetailsCard title="Phone Number" content="09093874628" />
+              <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Biller Details">
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Biller Account Number" content="9093874628" />
-                <DetailsCard title="Biller Code" content="123545" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Bank Name" content="Access" />
-                <DetailsCard title="Bank Code" content=";74628" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Account Name" content="Ugobest Venture" />
-              </div>
+              <DetailsCard title="Biller Account Number" content="9093874628" />
+              <DetailsCard title="Bank Name" content="Access" />
+              <DetailsCard title="Account Name" content="Ugobest Venture" />
+              <DetailsCard title="Biller Code" content="123545" />
+              <DetailsCard title="Bank Code" content=";74628" />
             </ItemDetailsContainer>
           </div>
 
           <div className="mt-10">
             <ItemDetailsContainer title="Creator Details">
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="ID" content="9344243" />
-                <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Created By" content="John Doe" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
-              </div>
+              <DetailsCard title="ID" content="9344243" />
+              <DetailsCard title="Created By" content="John Doe" />
+              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
+              <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
             </ItemDetailsContainer>
           </div>
 
           <div className="mt-10">
             <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="ID" content="9344243" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Approved By" content="John Doe" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Date Approved" content="12/12/2024 : 03:00pm" />
-              </div>
+              <DetailsCard title="ID" content="9344243" />
+              <DetailsCard title="Approved By" content="John Doe" />
+              <DetailsCard title="Date Approved" content="12/12/2024 : 03:00pm" />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Requested By">
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="ID" content="9344243" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Requested By" content="John Doe" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Date Requested" content="12/12/2024 : 03:00pm" />
-              </div>
+              <DetailsCard title="ID" content="9344243" />
+              <DetailsCard title="Requested By" content="John Doe" />
+              <DetailsCard title="Date Requested" content="12/12/2024 : 03:00pm" />
             </ItemDetailsContainer>
           </div>
         </div>

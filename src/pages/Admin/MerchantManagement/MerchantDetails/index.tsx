@@ -31,7 +31,7 @@ const MerchantDetails = () => {
         <span className="text-lightPurple">Merchant Details</span>
       </div>
       <div className="mt-6">
-        <h2 className="text-lg font-semibold md:text-2xl">Request ID : Req123456</h2>
+        <h2 className="text-lg font-semibold md:text-2xl">Merchant ID : Req123456</h2>
       </div>
       <div className="mt-5 rounded-lg bg-white px-5 py-8">
         <div className="bg-lilacPurple rounded-lg px-6 py-4">
@@ -68,44 +68,26 @@ const MerchantDetails = () => {
         </div>
         <div className="mt-10">
           <ItemDetailsContainer title="Merchant Details">
-            <div className="flex w-[300px] flex-col gap-10">
-              <DetailsCard title="Merchant ID" content="12345" />
-              <DetailsCard title="CIF Number" content="12345" />
-            </div>
-            <div className="flex w-[300px] flex-col gap-10">
-              <DetailsCard title="Merchant Name" content="Fair Money" />
-              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
-            </div>
-            <div className="flex w-[300px] flex-col gap-10">
-              <DetailsCard title="Merchant Code" content="12345" />
-            </div>
+            <DetailsCard title="Merchant ID" content="12345" />
+            <DetailsCard title="Merchant Name" content="Fair Money" />
+            <DetailsCard title="Merchant Code" content="12345" />
+            <DetailsCard title="CIF Number" content="12345" />
+            <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
           </ItemDetailsContainer>
         </div>
         <div className="mt-10">
           <ItemDetailsContainer title="Creator Details">
-            <div className="flex w-[300px] flex-col gap-10">
-              <DetailsCard title="ID" content="9344243" />
-              <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
-            </div>
-            <div className="flex w-[300px] flex-col gap-10">
-              <DetailsCard title="Created By" content="John Doe" />
-            </div>
-            <div className="flex w-[300px] flex-col gap-10">
-              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
-            </div>
+            <DetailsCard title="ID" content="9344243" />
+            <DetailsCard title="Created By" content="John Doe" />
+            <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
+            <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
           </ItemDetailsContainer>
         </div>
         <div className="mt-10">
           <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
-            <div className="flex w-[300px] flex-col gap-10">
-              <DetailsCard title="ID" content="9344243" />
-            </div>
-            <div className="flex w-[300px] flex-col gap-10">
-              <DetailsCard title="Approved By" content="John Doe" />
-            </div>
-            <div className="flex w-[300px] flex-col gap-10">
-              <DetailsCard title="Date Approved" content="12/12/2024 : 03:00pm" />
-            </div>
+            <DetailsCard title="ID" content="9344243" />
+            <DetailsCard title="Approved By" content="John Doe" />
+            <DetailsCard title="Date Approved" content="12/12/2024 : 03:00pm" />
           </ItemDetailsContainer>
         </div>
       </div>
