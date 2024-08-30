@@ -52,7 +52,6 @@ const ButtonComponent = (props: Props) => {
           justifyContent: 'flex',
           rowGap: '2px',
           padding: '5px',
-          // font: 'inherit',
           paddingX: props.customPaddingX ? props.customPaddingX : '5px',
         }}
         fullWidth={props.fullWidth}

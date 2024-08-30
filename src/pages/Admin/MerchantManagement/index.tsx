@@ -19,6 +19,7 @@ import PopoverTitle from 'components/common/PopoverTitle';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
+import BoldArrowDown from 'assets/icons/BoldArrowDown';
 
 const MerchantManagement = () => {
   const navigate = useNavigate();
@@ -60,8 +61,8 @@ const MerchantManagement = () => {
       sortable: false,
     },
     {
-      field: 'requestType',
-      headerName: 'Request Type',
+      field: 'status',
+      headerName: 'Status',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
@@ -69,20 +70,16 @@ const MerchantManagement = () => {
         const renderIcon = (IconComponent: React.ComponentType, colorClass: string) => (
           <div className="flex w-full items-center gap-2 font-semibold">
             <IconComponent />
-            <span className={`mb-[1px] ${colorClass}`}>{params?.row.requestType}</span>
+            <span className={`mb-[1px] ${colorClass}`}>{params?.row.status}</span>
           </div>
         );
-        switch (params?.row.requestType) {
-          case RequestTypes.Creation:
+        switch (params?.row.status) {
+          case 'Enabled':
             return renderIcon(CreationRequestIcon, 'text-greenPrimary');
-          case RequestTypes.Update:
-            return renderIcon(UpdateRequestIcon, 'text-lightPurple');
-          case RequestTypes.Disable:
-            return renderIcon(DisableRequestIcon, 'text-yellowNeutral');
-          case RequestTypes.Deletion:
+          case 'Disabled':
             return renderIcon(DeleteRequestIcon, 'text-redSecondary');
           default:
-            return <span>{params?.row.requestType}</span>;
+            return <span>{params?.row.status}</span>;
         }
       },
     },
@@ -112,7 +109,7 @@ const MerchantManagement = () => {
                 <button
                   onClick={() =>
                     navigate({
-                      pathname: `/${appRoutes.adminDashboard.dashboard.merchantDetails}`,
+                      pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantDetails}`,
                       search: `?${createSearchParams({ id: params?.row.id })}`,
                     })
                   }
@@ -124,7 +121,7 @@ const MerchantManagement = () => {
                 <button
                   onClick={() =>
                     navigate({
-                      pathname: `/${appRoutes.adminDashboard.dashboard.editMerchant}`,
+                      pathname: `/${appRoutes.adminDashboard.merchantManagement.editMerchant}`,
                       search: `?${createSearchParams({ id: params?.row.id })}`,
                     })
                   }
@@ -180,12 +177,12 @@ const MerchantManagement = () => {
               <div className="flex w-full items-center justify-end gap-8 lg:w-[50%]">
                 <ButtonComponent
                   color="purplePrimary"
-                  width="7rem"
                   variant="outlined"
                   height="3rem"
                   type="button"
                   title="Export"
-                  endIcon={<ArrowDownIcon />}
+                  customPaddingX="2rem"
+                  endIcon={<BoldArrowDown />}
                 />
               </div>
             </div>

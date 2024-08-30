@@ -31,7 +31,7 @@ const MerchantDetails = () => {
         <span className="text-lightPurple">Merchant Details</span>
       </div>
       <div className="mt-6">
-        <h2 className="text-lg font-semibold md:text-2xl">Request ID : Req123456</h2>
+        <h2 className="text-lg font-semibold md:text-2xl">Merchant ID : Req123456</h2>
       </div>
       <div className="mt-5 rounded-lg bg-white px-5 py-8">
         <div className="bg-lilacPurple rounded-lg px-6 py-4">
