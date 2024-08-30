@@ -87,63 +87,49 @@ const ProfileUpdateRequestDetails = () => {
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
           <div className="">
             <ItemDetailsContainer title="Old Information">
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Profile Name" content="John Doe" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Profile Email Address" content="johndoe@gmail.com" />
-              </div>
+              <DetailsCard title="Profile Name" content="John Doe" />
+              <DetailsCard title="Profile Email Address" content="johndoe@gmail.com" />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="New Information">
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Profile Name" content="John Doe" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Profile Email Address" content="johndoe@gmail.com" />
-              </div>
+              <DetailsCard title="Profile Name" content="John Doe" />
+              <DetailsCard title="Profile Email Address" content="johndoe@gmail.com" />
             </ItemDetailsContainer>
           </div>
-
+          <div className="mt-10">
+            <ItemDetailsContainer title="Profile Details">
+              <DetailsCard title="Account Name" content="Fair Money" />
+              <DetailsCard title="Merchant ID" content="12345" />
+              <DetailsCard title="Full Name" content="John Doe" />
+              <DetailsCard title="Merchant Name" content="Fair Money" />
+              <DetailsCard title="Account Id" content="8907812345" />
+              <DetailsCard title="Email" content="johndoe@gmail.com" />
+              <DetailsCard title="CIF Number" content="12345" />
+              <DetailsCard title="Role" content="Maker" />
+              <DetailsCard title="Date Requested" content="12/12/2024 : 03:00pm" />
+            </ItemDetailsContainer>
+          </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Creator Details">
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="ID" content="9344243" />
-                <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Created By" content="John Doe" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
-              </div>
+              <DetailsCard title="Created By" content="John Doe" />
+              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
+              <DetailsCard title="ID" content="9344243" />
+              <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="ID" content="9344243" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Approved By" content="John Doe" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Date Approved" content="12/12/2024 : 03:00pm" />
-              </div>
+              <DetailsCard title="ID" content="9344243" />
+              <DetailsCard title="Approved By" content="John Doe" />
+              <DetailsCard title="Date Approved" content="12/12/2024 : 03:00pm" />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Requested By">
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="ID" content="9344243" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Requested By" content="John Doe" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-10">
-                <DetailsCard title="Date Requested" content="12/12/2024 : 03:00pm" />
-              </div>
+              <DetailsCard title="ID" content="9344243" />
+              <DetailsCard title="Requested By" content="John Doe" />
+              <DetailsCard title="Date Requested" content="12/12/2024 : 03:00pm" />
             </ItemDetailsContainer>
           </div>
         </div>
