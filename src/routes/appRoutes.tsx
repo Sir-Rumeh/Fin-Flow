@@ -111,8 +111,8 @@ const adminRoutes: RoutesType[] = [
         component: <MerchantDetails />,
       },
       {
-        name: 'Create Merchant',
-        path: 'create-merchant',
+        name: 'Onboard Merchant',
+        path: 'onboard-merchant',
         component: <CreateMerchant />,
       },
       {

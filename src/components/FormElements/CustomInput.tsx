@@ -36,7 +36,7 @@ const CustomInput = ({
           className={`${inputStyles} ${!inputStyles && defaultInputStyles}`}
           placeholder={placeholder}
         />
-        {icon && icon}
+        {icon}
       </div>
     </div>
   );

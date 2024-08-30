@@ -15,6 +15,7 @@ import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import BoldArrowDown from 'assets/icons/BoldArrowDown';
+import ExportBUtton from 'components/FormElements/ExportButton';
 
 const MerchantManagement = () => {
   const navigate = useNavigate();
@@ -187,15 +188,7 @@ const MerchantManagement = () => {
                 </div>
               </div>
               <div className="flex w-full items-center justify-end gap-8 lg:w-[50%]">
-                <ButtonComponent
-                  color="purplePrimary"
-                  variant="outlined"
-                  height="3rem"
-                  type="button"
-                  title="Export"
-                  customPaddingX="2rem"
-                  endIcon={<BoldArrowDown />}
-                />
+                <ExportBUtton />
               </div>
             </div>
 
