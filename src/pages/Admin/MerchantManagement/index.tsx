@@ -7,12 +7,7 @@ import { RequestTypes } from 'utils/enums';
 import appRoutes from 'utils/constants/routes';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import {
-  CreationRequestIcon,
-  DeleteRequestIcon,
-  DisableRequestIcon,
-  UpdateRequestIcon,
-} from 'assets/icons';
+import { CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
 import { muiDashboardMerchantsList } from 'utils/constants';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
@@ -154,12 +149,29 @@ const MerchantManagement = () => {
   return (
     <>
       <section className="p-2 md:p-4">
-        <div className="fade-in-down my-2 flex items-center justify-between">
+        <div className="slide-down my-2 flex items-center justify-between">
           <div>
             <h1 className="text-lg font-semibold md:text-2xl">Merchant Requests</h1>
           </div>
+          <div className="w-auto">
+            <ButtonComponent
+              variant="contained"
+              color="white"
+              backgroundColor="#5C068C"
+              hoverBackgroundColor="#2F0248"
+              type="button"
+              title="Onboard Merchant"
+              height="3rem"
+              customPaddingX="2rem"
+              onClick={() => {
+                navigate({
+                  pathname: `/${appRoutes.adminDashboard.merchantManagement.createMerchant}`,
+                });
+              }}
+            />
+          </div>
         </div>
-        <div className="">
+        <div className="mt-5">
           <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-4">
             <div className="flex w-full flex-col items-center justify-between gap-y-4 border-b pb-3 lg:flex-row">
               <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-start">

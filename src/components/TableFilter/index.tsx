@@ -1,6 +1,7 @@
 import FormInput from 'components/FormElements/FormInput';
 import ButtonComponent from 'components/FormElements/Button';
 import { Dispatch, SetStateAction } from 'react';
+import { IoFilter } from 'react-icons/io5';
 
 interface TableFilterProps {
   name: string;
@@ -23,13 +24,13 @@ const TableFilter = ({
     <>
       <div className="flex w-full flex-col items-start gap-x-4 gap-y-3 py-2 md:flex-row md:items-center">
         <ButtonComponent
-          color="purplePrimary"
-          width="7rem"
-          variant="outlined"
+          onClick={() => {}}
+          title="Filter by"
+          children={<IoFilter className="mb-[1px] ml-3 h-5 w-5" />}
+          color="#5C068C"
+          border={1}
           height="3rem"
-          type="button"
-          onClick={handleFilter}
-          title="Filter By"
+          customPaddingX="1.3rem"
         />
 
         <FormInput
