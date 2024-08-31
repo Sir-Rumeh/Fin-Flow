@@ -29,7 +29,6 @@ const TableFilter = ({
           children={<IoFilter className="mb-[1px] ml-3 h-5 w-5" />}
           color="#5C068C"
           border={1}
-          height="3rem"
           customPaddingX="1.3rem"
         />
 

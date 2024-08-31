@@ -20,7 +20,6 @@ const CustomTabs = ({ tabs, activeTab, setActiveTab }: CustomTabProps) => {
           >
             <ButtonComponent
               width="9rem"
-              height="3rem"
               onClick={() => {
                 if (!(activeTab === tab.tabName)) {
                   setActiveTab(tab.tabName);

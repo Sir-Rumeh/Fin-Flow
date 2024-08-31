@@ -16,7 +16,6 @@ const ExportBUtton = (props: Props) => {
         children={<BiChevronDown className="mb-[1px] ml-2 h-8 w-8" />}
         color="#5C068C"
         border={1}
-        height="3rem"
         customPaddingX="1.3rem"
       />
     </div>

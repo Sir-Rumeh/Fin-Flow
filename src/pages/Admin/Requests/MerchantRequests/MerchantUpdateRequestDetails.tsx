@@ -57,7 +57,6 @@ const MerchantUpdateRequestDetails = () => {
               <ButtonComponent
                 color="purplePrimary"
                 variant="outlined"
-                height="3rem"
                 type="button"
                 title="Reject"
                 customPaddingX="3rem"
@@ -73,7 +72,6 @@ const MerchantUpdateRequestDetails = () => {
                 backgroundColor="#5C068C"
                 hoverBackgroundColor="#2F0248"
                 type="button"
-                height="3rem"
                 title="Approve"
                 customPaddingX="3rem"
                 onClick={() => {

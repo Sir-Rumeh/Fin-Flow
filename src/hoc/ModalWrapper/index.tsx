@@ -47,12 +47,14 @@ export const ModalWrapper = ({
                   borderColor="#5C068C"
                   border={0.5}
                   width="15rem"
+                  height="3rem"
                   onClick={() => setIsOpen(false)}
                   title="No, Cancel"
                 />
                 <ButtonComponent
                   color="white"
                   width="15rem"
+                  height="3rem"
                   variant="contained"
                   backgroundColor={proceedBackgroundColor ? proceedBackgroundColor : ''}
                   hoverBackgroundColor={hoverBackgroundColor ? hoverBackgroundColor : ''}

@@ -130,20 +130,24 @@ const MerchantManagement = () => {
                 >
                   Edit Details
                 </button>
-                <button
-                  type="button"
-                  onClick={() => openModal('confirmDisableMerchant')}
-                  className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
-                >
-                  Disable
-                </button>
-                <button
-                  type="button"
-                  onClick={() => openModal('confirmEnableMerchant')}
-                  className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
-                >
-                  Enable
-                </button>
+                {params?.row.status === 'Enabled' && (
+                  <button
+                    type="button"
+                    onClick={() => openModal('confirmDisableMerchant')}
+                    className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
+                  >
+                    Disable
+                  </button>
+                )}
+                {params?.row.status === 'Disabled' && (
+                  <button
+                    type="button"
+                    onClick={() => openModal('confirmEnableMerchant')}
+                    className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
+                  >
+                    Enable
+                  </button>
+                )}
                 <button
                   type="button"
                   onClick={() => openModal('confirmDeleteMerchant')}
@@ -174,7 +178,6 @@ const MerchantManagement = () => {
               hoverBackgroundColor="#2F0248"
               type="button"
               title="Onboard Merchant"
-              height="3rem"
               customPaddingX="1.4rem"
               onClick={() => {
                 navigate({

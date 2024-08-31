@@ -8,6 +8,8 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { checkRoute } from 'utils/helpers';
+import { useFormik } from 'formik';
+import { editMerchantSchema } from 'utils/formValidators';
 
 const EditMerchant = () => {
   const { pathname } = useLocation();
@@ -15,7 +17,7 @@ const EditMerchant = () => {
 
   const navigate = useNavigate();
   const [modals, setModals] = useState({
-    confirmeditMerchant: false,
+    confirmEditMerchant: false,
     editSuccessful: false,
   });
 
@@ -26,6 +28,19 @@ const EditMerchant = () => {
   const closeModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
+
+  const formik = useFormik({
+    initialValues: {
+      merchantId: '',
+      merchantName: '',
+      merchantCode: '',
+      merchantCIF: '',
+    },
+    validationSchema: editMerchantSchema,
+    onSubmit: (values) => {
+      openModal('confirmEditMerchant');
+    },
+  });
   return (
     <>
       <div className="px-5 py-1">
@@ -48,7 +63,7 @@ const EditMerchant = () => {
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-10">
           <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-8">
-            <div className="relative md:w-[80%] xl:w-[70%]">
+            <form onSubmit={formik.handleSubmit} noValidate className="relative w-full 2xl:w-[70%]">
               <div className="slide-down">
                 <div className="relative grid w-full grid-cols-1 gap-10 md:grid-cols-2">
                   <CustomInput
@@ -57,6 +72,7 @@ const EditMerchant = () => {
                     inputType="text"
                     placeholder="Enter here"
                     maxW="w-full"
+                    formik={formik}
                   />
                   <CustomInput
                     labelFor="merchantName"
@@ -64,6 +80,7 @@ const EditMerchant = () => {
                     inputType="text"
                     placeholder="Enter here"
                     maxW="w-full"
+                    formik={formik}
                   />
                   <CustomInput
                     labelFor="merchantCode"
@@ -71,40 +88,38 @@ const EditMerchant = () => {
                     inputType="text"
                     placeholder="Enter here"
                     maxW="w-full"
+                    formik={formik}
                   />
                   <CustomInput
-                    labelFor="cif"
-                    label="CIF"
+                    labelFor="merchantCIF"
+                    label="Merchant CIF"
                     inputType="text"
                     placeholder="Enter here"
                     maxW="w-full"
+                    formik={formik}
                   />
                 </div>
-                <div className="mt-10 flex items-center justify-end">
+                <div className="mt-6 flex items-center justify-end">
                   <ButtonComponent
                     variant="contained"
                     color="white"
                     backgroundColor="#5C068C"
                     hoverBackgroundColor="#2F0248"
-                    type="button"
+                    type="submit"
                     title="Save"
-                    height="3rem"
                     width="8rem"
                     customPaddingX="1.4rem"
-                    onClick={() => {
-                      openModal('confirmeditMerchant');
-                    }}
                   />
                 </div>
               </div>
-            </div>
+            </form>
           </div>
         </div>
       </div>
-      {modals.confirmeditMerchant && (
+      {modals.confirmEditMerchant && (
         <ModalWrapper
-          isOpen={modals.confirmeditMerchant}
-          setIsOpen={() => closeModal('confirmeditMerchant')}
+          isOpen={modals.confirmEditMerchant}
+          setIsOpen={() => closeModal('confirmEditMerchant')}
           title={'Save Changes?'}
           info={
             'You are about to save changes made to this merchant, would you want to proceed with this?'
@@ -112,7 +127,7 @@ const EditMerchant = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmeditMerchant');
+            closeModal('confirmEditMerchant');
             openModal('editSuccessful');
           }}
         />

@@ -27,7 +27,9 @@ type Props = {
 
 const ButtonComponent = (props: Props) => {
   return (
-    <div className={`flex h-full flex-col items-center justify-center ${props.customClass}`}>
+    <div
+      className={`flex h-full flex-col items-center justify-center ${props.customClass} scale-75 sm:scale-[80%] md:scale-100`}
+    >
       <Button
         disabled={props.disabled}
         onClick={props.onClick}
@@ -35,7 +37,7 @@ const ButtonComponent = (props: Props) => {
         type={props.type}
         sx={{
           width: props.width ? props.width : '100%',
-          height: props.height ? props.height : '3rem',
+          height: props.height ? props.height : '2.7rem',
           borderRadius: '6px',
           color: props.color,
           ':hover': {
