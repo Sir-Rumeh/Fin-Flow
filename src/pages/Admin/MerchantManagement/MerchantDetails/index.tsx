@@ -85,8 +85,8 @@ const MerchantDetails = () => {
                   onClick={() => {}}
                 />
               }
-              translationX={-40}
-              translationY={50}
+              translationX={8}
+              translationY={52}
             >
               <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
                 <button

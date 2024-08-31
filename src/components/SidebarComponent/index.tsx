@@ -29,7 +29,7 @@ const Sidebar = (props: {
       <div className={`mx-[25px] mt-[25px] flex items-center`}>
         <div className="flex w-full items-center pr-6">
           <FcmbIcon />
-          <p className="pl-4 text-base font-medium text-white">DDI Portal</p>
+          <p className="pl-4 text-base font-medium text-white">Easy Pay</p>
         </div>
       </div>
       <div className="mb-7 mt-[10px]" />
