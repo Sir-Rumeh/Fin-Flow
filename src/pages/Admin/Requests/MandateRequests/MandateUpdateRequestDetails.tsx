@@ -99,7 +99,7 @@ const MandateUpdateRequestDetails = () => {
               titleExtension={
                 <>
                   <div className="flex items-center justify-end gap-2">
-                    <p className="text-sm text-darkgray">Mandate Type</p>
+                    <p className="text-sm text-darkgray">Mandate Type:</p>
                     <UpdateRequestIcon />
                     <p className="mb-[1px] font-semibold text-lightPurple">Variable</p>
                   </div>
