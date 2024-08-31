@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import { BiChevronRight } from 'react-icons/bi';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
@@ -14,6 +14,7 @@ import { reasonForRejectionSchema } from 'utils/formValidators';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
 
 const AccountCreationRequestDetails = () => {
+  const navigate = useNavigate();
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
     confirmRejectRequest: false,
@@ -145,6 +146,7 @@ const AccountCreationRequestDetails = () => {
           type={'completed'}
           proceedAction={() => {
             closeModal('approveSuccessfulModal');
+            navigate(`/${appRoutes.adminDashboard.requests.accountRequests.index}`);
           }}
         />
       )}
@@ -199,6 +201,7 @@ const AccountCreationRequestDetails = () => {
           type={'completed'}
           proceedAction={() => {
             closeModal('rejectSuccessfulModal');
+            navigate(`/${appRoutes.adminDashboard.requests.accountRequests.index}`);
           }}
         />
       )}

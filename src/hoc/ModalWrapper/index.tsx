@@ -39,7 +39,7 @@ export const ModalWrapper = ({
           </div>
           <div className="mb-8 text-xl tracking-wider">{info}</div>
           <div className="mt-6 w-full">{feedback}</div>
-          <div className="mt-[3rem]">
+          <div className="mt-[2.5rem]">
             {type === 'confirmation' && (
               <div className="flex items-center justify-center gap-x-5">
                 <ButtonComponent

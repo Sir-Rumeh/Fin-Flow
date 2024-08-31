@@ -163,7 +163,7 @@ const MerchantManagement = () => {
               type="button"
               title="Onboard Merchant"
               height="3rem"
-              customPaddingX="2rem"
+              customPaddingX="1.4rem"
               onClick={() => {
                 navigate({
                   pathname: `/${appRoutes.adminDashboard.merchantManagement.createMerchant}`,

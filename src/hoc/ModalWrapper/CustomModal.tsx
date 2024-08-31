@@ -3,6 +3,7 @@ import CloseIcon from 'assets/icons/CloseIcon';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
+import { useMediaQuery } from '@mui/material';
 
 interface Props {
   title?: string;
@@ -13,15 +14,19 @@ interface Props {
 }
 
 const CustomModal = ({ title, isOpen, setIsOpen, children, width = '700px' }: Props) => {
+  const isMobile = useMediaQuery('(max-width:768px)');
+  const isTablet = useMediaQuery('(max-width:1024px)');
   const boxStyle = {
     position: 'absolute',
     display: 'flex',
     flexDirection: 'column',
     top: '50%',
     left: '50%',
-    transform: 'translate(-50%, -50%)',
+    transform: `translate(-50%, -50%) ${
+      isMobile ? 'scale(0.6)' : isTablet ? 'scale(0.8)' : 'scale(1)'
+    }`,
+    transition: 'transform 0.3s ease-in-out',
     width: width,
-
     bgcolor: 'white',
     borderRadius: '1rem',
     boxShadow: 24,

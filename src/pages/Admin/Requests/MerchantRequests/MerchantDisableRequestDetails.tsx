@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import { BiChevronRight } from 'react-icons/bi';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
@@ -17,6 +17,7 @@ import SubTitleIconGreen from 'assets/icons/SubTitleIconGreen';
 import SubTitleIconYellow from 'assets/icons/SubTitleIconYellow';
 
 const MerchantDisableRequestDetails = () => {
+  const navigate = useNavigate();
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
     confirmRejectRequest: false,
@@ -177,6 +178,7 @@ const MerchantDisableRequestDetails = () => {
           type={'completed'}
           proceedAction={() => {
             closeModal('approveSuccessfulModal');
+            navigate(`/${appRoutes.adminDashboard.requests.merchantRequests.index}`);
           }}
         />
       )}
@@ -231,6 +233,7 @@ const MerchantDisableRequestDetails = () => {
           type={'completed'}
           proceedAction={() => {
             closeModal('rejectSuccessfulModal');
+            navigate(`/${appRoutes.adminDashboard.requests.merchantRequests.index}`);
           }}
         />
       )}

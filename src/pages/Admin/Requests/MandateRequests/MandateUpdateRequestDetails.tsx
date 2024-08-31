@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import { BiChevronRight } from 'react-icons/bi';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
@@ -15,6 +15,7 @@ import ApprovedIcon from 'assets/icons/ApprovedIcon';
 import { UpdateRequestIcon } from 'assets/icons';
 
 const MandateUpdateRequestDetails = () => {
+  const navigate = useNavigate();
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
     confirmRejectRequest: false,
@@ -203,6 +204,7 @@ const MandateUpdateRequestDetails = () => {
           type={'completed'}
           proceedAction={() => {
             closeModal('approveSuccessfulModal');
+            navigate(`/${appRoutes.adminDashboard.requests.mandateRequests.index}`);
           }}
         />
       )}
@@ -257,6 +259,7 @@ const MandateUpdateRequestDetails = () => {
           type={'completed'}
           proceedAction={() => {
             closeModal('rejectSuccessfulModal');
+            navigate(`/${appRoutes.adminDashboard.requests.mandateRequests.index}`);
           }}
         />
       )}
