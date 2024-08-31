@@ -50,14 +50,13 @@ export const ModalWrapper = ({
                   onClick={() => setIsOpen(false)}
                   title="No, Cancel"
                 />
-
                 <ButtonComponent
                   color="white"
                   width="15rem"
                   variant="contained"
                   backgroundColor={proceedBackgroundColor ? proceedBackgroundColor : ''}
                   hoverBackgroundColor={hoverBackgroundColor ? hoverBackgroundColor : ''}
-                  onClick={() => proceedAction?.()}
+                  onClick={proceedAction}
                   title="Yes, Proceed"
                 />
               </div>
@@ -68,7 +67,7 @@ export const ModalWrapper = ({
                 color="white"
                 type="button"
                 title="Okay"
-                onClick={() => setIsOpen(false)}
+                onClick={proceedAction}
               />
             )}
           </div>

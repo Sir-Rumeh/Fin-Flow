@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
 import { BiChevronRight } from 'react-icons/bi';
 import CustomInput from 'components/FormElements/CustomInput';
@@ -9,6 +9,7 @@ import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 
 const CreateMerchant = () => {
+  const navigate = useNavigate();
   const [merchantCifValidated, setMerchantCifValidated] = useState(false);
   const [modals, setModals] = useState({
     confirmOnboardMerchant: false,
@@ -115,10 +116,6 @@ const CreateMerchant = () => {
               )}
             </div>
           </div>
-
-          <div className="mt-4 flex items-center justify-end">
-            <div className="flex items-center gap-5"></div>
-          </div>
         </div>
       </div>
       {modals.confirmOnboardMerchant && (
@@ -146,6 +143,7 @@ const CreateMerchant = () => {
           type={'completed'}
           proceedAction={() => {
             closeModal('onboardingSuccessful');
+            navigate(`/${appRoutes.adminDashboard.merchantManagement.index}`);
           }}
         />
       )}

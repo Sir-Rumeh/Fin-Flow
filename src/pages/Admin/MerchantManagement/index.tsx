@@ -22,7 +22,11 @@ const MerchantManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [modals, setModals] = useState({
     confirmDisableMerchant: false,
-    disableSuccessfulModal: false,
+    disableSuccessful: false,
+    confirmEnableMerchant: false,
+    enableSuccessful: false,
+    confirmDeleteMerchant: false,
+    deleteSuccessful: false,
   });
 
   const openModal = (modalName: keyof typeof modals) => {
@@ -127,14 +131,22 @@ const MerchantManagement = () => {
                   Edit Details
                 </button>
                 <button
-                  onClick={() => openModal('confirmDisableMerchant')}
                   type="button"
+                  onClick={() => openModal('confirmDisableMerchant')}
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
                   Disable
                 </button>
                 <button
                   type="button"
+                  onClick={() => openModal('confirmEnableMerchant')}
+                  className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
+                >
+                  Enable
+                </button>
+                <button
+                  type="button"
+                  onClick={() => openModal('confirmDeleteMerchant')}
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
                   Delete
@@ -214,20 +226,74 @@ const MerchantManagement = () => {
           type={'confirmation'}
           proceedAction={() => {
             closeModal('confirmDisableMerchant');
-            openModal('disableSuccessfulModal');
+            openModal('disableSuccessful');
           }}
         />
       )}
-      {modals.disableSuccessfulModal && (
+      {modals.disableSuccessful && (
         <ModalWrapper
-          isOpen={modals.disableSuccessfulModal}
-          setIsOpen={() => closeModal('disableSuccessfulModal')}
+          isOpen={modals.disableSuccessful}
+          setIsOpen={() => closeModal('disableSuccessful')}
           title={'Success!!'}
           info={'You have successfully disabled this merchant'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
-            closeModal('disableSuccessfulModal');
+            closeModal('disableSuccessful');
+          }}
+        />
+      )}
+      {modals.confirmEnableMerchant && (
+        <ModalWrapper
+          isOpen={modals.confirmEnableMerchant}
+          setIsOpen={() => closeModal('confirmEnableMerchant')}
+          title={'Enable Merchant?'}
+          info={'You are about to enable this merchant, would you want to proceed with this?'}
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
+          proceedAction={() => {
+            closeModal('confirmEnableMerchant');
+            openModal('enableSuccessful');
+          }}
+        />
+      )}
+      {modals.enableSuccessful && (
+        <ModalWrapper
+          isOpen={modals.enableSuccessful}
+          setIsOpen={() => closeModal('enableSuccessful')}
+          title={'Success!!'}
+          info={'You have successfully enabled this merchant'}
+          icon={<ActionSuccessIcon />}
+          type={'completed'}
+          proceedAction={() => {
+            closeModal('enableSuccessful');
+          }}
+        />
+      )}
+      {modals.confirmDeleteMerchant && (
+        <ModalWrapper
+          isOpen={modals.confirmDeleteMerchant}
+          setIsOpen={() => closeModal('confirmDeleteMerchant')}
+          title={'Delete Merchant?'}
+          info={'You are about to delete this merchant, would you want to proceed with this?'}
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
+          proceedAction={() => {
+            closeModal('confirmDeleteMerchant');
+            openModal('deleteSuccessful');
+          }}
+        />
+      )}
+      {modals.deleteSuccessful && (
+        <ModalWrapper
+          isOpen={modals.deleteSuccessful}
+          setIsOpen={() => closeModal('deleteSuccessful')}
+          title={'Success!!'}
+          info={'You have successfully deleted this merchant'}
+          icon={<ActionSuccessIcon />}
+          type={'completed'}
+          proceedAction={() => {
+            closeModal('deleteSuccessful');
           }}
         />
       )}

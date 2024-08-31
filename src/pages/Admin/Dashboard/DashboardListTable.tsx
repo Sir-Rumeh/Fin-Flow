@@ -11,8 +11,18 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import CustomTable from 'components/CustomTable';
 
 const DashboardListTable = () => {
-  const [confirmDisableMerchant, setConfirmDisableMerchant] = useState(false);
-  const [actionSuccessfulModal, setActionSuccessfulModal] = useState(false);
+  const [modals, setModals] = useState({
+    confirmDisableMerchant: false,
+    disableSuccessful: false,
+  });
+
+  const openModal = (modalName: keyof typeof modals) => {
+    setModals((prev) => ({ ...prev, [modalName]: true }));
+  };
+
+  const closeModal = (modalName: keyof typeof modals) => {
+    setModals((prev) => ({ ...prev, [modalName]: false }));
+  };
 
   const navigate = useNavigate();
   const columns: GridColDef[] = [
@@ -94,17 +104,11 @@ const DashboardListTable = () => {
                   Edit Details
                 </button>
                 <button
-                  onClick={() => setConfirmDisableMerchant(true)}
+                  onClick={() => openModal('confirmDisableMerchant')}
                   type="button"
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
                   Disable
-                </button>
-                <button
-                  type="button"
-                  className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
-                >
-                  Delete
                 </button>
               </div>
             </CustomPopover>
@@ -119,30 +123,30 @@ const DashboardListTable = () => {
       <div className="w-full">
         <CustomTable tableData={muiDashboardMerchantsList} columns={columns} rowCount={20} />
       </div>
-      {confirmDisableMerchant && (
+      {modals.confirmDisableMerchant && (
         <ModalWrapper
-          isOpen={confirmDisableMerchant}
-          setIsOpen={setConfirmDisableMerchant}
+          isOpen={modals.confirmDisableMerchant}
+          setIsOpen={() => closeModal('confirmDisableMerchant')}
           title={'Disable Merchant?'}
           info={'You are about to disable this merchant, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            setConfirmDisableMerchant(false);
-            setActionSuccessfulModal(true);
+            closeModal('confirmDisableMerchant');
+            openModal('disableSuccessful');
           }}
         />
       )}
-      {actionSuccessfulModal && (
+      {modals.disableSuccessful && (
         <ModalWrapper
-          isOpen={actionSuccessfulModal}
-          setIsOpen={setActionSuccessfulModal}
+          isOpen={modals.disableSuccessful}
+          setIsOpen={() => closeModal('disableSuccessful')}
           title={'Success!!'}
           info={'You have successfully disabled this merchant'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
-            setActionSuccessfulModal(false);
+            closeModal('disableSuccessful');
           }}
         />
       )}
