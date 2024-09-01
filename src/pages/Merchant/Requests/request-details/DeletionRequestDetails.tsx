@@ -101,28 +101,22 @@ const DeletionRequestDetails = () => {
             </div>
           </div>
           <div className="h-[2px] w-full bg-grayPrimary"></div>
-          <div className="mt-4 flex flex-col justify-between gap-5 md:flex-row md:gap-0">
-            <div className="flex w-[300px] flex-col gap-8">
-              <DetailsCard title="Account ID" content="12345" />
-              <DetailsCard title="Date Created" content="12/12/2024 - 03:00pm" />
-              <DetailsCard title="Effective Date" content="12/12/2024" />
-              <DetailsCard title="Frequency" content="Monthly" />
-              <DetailsCard title="Account Number" content="1234567" />
-            </div>
-            <div className="flex w-[300px] flex-col gap-8">
-              <DetailsCard title="Merchant ID" content="12345" />
-              <DetailsCard title="Product ID" content="12345" />
-              <DetailsCard title="End Date" content="12/12/2024" />
-              <DetailsCard title="Service" content="Life Insurance" />
-              <DetailsCard title="Account Name" content="Fair Money" />
-            </div>
-            <div className="flex w-[300px] flex-col gap-8">
-              <DetailsCard title="Merchant Code" content="12345" />
-              <DetailsCard title="Amount" content="N 500,000" contentClassName="text-lightPurple" />
-              <DetailsCard title="Day to apply" content="10/12/2024" />
-              <DetailsCard title="Narration" content="Any narration can be here" />
-              <DetailsCard title="Bank Code" content="787878" />
-            </div>
+          <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+            <DetailsCard title="Account ID" content="12345" />
+            <DetailsCard title="Merchant ID" content="12345" />
+            <DetailsCard title="Merchant Code" content="12345" />
+            <DetailsCard title="Date Created" content="12/12/2024 - 03:00pm" />
+            <DetailsCard title="Product ID" content="12345" />
+            <DetailsCard title="Amount" content="N 500,000" contentClassName="text-lightPurple" />
+            <DetailsCard title="Effective Date" content="12/12/2024" />
+            <DetailsCard title="End Date" content="12/12/2024" />
+            <DetailsCard title="Day to apply" content="10/12/2024" />
+            <DetailsCard title="Frequency" content="Monthly" />
+            <DetailsCard title="Service" content="Life Insurance" />
+            <DetailsCard title="Narration" content="Any narration can be here" />
+            <DetailsCard title="Account Number" content="1234567" />
+            <DetailsCard title="Account Name" content="Fair Money" />
+            <DetailsCard title="Bank Code" content="787878" />
           </div>
         </div>
         <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
@@ -130,17 +124,11 @@ const DeletionRequestDetails = () => {
             <p className="my-3 text-lg font-semibold">Payer Details</p>
           </div>
           <div className="h-[2px] w-full bg-grayPrimary"></div>
-          <div className="mt-4 flex flex-col justify-between gap-5 md:flex-row md:gap-0">
-            <div className="flex w-[300px] flex-col gap-8">
-              <DetailsCard title="Payer Name" content="Vekee James Ventures" />
-              <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
-            </div>
-            <div className="flex w-[300px] flex-col gap-8">
-              <DetailsCard title="Email Address" content="vekee@gmail.com" />
-            </div>
-            <div className="flex w-[300px] flex-col gap-8">
-              <DetailsCard title="Phone Number" content="09028272009" />
-            </div>
+          <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+            <DetailsCard title="Payer Name" content="Vekee James Ventures" />
+            <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
+            <DetailsCard title="Email Address" content="vekee@gmail.com" />
+            <DetailsCard title="Phone Number" content="09028272009" />
           </div>
         </div>
         <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
@@ -148,17 +136,11 @@ const DeletionRequestDetails = () => {
             <p className="my-3 text-lg font-semibold">Payee Details</p>
           </div>
           <div className="h-[2px] w-full bg-grayPrimary"></div>
-          <div className="mt-4 flex flex-col justify-between gap-5 md:flex-row md:gap-0">
-            <div className="flex w-[300px] flex-col gap-8">
-              <DetailsCard title="Payer Name" content="Vekee James Ventures" />
-              <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
-            </div>
-            <div className="flex w-[300px] flex-col gap-8">
-              <DetailsCard title="Email Address" content="vekee@gmail.com" />
-            </div>
-            <div className="flex w-[300px] flex-col gap-8">
-              <DetailsCard title="Phone Number" content="09028272009" />
-            </div>
+          <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+            <DetailsCard title="Payer Name" content="Vekee James Ventures" />
+            <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
+            <DetailsCard title="Email Address" content="vekee@gmail.com" />
+            <DetailsCard title="Phone Number" content="09028272009" />
           </div>
         </div>
         <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
@@ -170,17 +152,11 @@ const DeletionRequestDetails = () => {
             </div>
           </div>
           <div className="h-[2px] w-full bg-grayPrimary"></div>
-          <div className="mt-4 flex flex-col justify-between gap-5 md:flex-row md:gap-0">
-            <div className="flex w-[300px] flex-col gap-8">
-              <DetailsCard title="Biller Account Number" content="12345678" />
-              <DetailsCard title="Bank Name" content="Access Bank" />
-            </div>
-            <div className="flex w-[300px] flex-col gap-8">
-              <DetailsCard title="Account Name" content="Vekee James Ventures" />
-            </div>
-            <div className="flex w-[300px] flex-col gap-8">
-              <DetailsCard title="Bank Code" content="09028272009" />
-            </div>
+          <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+            <DetailsCard title="Biller Account Number" content="12345678" />
+            <DetailsCard title="Bank Name" content="Access Bank" />
+            <DetailsCard title="Account Name" content="Vekee James Ventures" />
+            <DetailsCard title="Bank Code" content="09028272009" />
           </div>
         </div>
         <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
@@ -188,16 +164,10 @@ const DeletionRequestDetails = () => {
             <p className="my-3 text-lg font-semibold">Requested By</p>
           </div>
           <div className="h-[2px] w-full bg-grayPrimary"></div>
-          <div className="mt-4 flex flex-col justify-between gap-5 md:flex-row md:gap-0">
-            <div className="flex w-[300px] flex-col gap-8">
-              <DetailsCard title="ID" content="12345678" />
-            </div>
-            <div className="flex w-[300px] flex-col gap-8">
-              <DetailsCard title="Requested By" content="Vekee James Ventures" />
-            </div>
-            <div className="flex w-[300px] flex-col gap-8">
-              <DetailsCard title="Date Requested" content="15/11/2023 - 12:12:12" />
-            </div>
+          <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+            <DetailsCard title="ID" content="12345678" />
+            <DetailsCard title="Requested By" content="Vekee James Ventures" />
+            <DetailsCard title="Date Requested" content="15/11/2023 - 12:12:12" />
           </div>
         </div>
         {tab === 3 && (
@@ -210,20 +180,14 @@ const DeletionRequestDetails = () => {
               </div>
             </div>
             <div className="h-[2px] w-full bg-grayPrimary"></div>
-            <div className="mt-4 flex flex-col justify-between gap-5 md:flex-row md:gap-0">
-              <div className="flex w-[300px] flex-col gap-8">
-                <DetailsCard title="ID" content="12345678" />
-                <DetailsCard
-                  title="Reason for Rejection"
-                  content="Any reason for rejection can be here"
-                />
-              </div>
-              <div className="flex w-[300px] flex-col gap-8">
-                <DetailsCard title="Rejected By" content="Vekee James Ventures" />
-              </div>
-              <div className="flex w-[300px] flex-col gap-8">
-                <DetailsCard title="Date Rejected" content="15/11/2023 - 12:12:12" />
-              </div>
+            <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+              <DetailsCard title="ID" content="12345678" />
+              <DetailsCard
+                title="Reason for Rejection"
+                content="Any reason for rejection can be here"
+              />
+              <DetailsCard title="Rejected By" content="Vekee James Ventures" />
+              <DetailsCard title="Date Rejected" content="15/11/2023 - 12:12:12" />
             </div>
           </div>
         )}

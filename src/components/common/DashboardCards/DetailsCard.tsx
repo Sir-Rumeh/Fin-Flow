@@ -1,6 +1,8 @@
+import { ReactNode } from 'react';
+
 type DetailsCardProps = {
   title: string;
-  content: string | number;
+  content: ReactNode;
   contentClassName?: string;
 };
 

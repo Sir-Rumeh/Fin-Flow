@@ -200,10 +200,10 @@
   
   .ag-thead {
 	background-color: #F4F4F4;
-	font-size: 18px;
-	font-weight: 700;
+	font-size: 16px;
+	font-weight: bolder;
   }
   
   .bold-header {
-	font-weight: bold;
+	font-weight: bolder;
   }

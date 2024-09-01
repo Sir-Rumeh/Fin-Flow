@@ -86,6 +86,7 @@ export const appRoutes = {
     },
     userManagement: {
       index: `${BASE_ROUTES.MERCHANT}/user-management`,
+      userDetails: `${BASE_ROUTES.MERCHANT}/user-management/user-details`,
     },
     auditTrail: {
       index: `${BASE_ROUTES.MERCHANT}/audit-trail`,

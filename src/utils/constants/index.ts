@@ -7,6 +7,7 @@ import {
   AccountDataRow,
   ProfileDataRow,
   TransactionsDataRow,
+  UserDataRow,
 } from 'utils/interfaces';
 
 export const merchantsList: MerchantDataRow[] = [
@@ -910,5 +911,40 @@ export const transactionHistory: TransactionsDataRow[] = [
     accountId: 126476,
     amount: '50,000',
     date: '2015-03-25T12:00:00-06:30',
+  },
+];
+
+export const UserManagementList: UserDataRow[] = [
+  {
+    id: 1,
+    accountId: 126473,
+    username: 'John Doe',
+    emailAddress: 'johndoe@gmail.com',
+    status: 'Enabled',
+    dateCreated: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 2,
+    accountId: 126479,
+    username: 'James Doe',
+    emailAddress: 'johndoe@gmail.com',
+    status: 'Disabled',
+    dateCreated: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 3,
+    accountId: 126474,
+    username: 'Amaka Cynthia',
+    emailAddress: 'johndoe@gmail.com',
+    status: 'Enabled',
+    dateCreated: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 4,
+    accountId: 126475,
+    username: 'Tolani Akinsola',
+    emailAddress: 'johndoe@gmail.com',
+    status: 'Disabled',
+    dateCreated: '2015-03-25T12:00:00-06:30',
   },
 ];

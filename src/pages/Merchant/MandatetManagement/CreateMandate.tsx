@@ -70,15 +70,13 @@ const CreateMandate = () => {
             label="Single Upload"
             isActive={tab === 1}
             onClick={() => setTab(1)}
-            activeColor="blue-500"
-            inactiveColor="yellow-500"
+            inactiveColor="text-[#334335]"
           />
           <Tab
             label="Bulk Upload"
             isActive={tab === 2}
             onClick={() => setTab(2)}
-            activeColor="blue-500"
-            inactiveColor="green-500"
+            inactiveColor="text-[#334335]"
           />
         </div>
         {tab === 1 && (

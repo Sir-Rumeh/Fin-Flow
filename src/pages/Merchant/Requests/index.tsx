@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 import {
   CreationRequestIcon,
   DeleteRequestIcon,
@@ -14,6 +14,7 @@ import TableLogo from 'assets/images/table_logo.png';
 import { useTabContext } from '../../../context/TabContext';
 import { RequestType } from 'utils/enums';
 import Tab from 'components/Tabs';
+import CustomTable from 'components/CustomTable';
 
 const MandateRequests = () => {
   const { tab, setTab } = useTabContext();
@@ -136,24 +137,21 @@ const MandateRequests = () => {
                 count={20}
                 isActive={tab === 1}
                 onClick={() => setTab(1)}
-                activeColor="blue-500"
-                inactiveColor="yellow-500"
+                inactiveColor="text-yellow-500"
               />
               <Tab
                 label="Approved"
                 count={20}
                 isActive={tab === 2}
                 onClick={() => setTab(2)}
-                activeColor="blue-500"
-                inactiveColor="green-500"
+                inactiveColor="text-green-500"
               />
               <Tab
                 label="Rejected"
                 count={20}
                 isActive={tab === 3}
                 onClick={() => setTab(3)}
-                activeColor="blue-500"
-                inactiveColor="red-500"
+                inactiveColor="text-red-500"
               />
             </div>
             <div className="flex items-center gap-3">
@@ -174,17 +172,10 @@ const MandateRequests = () => {
           <div className="mt-4 h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-6 w-full">
             {getCurrentMandateList()?.length > 0 ? (
-              <DataGrid
-                rows={getCurrentMandateList()}
+              <CustomTable
+                tableData={getCurrentMandateList()}
                 columns={MandateTableColumn}
-                sx={{
-                  border: 0,
-                }}
-                rowHeight={70}
-                columnHeaderHeight={70}
-                disableRowSelectionOnClick
-                disableColumnMenu
-                pagination
+                rowCount={20}
               />
             ) : (
               <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
