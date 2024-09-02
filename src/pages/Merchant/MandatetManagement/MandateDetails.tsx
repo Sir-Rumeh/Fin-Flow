@@ -272,16 +272,14 @@ const MandateDetails = () => {
                       count={20}
                       isActive={tab === 1}
                       onClick={() => setTab(1)}
-                      activeColor="blue-500"
-                      inactiveColor="green-500"
+                      inactiveColor="bg-green-500"
                     />
                     <Tab
                       label="Failed"
                       count={20}
                       isActive={tab === 2}
                       onClick={() => setTab(2)}
-                      activeColor="blue-500"
-                      inactiveColor="red-500"
+                      inactiveColor="bg-red-500"
                     />
                   </div>
                   <div className="flex h-[45px] w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2">

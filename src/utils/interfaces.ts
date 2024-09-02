@@ -64,6 +64,15 @@ export interface UserDataRow {
   dateCreated: string;
 }
 
+export interface AuditDataRow {
+  id: number;
+  referenceNumber: number;
+  accountName: string;
+  module: string;
+  performedAction: string;
+  date: string;
+}
+
 export interface TransactionsDataRow {
   id: number;
   accountId: number;
