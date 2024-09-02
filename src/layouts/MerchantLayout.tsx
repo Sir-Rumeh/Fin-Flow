@@ -24,9 +24,9 @@ export default function MerchantLayout() {
       <MerchantSidebar open={open} onClose={() => setOpen(false)} userRole={userRole} />
       <div className="dark:!bg-navy-900 w-full bg-backgroundColor xl:ml-[20vw]">
         <main className={`flex-none transition-all`}>
-          <div className="h-screen overflow-y-scroll">
+          <div className="overflow-hidden">
             <Navbar onOpenSidenav={() => setOpen(true)} />
-            <div className="no-scrollbar mx-auto mb-auto h-[90vh] bg-backgroundColor md:p-2">
+            <div className="no-scrollbar mx-auto mb-auto h-[90vh] overflow-y-scroll bg-backgroundColor md:p-2">
               <Outlet />
             </div>
           </div>

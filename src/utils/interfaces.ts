@@ -55,6 +55,15 @@ export interface MandateDataRow {
   dateRequested: string;
 }
 
+export interface UserDataRow {
+  id: number;
+  accountId: number;
+  username: string;
+  emailAddress: string;
+  status: string;
+  dateCreated: string;
+}
+
 export interface TransactionsDataRow {
   id: number;
   accountId: number;

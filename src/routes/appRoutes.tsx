@@ -42,6 +42,7 @@ import MandateDetails from 'pages/Merchant/MandatetManagement/MandateDetails';
 import CreateMandate from 'pages/Merchant/MandatetManagement/CreateMandate';
 import EditMerchant from 'pages/Admin/MerchantManagement/EditMerchant';
 import CreateMerchant from 'pages/Admin/MerchantManagement/CreateMerchant';
+import UserDetails from 'pages/Merchant/UserManagement/UserDetails';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -246,6 +247,13 @@ const merchantRoutes: RoutesType[] = [
     component: <MerchantUserManagement />,
     rolesWithAccess: [UserLoginRoles.Merchant],
     willChildLinkShow: false,
+    children: [
+      {
+        name: 'User Details',
+        path: 'user-details',
+        component: <UserDetails />,
+      },
+    ],
   },
   {
     name: 'Audit Trail',

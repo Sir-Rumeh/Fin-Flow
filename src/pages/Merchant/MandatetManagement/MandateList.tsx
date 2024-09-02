@@ -8,6 +8,7 @@ import {
 import { Link } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
 import TableLogo from 'assets/images/table_logo.png';
+import CustomTable from 'components/CustomTable';
 
 const MandateTableColumn: GridColDef[] = [
   {
@@ -207,18 +208,7 @@ const MandateList = () => {
   return (
     <>
       {data?.length > 0 ? (
-        <DataGrid
-          rows={data}
-          columns={MandateTableColumn}
-          sx={{
-            border: 0,
-          }}
-          rowHeight={70}
-          columnHeaderHeight={70}
-          disableRowSelectionOnClick
-          disableColumnMenu
-          pagination
-        />
+        <CustomTable tableData={data} columns={MandateTableColumn} rowCount={20} />
       ) : (
         <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
           <div>

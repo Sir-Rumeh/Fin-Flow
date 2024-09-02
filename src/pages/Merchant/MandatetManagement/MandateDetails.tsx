@@ -162,19 +162,19 @@ const MandateDetails = () => {
             <div className="h-[2px] w-full bg-grayPrimary"></div>
             <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
               <DetailsCard title="Account ID" content="12345" />
-              <DetailsCard title="Date Created" content="12/12/2024 - 03:00pm" />
-              <DetailsCard title="Effective Date" content="12/12/2024" />
-              <DetailsCard title="Frequency" content="Monthly" />
-              <DetailsCard title="Account Number" content="1234567" />
               <DetailsCard title="Merchant ID" content="12345" />
-              <DetailsCard title="Product ID" content="12345" />
-              <DetailsCard title="End Date" content="12/12/2024" />
-              <DetailsCard title="Service" content="Life Insurance" />
-              <DetailsCard title="Account Name" content="Fair Money" />
               <DetailsCard title="Merchant Code" content="12345" />
+              <DetailsCard title="Date Created" content="12/12/2024 - 03:00pm" />
+              <DetailsCard title="Product ID" content="12345" />
               <DetailsCard title="Amount" content="N 500,000" contentClassName="text-lightPurple" />
+              <DetailsCard title="Effective Date" content="12/12/2024" />
+              <DetailsCard title="End Date" content="12/12/2024" />
               <DetailsCard title="Day to apply" content="10/12/2024" />
+              <DetailsCard title="Frequency" content="Monthly" />
+              <DetailsCard title="Service" content="Life Insurance" />
               <DetailsCard title="Narration" content="Any narration can be here" />
+              <DetailsCard title="Account Number" content="1234567" />
+              <DetailsCard title="Account Name" content="Fair Money" />
               <DetailsCard title="Bank Code" content="787878" />
             </div>
           </div>
