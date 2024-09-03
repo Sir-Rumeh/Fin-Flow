@@ -51,6 +51,7 @@ export interface MandateDataRow {
   merchantId: number;
   mandateCode: number;
   mandateType: string;
+  status?: string;
   requestType: string;
   dateRequested: string;
 }

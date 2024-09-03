@@ -8,16 +8,16 @@ import AuditIcon from 'assets/icons/AuditIcon';
 import ReportIcon from 'assets/icons/ReportIcon';
 import AdminDashboard from 'pages/Admin/Dashboard';
 import AdminMerchantRequests from 'pages/Admin/Requests/MerchantRequests';
-import AdminMandateRequests from 'pages/Admin/Requests/MandateRequests';
-import AdminAccountRequests from 'pages/Admin/Requests/AccountRequests';
-import AdminProfileRequests from 'pages/Admin/Requests/ProfileRequests';
 import AdminMerchantManagement from 'pages/Admin/MerchantManagement';
 import AdminMandateManagement from 'pages/Admin/MandatetManagement';
+import AdminMandateDetails from 'pages/Admin/MandatetManagement/MandateDetails';
+import AdminMandateTransactions from 'pages/Admin/MandatetManagement/MandateTransactions';
+import AdminCreateMandate from 'pages/Admin/MandatetManagement/CreateMandate';
+import AdminEditMandate from 'pages/Admin/MandatetManagement/EditMandate';
 import AdminProfileManagement from 'pages/Admin/ProfileManagement';
 import AdminAccountManagement from 'pages/Admin/AccountManagement';
 import AdminAuditTrail from 'pages/Admin/AuditTrail';
 import AdminReports from 'pages/Admin/Reports';
-
 import MerchantDashboard from 'pages/Merchant/Dashboard';
 import MerchantRequests from 'pages/Merchant/Requests';
 import MerchantMandateManagement from 'pages/Merchant/MandatetManagement';
@@ -43,6 +43,8 @@ import CreateMandate from 'pages/Merchant/MandatetManagement/CreateMandate';
 import EditMerchant from 'pages/Admin/MerchantManagement/EditMerchant';
 import CreateMerchant from 'pages/Admin/MerchantManagement/CreateMerchant';
 import UserDetails from 'pages/Merchant/UserManagement/UserDetails';
+import UserIcon from 'assets/icons/UserIcon';
+import BankUserManagement from 'pages/Admin/BankUserManagement';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -131,6 +133,28 @@ const adminRoutes: RoutesType[] = [
     component: <AdminMandateManagement />,
     rolesWithAccess: [UserLoginRoles.Admin],
     willChildLinkShow: false,
+    children: [
+      {
+        name: 'Mandate Details',
+        path: 'mandate-details',
+        component: <AdminMandateDetails />,
+      },
+      {
+        name: 'Mandate Transactions',
+        path: 'mandate-transactions',
+        component: <AdminMandateTransactions />,
+      },
+      {
+        name: 'Create Mandate',
+        path: 'create-mandate',
+        component: <AdminCreateMandate />,
+      },
+      {
+        name: 'Edit Mandate',
+        path: 'edit-mandate',
+        component: <AdminEditMandate />,
+      },
+    ],
   },
   {
     name: 'Profile Management',
@@ -165,6 +189,15 @@ const adminRoutes: RoutesType[] = [
     path: 'reports',
     icon: <ReportIcon />,
     component: <AdminReports />,
+    rolesWithAccess: [UserLoginRoles.Admin],
+    willChildLinkShow: false,
+  },
+  {
+    name: 'Bank User Management',
+    layout: `/${BASE_ROUTES.ADMIN}`,
+    path: 'bank-user-management',
+    icon: <UserIcon />,
+    component: <BankUserManagement />,
     rolesWithAccess: [UserLoginRoles.Admin],
     willChildLinkShow: false,
   },

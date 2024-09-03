@@ -1,11 +1,9 @@
 import ButtonComponent from 'components/FormElements/Button';
-import ArrowDownIcon from 'assets/icons/ArrowDownIcon';
 import { useState } from 'react';
 import TableFilter from 'components/TableFilter';
 import CustomTable from 'components/CustomTable';
-import { RequestTypes } from 'utils/enums';
 import appRoutes from 'utils/constants/routes';
-import { createSearchParams, Link, useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
 import { muiDashboardMerchantsList } from 'utils/constants';
@@ -14,7 +12,6 @@ import PopoverTitle from 'components/common/PopoverTitle';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
-import BoldArrowDown from 'assets/icons/BoldArrowDown';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 

@@ -38,7 +38,7 @@ const TableFilter = ({
   const clearFilter = () => {
     formik.setFieldValue(fromDateName, null);
     formik.setFieldValue(toDateName, null);
-    formik.setFieldValue(selectName, null);
+    formik.setFieldValue(selectName, 'All');
   };
   return (
     <>
