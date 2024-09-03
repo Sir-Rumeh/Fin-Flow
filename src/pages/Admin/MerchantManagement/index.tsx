@@ -16,6 +16,7 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import BoldArrowDown from 'assets/icons/BoldArrowDown';
 import ExportBUtton from 'components/FormElements/ExportButton';
+import { useFormik } from 'formik';
 
 const MerchantManagement = () => {
   const navigate = useNavigate();
@@ -36,6 +37,18 @@ const MerchantManagement = () => {
   const closeModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
+
+  const formik = useFormik({
+    initialValues: {
+      searchMerchantName: '',
+      fromDateFilter: '',
+      toDateFilter: '',
+      statusFilter: '',
+    },
+    onSubmit: (values) => {
+      setSearchTerm('');
+    },
+  });
 
   const columns: GridColDef[] = [
     {
@@ -166,9 +179,9 @@ const MerchantManagement = () => {
   return (
     <>
       <section className="p-2 md:p-4">
-        <div className="slide-down my-2 flex items-center justify-between">
+        <div className="fade-in-down my-2 flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold md:text-2xl">Merchant Requests</h1>
+            <h1 className="text-lg font-semibold md:text-2xl">Merchant Management</h1>
           </div>
           <div className="w-auto">
             <ButtonComponent
@@ -197,8 +210,12 @@ const MerchantManagement = () => {
                     placeholder={'Search Merchant Name'}
                     label={'Search Merchant'}
                     value={searchTerm}
-                    handleFilter={() => setSearchTerm('')}
                     setSearch={setSearchTerm}
+                    handleOptionsFilter={() => {}}
+                    formik={formik}
+                    fromDateName={'fromDateFilter'}
+                    toDateName={'toDateFilter'}
+                    selectName={'statusFilter'}
                   />
                 </div>
               </div>

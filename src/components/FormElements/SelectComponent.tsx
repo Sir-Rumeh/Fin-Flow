@@ -7,7 +7,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 interface Props {
   formik: any;
-  options: { value: number; label: string }[];
+  options: { value: number | string; label: string }[];
   label: string;
   name: string;
   maxWidth?: number;
@@ -23,12 +23,23 @@ const SelectComponent = ({ formik, options, label, name, maxWidth, initialItem }
   };
 
   return (
-    <FormControl color="secondary" sx={{ width: '100%', maxWidth: maxWidth }} tabIndex={0}>
+    <FormControl
+      color="secondary"
+      sx={{
+        width: '100%',
+        maxWidth: maxWidth,
+        '& .MuiOutlinedInput-root': {
+          borderRadius: '10px',
+        },
+      }}
+      tabIndex={0}
+    >
       <InputLabel id="demo-simple-select-helper-label">{label}</InputLabel>
       <Select
         labelId="demo-simple-select-helper-label"
         id="demo-simple-select-helper"
-        value={item}
+        sx={{}}
+        value={formik.values[name]}
         label={label}
         onChange={handleChange}
         defaultValue={''}

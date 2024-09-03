@@ -15,11 +15,11 @@ const CustomTabs = ({ tabs, activeTab, setActiveTab }: CustomTabProps) => {
       {tabs?.map((tab) => {
         return (
           <div
-            className={`relative flex w-full items-center ${activeTab === tab.tabName ? 'border-b-2 border-purplePrimary' : ''}`}
+            className={`relative flex w-[6rem] flex-col items-start justify-between sm:w-[9rem]`}
             key={tab.tabIndex}
           >
             <ButtonComponent
-              width="9rem"
+              width={'100%'}
               onClick={() => {
                 if (!(activeTab === tab.tabName)) {
                   setActiveTab(tab.tabName);
@@ -39,6 +39,9 @@ const CustomTabs = ({ tabs, activeTab, setActiveTab }: CustomTabProps) => {
                 </span>
               </span>
             </ButtonComponent>
+            <div
+              className={`mt-[0px] w-full ${activeTab === tab.tabName ? 'border-b-2 border-purplePrimary' : ''}`}
+            ></div>
           </div>
         );
       })}

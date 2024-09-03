@@ -17,6 +17,7 @@ import {
 import { ProfileDataRow } from 'utils/interfaces';
 import { RequestTypes } from 'utils/enums';
 import CustomTable from 'components/CustomTable';
+import { useFormik } from 'formik';
 
 const ProfileRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -39,6 +40,18 @@ const ProfileRequests = () => {
       tabTotal: total,
     },
   ];
+
+  const formik = useFormik({
+    initialValues: {
+      searchProfile: '',
+      fromDateFilter: '',
+      toDateFilter: '',
+      statusFilter: '',
+    },
+    onSubmit: (values) => {
+      setSearchTerm('');
+    },
+  });
 
   const columns: GridColDef[] = [
     {
@@ -142,19 +155,23 @@ const ProfileRequests = () => {
         </div>
         <div className="">
           <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-4">
-            <div className="flex w-full flex-col items-center justify-between gap-y-4 border-b pb-3 lg:flex-row">
-              <div className="flex w-full items-center justify-start gap-8 lg:w-[50%]">
+            <div className="flex w-full flex-col justify-between gap-y-4 border-b pb-3 2xl:flex-row 2xl:items-center">
+              <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10 lg:w-[50%]">
                 <CustomTabs tabs={tabsList} activeTab={activeTab} setActiveTab={setActiveTab} />
               </div>
               <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-end">
                 <div className="">
                   <TableFilter
                     name={'searchProfile'}
-                    placeholder={'Search AProfile'}
+                    placeholder={'Search Profile'}
                     label={'Search Profile'}
                     value={searchTerm}
-                    handleFilter={() => setSearchTerm('')}
                     setSearch={setSearchTerm}
+                    handleOptionsFilter={() => {}}
+                    formik={formik}
+                    fromDateName={'fromDateFilter'}
+                    toDateName={'toDateFilter'}
+                    selectName={'statusFilter'}
                   />
                 </div>
               </div>

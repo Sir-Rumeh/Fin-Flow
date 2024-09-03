@@ -16,10 +16,13 @@ const MuiDatePicker = (props: Props) => {
       <DatePicker
         sx={{
           width: props.width ? props.width : '100%',
-          borderRadius: '6px',
+          '& .MuiOutlinedInput-root': {
+            borderRadius: '10px',
+          },
         }}
         label={props.label}
         format="DD/MM/YYYY"
+        value={props.formik.values[props.name] ? dayjs(props.formik.values[props.name]) : null}
         onChange={(newValue) => {
           props.formik.setFieldValue(props.name, dayjs(newValue).format('YYYY-MM-DDTHH:mm:ss'));
         }}

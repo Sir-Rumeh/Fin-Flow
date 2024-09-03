@@ -37,7 +37,7 @@ const ButtonComponent = (props: Props) => {
         type={props.type}
         sx={{
           width: props.width ? props.width : '100%',
-          height: props.height ? props.height : '2.7rem',
+          height: props.height ? props.height : '2.8rem',
           borderRadius: '6px',
           color: props.color,
           ':hover': {

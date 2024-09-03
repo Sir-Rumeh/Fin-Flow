@@ -13,7 +13,7 @@ const ExportBUtton = (props: Props) => {
       <ButtonComponent
         onClick={() => {}}
         title="Export"
-        children={<BiChevronDown className="mb-[1px] ml-2 h-8 w-8" />}
+        children={<BiChevronDown className="mb-[3px] ml-1 h-8 w-8" />}
         color="#5C068C"
         border={1}
         customPaddingX="1.3rem"

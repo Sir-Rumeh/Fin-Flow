@@ -19,7 +19,7 @@ const DashboardCard = ({
   icon,
 }: DashboardCardProps) => {
   return (
-    <div className={`${backgroundColor} h-[160px] w-[340px] rounded-[8px] px-4 py-3`}>
+    <div className={`${backgroundColor} h-[160px] w-full rounded-[8px] px-4 py-3 sm:w-[340px]`}>
       <div className="my-1 flex items-center justify-start gap-x-4 text-lg font-semibold">
         {icon ? <p>{icon}</p> : null}
         <p>{title}</p>

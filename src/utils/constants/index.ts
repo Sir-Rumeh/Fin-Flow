@@ -11,6 +11,11 @@ import {
   AuditDataRow,
 } from 'utils/interfaces';
 
+export const statusDropdownOptions = [
+  { value: 'Enabled', label: 'Enabled' },
+  { value: 'Disabled', label: 'Disabled' },
+];
+
 export const merchantsList: MerchantDataRow[] = [
   {
     id: 1,

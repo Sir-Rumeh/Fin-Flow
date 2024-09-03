@@ -1,17 +1,31 @@
-import * as React from 'react';
 import Popover from '@mui/material/Popover';
 import Button from '@mui/material/Button';
+import { useEffect, useState } from 'react';
 
 interface Props {
   popoverId: number;
   buttonIcon: JSX.Element;
-  children: JSX.Element;
+  children?: JSX.Element;
   translationX: number;
   translationY: number;
+  borderRadius?: string;
+  closeOnClick?: boolean;
+  closeCard?: boolean;
+  cardWidth?: string;
 }
 
-const CustomPopover = ({ popoverId, buttonIcon, children, translationX, translationY }: Props) => {
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(null);
+const CustomPopover = ({
+  popoverId,
+  buttonIcon,
+  children,
+  translationX,
+  translationY,
+  borderRadius,
+  closeOnClick = true,
+  closeCard,
+  cardWidth,
+}: Props) => {
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -24,6 +38,10 @@ const CustomPopover = ({ popoverId, buttonIcon, children, translationX, translat
   const open = Boolean(anchorEl);
   const id = open ? `simple-popover${popoverId.toString()}` : undefined;
 
+  useEffect(() => {
+    handleClose();
+  }, [closeCard]);
+
   return (
     <div className="">
       <Button aria-describedby={id} onClick={handleClick} className="w-full normal-case">
@@ -34,13 +52,28 @@ const CustomPopover = ({ popoverId, buttonIcon, children, translationX, translat
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
-        onClick={handleClose}
+        onClick={
+          closeOnClick
+            ? handleClose
+            : () => {
+                return;
+              }
+        }
         anchorOrigin={{
           vertical: translationY,
           horizontal: translationX,
         }}
+        slotProps={{
+          paper: {
+            sx: {
+              borderRadius: `${borderRadius ? borderRadius : ''}`,
+              display: `${!children ? 'none' : 'block'}`,
+              width: `${cardWidth ? cardWidth : 'auto'}`,
+            },
+          },
+        }}
       >
-        {children}
+        <div className="rounded-full">{children}</div>
       </Popover>
     </div>
   );
