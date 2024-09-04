@@ -72,8 +72,8 @@ export const appRoutes = {
     reports: {
       index: `${BASE_ROUTES.ADMIN}/reports`,
     },
-    bankUserManagement: {
-      index: `${BASE_ROUTES.ADMIN}/bank-user-management`,
+    staffUserManagement: {
+      index: `${BASE_ROUTES.ADMIN}/staff-user-management`,
     },
   },
   merchantDashboard: {

@@ -2,8 +2,8 @@ import { TabsListTabNames } from './enums';
 
 export interface TabsProps {
   tabIndex: number;
-  tabName: TabsListTabNames;
-  tabTotal: number;
+  tabName: TabsListTabNames | string;
+  tabTotal?: number;
 }
 
 export interface MerchantDataRow {

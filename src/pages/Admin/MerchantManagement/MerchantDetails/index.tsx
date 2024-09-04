@@ -51,7 +51,7 @@ const MerchantDetails = () => {
   return (
     <>
       <div className="px-5 py-1">
-        <div className="flex items-center gap-2 text-lg">
+        <div className="mt-2 flex items-center gap-2 text-lg">
           <Link
             to={
               isDashboardRoute
@@ -65,7 +65,7 @@ const MerchantDetails = () => {
           <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
           <span className="text-lightPurple">Merchant Details</span>
         </div>
-        <div className="slide-down mt-6 flex items-center justify-between">
+        <div className="slide-down mt-3 flex items-center justify-between">
           <div>
             <h2 className="text-lg font-semibold md:text-2xl">Merchant ID : Req123456</h2>
           </div>
@@ -82,11 +82,10 @@ const MerchantDetails = () => {
                   type="button"
                   title="Actions"
                   customPaddingX="1.4rem"
-                  onClick={() => {}}
                 />
               }
               translationX={8}
-              translationY={52}
+              translationY={54}
             >
               <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
                 <button
@@ -133,7 +132,7 @@ const MerchantDetails = () => {
           </div>
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
-          <div className="bg-lilacPurple rounded-lg px-6 py-4">
+          <div className="rounded-lg bg-lilacPurple px-6 py-4">
             <h3 className="text-md font-semibold md:text-xl">Merchant Accounts</h3>
             <div className="mt-4 flex flex-col items-center justify-between gap-6 gap-x-4 md:flex-row">
               <DashboardCard

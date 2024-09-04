@@ -43,7 +43,7 @@ const MerchantDeletionRequestDetails = () => {
   return (
     <>
       <div className="px-5 py-1">
-        <div className="slide-down flex items-center gap-2 text-lg">
+        <div className="slide-down mt-2 flex items-center gap-2 text-lg">
           <Link
             to={`/${appRoutes.adminDashboard.requests.merchantRequests.index}`}
             className="cursor-pointer text-darkgray"
@@ -85,7 +85,7 @@ const MerchantDeletionRequestDetails = () => {
           </div>
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
-          <div className="bg-lilacPurple rounded-lg px-6 py-4">
+          <div className="rounded-lg bg-lilacPurple px-6 py-4">
             <h3 className="text-md font-semibold md:text-xl">Merchant Accounts</h3>
             <div className="mt-4 flex flex-col items-center justify-between gap-6 gap-x-4 md:flex-row">
               <DashboardCard

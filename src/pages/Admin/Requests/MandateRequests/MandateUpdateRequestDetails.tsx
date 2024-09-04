@@ -41,7 +41,7 @@ const MandateUpdateRequestDetails = () => {
   return (
     <>
       <div className="px-5 py-1">
-        <div className="slide-down flex items-center gap-2 text-lg">
+        <div className="slide-down mt-2 flex items-center gap-2 text-lg">
           <Link
             to={`/${appRoutes.adminDashboard.requests.mandateRequests.index}`}
             className="cursor-pointer text-darkgray"

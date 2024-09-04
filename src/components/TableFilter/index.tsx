@@ -76,22 +76,28 @@ const TableFilter = ({
               <div className="mt-6">
                 <h3 className="font-bold">Date</h3>
                 <div className="relative mt-2 flex w-full flex-col justify-between gap-4 overflow-hidden sm:flex-row sm:items-center">
-                  <MuiDatePicker name={fromDateName} formik={formik} label="From Date" />
-                  <MuiDatePicker name={toDateName} formik={formik} label="To Date" />
+                  <div className="mt-2">
+                    <MuiDatePicker name={fromDateName} formik={formik} label="From Date" />
+                  </div>
+                  <div className="mt-2">
+                    <MuiDatePicker name={toDateName} formik={formik} label="To Date" />
+                  </div>
                 </div>
               </div>
 
               <div className="mt-6">
                 <h3 className="font-bold">Status</h3>
                 <div className="relative mt-2 flex w-full flex-col justify-between gap-4 overflow-hidden sm:flex-row sm:items-center">
-                  <SelectComponent
-                    name={selectName}
-                    formik={formik}
-                    options={statusDropdownOptions}
-                    label="All"
-                    maxWidth={700}
-                    initialItem=""
-                  />
+                  <div className="mt-2 w-full">
+                    <SelectComponent
+                      name={selectName}
+                      formik={formik}
+                      options={statusDropdownOptions}
+                      label={formik.values[selectName] ? 'Status' : 'All'}
+                      maxWidth={700}
+                      initialItem=""
+                    />
+                  </div>
                 </div>
               </div>
 

@@ -44,7 +44,7 @@ const EditMerchant = () => {
   return (
     <>
       <div className="px-5 py-1">
-        <div className="slide-down flex items-center gap-2 text-lg">
+        <div className="slide-down mt-2 flex items-center gap-2 text-lg">
           <Link
             to={
               isDashboardRoute
@@ -58,7 +58,7 @@ const EditMerchant = () => {
           <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
           <span className="text-lightPurple">Edit Merchant</span>
         </div>
-        <div className="slide-down mt-4 flex items-center justify-between">
+        <div className="slide-down mt-3 flex items-center justify-between">
           <h2 className="mt-3 text-xl font-semibold">Modify Merchant Details</h2>
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-10">

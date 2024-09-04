@@ -54,7 +54,7 @@ const ButtonComponent = (props: Props) => {
           justifyContent: 'flex',
           rowGap: '2px',
           padding: '5px',
-          paddingX: props.customPaddingX ? props.customPaddingX : '5px',
+          paddingX: props.customPaddingX ? props.customPaddingX : '8px',
         }}
         fullWidth={props.fullWidth}
         startIcon={props.startIcon}

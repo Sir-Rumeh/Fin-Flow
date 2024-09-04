@@ -26,7 +26,7 @@ const MuiDatePicker = (props: Props) => {
         onChange={(newValue) => {
           props.formik.setFieldValue(props.name, dayjs(newValue).format('YYYY-MM-DDTHH:mm:ss'));
         }}
-        onOpen={() => console.log('hello')}
+        onOpen={() => {}}
       />
     </>
   );

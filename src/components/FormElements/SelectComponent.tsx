@@ -4,6 +4,8 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
+import { TextField, InputAdornment } from '@mui/material';
+import { BiSearch } from 'react-icons/bi';
 
 interface Props {
   formik: any;
@@ -12,13 +14,11 @@ interface Props {
   name: string;
   maxWidth?: number;
   initialItem?: string;
+  searchable?: boolean;
 }
 
-const SelectComponent = ({ formik, options, label, name, maxWidth, initialItem }: Props) => {
-  const [item, setItem] = useState(initialItem ? initialItem : '');
-
+const SelectComponent = ({ formik, options, label, name, maxWidth, searchable = false }: Props) => {
   const handleChange = (event: SelectChangeEvent) => {
-    setItem(event.target.value);
     formik.setFieldValue(name, event.target.value);
   };
 
@@ -44,6 +44,26 @@ const SelectComponent = ({ formik, options, label, name, maxWidth, initialItem }
         onChange={handleChange}
         defaultValue={''}
       >
+        {searchable && (
+          <MenuItem>
+            <TextField
+              fullWidth
+              placeholder="Search..."
+              variant="standard"
+              onClick={(e) => e.preventDefault()}
+              value={formik.values[name]}
+              onChange={(e) => {}}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <BiSearch />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </MenuItem>
+        )}
+
         {options.map((option) => {
           return (
             <MenuItem key={option.label} value={option.value}>

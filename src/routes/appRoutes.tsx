@@ -44,7 +44,7 @@ import EditMerchant from 'pages/Admin/MerchantManagement/EditMerchant';
 import CreateMerchant from 'pages/Admin/MerchantManagement/CreateMerchant';
 import UserDetails from 'pages/Merchant/UserManagement/UserDetails';
 import UserIcon from 'assets/icons/UserIcon';
-import BankUserManagement from 'pages/Admin/BankUserManagement';
+import StaffUserManagement from 'pages/Admin/StaffUserManagement';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -193,11 +193,11 @@ const adminRoutes: RoutesType[] = [
     willChildLinkShow: false,
   },
   {
-    name: 'Bank User Management',
+    name: 'Staff User Management',
     layout: `/${BASE_ROUTES.ADMIN}`,
-    path: 'bank-user-management',
+    path: 'staff-user-management',
     icon: <UserIcon />,
-    component: <BankUserManagement />,
+    component: <StaffUserManagement />,
     rolesWithAccess: [UserLoginRoles.Admin],
     willChildLinkShow: false,
   },

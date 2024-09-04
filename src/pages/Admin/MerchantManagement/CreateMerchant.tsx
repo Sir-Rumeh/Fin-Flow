@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
 import { BiChevronRight } from 'react-icons/bi';
 import CustomInput from 'components/FormElements/CustomInput';
@@ -44,7 +44,7 @@ const CreateMerchant = () => {
   return (
     <>
       <div className="px-5 py-1">
-        <div className="slide-down flex items-center gap-2 text-lg">
+        <div className="slide-down mt-2 flex items-center gap-2 text-lg">
           <Link
             to={`/${appRoutes.adminDashboard.merchantManagement.index}`}
             className="cursor-pointer text-darkgray"
@@ -54,7 +54,7 @@ const CreateMerchant = () => {
           <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
           <span className="text-lightPurple">Onboard Merchant</span>
         </div>
-        <div className="slide-down mt-4 flex items-center justify-between">
+        <div className="slide-down mt-3 flex items-center justify-between">
           <h2 className="mt-3 text-xl font-semibold">Onboard Merchant</h2>
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-10">

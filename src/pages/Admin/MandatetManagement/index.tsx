@@ -158,7 +158,7 @@ const MandatetManagement = () => {
                     type="button"
                     className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
                   >
-                    Edit Details
+                    Update Amount
                   </button>
                 )}
 
