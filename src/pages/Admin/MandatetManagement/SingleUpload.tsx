@@ -37,7 +37,13 @@ const SingleUpload = () => {
   return (
     <>
       <div className="slide-down mt-5 rounded-lg bg-white px-5 py-10">
-        <form noValidate className="relative w-full">
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+          }}
+          noValidate
+          className="relative w-full"
+        >
           <div className="">
             <FormContentContainer
               title="Mandate Details"
