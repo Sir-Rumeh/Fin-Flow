@@ -11,9 +11,10 @@ interface Props {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   children?: React.ReactNode;
   width?: string;
+  paddingX?: number;
 }
 
-const CustomModal = ({ title, isOpen, setIsOpen, children, width = '700px' }: Props) => {
+const CustomModal = ({ title, isOpen, setIsOpen, children, width = '700px', paddingX }: Props) => {
   const isMobile = useMediaQuery('(max-width:768px)');
   const isTablet = useMediaQuery('(max-width:1024px)');
   const boxStyle = {
@@ -26,11 +27,12 @@ const CustomModal = ({ title, isOpen, setIsOpen, children, width = '700px' }: Pr
       isMobile ? 'scale(0.6)' : isTablet ? 'scale(0.8)' : 'scale(1)'
     }`,
     transition: 'transform 0.3s ease-in-out',
-    width: width,
+    width: '100%',
+    maxWidth: width,
     bgcolor: 'white',
     borderRadius: '1rem',
     boxShadow: 24,
-    px: 5,
+    px: paddingX ? paddingX : 5,
     py: 6,
   };
   const handleClose = () => setIsOpen(false);
@@ -45,7 +47,7 @@ const CustomModal = ({ title, isOpen, setIsOpen, children, width = '700px' }: Pr
       >
         <Box sx={boxStyle}>
           <div className="flex flex-col space-y-6">
-            <div className="px-5">{children}</div>
+            <div className="px-4">{children}</div>
           </div>
         </Box>
       </Modal>

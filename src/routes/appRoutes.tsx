@@ -11,9 +11,7 @@ import AdminMerchantRequests from 'pages/Admin/Requests/MerchantRequests';
 import AdminMerchantManagement from 'pages/Admin/MerchantManagement';
 import AdminMandateManagement from 'pages/Admin/MandatetManagement';
 import AdminMandateDetails from 'pages/Admin/MandatetManagement/MandateDetails';
-import AdminMandateTransactions from 'pages/Admin/MandatetManagement/MandateTransactions';
 import AdminCreateMandate from 'pages/Admin/MandatetManagement/CreateMandate';
-import AdminEditMandate from 'pages/Admin/MandatetManagement/EditMandate';
 import AdminProfileManagement from 'pages/Admin/ProfileManagement';
 import AdminAccountManagement from 'pages/Admin/AccountManagement';
 import AdminAuditTrail from 'pages/Admin/AuditTrail';
@@ -25,7 +23,7 @@ import MerchantUserManagement from 'pages/Merchant/UserManagement';
 import MerchantAuditTrail from 'pages/Merchant/AuditTrail';
 import MerchantReports from 'pages/Merchant/Reports';
 import { UserLoginRoles } from 'utils/enums';
-import appRoutes, { BASE_ROUTES } from 'utils/constants/routes';
+import { BASE_ROUTES } from 'utils/constants/routes';
 import MerchantDetails from 'pages/Admin/MerchantManagement/MerchantDetails';
 import MerchantDashboardMandateDetails from 'pages/Merchant/Dashboard/MerchantDashboardMandateDetails';
 import CreationRequestDetails from 'pages/Merchant/Requests/request-details/CreationRequestDetails';
@@ -139,20 +137,11 @@ const adminRoutes: RoutesType[] = [
         path: 'mandate-details',
         component: <AdminMandateDetails />,
       },
-      {
-        name: 'Mandate Transactions',
-        path: 'mandate-transactions',
-        component: <AdminMandateTransactions />,
-      },
+
       {
         name: 'Create Mandate',
         path: 'create-mandate',
         component: <AdminCreateMandate />,
-      },
-      {
-        name: 'Edit Mandate',
-        path: 'edit-mandate',
-        component: <AdminEditMandate />,
       },
     ],
   },

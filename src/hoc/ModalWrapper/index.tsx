@@ -1,5 +1,5 @@
 import { SetStateAction, Dispatch } from 'react';
-import Modal from 'hoc/ModalWrapper/CustomModal';
+import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import ButtonComponent from 'components/FormElements/Button';
 
 interface PopupProps {
@@ -31,7 +31,7 @@ export const ModalWrapper = ({
 }: PopupProps) => {
   return (
     <>
-      <Modal isOpen={isOpen} setIsOpen={setIsOpen} width={width}>
+      <CustomModal isOpen={isOpen} setIsOpen={setIsOpen} width={width}>
         <div className="mb-4 w-full p-1 text-center">
           <div className="mb-6 flex flex-col items-center justify-center gap-y-3">
             {icon}
@@ -74,7 +74,7 @@ export const ModalWrapper = ({
             )}
           </div>
         </div>
-      </Modal>
+      </CustomModal>
     </>
   );
 };

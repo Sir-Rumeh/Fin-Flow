@@ -1,8 +1,29 @@
+import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
+import RedAlertIcon from 'assets/icons/RedAlertIcon';
+import ButtonComponent from 'components/FormElements/Button';
+import { ModalWrapper } from 'hoc/ModalWrapper';
+import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import { BiDownload } from 'react-icons/bi';
+import { useNavigate } from 'react-router-dom';
+import appRoutes from 'utils/constants/routes';
 
 const BulkUpload = () => {
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+  const navigate = useNavigate();
+
+  const [modals, setModals] = useState({
+    confirmCreate: false,
+    creationSuccessful: false,
+  });
+
+  const openModal = (modalName: keyof typeof modals) => {
+    setModals((prev) => ({ ...prev, [modalName]: true }));
+  };
+
+  const closeModal = (modalName: keyof typeof modals) => {
+    setModals((prev) => ({ ...prev, [modalName]: false }));
+  };
 
   const files = acceptedFiles.map((file) => (
     <li key={file.name}>
@@ -41,8 +62,69 @@ const BulkUpload = () => {
               </section>
             </div>
           </div>
+          <div className="mt-10">
+            <div className="flex w-full items-center justify-end gap-4">
+              <div className="w-auto">
+                <ButtonComponent
+                  color="purplePrimary"
+                  variant="outlined"
+                  type="button"
+                  title="Cancel"
+                  customPaddingX="1.5rem"
+                  width="10rem"
+                  onClick={() => {
+                    navigate(`/${appRoutes.adminDashboard.mandateManagement.index}`);
+                  }}
+                />
+              </div>
+              <div className="w-auto">
+                <ButtonComponent
+                  variant="contained"
+                  color="white"
+                  backgroundColor="#5C068C"
+                  hoverBackgroundColor="#2F0248"
+                  type="button"
+                  title="Add Mandate"
+                  customPaddingX="1.5rem"
+                  width="10rem"
+                  onClick={() => {
+                    openModal('confirmCreate');
+                  }}
+                />
+              </div>
+            </div>
+          </div>
         </form>
       </div>
+      {modals.confirmCreate && (
+        <ModalWrapper
+          isOpen={modals.confirmCreate}
+          setIsOpen={() => closeModal('confirmCreate')}
+          title={'Add Mandate?'}
+          info={'You are about to add a new mandate, would you want to proceed with this?'}
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
+          proceedAction={() => {
+            closeModal('confirmCreate');
+            openModal('creationSuccessful');
+          }}
+        />
+      )}
+
+      {modals.creationSuccessful && (
+        <ModalWrapper
+          isOpen={modals.creationSuccessful}
+          setIsOpen={() => closeModal('creationSuccessful')}
+          title={'Success!!'}
+          info={'You have successfully added a new mandate'}
+          icon={<ActionSuccessIcon />}
+          type={'completed'}
+          proceedAction={() => {
+            closeModal('creationSuccessful');
+            navigate(`/${appRoutes.adminDashboard.mandateManagement.index}`);
+          }}
+        />
+      )}
     </>
   );
 };
