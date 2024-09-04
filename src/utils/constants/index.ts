@@ -8,6 +8,7 @@ import {
   ProfileDataRow,
   TransactionsDataRow,
   UserDataRow,
+  AuditDataRow,
 } from 'utils/interfaces';
 
 export const merchantsList: MerchantDataRow[] = [
@@ -946,5 +947,40 @@ export const UserManagementList: UserDataRow[] = [
     emailAddress: 'johndoe@gmail.com',
     status: 'Disabled',
     dateCreated: '2015-03-25T12:00:00-06:30',
+  },
+];
+
+export const auditTrailList: AuditDataRow[] = [
+  {
+    id: 1,
+    referenceNumber: 126473,
+    accountName: 'John Doe',
+    module: 'Mandates',
+    performedAction: 'Modification',
+    date: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 2,
+    referenceNumber: 126474,
+    accountName: 'John Doe',
+    module: 'Mandates',
+    performedAction: 'Modification',
+    date: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 3,
+    referenceNumber: 126479,
+    accountName: 'Benahi Kalu',
+    module: 'Mandates',
+    performedAction: 'Modification',
+    date: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 4,
+    referenceNumber: 126480,
+    accountName: 'Lebron James',
+    module: 'Mandates',
+    performedAction: 'Modification',
+    date: '2015-03-25T12:00:00-06:30',
   },
 ];
