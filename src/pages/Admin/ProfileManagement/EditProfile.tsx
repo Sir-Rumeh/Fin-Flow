@@ -7,12 +7,9 @@ import { useState } from 'react';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
-import { checkRoute } from 'utils/helpers';
 import { useFormik } from 'formik';
 
 function EditProfile() {
-  const { pathname } = useLocation();
-
   const navigate = useNavigate();
   const [modals, setModals] = useState({
     confirmEdit: false,
@@ -54,7 +51,7 @@ function EditProfile() {
           <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-8">
             <form onSubmit={formik.handleSubmit} noValidate className="relative w-full">
               <div className="slide-down">
-                <div className="relative grid w-full grid-cols-1 gap-10 md:grid-cols-3">
+                <div className="relative grid w-full grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
                   <CustomInput
                     labelFor="merchantId"
                     label="Merchant ID"
