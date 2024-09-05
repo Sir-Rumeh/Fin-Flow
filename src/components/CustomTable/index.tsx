@@ -64,7 +64,7 @@ function CustomTable({ tableData, columns, rowCount }: CustomTableProps): JSX.El
             <img src={TableLogo} alt="group_logo" />
           </div>
           <div className="mt-8 text-center">
-            <h3 className="text-2xl font-bold">Oops! No Active Merchants</h3>
+            <h3 className="text-2xl font-bold">Oops! No Active Data</h3>
           </div>
         </div>
       )}

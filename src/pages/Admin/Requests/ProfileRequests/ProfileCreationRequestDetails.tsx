@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import { BiChevronRight } from 'react-icons/bi';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
@@ -14,6 +14,7 @@ import { reasonForRejectionSchema } from 'utils/formValidators';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
 
 const ProfileCreationRequestDetails = () => {
+  const navigate = useNavigate();
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
     confirmRejectRequest: false,
@@ -39,7 +40,7 @@ const ProfileCreationRequestDetails = () => {
   return (
     <>
       <div className="px-5 py-1">
-        <div className="slide-down flex items-center gap-2 text-lg">
+        <div className="slide-down mt-2 flex items-center gap-2 text-lg">
           <Link
             to={`/${appRoutes.adminDashboard.requests.profileRequests.index}`}
             className="cursor-pointer text-darkgray"
@@ -56,7 +57,6 @@ const ProfileCreationRequestDetails = () => {
               <ButtonComponent
                 color="purplePrimary"
                 variant="outlined"
-                height="3rem"
                 type="button"
                 title="Reject"
                 customPaddingX="3rem"
@@ -72,7 +72,6 @@ const ProfileCreationRequestDetails = () => {
                 backgroundColor="#5C068C"
                 hoverBackgroundColor="#2F0248"
                 type="button"
-                height="3rem"
                 title="Approve"
                 customPaddingX="3rem"
                 onClick={() => {
@@ -148,6 +147,7 @@ const ProfileCreationRequestDetails = () => {
           type={'completed'}
           proceedAction={() => {
             closeModal('approveSuccessfulModal');
+            navigate(`/${appRoutes.adminDashboard.requests.profileRequests.index}`);
           }}
         />
       )}
@@ -202,6 +202,7 @@ const ProfileCreationRequestDetails = () => {
           type={'completed'}
           proceedAction={() => {
             closeModal('rejectSuccessfulModal');
+            navigate(`/${appRoutes.adminDashboard.requests.profileRequests.index}`);
           }}
         />
       )}

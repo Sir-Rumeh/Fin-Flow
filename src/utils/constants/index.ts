@@ -11,6 +11,12 @@ import {
   AuditDataRow,
 } from 'utils/interfaces';
 
+export const statusDropdownOptions = [
+  { value: 'All', label: 'All' },
+  { value: 'Enabled', label: 'Enabled' },
+  { value: 'Disabled', label: 'Disabled' },
+];
+
 export const merchantsList: MerchantDataRow[] = [
   {
     id: 1,
@@ -105,6 +111,7 @@ export const mandateRequestsList: MandateDataRow[] = [
     merchantId: 123455,
     mandateCode: 123890,
     mandateType: 'Variable',
+    status: 'Enabled',
     requestType: 'Creation',
     dateRequested: '2015-03-25T12:00:00-06:30',
   },
@@ -114,6 +121,7 @@ export const mandateRequestsList: MandateDataRow[] = [
     merchantId: 123455,
     mandateCode: 123890,
     mandateType: 'Fixed',
+    status: 'Enabled',
     requestType: 'Update',
     dateRequested: '2015-03-25T12:00:00-06:30',
   },
@@ -123,6 +131,7 @@ export const mandateRequestsList: MandateDataRow[] = [
     merchantId: 123455,
     mandateCode: 123890,
     mandateType: 'Variable',
+    status: 'Disabled',
     requestType: 'Disable',
     dateRequested: '2015-03-25T12:00:00-06:30',
   },
@@ -132,6 +141,7 @@ export const mandateRequestsList: MandateDataRow[] = [
     merchantId: 123455,
     mandateCode: 123890,
     mandateType: 'Fixed',
+    status: 'Disabled',
     requestType: 'Deletion',
     dateRequested: '2015-03-25T12:00:00-06:30',
   },
@@ -141,6 +151,7 @@ export const mandateRequestsList: MandateDataRow[] = [
     merchantId: 123455,
     mandateCode: 123890,
     mandateType: 'Variable',
+    status: 'Disabled',
     requestType: 'Deletion',
     dateRequested: '2015-03-25T12:00:00-06:30',
   },
@@ -150,6 +161,7 @@ export const mandateRequestsList: MandateDataRow[] = [
     merchantId: 123455,
     mandateCode: 123890,
     mandateType: 'Fixed',
+    status: 'Enabled',
     requestType: 'Deletion',
     dateRequested: '2015-03-25T12:00:00-06:30',
   },
@@ -159,6 +171,7 @@ export const mandateRequestsList: MandateDataRow[] = [
     merchantId: 123455,
     mandateCode: 123890,
     mandateType: 'Variable',
+    status: 'Enabled',
     requestType: 'Deletion',
     dateRequested: '2015-03-25T12:00:00-06:30',
   },
@@ -168,6 +181,7 @@ export const mandateRequestsList: MandateDataRow[] = [
     merchantId: 123455,
     mandateCode: 123890,
     mandateType: 'Fixed',
+    status: 'Enabled',
     requestType: 'Deletion',
     dateRequested: '2015-03-25T12:00:00-06:30',
   },
@@ -177,6 +191,7 @@ export const mandateRequestsList: MandateDataRow[] = [
     merchantId: 123455,
     mandateCode: 123890,
     mandateType: 'Variable',
+    status: 'Enabled',
     requestType: 'Deletion',
     dateRequested: '2015-03-25T12:00:00-06:30',
   },
@@ -186,6 +201,7 @@ export const mandateRequestsList: MandateDataRow[] = [
     merchantId: 123455,
     mandateCode: 123890,
     mandateType: 'Fixed',
+    status: 'Disabled',
     requestType: 'Deletion',
     dateRequested: '2015-03-25T12:00:00-06:30',
   },

@@ -8,16 +8,14 @@ import AuditIcon from 'assets/icons/AuditIcon';
 import ReportIcon from 'assets/icons/ReportIcon';
 import AdminDashboard from 'pages/Admin/Dashboard';
 import AdminMerchantRequests from 'pages/Admin/Requests/MerchantRequests';
-import AdminMandateRequests from 'pages/Admin/Requests/MandateRequests';
-import AdminAccountRequests from 'pages/Admin/Requests/AccountRequests';
-import AdminProfileRequests from 'pages/Admin/Requests/ProfileRequests';
 import AdminMerchantManagement from 'pages/Admin/MerchantManagement';
 import AdminMandateManagement from 'pages/Admin/MandatetManagement';
+import AdminMandateDetails from 'pages/Admin/MandatetManagement/MandateDetails';
+import AdminCreateMandate from 'pages/Admin/MandatetManagement/CreateMandate';
 import AdminProfileManagement from 'pages/Admin/ProfileManagement';
 import AdminAccountManagement from 'pages/Admin/AccountManagement';
 import AdminAuditTrail from 'pages/Admin/AuditTrail';
 import AdminReports from 'pages/Admin/Reports';
-
 import MerchantDashboard from 'pages/Merchant/Dashboard';
 import MerchantRequests from 'pages/Merchant/Requests';
 import MerchantMandateManagement from 'pages/Merchant/MandatetManagement';
@@ -25,7 +23,7 @@ import MerchantUserManagement from 'pages/Merchant/UserManagement';
 import MerchantAuditTrail from 'pages/Merchant/AuditTrail';
 import MerchantReports from 'pages/Merchant/Reports';
 import { UserLoginRoles } from 'utils/enums';
-import appRoutes, { BASE_ROUTES } from 'utils/constants/routes';
+import { BASE_ROUTES } from 'utils/constants/routes';
 import MerchantDetails from 'pages/Admin/MerchantManagement/MerchantDetails';
 import MerchantDashboardMandateDetails from 'pages/Merchant/Dashboard/MerchantDashboardMandateDetails';
 import CreationRequestDetails from 'pages/Merchant/Requests/request-details/CreationRequestDetails';
@@ -43,6 +41,8 @@ import CreateMandate from 'pages/Merchant/MandatetManagement/CreateMandate';
 import EditMerchant from 'pages/Admin/MerchantManagement/EditMerchant';
 import CreateMerchant from 'pages/Admin/MerchantManagement/CreateMerchant';
 import UserDetails from 'pages/Merchant/UserManagement/UserDetails';
+import UserIcon from 'assets/icons/UserIcon';
+import StaffUserManagement from 'pages/Admin/StaffUserManagement';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -131,6 +131,19 @@ const adminRoutes: RoutesType[] = [
     component: <AdminMandateManagement />,
     rolesWithAccess: [UserLoginRoles.Admin],
     willChildLinkShow: false,
+    children: [
+      {
+        name: 'Mandate Details',
+        path: 'mandate-details',
+        component: <AdminMandateDetails />,
+      },
+
+      {
+        name: 'Create Mandate',
+        path: 'create-mandate',
+        component: <AdminCreateMandate />,
+      },
+    ],
   },
   {
     name: 'Profile Management',
@@ -165,6 +178,15 @@ const adminRoutes: RoutesType[] = [
     path: 'reports',
     icon: <ReportIcon />,
     component: <AdminReports />,
+    rolesWithAccess: [UserLoginRoles.Admin],
+    willChildLinkShow: false,
+  },
+  {
+    name: 'Staff User Management',
+    layout: `/${BASE_ROUTES.ADMIN}`,
+    path: 'staff-user-management',
+    icon: <UserIcon />,
+    component: <StaffUserManagement />,
     rolesWithAccess: [UserLoginRoles.Admin],
     willChildLinkShow: false,
   },

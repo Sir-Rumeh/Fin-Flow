@@ -1,4 +1,5 @@
 import { TextField } from '@mui/material';
+import InputAdornment from '@mui/material/InputAdornment';
 
 type Props = {
   label: string;
@@ -20,9 +21,13 @@ type Props = {
   color?: string;
   error?: boolean;
   helperText?: string;
+  startIcon?: any;
 };
 
 const FormInput = (props: Props) => {
+  const Icon = () => {
+    return props.startIcon;
+  };
   return (
     <TextField
       label={props.label}
@@ -44,7 +49,18 @@ const FormInput = (props: Props) => {
         },
       }}
       tabIndex={0}
-      InputProps={{ readOnly: props.readonly, style: { borderRadius: '6px' } }}
+      InputProps={{
+        readOnly: props.readonly,
+        style: { borderRadius: '6px' },
+        startAdornment: (
+          <InputAdornment
+            position="start"
+            className={`${props.startIcon ? 'ml-4' : 'ml-[6px]'} flex scale-[140%] items-center justify-center`}
+          >
+            {props.startIcon && <Icon />}
+          </InputAdornment>
+        ),
+      }}
       onChange={props.onChange}
       error={props.error}
       fullWidth={props.fullWidth}

@@ -1,5 +1,5 @@
 import { SetStateAction, Dispatch } from 'react';
-import Modal from 'hoc/ModalWrapper/CustomModal';
+import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import ButtonComponent from 'components/FormElements/Button';
 
 interface PopupProps {
@@ -31,7 +31,7 @@ export const ModalWrapper = ({
 }: PopupProps) => {
   return (
     <>
-      <Modal isOpen={isOpen} setIsOpen={setIsOpen} width={width}>
+      <CustomModal isOpen={isOpen} setIsOpen={setIsOpen} width={width}>
         <div className="mb-4 w-full p-1 text-center">
           <div className="mb-6 flex flex-col items-center justify-center gap-y-3">
             {icon}
@@ -39,7 +39,7 @@ export const ModalWrapper = ({
           </div>
           <div className="mb-8 text-xl tracking-wider">{info}</div>
           <div className="mt-6 w-full">{feedback}</div>
-          <div className="mt-[3rem]">
+          <div className="mt-[2.5rem]">
             {type === 'confirmation' && (
               <div className="flex items-center justify-center gap-x-5">
                 <ButtonComponent
@@ -47,17 +47,18 @@ export const ModalWrapper = ({
                   borderColor="#5C068C"
                   border={0.5}
                   width="15rem"
+                  height="3rem"
                   onClick={() => setIsOpen(false)}
                   title="No, Cancel"
                 />
-
                 <ButtonComponent
                   color="white"
                   width="15rem"
+                  height="3rem"
                   variant="contained"
                   backgroundColor={proceedBackgroundColor ? proceedBackgroundColor : ''}
                   hoverBackgroundColor={hoverBackgroundColor ? hoverBackgroundColor : ''}
-                  onClick={() => proceedAction?.()}
+                  onClick={proceedAction}
                   title="Yes, Proceed"
                 />
               </div>
@@ -68,12 +69,12 @@ export const ModalWrapper = ({
                 color="white"
                 type="button"
                 title="Okay"
-                onClick={() => setIsOpen(false)}
+                onClick={proceedAction}
               />
             )}
           </div>
         </div>
-      </Modal>
+      </CustomModal>
     </>
   );
 };

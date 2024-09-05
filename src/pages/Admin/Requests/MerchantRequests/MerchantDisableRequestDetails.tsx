@@ -1,4 +1,4 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import { BiChevronRight } from 'react-icons/bi';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
@@ -17,6 +17,7 @@ import SubTitleIconGreen from 'assets/icons/SubTitleIconGreen';
 import SubTitleIconYellow from 'assets/icons/SubTitleIconYellow';
 
 const MerchantDisableRequestDetails = () => {
+  const navigate = useNavigate();
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
     confirmRejectRequest: false,
@@ -41,7 +42,7 @@ const MerchantDisableRequestDetails = () => {
   return (
     <>
       <div className="px-5 py-1">
-        <div className="slide-down flex items-center gap-2 text-lg">
+        <div className="slide-down mt-2 flex items-center gap-2 text-lg">
           <Link
             to={`/${appRoutes.adminDashboard.requests.merchantRequests.index}`}
             className="cursor-pointer text-darkgray"
@@ -58,7 +59,6 @@ const MerchantDisableRequestDetails = () => {
               <ButtonComponent
                 color="purplePrimary"
                 variant="outlined"
-                height="3rem"
                 type="button"
                 title="Reject"
                 customPaddingX="3rem"
@@ -74,7 +74,6 @@ const MerchantDisableRequestDetails = () => {
                 backgroundColor="#5C068C"
                 hoverBackgroundColor="#2F0248"
                 type="button"
-                height="3rem"
                 title="Approve"
                 customPaddingX="3rem"
                 onClick={() => {
@@ -85,7 +84,7 @@ const MerchantDisableRequestDetails = () => {
           </div>
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
-          <div className="bg-lilacPurple rounded-lg px-6 py-4">
+          <div className="rounded-lg bg-lilacPurple px-6 py-4">
             <h3 className="text-md font-semibold md:text-xl">Merchant Accounts</h3>
             <div className="mt-4 flex flex-col items-center justify-between gap-6 gap-x-4 md:flex-row">
               <DashboardCard
@@ -177,6 +176,7 @@ const MerchantDisableRequestDetails = () => {
           type={'completed'}
           proceedAction={() => {
             closeModal('approveSuccessfulModal');
+            navigate(`/${appRoutes.adminDashboard.requests.merchantRequests.index}`);
           }}
         />
       )}
@@ -231,6 +231,7 @@ const MerchantDisableRequestDetails = () => {
           type={'completed'}
           proceedAction={() => {
             closeModal('rejectSuccessfulModal');
+            navigate(`/${appRoutes.adminDashboard.requests.merchantRequests.index}`);
           }}
         />
       )}

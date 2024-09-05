@@ -1,11 +1,9 @@
 import ButtonComponent from 'components/FormElements/Button';
-import ArrowDownIcon from 'assets/icons/ArrowDownIcon';
 import { useState } from 'react';
 import TableFilter from 'components/TableFilter';
 import CustomTable from 'components/CustomTable';
-import { RequestTypes } from 'utils/enums';
 import appRoutes from 'utils/constants/routes';
-import { createSearchParams, Link, useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
 import { muiDashboardMerchantsList } from 'utils/constants';
@@ -14,15 +12,19 @@ import PopoverTitle from 'components/common/PopoverTitle';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
-import BoldArrowDown from 'assets/icons/BoldArrowDown';
 import ExportBUtton from 'components/FormElements/ExportButton';
+import { useFormik } from 'formik';
 
 const MerchantManagement = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [modals, setModals] = useState({
     confirmDisableMerchant: false,
-    disableSuccessfulModal: false,
+    disableSuccessful: false,
+    confirmEnableMerchant: false,
+    enableSuccessful: false,
+    confirmDeleteMerchant: false,
+    deleteSuccessful: false,
   });
 
   const openModal = (modalName: keyof typeof modals) => {
@@ -32,6 +34,18 @@ const MerchantManagement = () => {
   const closeModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
+
+  const formik = useFormik({
+    initialValues: {
+      searchMerchantName: '',
+      fromDateFilter: '',
+      toDateFilter: '',
+      statusFilter: '',
+    },
+    onSubmit: (values) => {
+      setSearchTerm('');
+    },
+  });
 
   const columns: GridColDef[] = [
     {
@@ -126,15 +140,27 @@ const MerchantManagement = () => {
                 >
                   Edit Details
                 </button>
+                {params?.row.status === 'Enabled' && (
+                  <button
+                    type="button"
+                    onClick={() => openModal('confirmDisableMerchant')}
+                    className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
+                  >
+                    Disable
+                  </button>
+                )}
+                {params?.row.status === 'Disabled' && (
+                  <button
+                    type="button"
+                    onClick={() => openModal('confirmEnableMerchant')}
+                    className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
+                  >
+                    Enable
+                  </button>
+                )}
                 <button
-                  onClick={() => openModal('confirmDisableMerchant')}
                   type="button"
-                  className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
-                >
-                  Disable
-                </button>
-                <button
-                  type="button"
+                  onClick={() => openModal('confirmDeleteMerchant')}
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
                   Delete
@@ -150,9 +176,9 @@ const MerchantManagement = () => {
   return (
     <>
       <section className="p-2 md:p-4">
-        <div className="slide-down my-2 flex items-center justify-between">
+        <div className="fade-in-down my-2 flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold md:text-2xl">Merchant Requests</h1>
+            <h1 className="text-lg font-semibold md:text-2xl">Merchant Management</h1>
           </div>
           <div className="w-auto">
             <ButtonComponent
@@ -162,8 +188,7 @@ const MerchantManagement = () => {
               hoverBackgroundColor="#2F0248"
               type="button"
               title="Onboard Merchant"
-              height="3rem"
-              customPaddingX="2rem"
+              customPaddingX="1.4rem"
               onClick={() => {
                 navigate({
                   pathname: `/${appRoutes.adminDashboard.merchantManagement.createMerchant}`,
@@ -182,8 +207,12 @@ const MerchantManagement = () => {
                     placeholder={'Search Merchant Name'}
                     label={'Search Merchant'}
                     value={searchTerm}
-                    handleFilter={() => setSearchTerm('')}
                     setSearch={setSearchTerm}
+                    handleOptionsFilter={() => {}}
+                    formik={formik}
+                    fromDateName={'fromDateFilter'}
+                    toDateName={'toDateFilter'}
+                    selectName={'statusFilter'}
                   />
                 </div>
               </div>
@@ -214,20 +243,74 @@ const MerchantManagement = () => {
           type={'confirmation'}
           proceedAction={() => {
             closeModal('confirmDisableMerchant');
-            openModal('disableSuccessfulModal');
+            openModal('disableSuccessful');
           }}
         />
       )}
-      {modals.disableSuccessfulModal && (
+      {modals.disableSuccessful && (
         <ModalWrapper
-          isOpen={modals.disableSuccessfulModal}
-          setIsOpen={() => closeModal('disableSuccessfulModal')}
+          isOpen={modals.disableSuccessful}
+          setIsOpen={() => closeModal('disableSuccessful')}
           title={'Success!!'}
           info={'You have successfully disabled this merchant'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
-            closeModal('disableSuccessfulModal');
+            closeModal('disableSuccessful');
+          }}
+        />
+      )}
+      {modals.confirmEnableMerchant && (
+        <ModalWrapper
+          isOpen={modals.confirmEnableMerchant}
+          setIsOpen={() => closeModal('confirmEnableMerchant')}
+          title={'Enable Merchant?'}
+          info={'You are about to enable this merchant, would you want to proceed with this?'}
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
+          proceedAction={() => {
+            closeModal('confirmEnableMerchant');
+            openModal('enableSuccessful');
+          }}
+        />
+      )}
+      {modals.enableSuccessful && (
+        <ModalWrapper
+          isOpen={modals.enableSuccessful}
+          setIsOpen={() => closeModal('enableSuccessful')}
+          title={'Success!!'}
+          info={'You have successfully enabled this merchant'}
+          icon={<ActionSuccessIcon />}
+          type={'completed'}
+          proceedAction={() => {
+            closeModal('enableSuccessful');
+          }}
+        />
+      )}
+      {modals.confirmDeleteMerchant && (
+        <ModalWrapper
+          isOpen={modals.confirmDeleteMerchant}
+          setIsOpen={() => closeModal('confirmDeleteMerchant')}
+          title={'Delete Merchant?'}
+          info={'You are about to delete this merchant, would you want to proceed with this?'}
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
+          proceedAction={() => {
+            closeModal('confirmDeleteMerchant');
+            openModal('deleteSuccessful');
+          }}
+        />
+      )}
+      {modals.deleteSuccessful && (
+        <ModalWrapper
+          isOpen={modals.deleteSuccessful}
+          setIsOpen={() => closeModal('deleteSuccessful')}
+          title={'Success!!'}
+          info={'You have successfully deleted this merchant'}
+          icon={<ActionSuccessIcon />}
+          type={'completed'}
+          proceedAction={() => {
+            closeModal('deleteSuccessful');
           }}
         />
       )}

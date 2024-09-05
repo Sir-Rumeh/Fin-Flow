@@ -55,6 +55,8 @@ export const appRoutes = {
     },
     mandateManagement: {
       index: `${BASE_ROUTES.ADMIN}/mandate-management`,
+      mandateDetails: `${BASE_ROUTES.ADMIN}/mandate-management/mandate-details`,
+      createMandate: `${BASE_ROUTES.ADMIN}/mandate-management/create-mandate`,
     },
     profileManagement: {
       index: `${BASE_ROUTES.ADMIN}/profile-management`,
@@ -67,6 +69,9 @@ export const appRoutes = {
     },
     reports: {
       index: `${BASE_ROUTES.ADMIN}/reports`,
+    },
+    staffUserManagement: {
+      index: `${BASE_ROUTES.ADMIN}/staff-user-management`,
     },
   },
   merchantDashboard: {
