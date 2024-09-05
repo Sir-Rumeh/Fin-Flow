@@ -70,7 +70,7 @@ const TableFilter = ({
                   <button
                     type="button"
                     onClick={() => clearFilter()}
-                    className="font-semibold text-[#B42318]"
+                    className="rounded-md px-3 py-1 font-semibold text-[#B42318] hover:bg-[#f8efed]"
                   >
                     Clear Filter
                   </button>

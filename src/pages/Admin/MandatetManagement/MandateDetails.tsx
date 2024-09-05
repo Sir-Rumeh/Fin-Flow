@@ -461,7 +461,6 @@ const MandateDetails = () => {
                     width="9rem"
                     customPaddingX="1.4rem"
                     onClick={() => {
-                      closeModal('editMandate');
                       openModal('confirmEdit');
                     }}
                   />
@@ -489,6 +488,7 @@ const MandateDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
+            closeModal('editMandate');
             closeModal('confirmEdit');
             openModal('editSuccessful');
           }}

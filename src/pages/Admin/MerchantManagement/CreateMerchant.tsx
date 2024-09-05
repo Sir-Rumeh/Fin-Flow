@@ -59,7 +59,7 @@ const CreateMerchant = () => {
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-10">
           <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-8">
-            <form onSubmit={formik.handleSubmit} noValidate className="relative w-full 2xl:w-[70%]">
+            <form onSubmit={formik.handleSubmit} noValidate className="relative w-full 2xl:w-[80%]">
               <div className="flex flex-col items-end gap-x-8 gap-y-4 md:flex-row md:items-center md:justify-between">
                 <div className="w-full md:w-[80%]">
                   <CustomInput

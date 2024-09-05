@@ -43,6 +43,9 @@ import CreateMerchant from 'pages/Admin/MerchantManagement/CreateMerchant';
 import UserDetails from 'pages/Merchant/UserManagement/UserDetails';
 import UserIcon from 'assets/icons/UserIcon';
 import StaffUserManagement from 'pages/Admin/StaffUserManagement';
+import ProfileDetails from 'pages/Admin/ProfileManagement/ProfileDetails';
+import CreateProfile from 'pages/Admin/ProfileManagement/CreateProfile';
+import EditProfile from 'pages/Admin/ProfileManagement/EditProfile';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -153,6 +156,23 @@ const adminRoutes: RoutesType[] = [
     component: <AdminProfileManagement />,
     rolesWithAccess: [UserLoginRoles.Admin],
     willChildLinkShow: false,
+    children: [
+      {
+        name: 'Profile Details',
+        path: 'profile-details',
+        component: <ProfileDetails />,
+      },
+      {
+        name: 'Create Profile',
+        path: 'create-profile',
+        component: <CreateProfile />,
+      },
+      {
+        name: 'Edit Profile',
+        path: 'edit-profile',
+        component: <EditProfile />,
+      },
+    ],
   },
   {
     name: 'Account Management',

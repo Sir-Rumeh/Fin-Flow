@@ -22,6 +22,7 @@ export interface DashboardMerchantDataRow {
   accountNumber: string;
   phoneNumber: string;
   dateRequested: string;
+  dateCreated?: string;
   dateUpdated: string;
   status: string;
   requestType: string;
@@ -63,6 +64,7 @@ export interface UserDataRow {
   emailAddress: string;
   status: string;
   dateCreated: string;
+  dateRequested?: string;
 }
 
 export interface AuditDataRow {
