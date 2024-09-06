@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
-import { BiChevronRight } from 'react-icons/bi';
+import ChevronRight from 'assets/icons/ChevronRight';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
 import { useState } from 'react';
@@ -51,7 +51,7 @@ const CreateMerchant = () => {
           >
             Merchant Management
           </Link>{' '}
-          <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
+          <ChevronRight />
           <span className="text-lightPurple">Onboard Merchant</span>
         </div>
         <div className="slide-down mt-3 flex items-center justify-between">

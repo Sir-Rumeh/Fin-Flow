@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
-import { BiChevronDown, BiChevronRight } from 'react-icons/bi';
+import ChevronDown from 'assets/icons/ChevronDown';
+import ChevronRight from 'assets/icons/ChevronRight';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
 import { useState } from 'react';
@@ -41,7 +42,7 @@ function EditProfile() {
           >
             Profile Management
           </Link>{' '}
-          <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
+          <ChevronRight />
           <span className="text-lightPurple">Edit Profile</span>
         </div>
         <div className="slide-down mt-3 flex items-center justify-between">
@@ -116,7 +117,7 @@ function EditProfile() {
                       inputType="text"
                       placeholder="Enter here"
                       maxW="w-full"
-                      icon={<BiChevronDown className="h-7 w-7" />}
+                      icon={<ChevronDown />}
                     />
                   </div>
                 </div>

@@ -55,7 +55,7 @@ const FormInput = (props: Props) => {
         startAdornment: (
           <InputAdornment
             position="start"
-            className={`${props.startIcon ? 'ml-4' : 'ml-[6px]'} flex scale-[140%] items-center justify-center`}
+            className={`${props.startIcon ? 'ml-4' : 'ml-[6px]'} flex items-center justify-center`}
           >
             {props.startIcon && <Icon />}
           </InputAdornment>

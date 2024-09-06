@@ -7,7 +7,7 @@ import {
 } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import { CreationRequestIcon, DeleteRequestIcon, UpdateRequestIcon } from 'assets/icons';
-import { BiChevronRight } from 'react-icons/bi';
+import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
 import appRoutes from 'utils/constants/routes';
 import DashboardCard from 'components/common/DashboardCards/DashboardCard';
@@ -62,7 +62,7 @@ const MerchantDetails = () => {
           >
             {isDashboardRoute ? 'Dashboard' : 'Merchant Management'}
           </Link>{' '}
-          <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
+          <ChevronRight />
           <span className="text-lightPurple">Merchant Details</span>
         </div>
         <div className="slide-down mt-3 flex items-center justify-between">

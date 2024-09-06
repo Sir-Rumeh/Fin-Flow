@@ -6,11 +6,7 @@ import appRoutes from 'utils/constants/routes';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
-import {
-  mandateRequestsList,
-  muiDashboardMerchantsList,
-  transactionHistory,
-} from 'utils/constants';
+import { mandateRequestsList, transactionHistory } from 'utils/constants';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
 import { ModalWrapper } from 'hoc/ModalWrapper';
@@ -18,13 +14,13 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
-import { Box, Modal, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
-import { LiaTimesSolid } from 'react-icons/lia';
 import { TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
-import { FiDownload } from 'react-icons/fi';
 import CustomInput from 'components/FormElements/CustomInput';
+import CloseIcon from 'assets/icons/CloseIcon';
+import DownloadIcon from 'assets/icons/DownloadIcon';
 
 const MandatetManagement = () => {
   const navigate = useNavigate();
@@ -234,7 +230,7 @@ const MandatetManagement = () => {
       renderCell: (params) => {
         return (
           <button className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple">
-            <FiDownload />
+            <DownloadIcon />
             Download Receipt
           </button>
         );
@@ -403,8 +399,8 @@ const MandatetManagement = () => {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             <div className="flex items-center justify-between">
               <h1 className="text-xl">Transaction History Details</h1>
-              <button className="scale-[130%]" onClick={() => closeModal('openTransactionHistory')}>
-                <LiaTimesSolid />
+              <button className="scale-[110%]" onClick={() => closeModal('openTransactionHistory')}>
+                <CloseIcon />
               </button>
             </div>
             <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
@@ -457,8 +453,8 @@ const MandatetManagement = () => {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             <div className="slide-down flex items-center justify-between">
               <h1 className="text-xl">Modify Mandate Details</h1>
-              <button className="scale-[130%]" onClick={() => closeModal('editMandate')}>
-                <LiaTimesSolid />
+              <button className="scale-[110%]" onClick={() => closeModal('editMandate')}>
+                <CloseIcon />
               </button>
             </div>
             <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>

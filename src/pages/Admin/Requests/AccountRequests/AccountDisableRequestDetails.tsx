@@ -1,6 +1,6 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
-import { BiChevronRight } from 'react-icons/bi';
+import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
 import appRoutes from 'utils/constants/routes';
 import ButtonComponent from 'components/FormElements/Button';
@@ -49,8 +49,7 @@ const AccountDisableRequestDetails = () => {
           >
             Account Requests
           </Link>{' '}
-          <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
-          <span className="text-lightPurple">Disable Account Request Details</span>
+          <ChevronRight />s<span className="text-lightPurple">Disable Account Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
           <h2 className="text-lg font-semibold md:text-2xl">Request ID : Req123456</h2>

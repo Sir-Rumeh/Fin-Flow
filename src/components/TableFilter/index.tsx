@@ -1,12 +1,12 @@
 import FormInput from 'components/FormElements/FormInput';
 import ButtonComponent from 'components/FormElements/Button';
 import { Dispatch, SetStateAction, useState } from 'react';
-import { IoFilter } from 'react-icons/io5';
-import { BiSearch } from 'react-icons/bi';
 import CustomPopover from 'hoc/PopOverWrapper';
 import MuiDatePicker from 'components/FormElements/DatePicker';
 import SelectComponent from 'components/FormElements/SelectComponent';
 import { statusDropdownOptions } from 'utils/constants';
+import { FilterIcon } from 'assets/icons';
+import SearchIcon from 'assets/icons/SearchIcon';
 
 interface TableFilterProps {
   name: string;
@@ -53,7 +53,11 @@ const TableFilter = ({
               buttonIcon={
                 <ButtonComponent
                   title="Filter by"
-                  children={<IoFilter className="mb-[1px] ml-3 h-5 w-5" />}
+                  children={
+                    <div className="ml-1">
+                      <FilterIcon />
+                    </div>
+                  }
                   color="#5C068C"
                   border={1}
                   customPaddingX="1.3rem"
@@ -146,7 +150,7 @@ const TableFilter = ({
             height={'2.8rem'}
             value={value}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
-            startIcon={<BiSearch />}
+            startIcon={<SearchIcon />}
           />
         </form>
       </div>

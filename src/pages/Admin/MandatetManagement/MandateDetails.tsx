@@ -1,7 +1,6 @@
 import { Link, createSearchParams, useSearchParams, useNavigate } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import { UpdateRequestIcon } from 'assets/icons';
-import { BiChevronRight } from 'react-icons/bi';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
 import appRoutes from 'utils/constants/routes';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
@@ -11,7 +10,7 @@ import CustomPopover from 'hoc/PopOverWrapper';
 import { useState } from 'react';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import { Typography } from '@mui/material';
-import { LiaTimesSolid } from 'react-icons/lia';
+
 import CustomTabs from 'hoc/CustomTabs';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
@@ -20,10 +19,12 @@ import { TabsProps } from 'utils/interfaces';
 import CustomTable from 'components/CustomTable';
 import { transactionHistory } from 'utils/constants';
 import { GridColDef } from '@mui/x-data-grid';
-import { FiDownload } from 'react-icons/fi';
+import DownloadIcon from 'assets/icons/DownloadIcon';
 import TableFilter from 'components/TableFilter';
 import { useFormik } from 'formik';
 import CustomInput from 'components/FormElements/CustomInput';
+import ChevronRight from 'assets/icons/ChevronRight';
+import CloseIcon from 'assets/icons/CloseIcon';
 
 const MandateDetails = () => {
   const navigate = useNavigate();
@@ -111,7 +112,7 @@ const MandateDetails = () => {
       renderCell: (params) => {
         return (
           <button className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple">
-            <FiDownload />
+            <DownloadIcon />
             Download Receipt
           </button>
         );
@@ -128,7 +129,7 @@ const MandateDetails = () => {
           >
             Mandate Management
           </Link>{' '}
-          <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
+          <ChevronRight />
           <span className="text-lightPurple">Mandate Details</span>
         </div>
 
@@ -370,8 +371,8 @@ const MandateDetails = () => {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             <div className="flex items-center justify-between">
               <h1 className="text-xl">Transaction History Details</h1>
-              <button className="scale-[130%]" onClick={() => closeModal('openTransactionHistory')}>
-                <LiaTimesSolid />
+              <button className="scale-[110%]" onClick={() => closeModal('openTransactionHistory')}>
+                <CloseIcon />
               </button>
             </div>
             <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
@@ -425,8 +426,8 @@ const MandateDetails = () => {
           <Typography id="modal-modal-title" variant="h6" component="h2">
             <div className="slide-down flex items-center justify-between">
               <h1 className="text-xl">Modify Mandate Details</h1>
-              <button className="scale-[130%]" onClick={() => closeModal('editMandate')}>
-                <LiaTimesSolid />
+              <button className="scale-[110%]" onClick={() => closeModal('editMandate')}>
+                <CloseIcon />
               </button>
             </div>
             <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>

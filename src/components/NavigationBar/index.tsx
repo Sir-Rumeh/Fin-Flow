@@ -1,7 +1,7 @@
-import { FiAlignJustify } from 'react-icons/fi';
 import NotificationIcon from 'assets/icons/NotificationIcon';
 import dayjs from 'dayjs';
 import LocalizedTime from 'dayjs/plugin/localizedFormat';
+import Hamburger from 'assets/icons/Hamburger';
 
 const Navbar = (props: { onOpenSidenav: () => void }) => {
   dayjs.extend(LocalizedTime);
@@ -15,7 +15,7 @@ const Navbar = (props: { onOpenSidenav: () => void }) => {
           className="flex cursor-pointer items-center text-xl text-blackInput xl:hidden"
           onClick={onOpenSidenav}
         >
-          <FiAlignJustify className="h-5 w-5 text-blackSecondary" />
+          <Hamburger className="" />
         </span>
         <div className="flex items-center justify-between">
           <div className="flex flex-col items-start text-sm font-semibold">
@@ -34,7 +34,7 @@ const Navbar = (props: { onOpenSidenav: () => void }) => {
           <div className="flex">
             <div className="relative flex items-center justify-center p-1">
               <NotificationIcon />
-              <span className="bg-lightRed absolute -right-2 -top-2 w-8 scale-75 rounded-3xl p-1 text-center font-semibold text-red-400">
+              <span className="absolute -right-2 -top-2 w-8 scale-75 rounded-3xl bg-lightRed p-1 text-center font-semibold text-red-400">
                 50
               </span>
             </div>

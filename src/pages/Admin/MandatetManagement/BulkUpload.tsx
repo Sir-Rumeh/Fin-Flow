@@ -1,10 +1,10 @@
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
+import UploadIcon from 'assets/icons/UploadIcon';
 import ButtonComponent from 'components/FormElements/Button';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import { useState } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { BiDownload } from 'react-icons/bi';
 import { useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
 
@@ -51,7 +51,7 @@ const BulkUpload = () => {
                     <p className="text-center font-semibold">or</p>
                     <div className="flex items-center justify-around">
                       <button className="mt-2 flex items-center gap-2 rounded-lg border border-lightPurple px-4 py-2 text-center text-lightPurple">
-                        <BiDownload className="h-5 w-5" /> Browse Document
+                        <UploadIcon /> Browse Document
                       </button>
                     </div>
                   </div>

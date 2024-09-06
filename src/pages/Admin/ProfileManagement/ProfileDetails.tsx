@@ -1,6 +1,6 @@
 import { Link, createSearchParams, useSearchParams, useNavigate } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
-import { BiChevronRight } from 'react-icons/bi';
+import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
 import appRoutes from 'utils/constants/routes';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
@@ -46,7 +46,7 @@ const ProfileDetails = () => {
           >
             Profile Management
           </Link>{' '}
-          <BiChevronRight className="h-5 w-5 text-darkgray" />
+          <ChevronRight />
           <span className="text-lightPurple">Profile Details</span>
         </div>
         <div className="slide-down mt-3 flex items-center justify-between">
