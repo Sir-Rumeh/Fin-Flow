@@ -1,18 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
-import { BiChevronRight } from 'react-icons/bi';
-import CustomInput from 'components/FormElements/CustomInput';
-import ButtonComponent from 'components/FormElements/Button';
 import { useState } from 'react';
-import RedAlertIcon from 'assets/icons/RedAlertIcon';
-import { ModalWrapper } from 'hoc/ModalWrapper';
-import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
-import { useFormik } from 'formik';
-import { onboardMerchantSchema } from 'utils/formValidators';
 import { TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
 import SingleUpload from './SingleUpload';
 import BulkUpload from './BulkUpload';
+import ChevronRight from 'assets/icons/ChevronRight';
 
 const CreateMandate = () => {
   const navigate = useNavigate();
@@ -52,8 +45,7 @@ const CreateMandate = () => {
           >
             Mandate Management
           </Link>{' '}
-          <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
-          <span className="text-lightPurple">Create Mandate</span>
+          <ChevronRight /> <span className="text-lightPurple">Create Mandate</span>
         </div>
         <div className="slide-down mt-3 flex items-center justify-between">
           <h2 className="mt-3 text-xl font-semibold">Create Mandate</h2>

@@ -1,6 +1,6 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
-import { BiChevronRight } from 'react-icons/bi';
+import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
 import appRoutes from 'utils/constants/routes';
 import ButtonComponent from 'components/FormElements/Button';
@@ -11,7 +11,6 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import FormInput from 'components/FormElements/FormInput';
 import { useFormik } from 'formik';
 import { reasonForRejectionSchema } from 'utils/formValidators';
-import { checkRoute } from 'utils/helpers';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
 
 const MerchantCreationRequestDetails = () => {
@@ -49,7 +48,7 @@ const MerchantCreationRequestDetails = () => {
           >
             Merchant Requests
           </Link>{' '}
-          <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
+          <ChevronRight />
           <span className="text-lightPurple">Merchant Creation Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">

@@ -1,4 +1,3 @@
-import { HiX } from 'react-icons/hi';
 import Links from './Links';
 import { adminRoutes, merchantRoutes } from 'routes/appRoutes';
 import FcmbIcon from 'assets/icons//FcmbIcon';
@@ -6,6 +5,7 @@ import SignoutIcon from 'assets/icons/SignoutIcon';
 import { UserLoginRoles } from 'utils/enums';
 import { useNavigate } from 'react-router-dom';
 import { BASE_ROUTES } from 'utils/constants/routes';
+import WhiteClose from 'assets/icons/WhiteClose';
 
 const Sidebar = (props: {
   open: boolean;
@@ -24,7 +24,7 @@ const Sidebar = (props: {
         className="absolute right-4 top-4 block scale-[170%] cursor-pointer text-white xl:hidden"
         onClick={onClose}
       >
-        <HiX />
+        <WhiteClose className="" />
       </span>
       <div className={`mx-[25px] mt-[25px] flex items-center`}>
         <div className="flex w-full items-center pr-6">

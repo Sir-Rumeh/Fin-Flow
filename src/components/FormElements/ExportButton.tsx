@@ -1,8 +1,8 @@
 import { Button } from '@mui/material';
 import { MouseEvent } from 'react';
 import ButtonComponent from './Button';
-import { BiChevronDown } from 'react-icons/bi';
 import CustomPopover from 'hoc/PopOverWrapper';
+import ExportButtonArrowDown from 'assets/icons/ExportButtonArrowDown';
 
 type Props = {
   customClass?: string;
@@ -18,7 +18,7 @@ const ExportBUtton = (props: Props) => {
             <ButtonComponent
               onClick={() => {}}
               title="Export"
-              children={<BiChevronDown className="mb-[3px] ml-1 h-8 w-8" />}
+              children={<ExportButtonArrowDown className="ml-1" />}
               color="#5C068C"
               border={1}
               customPaddingX="1.3rem"

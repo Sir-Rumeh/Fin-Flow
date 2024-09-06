@@ -13,7 +13,7 @@ export default function FormContentContainer({ title, titleExtension, children }
         <p className="my-3 text-lg font-semibold">{title}</p>
         {titleExtension}
       </div>
-      <div className="mt-10 grid grid-cols-1 gap-4 md:grid-cols-3">{children}</div>
+      <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-3">{children}</div>
     </div>
   );
 }

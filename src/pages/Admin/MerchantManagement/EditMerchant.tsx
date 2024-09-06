@@ -1,9 +1,9 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
-import { BiChevronRight } from 'react-icons/bi';
+import ChevronRight from 'assets/icons/ChevronRight';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
@@ -41,6 +41,7 @@ const EditMerchant = () => {
       openModal('confirmEditMerchant');
     },
   });
+
   return (
     <>
       <div className="px-5 py-1">
@@ -55,7 +56,7 @@ const EditMerchant = () => {
           >
             {isDashboardRoute ? 'Dashboard' : 'Merchant Management'}
           </Link>{' '}
-          <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
+          <ChevronRight />
           <span className="text-lightPurple">Edit Merchant</span>
         </div>
         <div className="slide-down mt-3 flex items-center justify-between">
@@ -63,9 +64,9 @@ const EditMerchant = () => {
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-10">
           <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-8">
-            <form onSubmit={formik.handleSubmit} noValidate className="relative w-full 2xl:w-[70%]">
+            <form onSubmit={formik.handleSubmit} noValidate className="relative w-full 2xl:w-[80%]">
               <div className="slide-down">
-                <div className="relative grid w-full grid-cols-1 gap-10 md:grid-cols-2">
+                <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-2">
                   <CustomInput
                     labelFor="merchantId"
                     label="Merchant ID"

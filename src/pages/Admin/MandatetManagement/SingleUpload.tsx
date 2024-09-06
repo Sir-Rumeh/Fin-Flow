@@ -7,7 +7,7 @@ import FormDatePicker from 'components/FormElements/FormDatePicker';
 import { useFormik } from 'formik';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import { useState } from 'react';
-import { BiChevronDown } from 'react-icons/bi';
+import ChevronDown from 'assets/icons/ChevronDown';
 import { useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
 
@@ -114,7 +114,7 @@ const SingleUpload = () => {
                   label="Day to Apply"
                   inputType="text"
                   placeholder="Enter here"
-                  icon={<BiChevronDown className="h-7 w-7" />}
+                  icon={<ChevronDown />}
                 />
               </div>
               <div className="md:col-span-1">
@@ -124,7 +124,7 @@ const SingleUpload = () => {
                   label="Frequency"
                   inputType="text"
                   placeholder="Enter here"
-                  icon={<BiChevronDown className="h-7 w-7" />}
+                  icon={<ChevronDown />}
                 />
               </div>
               <div className="md:col-span-1">
@@ -134,7 +134,7 @@ const SingleUpload = () => {
                   label="Service"
                   inputType="text"
                   placeholder="Enter here"
-                  icon={<BiChevronDown className="h-7 w-7" />}
+                  icon={<ChevronDown />}
                 />
               </div>
               <div className="w-full md:col-span-1">

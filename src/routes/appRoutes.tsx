@@ -22,7 +22,7 @@ import MerchantMandateManagement from 'pages/Merchant/MandatetManagement';
 import MerchantUserManagement from 'pages/Merchant/UserManagement';
 import MerchantAuditTrail from 'pages/Merchant/AuditTrail';
 import MerchantReports from 'pages/Merchant/Reports';
-import { UserLoginRoles } from 'utils/enums';
+import { AdminUserRoles, UserLoginRoles } from 'utils/enums';
 import { BASE_ROUTES } from 'utils/constants/routes';
 import MerchantDetails from 'pages/Admin/MerchantManagement/MerchantDetails';
 import MerchantDashboardMandateDetails from 'pages/Merchant/Dashboard/MerchantDashboardMandateDetails';
@@ -43,6 +43,9 @@ import CreateMerchant from 'pages/Admin/MerchantManagement/CreateMerchant';
 import UserDetails from 'pages/Merchant/UserManagement/UserDetails';
 import UserIcon from 'assets/icons/UserIcon';
 import StaffUserManagement from 'pages/Admin/StaffUserManagement';
+import ProfileDetails from 'pages/Admin/ProfileManagement/ProfileDetails';
+import CreateProfile from 'pages/Admin/ProfileManagement/CreateProfile';
+import EditProfile from 'pages/Admin/ProfileManagement/EditProfile';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -51,7 +54,7 @@ const adminRoutes: RoutesType[] = [
     path: 'dashboard',
     icon: <DashboardIcon />,
     component: <AdminDashboard />,
-    rolesWithAccess: [UserLoginRoles.Admin],
+    rolesWithAccess: [AdminUserRoles.Onboarding],
     willChildLinkShow: false,
     children: [
       {
@@ -72,7 +75,7 @@ const adminRoutes: RoutesType[] = [
     path: 'requests',
     icon: <RequestIcon />,
     component: <AdminMerchantRequests />,
-    rolesWithAccess: [UserLoginRoles.Admin],
+    rolesWithAccess: [AdminUserRoles.Onboarding],
     willChildLinkShow: true,
     children: [
       {
@@ -103,7 +106,7 @@ const adminRoutes: RoutesType[] = [
     path: 'merchant-management',
     icon: <MerchantIcon />,
     component: <AdminMerchantManagement />,
-    rolesWithAccess: [UserLoginRoles.Admin],
+    rolesWithAccess: [AdminUserRoles.Onboarding],
     willChildLinkShow: false,
     children: [
       {
@@ -129,7 +132,7 @@ const adminRoutes: RoutesType[] = [
     path: 'mandate-management',
     icon: <MandateIcon />,
     component: <AdminMandateManagement />,
-    rolesWithAccess: [UserLoginRoles.Admin],
+    rolesWithAccess: [AdminUserRoles.Onboarding],
     willChildLinkShow: false,
     children: [
       {
@@ -151,8 +154,25 @@ const adminRoutes: RoutesType[] = [
     path: 'profile-management',
     icon: <ProfileIcon />,
     component: <AdminProfileManagement />,
-    rolesWithAccess: [UserLoginRoles.Admin],
+    rolesWithAccess: [AdminUserRoles.Onboarding],
     willChildLinkShow: false,
+    children: [
+      {
+        name: 'Profile Details',
+        path: 'profile-details',
+        component: <ProfileDetails />,
+      },
+      {
+        name: 'Create Profile',
+        path: 'create-profile',
+        component: <CreateProfile />,
+      },
+      {
+        name: 'Edit Profile',
+        path: 'edit-profile',
+        component: <EditProfile />,
+      },
+    ],
   },
   {
     name: 'Account Management',
@@ -160,7 +180,7 @@ const adminRoutes: RoutesType[] = [
     path: 'account-management',
     icon: <AccountIcon />,
     component: <AdminAccountManagement />,
-    rolesWithAccess: [UserLoginRoles.Admin],
+    rolesWithAccess: [AdminUserRoles.Onboarding],
     willChildLinkShow: false,
   },
   {
@@ -169,7 +189,7 @@ const adminRoutes: RoutesType[] = [
     path: 'audit-trail',
     icon: <AuditIcon />,
     component: <AdminAuditTrail />,
-    rolesWithAccess: [UserLoginRoles.Admin],
+    rolesWithAccess: [AdminUserRoles.Audit],
     willChildLinkShow: false,
   },
   {
@@ -178,7 +198,7 @@ const adminRoutes: RoutesType[] = [
     path: 'reports',
     icon: <ReportIcon />,
     component: <AdminReports />,
-    rolesWithAccess: [UserLoginRoles.Admin],
+    rolesWithAccess: [AdminUserRoles.Reporting],
     willChildLinkShow: false,
   },
   {
@@ -187,7 +207,7 @@ const adminRoutes: RoutesType[] = [
     path: 'staff-user-management',
     icon: <UserIcon />,
     component: <StaffUserManagement />,
-    rolesWithAccess: [UserLoginRoles.Admin],
+    rolesWithAccess: [AdminUserRoles.Admin],
     willChildLinkShow: false,
   },
 ];

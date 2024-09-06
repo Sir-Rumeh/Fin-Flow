@@ -60,6 +60,9 @@ export const appRoutes = {
     },
     profileManagement: {
       index: `${BASE_ROUTES.ADMIN}/profile-management`,
+      profileDetails: `${BASE_ROUTES.ADMIN}/profile-management/profile-details`,
+      createProfile: `${BASE_ROUTES.ADMIN}/profile-management/create-profile`,
+      editProfile: `${BASE_ROUTES.ADMIN}/profile-management/edit-profile`,
     },
     accountManagement: {
       index: `${BASE_ROUTES.ADMIN}/account-management`,

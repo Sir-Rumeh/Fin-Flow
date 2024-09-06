@@ -1,6 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
-import { BiChevronRight } from 'react-icons/bi';
+import ChevronRight from 'assets/icons/ChevronRight';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
 import { useState } from 'react';
@@ -51,7 +51,7 @@ const CreateMerchant = () => {
           >
             Merchant Management
           </Link>{' '}
-          <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
+          <ChevronRight />
           <span className="text-lightPurple">Onboard Merchant</span>
         </div>
         <div className="slide-down mt-3 flex items-center justify-between">
@@ -59,8 +59,8 @@ const CreateMerchant = () => {
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-10">
           <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-8">
-            <form onSubmit={formik.handleSubmit} noValidate className="relative w-full 2xl:w-[70%]">
-              <div className="flex flex-col items-end gap-x-8 gap-y-4 md:flex-row md:items-center md:justify-between">
+            <form onSubmit={formik.handleSubmit} noValidate className="relative w-full 2xl:w-[80%]">
+              <div className="mt-6 flex flex-col items-end gap-x-8 gap-y-4 md:flex-row md:items-center md:justify-between">
                 <div className="w-full md:w-[80%]">
                   <CustomInput
                     labelFor="merchantCIF"
@@ -70,6 +70,7 @@ const CreateMerchant = () => {
                     maxW="w-full"
                     formik={formik}
                     useTouched={false}
+                    verticalMargin={false}
                   />
                 </div>
                 <ButtonComponent
@@ -89,8 +90,8 @@ const CreateMerchant = () => {
                 />
               </div>
               {merchantCifValidated && (
-                <div className="slide-down">
-                  <div className="relative mt-10 grid w-full grid-cols-1 gap-10 md:grid-cols-2">
+                <div className="slide-down mt-12">
+                  <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-2">
                     <CustomInput
                       labelFor="merchantName"
                       label="Merchant Name"
