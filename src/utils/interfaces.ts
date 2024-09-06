@@ -81,6 +81,13 @@ export interface TransactionsDataRow {
   date: string;
 }
 
+export interface TransactionsReport {
+  id: number;
+  mandateId: number;
+  amount: string;
+  date: string;
+}
+
 export interface DataTableState {
   resetPaginationToggle: boolean;
   pageSize: number;

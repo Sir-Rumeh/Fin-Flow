@@ -1,20 +1,19 @@
 import { Link } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import appRoutes from 'utils/constants/routes';
-import { CreationRequestIcon } from 'assets/icons';
-import { BiChevronRight } from 'react-icons/bi';
+import { ArrowRightIcon, CreationRequestIcon } from 'assets/icons';
 
 const UserDetails = () => {
   return (
     <div className="px-5 py-5">
-      <div className="flex items-center gap-2 font-semibold">
+      <div className="flex items-center gap-4 font-semibold">
         <Link
           to={`/${appRoutes.merchantDashboard.userManagement.index}`}
           className="cursor-pointer text-sm text-darkgray"
         >
           Mandate Requests
-        </Link>{' '}
-        <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
+        </Link>
+        <ArrowRightIcon style="mt-[2px]" />
         <span className="text-sm text-lightPurple">Request Details</span>
       </div>
       <div className="mt-5 rounded-lg bg-white px-5 py-10">

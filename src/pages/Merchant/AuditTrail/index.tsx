@@ -9,10 +9,10 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import ButtonComponent from 'components/FormElements/Button';
 import { Box, Modal, Typography } from '@mui/material';
-import { BiChevronDown } from 'react-icons/bi';
 import Popover from '@mui/material/Popover';
 import { LiaTimesSolid } from 'react-icons/lia';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
+import { DarkArrowDown } from 'assets/icons';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -118,7 +118,7 @@ const AuditTrail = () => {
               inputType="text"
               placeholder="Enter here"
             />
-            <div className="mt-8 flex items-center justify-between gap-4">
+            <div className="mt-2 flex items-center justify-between gap-4">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Box sx={{ display: 'flex', gap: 2 }}>
                   <DatePicker
@@ -167,7 +167,7 @@ const AuditTrail = () => {
             <ButtonComponent
               onClick={(e) => handleClick(e)}
               title="Export"
-              children={<BiChevronDown className="mb-[1px] ml-2 h-8 w-8" />}
+              children={<DarkArrowDown height="20" width="20" styles="ml-2" />}
               color="#5C068C"
               border={1}
               width="150px"

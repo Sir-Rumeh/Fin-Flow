@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
+  ArrowRightIcon,
   CreationRequestIcon,
   DeleteRequestIcon,
   SuccessModalIcon,
@@ -50,14 +51,14 @@ const UpdateRequestDetails = () => {
 
   return (
     <div className="px-5 py-5">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-4">
         <Link
           to={`/${appRoutes.merchantDashboard.requests.index}`}
           className="cursor-pointer text-sm text-darkgray"
         >
           Mandate Update Requests
-        </Link>{' '}
-        <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
+        </Link>
+        <ArrowRightIcon style="mt-[2px]" />
         <span className="text-sm text-lightPurple">Request Details</span>
       </div>
       <div className="mt-4 flex items-center justify-between">

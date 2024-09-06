@@ -29,3 +29,8 @@ export enum RequestType {
   Enabled = 'Enabled',
   Disabled = 'Disabled',
 }
+
+export enum ReportsType {
+  TransactionReports = 'Transaction Reports',
+  MandateStatusReports = 'Mandate Status Report',
+}

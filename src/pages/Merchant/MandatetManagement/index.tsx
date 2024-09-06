@@ -3,18 +3,19 @@ import { Link, useNavigate } from 'react-router-dom';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import {
   CreationRequestIcon,
+  DarkArrowDown,
   DeleteRequestIcon,
   DisableRequestIcon,
+  FilterIcon,
   SuccessModalIcon,
   UpdateRequestIcon,
 } from 'assets/icons';
-import { BiChevronDown, BiSearch } from 'react-icons/bi';
+import { BiSearch } from 'react-icons/bi';
 import { mandateList, transactionHistory } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
 import TableLogo from 'assets/images/table_logo.png';
 import { RequestType } from 'utils/enums';
 import ButtonComponent from 'components/FormElements/Button';
-import { IoFilter } from 'react-icons/io5';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
 
@@ -278,7 +279,7 @@ const MandatetManagement = () => {
               <ButtonComponent
                 onClick={() => {}}
                 title="Filter by"
-                children={<IoFilter className="mb-[1px] ml-3 h-5 w-5" />}
+                children={<FilterIcon styles="ml-3" />}
                 color="#5C068C"
                 border={1}
                 width="150px"
@@ -296,7 +297,7 @@ const MandatetManagement = () => {
             <ButtonComponent
               onClick={() => {}}
               title="Export"
-              children={<BiChevronDown className="mb-[1px] ml-2 h-8 w-8" />}
+              children={<DarkArrowDown styles="ml-2" height="20" width="20" />}
               color="#5C068C"
               border={1}
               width="150px"
