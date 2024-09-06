@@ -1,24 +1,29 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { CreationRequestIcon, SuccessModalIcon, UpdateRequestIcon } from 'assets/icons';
+import {
+  ArrowRightIcon,
+  CloseIcon,
+  CreationRequestIcon,
+  SuccessModalIcon,
+  UpdateRequestIcon,
+} from 'assets/icons';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import ButtonComponent from 'components/FormElements/Button';
-import { BiChevronDown, BiChevronRight, BiSearch } from 'react-icons/bi';
+import { BiSearch } from 'react-icons/bi';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import appRoutes from 'utils/constants/routes';
 import { useTabContext } from '../../../context/TabContext';
-
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { LiaTimesSolid } from 'react-icons/lia';
 import Tab from 'components/Tabs';
 import { FiDownload } from 'react-icons/fi';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { transactionHistory } from 'utils/constants';
 import TableLogo from 'assets/images/table_logo.png';
 import { Popover } from '@mui/material';
+import WhiteArrowDown from 'assets/icons/WhiteArrowDown';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -131,7 +136,7 @@ const MandateDetails = () => {
           >
             Mandate Management
           </Link>{' '}
-          <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
+          <ArrowRightIcon style="mt-[2px]" />
           <span className="text-sm text-lightPurple">Request Details</span>
         </div>
         <div className="mt-4 flex items-center justify-between">
@@ -139,7 +144,7 @@ const MandateDetails = () => {
           <ButtonComponent
             onClick={(e) => handleClick(e)}
             title="Actions"
-            children={<BiChevronDown className="mb-[1px] ml-2 h-8 w-8" />}
+            children={<WhiteArrowDown styles="ml-2" />}
             backgroundColor="#5C068C"
             hoverBackgroundColor="#5C067C"
             color="white"
@@ -258,7 +263,7 @@ const MandateDetails = () => {
               <div className="flex items-center justify-between">
                 <h1>Transaction History Details</h1>
                 <button onClick={() => closeModal('openTransactionHistory')}>
-                  <LiaTimesSolid />
+                  <CloseIcon />
                 </button>
               </div>
               <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
@@ -334,7 +339,7 @@ const MandateDetails = () => {
               <div className="flex items-center justify-between">
                 <h1 className="font-semibold">Modify Mandate Details</h1>
                 <button onClick={() => closeModal('openModifyMandate')}>
-                  <LiaTimesSolid />
+                  <CloseIcon />
                 </button>
               </div>
               <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>

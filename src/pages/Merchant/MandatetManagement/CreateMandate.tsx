@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Tab from 'components/Tabs';
-import { BiChevronDown, BiChevronRight, BiDownload } from 'react-icons/bi';
+import { BiDownload } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { useTabContext } from '../../../context/TabContext';
 import appRoutes from 'utils/constants/routes';
@@ -9,8 +9,9 @@ import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
-import { SuccessModalIcon } from 'assets/icons';
+import { ArrowRightIcon, DarkArrowDown, SuccessModalIcon } from 'assets/icons';
 import { useDropzone } from 'react-dropzone';
+import CustomSelect from 'components/FormElements/CustomSelect';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -52,14 +53,14 @@ const CreateMandate = () => {
   return (
     <>
       <div className="px-5 py-5">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <Link
             to={`/${appRoutes.merchantDashboard.mandateManagement.index}`}
             className="cursor-pointer text-sm text-darkgray"
           >
             Mandate Management
-          </Link>{' '}
-          <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
+          </Link>
+          <ArrowRightIcon style="mt-[2px]" />
           <span className="text-sm text-lightPurple">Create Mandate</span>
         </div>
         <div className="mt-4 flex items-center justify-between">
@@ -155,35 +156,38 @@ const CreateMandate = () => {
                   />
                 </div>
                 <div className="mt-5 grid grid-cols-1 gap-10 md:grid-cols-3">
-                  <CustomInput
-                    labelFor="merchantId"
+                  <CustomSelect
+                    labelFor="reportType"
                     label="Day to Apply"
-                    containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 md:w-[327px]"
-                    inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
-                    inputType="text"
-                    placeholder="Enter here"
-                    icon={<BiChevronDown className="h-7 w-7" />}
+                    containerStyles="h-[50px] md:w-[327px]"
+                    selectStyles="h-[50px] px-2"
+                    options={['Mandate Status Report', 'Transaction Reports']}
+                    placeholder="Select here"
+                    icon={<DarkArrowDown />}
+                    onSelect={() => {}}
                   />
-                  <CustomInput
-                    labelFor="merchantId"
+                  <CustomSelect
+                    labelFor="reportType"
                     label="Frequency"
-                    containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 md:w-[327px]"
-                    inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
-                    inputType="text"
-                    placeholder="Enter here"
-                    icon={<BiChevronDown className="h-7 w-7" />}
+                    containerStyles="h-[50px] md:w-[327px]"
+                    selectStyles="h-[50px] px-2"
+                    options={['Mandate Status Report', 'Transaction Reports']}
+                    placeholder="Select here"
+                    icon={<DarkArrowDown />}
+                    onSelect={() => {}}
                   />
-                  <CustomInput
-                    labelFor="merchantId"
+                  <CustomSelect
+                    labelFor="reportType"
                     label="Service"
-                    containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 md:w-[327px]"
-                    inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
-                    inputType="text"
-                    placeholder="Enter here"
-                    icon={<BiChevronDown className="h-7 w-7" />}
+                    containerStyles="h-[50px] md:w-[327px]"
+                    selectStyles="h-[50px] px-2"
+                    options={['Mandate Status Report', 'Transaction Reports']}
+                    placeholder="Select here"
+                    icon={<DarkArrowDown />}
+                    onSelect={() => {}}
                   />
                 </div>
-                <div className="mt-5 grid grid-cols-1 gap-10 md:grid-cols-3">
+                <div className="mt-[70px] grid grid-cols-1 gap-10 md:grid-cols-3">
                   <CustomInput
                     labelFor="merchantId"
                     label="Account Name"
@@ -411,7 +415,6 @@ const CreateMandate = () => {
           <div className="mt-5 rounded-lg bg-white px-5 py-10">
             <div className="flex items-center justify-around rounded-[5px] border-[3px] border-dashed border-gray-200 px-6 py-10">
               <div className="flex h-auto w-auto items-center justify-around rounded-md bg-[#F0F0F0] px-40 py-10">
-                {/* <div className="flex min-h-[150px] min-w-[500px] items-center justify-around rounded-md bg-[#F0F0F0]"> */}
                 <section>
                   <div {...getRootProps({ className: 'dropzone' })}>
                     <input {...getInputProps()} />

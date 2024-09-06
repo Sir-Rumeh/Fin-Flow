@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
+  ArrowRightIcon,
   CreationRequestIcon,
   DeleteRequestIcon,
   SuccessModalIcon,
@@ -8,7 +9,6 @@ import {
 } from 'assets/icons';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import ButtonComponent from 'components/FormElements/Button';
-import { BiChevronRight } from 'react-icons/bi';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import appRoutes from 'utils/constants/routes';
@@ -50,14 +50,14 @@ const CreationRequestDetails = () => {
 
   return (
     <div className="px-5 py-5">
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-4">
         <Link
           to={`/${appRoutes.merchantDashboard.requests.index}`}
           className="cursor-pointer text-sm text-darkgray"
         >
           Mandate Requests
-        </Link>{' '}
-        <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
+        </Link>
+        <ArrowRightIcon style="mt-[2px]" />
         <span className="text-sm text-lightPurple">Request Details</span>
       </div>
       <div className="mt-4 flex items-center justify-between">

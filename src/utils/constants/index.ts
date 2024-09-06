@@ -9,6 +9,7 @@ import {
   TransactionsDataRow,
   UserDataRow,
   AuditDataRow,
+  TransactionsReport,
 } from 'utils/interfaces';
 
 export const statusDropdownOptions = [
@@ -926,6 +927,33 @@ export const transactionHistory: TransactionsDataRow[] = [
   {
     id: 4,
     accountId: 126476,
+    amount: '50,000',
+    date: '2015-03-25T12:00:00-06:30',
+  },
+];
+
+export const transactionReports: TransactionsReport[] = [
+  {
+    id: 1,
+    mandateId: 126473,
+    amount: '50,000',
+    date: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 2,
+    mandateId: 126474,
+    amount: '50,000',
+    date: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 3,
+    mandateId: 126475,
+    amount: '50,000',
+    date: '2015-03-25T12:00:00-06:30',
+  },
+  {
+    id: 4,
+    mandateId: 126476,
     amount: '50,000',
     date: '2015-03-25T12:00:00-06:30',
   },
