@@ -51,7 +51,7 @@ function CreateProfile() {
           <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-8">
             <form onSubmit={formik.handleSubmit} noValidate className="relative w-full">
               <div className="slide-down">
-                <div className="relative grid w-full grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
                   <CustomInput
                     labelFor="merchantId"
                     label="Merchant ID"

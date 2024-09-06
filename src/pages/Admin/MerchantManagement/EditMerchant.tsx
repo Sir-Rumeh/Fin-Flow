@@ -3,7 +3,7 @@ import appRoutes from 'utils/constants/routes';
 import { BiChevronRight } from 'react-icons/bi';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
@@ -41,6 +41,7 @@ const EditMerchant = () => {
       openModal('confirmEditMerchant');
     },
   });
+
   return (
     <>
       <div className="px-5 py-1">
@@ -65,7 +66,7 @@ const EditMerchant = () => {
           <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-8">
             <form onSubmit={formik.handleSubmit} noValidate className="relative w-full 2xl:w-[80%]">
               <div className="slide-down">
-                <div className="relative grid w-full grid-cols-1 gap-10 md:grid-cols-2">
+                <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-2">
                   <CustomInput
                     labelFor="merchantId"
                     label="Merchant ID"

@@ -2,6 +2,12 @@ export enum UserLoginRoles {
   Admin = 'Admin',
   Merchant = 'Merchant',
 }
+export enum AdminUserRoles {
+  Admin = 'Admin',
+  Onboarding = 'Onboarding',
+  Audit = 'Audit',
+  Reporting = 'Reporting',
+}
 
 export enum RequestTypes {
   Creation = 'Creation',

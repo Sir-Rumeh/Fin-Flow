@@ -36,6 +36,7 @@ const TableFilter = ({
   showOptionsFilter = true,
 }: TableFilterProps) => {
   const [closeFilterCard, setCloseFilterCard] = useState(false);
+  const [pulse, setPulse] = useState(false);
 
   const clearFilter = () => {
     formik.setFieldValue(fromDateName, null);
@@ -69,8 +70,14 @@ const TableFilter = ({
                   <h3 className="text-lg font-bold">Filter By</h3>
                   <button
                     type="button"
-                    onClick={() => clearFilter()}
-                    className="rounded-md px-3 py-1 font-semibold text-[#B42318] hover:bg-[#f8efed]"
+                    onClick={() => {
+                      setPulse(true);
+                      clearFilter();
+                      setTimeout(() => {
+                        setPulse(false);
+                      }, 300);
+                    }}
+                    className={`${pulse ? 'scale-95 animate-pulse opacity-85 duration-75' : 'scale-100'} rounded-lg px-3 py-1 font-semibold text-[#B42318] hover:bg-[#f8efed]`}
                   >
                     Clear Filter
                   </button>

@@ -42,7 +42,7 @@ function EditProfile() {
             Profile Management
           </Link>{' '}
           <BiChevronRight className="h-5 w-5 text-darkgray" />{' '}
-          <span className="text-lightPurple">Modify Profile</span>
+          <span className="text-lightPurple">Edit Profile</span>
         </div>
         <div className="slide-down mt-3 flex items-center justify-between">
           <h2 className="mt-3 text-xl font-semibold">Modify Profile Details</h2>
@@ -51,7 +51,7 @@ function EditProfile() {
           <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-8">
             <form onSubmit={formik.handleSubmit} noValidate className="relative w-full">
               <div className="slide-down">
-                <div className="relative grid w-full grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
                   <CustomInput
                     labelFor="merchantId"
                     label="Merchant ID"

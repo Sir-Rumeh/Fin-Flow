@@ -472,7 +472,7 @@ const MandatetManagement = () => {
                 noValidate
                 className="slide-down mt-8 w-full"
               >
-                <div className="flex flex-col items-end gap-x-8 gap-y-4 md:flex-row md:items-center md:justify-between">
+                <div className="mt-14 flex flex-col items-end gap-x-8 gap-y-4 md:flex-row md:items-center md:justify-between">
                   <div className="w-full">
                     <CustomInput
                       labelFor="modifiedAmount"
@@ -480,6 +480,7 @@ const MandatetManagement = () => {
                       inputType="text"
                       placeholder="Enter here"
                       maxW="w-full"
+                      verticalMargin={false}
                     />
                   </div>
                   <ButtonComponent
@@ -500,12 +501,10 @@ const MandatetManagement = () => {
                 </div>
               </form>
             ) : (
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                <span className="slide-down flex items-center justify-start gap-1">
-                  <h3 className="text-red-300">Error:</h3>
-                  <h3 className="">You cannot modify a fixed mandate</h3>
-                </span>
-              </Typography>
+              <span className="slide-down flex items-center justify-start gap-1">
+                <h3 className="text-red-300">Error:</h3>
+                <h3 className="">You cannot modify a fixed mandate</h3>
+              </span>
             )}
           </Typography>
         </CustomModal>

@@ -440,7 +440,7 @@ const MandateDetails = () => {
                 noValidate
                 className="slide-down mt-8 w-full"
               >
-                <div className="flex flex-col items-end gap-x-8 gap-y-4 md:flex-row md:items-center md:justify-between">
+                <div className="mt-14 flex flex-col items-end gap-x-8 gap-y-4 md:flex-row md:items-center md:justify-between">
                   <div className="w-full">
                     <CustomInput
                       labelFor="modifiedAmount"
@@ -448,6 +448,7 @@ const MandateDetails = () => {
                       inputType="text"
                       placeholder="Enter here"
                       maxW="w-full"
+                      verticalMargin={false}
                     />
                   </div>
                   <ButtonComponent
