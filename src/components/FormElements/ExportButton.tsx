@@ -1,14 +1,25 @@
-import { Button } from '@mui/material';
-import { MouseEvent } from 'react';
+import { MutableRefObject, useState } from 'react';
 import ButtonComponent from './Button';
 import CustomPopover from 'hoc/PopOverWrapper';
 import ExportButtonArrowDown from 'assets/icons/ExportButtonArrowDown';
+import ExportToExcel from 'components/common/ExportToExcel';
+import { useReactToPrint } from 'react-to-print';
 
 type Props = {
   customClass?: string;
+  fileName?: string;
+  data?: any[];
+  headers?: { label: string; key: string }[];
+  printPdfRef?: MutableRefObject<null>;
 };
 
 const ExportBUtton = (props: Props) => {
+  const [download, setDownload] = useState(false);
+
+  const handlePrintPdf = useReactToPrint({
+    content: () => props.printPdfRef?.current || null,
+  });
+
   return (
     <div className={`relative ${props.customClass}`}>
       <div className="">
@@ -30,27 +41,29 @@ const ExportBUtton = (props: Props) => {
           <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
             <button
               type="button"
-              onClick={() => {}}
               className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
-            >
-              CSV
-            </button>
-            <button
-              type="button"
-              onClick={() => {}}
-              className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
+              onClick={() => setDownload(true)}
             >
               Excel
             </button>
             <button
               type="button"
-              onClick={() => {}}
               className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
+              onClick={handlePrintPdf}
             >
               PDF
             </button>
           </div>
         </CustomPopover>
+        <div className="hidden">
+          <ExportToExcel
+            data={props.data ?? []}
+            headers={props.headers ?? []}
+            fileName={props.fileName ?? ''}
+            download={download}
+            setDownload={setDownload}
+          />
+        </div>
       </div>
     </div>
   );
