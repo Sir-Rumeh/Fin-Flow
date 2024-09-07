@@ -68,3 +68,28 @@ export const notifyInfo = (msg: string) => {
 export const notifyWarning = (msg: string) => {
   toast.warn(msg);
 };
+
+export const isFileSizeValid = (size: number) => {
+  return size / 1024 ** 2 <= 50;
+};
+
+export const isFileTypeValid = (type: string, fileTypes = ['pdf', 'jpg', 'jpeg', 'png']) => {
+  const fileType = type.split('.').pop()?.toLowerCase();
+  if (!fileType) return undefined;
+  return fileTypes.includes(fileType);
+};
+
+export const convertBase64 = (file: any) => {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader();
+    fileReader.readAsDataURL(file);
+
+    fileReader.onload = () => {
+      resolve(fileReader.result);
+    };
+
+    fileReader.onerror = (error) => {
+      reject(error);
+    };
+  });
+};

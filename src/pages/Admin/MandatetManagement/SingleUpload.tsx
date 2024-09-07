@@ -10,6 +10,7 @@ import { useState } from 'react';
 import ChevronDown from 'assets/icons/ChevronDown';
 import { useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
+import CustomFileUpload from 'components/FormElements/CustomFileUpload';
 
 const SingleUpload = () => {
   const navigate = useNavigate();
@@ -165,13 +166,10 @@ const SingleUpload = () => {
                 />
               </div>
               <div className="w-full md:col-span-1">
-                <CustomInput
+                <CustomFileUpload
                   labelFor="supportingDocument"
                   label="Upload Supporting Document"
-                  inputType="file"
-                  containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1"
-                  inputStyles="focus:outline-none focus:ring-0"
-                  maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-2">

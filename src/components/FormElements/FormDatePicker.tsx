@@ -18,14 +18,14 @@ interface Props {
 const FormDatePicker = (props: Props) => {
   return (
     <>
-      <div className="relative mb-4 mt-6 flex h-auto flex-col gap-2">
+      <div className="relative mb-4 mt-6 flex flex-col gap-2">
         <label className="absolute bottom-16 font-semibold">{props.label}</label>
         <DatePicker
           sx={{
             width: props.width ? props.width : '100%',
             '& .MuiOutlinedInput-root': {
+              height: '3.1rem',
               borderRadius: '10px',
-              height: '3rem',
               '&.Mui-focused fieldset': {
                 border: '1px solid black',
               },
@@ -47,6 +47,8 @@ const FormDatePicker = (props: Props) => {
               '&.Mui-focused': {
                 visibility: 'hidden',
               },
+              paddingLeft: '0.7rem',
+              transform: 'translate(0, 60%) scale(1)',
             },
           }}
           label={props.label ? props.label : null}
@@ -55,7 +57,6 @@ const FormDatePicker = (props: Props) => {
           onChange={(newValue) => {
             props.formik.setFieldValue(props.name, dayjs(newValue).format('YYYY-MM-DDTHH:mm:ss'));
           }}
-          onOpen={() => console.log('hello')}
         />
       </div>
     </>
