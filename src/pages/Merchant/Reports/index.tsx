@@ -12,7 +12,6 @@ import { BiSearch } from 'react-icons/bi';
 import Popover from '@mui/material/Popover';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import Tab from 'components/Tabs';
-import { FiDownload } from 'react-icons/fi';
 import { ReportsType, RequestType } from 'utils/enums';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
@@ -24,6 +23,7 @@ import {
   DarkArrowDown,
   DeleteRequestIcon,
   DisableRequestIcon,
+  DownloadIcon,
   FilterIcon,
   UpdateRequestIcon,
 } from 'assets/icons';
@@ -112,7 +112,7 @@ const Reports = () => {
       renderCell: (params) => {
         return (
           <button className="flex cursor-pointer items-center gap-3 font-semibold text-lightPurple">
-            <FiDownload />
+            <DownloadIcon />
             Download Receipt
           </button>
         );
@@ -279,8 +279,8 @@ const Reports = () => {
             <p className="my-3 text-lg font-semibold">Generate Report</p>
           </div>
           <div className="h-[2px] w-full bg-grayPrimary"></div>
-          <div className="mt-4 flex flex-col items-center gap-14 md:flex-row">
-            <div className="mt-8 flex items-center justify-between gap-14">
+          <div className="mt-4 flex flex-col items-center gap-x-20 md:flex-row">
+            <div className="mt-8 flex items-center justify-between gap-x-16">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Box sx={{ display: 'flex', gap: 5 }}>
                   <DatePicker
@@ -314,7 +314,7 @@ const Reports = () => {
                 </Box>
               </LocalizationProvider>
             </div>
-            <div className="mb-8 flex w-full items-center gap-14">
+            <div className="mb-8 flex w-full items-center gap-x-16">
               <CustomSelect
                 labelFor="reportType"
                 label="Report Type"

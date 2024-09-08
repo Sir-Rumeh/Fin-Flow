@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { GridColDef } from '@mui/x-data-grid';
-import { CreationRequestIcon, DeleteRequestIcon, FilterIcon } from 'assets/icons';
-import { BiSearch } from 'react-icons/bi';
+import { CreationRequestIcon, DeleteRequestIcon, FilterIcon, SearchIcon } from 'assets/icons';
 import { pendingMandateList, UserManagementList } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
 import TableLogo from 'assets/images/table_logo.png';
@@ -91,7 +90,7 @@ const UserManagement = () => {
                 <FilterIcon />
               </button>
               <div className="flex w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2">
-                <BiSearch className="h-6 w-6" />
+                <SearchIcon />
                 <input
                   type="text"
                   className="w-full border-none focus:border-none focus:outline-none"

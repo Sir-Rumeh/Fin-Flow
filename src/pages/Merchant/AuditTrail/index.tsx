@@ -10,9 +10,8 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import ButtonComponent from 'components/FormElements/Button';
 import { Box, Modal, Typography } from '@mui/material';
 import Popover from '@mui/material/Popover';
-import { LiaTimesSolid } from 'react-icons/lia';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
-import { DarkArrowDown } from 'assets/icons';
+import { CloseIcon, DarkArrowDown } from 'assets/icons';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -240,7 +239,7 @@ const AuditTrail = () => {
               <div className="flex items-center justify-between font-semibold">
                 <h1>Log Details</h1>
                 <button onClick={closeModal}>
-                  <LiaTimesSolid />
+                  <CloseIcon />
                 </button>
               </div>
               <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>

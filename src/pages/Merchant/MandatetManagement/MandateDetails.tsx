@@ -4,6 +4,7 @@ import {
   ArrowRightIcon,
   CloseIcon,
   CreationRequestIcon,
+  DownloadIcon,
   SuccessModalIcon,
   UpdateRequestIcon,
 } from 'assets/icons';
@@ -18,7 +19,6 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Tab from 'components/Tabs';
-import { FiDownload } from 'react-icons/fi';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { transactionHistory } from 'utils/constants';
 import TableLogo from 'assets/images/table_logo.png';
@@ -95,7 +95,7 @@ const MandateDetails = () => {
       renderCell: (params) => {
         return (
           <button className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple">
-            <FiDownload />
+            <DownloadIcon />
             Download Receipt
           </button>
         );

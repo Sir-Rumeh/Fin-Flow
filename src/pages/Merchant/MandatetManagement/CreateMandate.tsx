@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import Tab from 'components/Tabs';
-import { BiDownload } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 import { useTabContext } from '../../../context/TabContext';
 import appRoutes from 'utils/constants/routes';
@@ -9,7 +8,7 @@ import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
-import { ArrowRightIcon, DarkArrowDown, SuccessModalIcon } from 'assets/icons';
+import { ArrowRightIcon, DarkArrowDown, DownloadIcon, SuccessModalIcon } from 'assets/icons';
 import { useDropzone } from 'react-dropzone';
 import CustomSelect from 'components/FormElements/CustomSelect';
 
@@ -422,7 +421,7 @@ const CreateMandate = () => {
                     <p className="text-center font-semibold">or</p>
                     <div className="flex items-center justify-around">
                       <button className="mt-2 flex items-center gap-2 rounded-lg border border-lightPurple px-4 py-2 text-center text-lightPurple">
-                        <BiDownload className="h-5 w-5" /> Browse Document
+                        <DownloadIcon /> Browse Document
                       </button>
                     </div>
                   </div>
