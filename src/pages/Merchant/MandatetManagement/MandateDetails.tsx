@@ -9,7 +9,6 @@ import {
 } from 'assets/icons';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import ButtonComponent from 'components/FormElements/Button';
-import { BiSearch } from 'react-icons/bi';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import appRoutes from 'utils/constants/routes';
@@ -18,12 +17,13 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import Tab from 'components/Tabs';
-import { FiDownload } from 'react-icons/fi';
 import { DataGrid, GridColDef } from '@mui/x-data-grid';
 import { transactionHistory } from 'utils/constants';
 import TableLogo from 'assets/images/table_logo.png';
 import { Popover } from '@mui/material';
 import WhiteArrowDown from 'assets/icons/WhiteArrowDown';
+import DownloadIcon from 'assets/icons/DownloadIcon';
+import SearchIcon from 'assets/icons/SearchIcon';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -95,7 +95,7 @@ const MandateDetails = () => {
       renderCell: (params) => {
         return (
           <button className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple">
-            <FiDownload />
+            <DownloadIcon />
             Download Receipt
           </button>
         );
@@ -288,7 +288,7 @@ const MandateDetails = () => {
                     />
                   </div>
                   <div className="flex h-[45px] w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2">
-                    <BiSearch className="h-6 w-6" />
+                    <SearchIcon className="h-6 w-6" />
                     <input
                       type="text"
                       className="w-full border-none focus:border-none focus:outline-none"

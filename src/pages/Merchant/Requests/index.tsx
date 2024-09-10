@@ -7,7 +7,7 @@ import {
   FilterIcon,
   UpdateRequestIcon,
 } from 'assets/icons';
-import { BiSearch } from 'react-icons/bi';
+import SearchIcon from 'assets/icons/SearchIcon';
 import { approvedMandateList, pendingMandateList, rejectedMandateList } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
 import TableLogo from 'assets/images/table_logo.png';
@@ -160,7 +160,7 @@ const MandateRequests = () => {
                 <FilterIcon />
               </button>
               <div className="flex w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2">
-                <BiSearch className="h-6 w-6" />
+                <SearchIcon />
                 <input
                   type="text"
                   className="w-full border-none focus:border-none focus:outline-none"

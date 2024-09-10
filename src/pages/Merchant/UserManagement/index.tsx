@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
 import { GridColDef } from '@mui/x-data-grid';
 import { CreationRequestIcon, DeleteRequestIcon, FilterIcon } from 'assets/icons';
-import { BiSearch } from 'react-icons/bi';
 import { pendingMandateList, UserManagementList } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
 import TableLogo from 'assets/images/table_logo.png';
 import { RequestType } from 'utils/enums';
 import CustomTable from 'components/CustomTable';
+import SearchIcon from 'assets/icons/SearchIcon';
 
 const UserManagement = () => {
   const UserTableColumn: GridColDef[] = [
@@ -91,7 +91,7 @@ const UserManagement = () => {
                 <FilterIcon />
               </button>
               <div className="flex w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2">
-                <BiSearch className="h-6 w-6" />
+                <SearchIcon className="h-6 w-6" />
                 <input
                   type="text"
                   className="w-full border-none focus:border-none focus:outline-none"

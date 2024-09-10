@@ -8,11 +8,11 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import ButtonComponent from 'components/FormElements/Button';
 import { Box, Modal, Typography } from '@mui/material';
-import { BiSearch } from 'react-icons/bi';
 import Popover from '@mui/material/Popover';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import Tab from 'components/Tabs';
-import { FiDownload } from 'react-icons/fi';
+import DownloadIcon from 'assets/icons/DownloadIcon';
+import SearchIcon from 'assets/icons/SearchIcon';
 import { ReportsType, RequestType } from 'utils/enums';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
@@ -112,7 +112,7 @@ const Reports = () => {
       renderCell: (params) => {
         return (
           <button className="flex cursor-pointer items-center gap-3 font-semibold text-lightPurple">
-            <FiDownload />
+            <DownloadIcon />
             Download Receipt
           </button>
         );
@@ -429,7 +429,7 @@ const Reports = () => {
                       height="45px"
                     />
                     <div className="flex h-[45px] w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2">
-                      <BiSearch className="h-6 w-6" />
+                      <SearchIcon className="h-6 w-6" />
                       <input
                         type="text"
                         className="w-full border-none focus:border-none focus:outline-none"
@@ -528,7 +528,7 @@ const Reports = () => {
                         height="45px"
                       />
                       <div className="flex h-[45px] w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2">
-                        <BiSearch className="h-6 w-6" />
+                        <search className="h-6 w-6" />
                         <input
                           type="text"
                           className="w-full border-none focus:border-none focus:outline-none"

@@ -47,20 +47,19 @@ const CustomPopover = ({
   }, [closeCard]);
 
   return (
-    <div className="relative w-full">
-      <div
-        className="normal-case"
-        onClick={(e) => {
-          handleClick(e);
-        }}
-        style={{
+    <div className="relative h-full w-full">
+      <Button
+        sx={{
           width: '100%',
           paddingLeft: customPaddingX ? customPaddingX : undefined,
           paddingRight: customPaddingX ? customPaddingX : undefined,
         }}
+        aria-describedby={id}
+        onClick={handleClick}
+        className="w-full normal-case"
       >
         {buttonIcon}
-      </div>
+      </Button>
       <Popover
         id={id}
         open={open}

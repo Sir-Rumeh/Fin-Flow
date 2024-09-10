@@ -9,7 +9,6 @@ import {
 } from 'assets/icons';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import ButtonComponent from 'components/FormElements/Button';
-import { BiChevronRight } from 'react-icons/bi';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import appRoutes from 'utils/constants/routes';

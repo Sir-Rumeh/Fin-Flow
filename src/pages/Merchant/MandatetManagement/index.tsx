@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import {
+  CloseIcon,
   CreationRequestIcon,
   DarkArrowDown,
   DeleteRequestIcon,
@@ -10,7 +11,6 @@ import {
   SuccessModalIcon,
   UpdateRequestIcon,
 } from 'assets/icons';
-import { BiSearch } from 'react-icons/bi';
 import { mandateList, transactionHistory } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
 import TableLogo from 'assets/images/table_logo.png';
@@ -18,15 +18,14 @@ import { RequestType } from 'utils/enums';
 import ButtonComponent from 'components/FormElements/Button';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
-
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import { LiaTimesSolid } from 'react-icons/lia';
 import Tab from 'components/Tabs';
-import { FiDownload } from 'react-icons/fi';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
+import DownloadIcon from 'assets/icons/DownloadIcon';
+import SearchIcon from 'assets/icons/SearchIcon';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -249,7 +248,7 @@ const MandatetManagement = () => {
       renderCell: (params) => {
         return (
           <button className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple">
-            <FiDownload />
+            <DownloadIcon />
             Download Receipt
           </button>
         );
@@ -286,7 +285,7 @@ const MandatetManagement = () => {
                 height="45px"
               />
               <div className="flex h-[45px] w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2">
-                <BiSearch className="h-6 w-6" />
+                <SearchIcon className="h-6 w-6" />
                 <input
                   type="text"
                   className="w-full border-none focus:border-none focus:outline-none"
@@ -344,7 +343,7 @@ const MandatetManagement = () => {
               <div className="flex items-center justify-between">
                 <h1>Transaction History Details</h1>
                 <button onClick={() => closeModal('openTransactionHistory')}>
-                  <LiaTimesSolid />
+                  <CloseIcon />
                 </button>
               </div>
               <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
@@ -369,7 +368,7 @@ const MandatetManagement = () => {
                     />
                   </div>
                   <div className="flex h-[45px] w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2">
-                    <BiSearch className="h-6 w-6" />
+                    <SearchIcon className="h-6 w-6" />
                     <input
                       type="text"
                       className="w-full border-none focus:border-none focus:outline-none"
@@ -420,7 +419,7 @@ const MandatetManagement = () => {
               <div className="flex items-center justify-between">
                 <h1 className="font-semibold">Modify Mandate Details</h1>
                 <button onClick={() => closeModal('openModifyMandate')}>
-                  <LiaTimesSolid />
+                  <CloseIcon />
                 </button>
               </div>
               <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>

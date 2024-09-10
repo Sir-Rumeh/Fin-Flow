@@ -1,7 +1,5 @@
-import React, { useRef, useState } from 'react';
-import ChevronDown from 'assets/icons/ChevronDown';
+import { useState } from 'react';
 import { DarkArrowDown } from 'assets/icons';
-import CustomPopover from 'hoc/PopOverWrapper';
 
 interface Option {
   value: string;
