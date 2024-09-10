@@ -27,13 +27,12 @@ const CustomFileUpload = ({
       if (file) {
         if (!isFileTypeValid(file[0].name, fileTypes))
           throw `Invalid file type. File should be ${fileTypes?.join(', ')}`;
-        if (!isFileSizeValid(file[0].size)) {
+        if (!isFileSizeValid(file[0].size, 10)) {
           setUploadedfileName('');
-          throw 'File should be lesser than or equal to 50MB';
+          throw 'File should be lesser than or equal to 10MB';
         }
         const base64 = await convertBase64(file[0]);
-        formik.setFieldValue(name, base64);
-
+        formik.setFieldValue(labelFor, base64);
         setUploadedfileName(file[0].name);
       }
     } catch (error: any) {
@@ -48,13 +47,9 @@ const CustomFileUpload = ({
         </label>
 
         <div
-          className={`relative flex ${height ? height : 'h-[50px]'} items-center justify-between rounded-lg border border-gray-300 px-1 ${!formik?.errors[labelFor] && 'hover:border-black'} ${
+          className={`relative flex ${height ? height : 'h-[50px]'} items-center justify-between rounded-lg border border-gray-300 px-1 ${
             useTouched && formik?.touched[labelFor] && formik?.errors[labelFor]
               ? 'border-red-400'
-              : ''
-          } ${
-            useTouched && !formik?.touched[labelFor] && formik?.errors[labelFor]
-              ? 'hover:border-black'
               : ''
           } ${!useTouched && formik?.errors[labelFor] ? 'border-red-400' : ''} `}
         >
@@ -68,7 +63,7 @@ const CustomFileUpload = ({
             />
             <button
               type="button"
-              className="flex h-full w-full cursor-pointer items-center justify-center bg-gradient-to-r from-[#2F0248] via-yellow-700 to-[#5C068C] bg-clip-text text-center font-semibold text-transparent"
+              className="flex h-full w-full cursor-pointer items-center justify-center bg-gradient-to-r from-[#2F0248] to-yellow-800 bg-clip-text text-center font-semibold text-transparent"
               onClick={() => {
                 if (fileRef.current) {
                   fileRef.current.click();
@@ -82,20 +77,19 @@ const CustomFileUpload = ({
             {uploadedfileName ? uploadedfileName : 'No file chosen'}
           </span>
         </div>
+        {useTouched
+          ? formik?.touched[labelFor] &&
+            formik?.errors[labelFor] && (
+              <p className={`absolute top-14 text-xs italic text-red-400`}>
+                {formik?.errors[labelFor]}
+              </p>
+            )
+          : formik?.errors[labelFor] && (
+              <p className={`absolute top-14 text-xs italic text-red-400`}>
+                {formik?.errors[labelFor]}
+              </p>
+            )}
       </div>
-
-      {useTouched
-        ? formik?.touched[labelFor] &&
-          formik?.errors[labelFor] && (
-            <p className={`absolute top-14 text-xs italic text-red-400`}>
-              {formik?.errors[labelFor]}
-            </p>
-          )
-        : formik?.errors[labelFor] && (
-            <p className={`absolute top-14 text-xs italic text-red-400`}>
-              {formik?.errors[labelFor]}
-            </p>
-          )}
     </>
   );
 };

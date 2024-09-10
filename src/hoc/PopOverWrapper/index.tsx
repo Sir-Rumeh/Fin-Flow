@@ -12,6 +12,7 @@ interface Props {
   closeOnClick?: boolean;
   closeCard?: boolean;
   cardWidth?: string;
+  customPaddingX?: number | string;
 }
 
 const CustomPopover = ({
@@ -24,6 +25,7 @@ const CustomPopover = ({
   closeOnClick = true,
   closeCard,
   cardWidth,
+  customPaddingX,
 }: Props) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -43,8 +45,16 @@ const CustomPopover = ({
   }, [closeCard]);
 
   return (
-    <div className="">
-      <Button aria-describedby={id} onClick={handleClick} className="w-full normal-case">
+    <div className="relative w-full">
+      <Button
+        sx={{
+          width: '100%',
+          paddingX: customPaddingX ? customPaddingX : null,
+        }}
+        aria-describedby={id}
+        onClick={handleClick}
+        className="w-full normal-case"
+      >
         {buttonIcon}
       </Button>
       <Popover
@@ -73,7 +83,7 @@ const CustomPopover = ({
           },
         }}
       >
-        <div className="rounded-full">{children}</div>
+        <div className="w-full rounded-full">{children}</div>
       </Popover>
     </div>
   );

@@ -24,7 +24,7 @@ const CustomInput = ({
   placeholder,
   defaultContainerStyles = 'flex h-auto items-center justify-between rounded-lg border border-gray-300 px-1 ',
   maxW = 'md:w-[327px]',
-  defaultInputStyles = 'h-[3rem] w-full px-2 focus:outline-none focus:ring-0',
+  defaultInputStyles = 'h-[3rem] w-full px-2 focus:outline-none focus:ring-0 ',
   formik,
   useTouched = true,
   verticalMargin = true,

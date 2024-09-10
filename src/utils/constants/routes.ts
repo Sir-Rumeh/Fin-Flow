@@ -66,6 +66,9 @@ export const appRoutes = {
     },
     accountManagement: {
       index: `${BASE_ROUTES.ADMIN}/account-management`,
+      accountDetails: `${BASE_ROUTES.ADMIN}/account-management/account-details`,
+      createAccount: `${BASE_ROUTES.ADMIN}/account-management/create-account`,
+      editAccount: `${BASE_ROUTES.ADMIN}/account-management/edit-account`,
     },
     auditTrail: {
       index: `${BASE_ROUTES.ADMIN}/audit-trail`,

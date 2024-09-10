@@ -56,13 +56,15 @@ const ExportBUtton = (props: Props) => {
           </div>
         </CustomPopover>
         <div className="hidden">
-          <ExportToExcel
-            data={props.data ?? []}
-            headers={props.headers ?? []}
-            fileName={props.fileName ?? ''}
-            download={download}
-            setDownload={setDownload}
-          />
+          {props.data && props.data.length > 0 ? (
+            <ExportToExcel
+              data={props.data ?? []}
+              headers={props.headers ?? []}
+              fileName={props.fileName ?? ''}
+              download={download}
+              setDownload={setDownload}
+            />
+          ) : null}
         </div>
       </div>
     </div>

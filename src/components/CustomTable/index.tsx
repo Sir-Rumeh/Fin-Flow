@@ -53,7 +53,7 @@ function CustomTable({ tableData, columns, rowCount }: CustomTableProps): JSX.El
           disableColumnMenu
           pagination
           onPaginationModelChange={handlePageSizeChange}
-          pageSizeOptions={[10, 20, 30]}
+          pageSizeOptions={[10, 50, 100]}
           paginationModel={{ page: paginationData.pageNumber, pageSize: paginationData.pageSize }}
           paginationMode="server"
           rowCount={rowCount}
