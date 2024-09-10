@@ -15,9 +15,9 @@ export default function WhiteArrowDown({ styles }: WhiteArrowDownProps) {
       <path
         d="M6 9L12 15L18 9"
         stroke="white"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

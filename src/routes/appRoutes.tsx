@@ -92,14 +92,14 @@ const adminRoutes: RoutesType[] = [
         component: <MandateRequestsRoutes />,
       },
       {
-        name: 'Account Requests',
-        path: 'accounts/*',
-        component: <AccountRequestsRoutes />,
-      },
-      {
         name: 'Profile Requests',
         path: 'profiles/*',
         component: <ProfileRequestsRoutes />,
+      },
+      {
+        name: 'Account Requests',
+        path: 'accounts/*',
+        component: <AccountRequestsRoutes />,
       },
     ],
   },

@@ -1,7 +1,7 @@
 export default function FcmbIcon() {
   return (
     <svg width="53" height="53" viewBox="0 0 53 53" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <g clip-path="url(#clip0_15269_927)">
+      <g clipPath="url(#clip0_15269_927)">
         <path
           d="M50.5907 0.318359H2.40944C1.2544 0.318359 0.31806 1.2547 0.31806 2.40974V50.591C0.31806 51.746 1.2544 52.6824 2.40944 52.6824H50.5907C51.7457 52.6824 52.6821 51.746 52.6821 50.591V2.40974C52.6821 1.2547 51.7457 0.318359 50.5907 0.318359Z"
           fill="#5F138D"

@@ -15,17 +15,17 @@ export default function ArrowIcon({ style }: ArrowIconProps) {
       <path
         d="M1 9.5L5 5.5L1 1.5"
         stroke="#334335"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
       <path
         d="M1 9.5L5 5.5L1 1.5"
         stroke="white"
-        stroke-opacity="0.3"
-        stroke-width="2"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        strokeOpacity="0.3"
+        strokeWidth="2"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );
