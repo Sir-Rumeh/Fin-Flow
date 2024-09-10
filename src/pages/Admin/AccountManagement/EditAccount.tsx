@@ -1,6 +1,5 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
-import ChevronDown from 'assets/icons/ChevronDown';
 import ChevronRight from 'assets/icons/ChevronRight';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
@@ -9,9 +8,8 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
-import FormSelect from 'components/FormElements/FormSelect';
 
-function EditProfile() {
+function EditAccount() {
   const navigate = useNavigate();
   const [modals, setModals] = useState({
     confirmEdit: false,
@@ -34,33 +32,27 @@ function EditProfile() {
     },
   });
 
-  const dayToApplyOptions = [
-    { value: 'Day 1', label: 'Day 1' },
-    { value: 'Day 2', label: 'Day 2' },
-    { value: 'Day 3', label: 'Day 3' },
-    { value: 'Day 4', label: 'Day 4' },
-  ];
   return (
     <>
       <div className="px-5 py-1">
         <div className="slide-down mt-2 flex items-center gap-2 text-lg">
           <Link
-            to={`/${appRoutes.adminDashboard.profileManagement.index}`}
+            to={`/${appRoutes.adminDashboard.accountManagement.index}`}
             className="cursor-pointer text-darkgray"
           >
-            Profile Management
+            Account Management
           </Link>{' '}
           <ChevronRight />
-          <span className="text-lightPurple">Edit Profile</span>
+          <span className="text-lightPurple">Edit Account</span>
         </div>
         <div className="slide-down mt-3 flex items-center justify-between">
-          <h2 className="mt-3 text-xl font-semibold">Modify Profile Details</h2>
+          <h2 className="mt-3 text-xl font-semibold">Modify Account Details</h2>
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-10">
           <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-8">
-            <form onSubmit={formik.handleSubmit} noValidate className="relative w-full">
+            <form onSubmit={formik.handleSubmit} noValidate className="relative w-full 2xl:w-[80%]">
               <div className="slide-down">
-                <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
                   <CustomInput
                     labelFor="merchantId"
                     label="Merchant ID"
@@ -78,40 +70,16 @@ function EditProfile() {
                     formik={formik}
                   />
                   <CustomInput
-                    labelFor="accountId"
-                    label="Account Id"
+                    labelFor="cif"
+                    label="CIF"
                     inputType="text"
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
                   />
                   <CustomInput
-                    labelFor="accountNumber"
-                    label="Account Number"
-                    inputType="text"
-                    placeholder="Enter here"
-                    maxW="w-full"
-                    formik={formik}
-                  />
-                  <CustomInput
-                    labelFor="firstName"
-                    label="First Name"
-                    inputType="text"
-                    placeholder="Enter here"
-                    maxW="w-full"
-                    formik={formik}
-                  />
-                  <CustomInput
-                    labelFor="lastName"
-                    label="Last Name"
-                    inputType="text"
-                    placeholder="Enter here"
-                    maxW="w-full"
-                    formik={formik}
-                  />
-                  <CustomInput
-                    labelFor="emailAddress"
-                    label="Email Address"
+                    labelFor="accountName"
+                    label="Account Name"
                     inputType="text"
                     placeholder="Enter here"
                     maxW="w-full"
@@ -119,11 +87,13 @@ function EditProfile() {
                   />
 
                   <div className="md:col-span-2">
-                    <FormSelect
-                      labelFor="role"
-                      label="Assign Role"
+                    <CustomInput
+                      labelFor="accountNumber"
+                      label="Account Number"
+                      inputType="text"
+                      placeholder="Enter here"
+                      maxW="w-full"
                       formik={formik}
-                      options={dayToApplyOptions}
                     />
                   </div>
                 </div>
@@ -150,7 +120,7 @@ function EditProfile() {
           setIsOpen={() => closeModal('confirmEdit')}
           title={'Save Changes?'}
           info={
-            'You are about to save changes made to this profile, would you want to proceed with this?'
+            'You are about to save changes made to this account, would you want to proceed with this?'
           }
           icon={<RedAlertIcon />}
           type={'confirmation'}
@@ -171,7 +141,7 @@ function EditProfile() {
           type={'completed'}
           proceedAction={() => {
             closeModal('editSuccessful');
-            navigate(`/${appRoutes.adminDashboard.profileManagement.index}`);
+            navigate(`/${appRoutes.adminDashboard.accountManagement.index}`);
           }}
         />
       )}
@@ -179,4 +149,4 @@ function EditProfile() {
   );
 }
 
-export default EditProfile;
+export default EditAccount;

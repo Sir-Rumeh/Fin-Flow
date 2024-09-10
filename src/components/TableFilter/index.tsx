@@ -45,7 +45,7 @@ const TableFilter = ({
   };
   return (
     <>
-      <div className="flex w-full flex-col items-start gap-x-4 gap-y-3 py-2 md:flex-row md:items-center">
+      <div className="flex w-full flex-col items-start gap-x-2 gap-y-3 py-2 md:flex-row md:items-center">
         {showOptionsFilter && (
           <div className="">
             <CustomPopover
