@@ -405,7 +405,7 @@ const MandatetManagement = () => {
             </div>
             <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          <div className="mt-2">
             <div className="">
               <div className="flex items-center justify-between">
                 <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10">
@@ -440,7 +440,7 @@ const MandatetManagement = () => {
                 />
               </div>
             </div>
-          </Typography>
+          </div>
         </CustomModal>
       )}
       {modals.editMandate && (

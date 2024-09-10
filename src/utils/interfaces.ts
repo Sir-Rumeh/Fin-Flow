@@ -34,6 +34,7 @@ export interface AccountDataRow {
   merchantId: string;
   accountNumber: string;
   cif: string;
+  status?: string;
   requestType: string;
   dateRequested: string;
 }

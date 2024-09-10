@@ -1,6 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
-import ChevronDown from 'assets/icons/ChevronDown';
 import ChevronRight from 'assets/icons/ChevronRight';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
@@ -9,13 +8,12 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
-import FormSelect from 'components/FormElements/FormSelect';
 
-function CreateProfile() {
+function EditAccount() {
   const navigate = useNavigate();
   const [modals, setModals] = useState({
-    confirmCreate: false,
-    creationSuccessful: false,
+    confirmEdit: false,
+    editSuccessful: false,
   });
 
   const openModal = (modalName: keyof typeof modals) => {
@@ -30,37 +28,31 @@ function CreateProfile() {
     initialValues: {},
 
     onSubmit: (values) => {
-      openModal('confirmCreate');
+      openModal('confirmEdit');
     },
   });
 
-  const dayToApplyOptions = [
-    { value: 'Day 1', label: 'Day 1' },
-    { value: 'Day 2', label: 'Day 2' },
-    { value: 'Day 3', label: 'Day 3' },
-    { value: 'Day 4', label: 'Day 4' },
-  ];
   return (
     <>
       <div className="px-5 py-1">
         <div className="slide-down mt-2 flex items-center gap-2 text-lg">
           <Link
-            to={`/${appRoutes.adminDashboard.profileManagement.index}`}
+            to={`/${appRoutes.adminDashboard.accountManagement.index}`}
             className="cursor-pointer text-darkgray"
           >
-            Profile Management
+            Account Management
           </Link>{' '}
           <ChevronRight />
-          <span className="text-lightPurple">Add Profile</span>
+          <span className="text-lightPurple">Edit Account</span>
         </div>
         <div className="slide-down mt-3 flex items-center justify-between">
-          <h2 className="mt-3 text-xl font-semibold">Add New Profile </h2>
+          <h2 className="mt-3 text-xl font-semibold">Modify Account Details</h2>
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-10">
           <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-8">
-            <form onSubmit={formik.handleSubmit} noValidate className="relative w-full">
+            <form onSubmit={formik.handleSubmit} noValidate className="relative w-full 2xl:w-[80%]">
               <div className="slide-down">
-                <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
                   <CustomInput
                     labelFor="merchantId"
                     label="Merchant ID"
@@ -78,51 +70,30 @@ function CreateProfile() {
                     formik={formik}
                   />
                   <CustomInput
-                    labelFor="accountId"
-                    label="Account Id"
+                    labelFor="cif"
+                    label="CIF"
                     inputType="text"
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
                   />
                   <CustomInput
-                    labelFor="accountNumber"
-                    label="Account Number"
+                    labelFor="accountName"
+                    label="Account Name"
                     inputType="text"
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
                   />
-                  <CustomInput
-                    labelFor="firstName"
-                    label="First Name"
-                    inputType="text"
-                    placeholder="Enter here"
-                    maxW="w-full"
-                    formik={formik}
-                  />
-                  <CustomInput
-                    labelFor="lastName"
-                    label="Last Name"
-                    inputType="text"
-                    placeholder="Enter here"
-                    maxW="w-full"
-                    formik={formik}
-                  />
-                  <CustomInput
-                    labelFor="emailAddress"
-                    label="Email Address"
-                    inputType="text"
-                    placeholder="Enter here"
-                    maxW="w-full"
-                    formik={formik}
-                  />
+
                   <div className="md:col-span-2">
-                    <FormSelect
-                      labelFor="role"
-                      label="Assign Role"
+                    <CustomInput
+                      labelFor="accountNumber"
+                      label="Account Number"
+                      inputType="text"
+                      placeholder="Enter here"
+                      maxW="w-full"
                       formik={formik}
-                      options={dayToApplyOptions}
                     />
                   </div>
                 </div>
@@ -133,8 +104,8 @@ function CreateProfile() {
                     backgroundColor="#5C068C"
                     hoverBackgroundColor="#2F0248"
                     type="submit"
-                    title="Add Profile"
-                    width="10rem"
+                    title="Save"
+                    width="8rem"
                     customPaddingX="1.4rem"
                   />
                 </div>
@@ -143,32 +114,34 @@ function CreateProfile() {
           </div>
         </div>
       </div>
-      {modals.confirmCreate && (
+      {modals.confirmEdit && (
         <ModalWrapper
-          isOpen={modals.confirmCreate}
-          setIsOpen={() => closeModal('confirmCreate')}
-          title={'Add Profile?'}
-          info={'You are about to add this profile, would you want to proceed with this?'}
+          isOpen={modals.confirmEdit}
+          setIsOpen={() => closeModal('confirmEdit')}
+          title={'Save Changes?'}
+          info={
+            'You are about to save changes made to this account, would you want to proceed with this?'
+          }
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmCreate');
-            openModal('creationSuccessful');
+            closeModal('confirmEdit');
+            openModal('editSuccessful');
           }}
         />
       )}
 
-      {modals.creationSuccessful && (
+      {modals.editSuccessful && (
         <ModalWrapper
-          isOpen={modals.creationSuccessful}
-          setIsOpen={() => closeModal('creationSuccessful')}
+          isOpen={modals.editSuccessful}
+          setIsOpen={() => closeModal('editSuccessful')}
           title={'Success!!'}
-          info={'You have successfully added this profile'}
+          info={'You have successfully saved new changes'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
-            closeModal('creationSuccessful');
-            navigate(`/${appRoutes.adminDashboard.profileManagement.index}`);
+            closeModal('editSuccessful');
+            navigate(`/${appRoutes.adminDashboard.accountManagement.index}`);
           }}
         />
       )}
@@ -176,4 +149,4 @@ function CreateProfile() {
   );
 }
 
-export default CreateProfile;
+export default EditAccount;

@@ -1,5 +1,5 @@
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import TableFilter from 'components/TableFilter';
 import CustomTable from 'components/CustomTable';
 import appRoutes from 'utils/constants/routes';
@@ -16,6 +16,7 @@ import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 
 const MerchantManagement = () => {
+  const printPdfRef = useRef(null);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [modals, setModals] = useState({
@@ -46,6 +47,14 @@ const MerchantManagement = () => {
       setSearchTerm('');
     },
   });
+
+  const headers = [
+    { label: 'Merchant ID', key: 'id' },
+    { label: 'Merchant Name', key: 'merchantName' },
+    { label: 'CIF Number', key: 'cif' },
+    { label: 'Status', key: 'status' },
+    { label: 'Date Requested', key: 'dateRequested' },
+  ];
 
   const columns: GridColDef[] = [
     {
@@ -217,12 +226,17 @@ const MerchantManagement = () => {
                 </div>
               </div>
               <div className="flex w-full items-center justify-end gap-8 lg:w-[50%]">
-                <ExportBUtton />
+                <ExportBUtton
+                  fileName="Merchants List.csv"
+                  data={muiDashboardMerchantsList}
+                  headers={headers}
+                  printPdfRef={printPdfRef}
+                />
               </div>
             </div>
 
             <div className="mt-6 w-full">
-              <div className="w-full">
+              <div ref={printPdfRef} className="w-full">
                 <CustomTable
                   tableData={muiDashboardMerchantsList}
                   columns={columns}

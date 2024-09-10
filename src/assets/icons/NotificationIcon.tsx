@@ -7,9 +7,9 @@ export default function NotificationIcon() {
         <path
           d="M23.4417 28.5C23.2952 28.7526 23.0849 28.9622 22.8319 29.1079C22.5788 29.2537 22.292 29.3304 22 29.3304C21.708 29.3304 21.4212 29.2537 21.1681 29.1079C20.9151 28.9622 20.7048 28.7526 20.5583 28.5M27 17.6667C27 16.3406 26.4732 15.0688 25.5355 14.1311C24.5979 13.1935 23.3261 12.6667 22 12.6667C20.6739 12.6667 19.4021 13.1935 18.4645 14.1311C17.5268 15.0688 17 16.3406 17 17.6667C17 23.5 14.5 25.1667 14.5 25.1667H29.5C29.5 25.1667 27 23.5 27 17.6667Z"
           stroke="#262832"
-          stroke-width="1.67"
-          stroke-linecap="round"
-          stroke-linejoin="round"
+          strokeWidth="1.67"
+          strokeLinecap="round"
+          strokeLinejoin="round"
         />
       </g>
       <defs>
@@ -20,9 +20,9 @@ export default function NotificationIcon() {
           width="44"
           height="44"
           filterUnits="userSpaceOnUse"
-          color-interpolation-filters="sRGB"
+          colorInterpolationFilters="sRGB"
         >
-          <feFlood flood-opacity="0" result="BackgroundImageFix" />
+          <feFlood floodOpacity="0" result="BackgroundImageFix" />
           <feColorMatrix
             in="SourceAlpha"
             type="matrix"
