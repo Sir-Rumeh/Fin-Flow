@@ -11,13 +11,15 @@ import { useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
+import DashboardCard from 'components/common/DashboardCards/DashboardCard';
+import SubTitleIconYellow from 'assets/icons/SubTitleIconYellow';
 
 const ProfileDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const id = searchParams?.get('id') || '';
 
-  let profileStatus = 'Disabled';
+  let accountStatus = 'Disabled';
 
   const [modals, setModals] = useState({
     confirmDisable: false,
@@ -41,17 +43,17 @@ const ProfileDetails = () => {
       <div className="px-5 py-1">
         <div className="mt-2 flex items-center gap-2 text-lg">
           <Link
-            to={`/${appRoutes.adminDashboard.profileManagement.index}`}
+            to={`/${appRoutes.adminDashboard.accountManagement.index}`}
             className="cursor-pointer text-darkgray"
           >
-            Profile Management
+            Account Management
           </Link>{' '}
           <ChevronRight />
-          <span className="text-lightPurple">Profile Details</span>
+          <span className="text-lightPurple">Account Details</span>
         </div>
         <div className="slide-down mt-3 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold md:text-2xl">Profile ID : Req123456</h2>
+            <h2 className="text-lg font-semibold md:text-2xl">Account ID : Req123456</h2>
           </div>
           <div className="w-auto">
             <CustomPopover
@@ -75,7 +77,7 @@ const ProfileDetails = () => {
                 <button
                   onClick={() =>
                     navigate({
-                      pathname: `/${appRoutes.adminDashboard.profileManagement.editProfile}`,
+                      pathname: `/${appRoutes.adminDashboard.accountManagement.editAccount}`,
                       search: `?${createSearchParams({ id })}`,
                     })
                   }
@@ -84,7 +86,7 @@ const ProfileDetails = () => {
                 >
                   Edit Details
                 </button>
-                {profileStatus === 'Enabled' && (
+                {accountStatus === 'Enabled' && (
                   <button
                     type="button"
                     onClick={() => openModal('confirmDisable')}
@@ -93,7 +95,7 @@ const ProfileDetails = () => {
                     Disable
                   </button>
                 )}
-                {profileStatus === 'Disabled' && (
+                {accountStatus === 'Disabled' && (
                   <button
                     type="button"
                     onClick={() => openModal('confirmEnable')}
@@ -114,24 +116,43 @@ const ProfileDetails = () => {
           </div>
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
-          <div className="">
-            <ItemDetailsContainer title="Profile Details">
-              <DetailsCard title="Account Name" content="Fair Money" />
+          <div className="rounded-lg bg-lilacPurple px-6 py-4">
+            <h3 className="text-md font-semibold md:text-xl">Merchant Accounts</h3>
+            <div className="mt-4 flex flex-col items-center justify-between gap-6 gap-x-4 md:flex-row">
+              <DashboardCard
+                title="Total Profiles"
+                numberOfRequest={1200}
+                backgroundColor="bg-white"
+                textColor="text-purplePrimary"
+                icon={<SubTitleIconYellow />}
+                route={`/${appRoutes.adminDashboard.accountManagement.index}`}
+                // navigate to MerchantProfiles which will import table from Profile Management
+              />
+              <DashboardCard
+                title="Total Mandates"
+                numberOfRequest={1200}
+                backgroundColor="bg-white"
+                textColor="text-purplePrimary"
+                icon={<SubTitleIconYellow />}
+                route={`/${appRoutes.adminDashboard.accountManagement.index}`}
+                // navigate to MerchantMandates  which will import table from Mandate  Management
+              />
+            </div>
+          </div>
+          <div className="mt-10">
+            <ItemDetailsContainer title="Account Details">
               <DetailsCard title="Merchant ID" content="12345" />
-              <DetailsCard title="Full Name" content="John Doe" />
               <DetailsCard title="Merchant Name" content="Fair Money" />
-              <DetailsCard title="Account Id" content="8907812345" />
-              <DetailsCard title="Email" content="johndoe@gmail.com" />
+              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
               <DetailsCard title="CIF Number" content="12345" />
-              <DetailsCard title="Role" content="Maker" />
-              <DetailsCard title="Date Requested" content="12/12/2024 : 03:00pm" />
+              <DetailsCard title="Account Number" content="8907812345" />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Creator Details">
+              <DetailsCard title="ID" content="9344243" />
               <DetailsCard title="Created By" content="John Doe" />
               <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
-              <DetailsCard title="ID" content="9344243" />
               <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
             </ItemDetailsContainer>
           </div>
@@ -148,8 +169,8 @@ const ProfileDetails = () => {
         <ModalWrapper
           isOpen={modals.confirmDisable}
           setIsOpen={() => closeModal('confirmDisable')}
-          title={'Disable Profile?'}
-          info={'You are about to disable this profile, would you want to proceed with this?'}
+          title={'Disable Account?'}
+          info={'You are about to disable this account, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
@@ -163,7 +184,7 @@ const ProfileDetails = () => {
           isOpen={modals.disableSuccessful}
           setIsOpen={() => closeModal('disableSuccessful')}
           title={'Success!!'}
-          info={'You have successfully disabled this profile'}
+          info={'You have successfully disabled this account'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -175,8 +196,8 @@ const ProfileDetails = () => {
         <ModalWrapper
           isOpen={modals.confirmEnable}
           setIsOpen={() => closeModal('confirmEnable')}
-          title={'Enable Profile?'}
-          info={'You are about to enable this profile, would you want to proceed with this?'}
+          title={'Enable Account?'}
+          info={'You are about to enable this account, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
@@ -190,7 +211,7 @@ const ProfileDetails = () => {
           isOpen={modals.enableSuccessful}
           setIsOpen={() => closeModal('enableSuccessful')}
           title={'Success!!'}
-          info={'You have successfully enabled this profile'}
+          info={'You have successfully enabled this account'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -202,8 +223,8 @@ const ProfileDetails = () => {
         <ModalWrapper
           isOpen={modals.confirmDelete}
           setIsOpen={() => closeModal('confirmDelete')}
-          title={'Delete Profile?'}
-          info={'You are about to delete this profile, would you want to proceed with this?'}
+          title={'Delete Account?'}
+          info={'You are about to delete this account, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
@@ -217,12 +238,12 @@ const ProfileDetails = () => {
           isOpen={modals.deleteSuccessful}
           setIsOpen={() => closeModal('deleteSuccessful')}
           title={'Success!!'}
-          info={'You have successfully deleted this profile'}
+          info={'You have successfully deleted this account'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
             closeModal('deleteSuccessful');
-            navigate(`/${appRoutes.adminDashboard.profileManagement.index}`);
+            navigate(`/${appRoutes.adminDashboard.accountManagement.index}`);
           }}
         />
       )}

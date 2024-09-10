@@ -7,6 +7,7 @@ type DashboardCardProps = {
   route: string;
   backgroundColor?: string;
   textColor?: string;
+  maxW?: string;
   icon?: React.ReactNode;
 };
 
@@ -17,9 +18,10 @@ const DashboardCard = ({
   backgroundColor = 'bg-graySecondary',
   textColor,
   icon,
+  maxW,
 }: DashboardCardProps) => {
   return (
-    <div className={`${backgroundColor} h-[160px] w-full rounded-[8px] px-4 py-3 sm:w-[340px]`}>
+    <div className={`${backgroundColor} ${maxW} h-[160px] w-full rounded-[8px] px-4 py-3`}>
       <div className="my-1 flex items-center justify-start gap-x-4 text-lg font-semibold">
         {icon ? <p>{icon}</p> : null}
         <p>{title}</p>

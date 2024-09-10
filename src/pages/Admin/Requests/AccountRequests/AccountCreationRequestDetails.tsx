@@ -100,7 +100,6 @@ const AccountCreationRequestDetails = () => {
               <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
             </ItemDetailsContainer>
           </div>
-
           <div className="mt-10">
             <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
               <DetailsCard title="ID" content="9344243" />

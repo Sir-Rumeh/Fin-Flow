@@ -52,7 +52,7 @@ const FormSelect = ({
             }}
             className="flex h-full w-full items-center justify-between px-2"
           >
-            <p className={`${selectedOption ? 'font-semibold' : 'text-gray-400'} `}>
+            <p className={`${selectedOption ? 'font-[400]' : 'text-gray-400'} `}>
               {' '}
               {selectedOption || 'Select Here'}{' '}
             </p>
@@ -67,6 +67,7 @@ const FormSelect = ({
             {options.map((option) => {
               return (
                 <button
+                  key={option.label}
                   onClick={() => handleChange(option)}
                   type="button"
                   className="w-full border-b px-3 py-3 text-start text-[16px] hover:bg-purpleSecondary"
@@ -77,27 +78,6 @@ const FormSelect = ({
             })}
           </div>
         )}
-
-        {/* <CustomPopover
-          popoverId={4}
-          buttonIcon={
-
-          }
-          customPaddingX="0"
-          translationX={0}
-          translationY={60}
-          //  cardWidth="100%"
-        >
-          <div className="flex w-full flex-col rounded-md bg-red-400 p-1 text-sm">
-            <button
-              onClick={() => {}}
-              type="button"
-              className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
-            >
-              View Details
-            </button>
-          </div>
-        </CustomPopover> */}
 
         {useTouched
           ? formik?.touched[labelFor] &&

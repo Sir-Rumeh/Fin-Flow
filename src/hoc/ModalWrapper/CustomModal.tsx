@@ -1,7 +1,5 @@
 import type { Dispatch, SetStateAction } from 'react';
-import CloseIcon from 'assets/icons/CloseIcon';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { useMediaQuery } from '@mui/material';
 

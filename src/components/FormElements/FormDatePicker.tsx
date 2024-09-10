@@ -1,10 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-// import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-// import dayjs from 'dayjs';
 
-import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { TextField } from '@mui/material';
 import dayjs from 'dayjs';
 
 interface Props {
@@ -13,17 +9,29 @@ interface Props {
   width?: string;
   label?: string;
   initialDate?: string;
+  useTouched?: boolean;
 }
 
 const FormDatePicker = (props: Props) => {
+  const { formik, name, width, label, initialDate, useTouched = true } = props;
+
+  const getPickerBorder = () => {
+    if (
+      (useTouched && formik?.touched[name] && formik?.errors[name]) ||
+      (!useTouched && formik?.errors[name])
+    ) {
+      return 'border-red-400';
+    } else return '';
+  };
   return (
     <>
       <div className="relative mb-4 mt-6 flex flex-col gap-2">
-        <label className="absolute bottom-16 font-semibold">{props.label}</label>
+        <label className="absolute bottom-16 font-semibold">{label}</label>
         <DatePicker
           sx={{
-            width: props.width ? props.width : '100%',
+            width: width ? width : '100%',
             '& .MuiOutlinedInput-root': {
+              border: getPickerBorder(),
               height: '3.1rem',
               borderRadius: '10px',
               '&.Mui-focused fieldset': {
@@ -41,7 +49,6 @@ const FormDatePicker = (props: Props) => {
                 },
               },
             },
-
             '& .MuiInputLabel-root': {
               visibility: 'visible',
               '&.Mui-focused': {
@@ -51,14 +58,23 @@ const FormDatePicker = (props: Props) => {
               transform: 'translate(0, 60%) scale(1)',
             },
           }}
-          label={props.label ? props.label : null}
+          label={label ? label : null}
           format="DD/MM/YYYY"
-          value={props.formik.values[props.name] ? dayjs(props.formik.values[props.name]) : null}
+          value={formik.values[props.name] ? dayjs(formik.values[name]) : null}
           onChange={(newValue) => {
-            props.formik.setFieldValue(props.name, dayjs(newValue).format('YYYY-MM-DDTHH:mm:ss'));
+            formik.setFieldValue(name, dayjs(newValue).format('YYYY-MM-DDTHH:mm:ss'));
           }}
         />
       </div>
+
+      {useTouched
+        ? formik?.touched[name] &&
+          formik?.errors[name] && (
+            <p className={`absolute top-14 text-xs italic text-red-400`}>{formik?.errors[name]}</p>
+          )
+        : formik?.errors[name] && (
+            <p className={`absolute top-14 text-xs italic text-red-400`}>{formik?.errors[name]}</p>
+          )}
     </>
   );
 };
