@@ -1,6 +1,7 @@
 import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import TableLogo from 'assets/images/table_logo.png';
 import { useState } from 'react';
+import { useMediaQuery } from '@mui/material';
 
 interface CustomTableProps {
   tableData: any;
@@ -9,6 +10,7 @@ interface CustomTableProps {
 }
 
 function CustomTable({ tableData, columns, rowCount }: CustomTableProps): JSX.Element {
+  const isSmallWidth = useMediaQuery('(max-width:1440px)');
   const [paginationData, setPaginationData] = useState({
     pageNumber: 0,
     pageSize: 10,
@@ -39,6 +41,9 @@ function CustomTable({ tableData, columns, rowCount }: CustomTableProps): JSX.El
           rows={tableData}
           columns={columns}
           sx={{
+            '& .MuiDataGrid-cell': {
+              fontSize: isSmallWidth ? '12px' : '14px',
+            },
             border: 0,
             [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]: {
               outline: 'none',

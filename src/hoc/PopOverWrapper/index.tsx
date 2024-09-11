@@ -13,6 +13,7 @@ interface Props {
   closeCard?: boolean;
   cardWidth?: string;
   customPaddingX?: number | string;
+  scale?: string;
 }
 
 const CustomPopover = ({
@@ -26,6 +27,7 @@ const CustomPopover = ({
   closeCard,
   cardWidth,
   customPaddingX,
+  scale,
 }: Props) => {
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | HTMLDivElement | null>(null);
 
@@ -82,11 +84,12 @@ const CustomPopover = ({
               borderRadius: `${borderRadius ? borderRadius : ''}`,
               display: `${!children ? 'none' : 'block'}`,
               width: `${cardWidth ? cardWidth : 'auto'}`,
+              scale: scale ? scale : undefined,
             },
           },
         }}
       >
-        <div className="w-full rounded-full">{children}</div>
+        <div className="w-full rounded-full text-xs">{children}</div>
       </Popover>
     </div>
   );

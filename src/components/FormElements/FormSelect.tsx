@@ -13,6 +13,8 @@ type CustomInputProps = {
   useTouched?: boolean;
   height?: string;
   options: Option[];
+  scrollableOptions?: boolean;
+  labelFontWeight?: string;
 };
 
 const FormSelect = ({
@@ -22,6 +24,8 @@ const FormSelect = ({
   formik,
   useTouched = true,
   options,
+  scrollableOptions = false,
+  labelFontWeight,
 }: CustomInputProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
@@ -34,12 +38,15 @@ const FormSelect = ({
   return (
     <>
       <div className="relative mb-4 mt-6 h-auto w-full">
-        <label htmlFor={labelFor} className="absolute bottom-16 font-semibold">
+        <label
+          htmlFor={labelFor}
+          className={`${labelFontWeight ? labelFontWeight : 'font-semibold'} absolute bottom-16`}
+        >
           {label}
         </label>
 
         <div
-          className={`relative flex w-full ${height ? height : 'h-[50px]'} items-center justify-between rounded-lg border border-gray-300 px-1 ${
+          className={`flex w-full ${height ? height : 'h-[50px]'} items-center justify-between rounded-lg border border-gray-300 px-1 ${
             useTouched && formik?.touched[labelFor] && formik?.errors[labelFor]
               ? 'border-red-400'
               : ''
@@ -52,9 +59,14 @@ const FormSelect = ({
             }}
             className="flex h-full w-full items-center justify-between px-2"
           >
-            <p className={`${selectedOption ? 'font-[400]' : 'text-gray-400'} `}>
-              {' '}
-              {selectedOption || 'Select Here'}{' '}
+            <p
+              className={`text-base ${selectedOption ? 'font-[400]' : scrollableOptions ? 'text-blackInput' : 'text-gray-400'} `}
+            >
+              {selectedOption
+                ? selectedOption
+                : scrollableOptions
+                  ? options[0].value
+                  : 'Select Here'}
             </p>
             <i className="scale-125">
               <DarkArrowDown />
@@ -63,7 +75,9 @@ const FormSelect = ({
         </div>
 
         {isOpen && (
-          <div className="slide-downward absolute z-50 mt-1 flex w-full flex-col rounded-md bg-white text-sm shadow">
+          <div
+            className={`${scrollableOptions ? 'no-scrollbar h-[9rem] overflow-y-scroll' : ''} slide-downward absolute z-[999] mt-1 flex w-full flex-col rounded-md bg-white text-sm shadow`}
+          >
             {options.map((option) => {
               return (
                 <button
