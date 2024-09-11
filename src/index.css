@@ -229,3 +229,8 @@ body {
   .gotham-grid,   .MuiDataGrid-cell, .gotham-grid, .MuiDataGrid-columnHeader{
 	font-family: 'Gotham', sans-serif;
  }
+
+
+ .hide-pagination .MuiTablePagination-root {
+	display: none;
+ }

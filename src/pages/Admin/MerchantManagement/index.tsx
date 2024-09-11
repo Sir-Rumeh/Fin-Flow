@@ -14,6 +14,7 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
+import { Button } from '@mui/material';
 
 const MerchantManagement = () => {
   const printPdfRef = useRef(null);
@@ -240,7 +241,7 @@ const MerchantManagement = () => {
                 <CustomTable
                   tableData={muiDashboardMerchantsList}
                   columns={columns}
-                  rowCount={20}
+                  rowCount={74}
                 />
               </div>
             </div>
