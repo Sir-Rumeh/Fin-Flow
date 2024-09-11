@@ -108,16 +108,16 @@ const AuditTrail = () => {
       <div className="px-5 py-5">
         <h2 className="text-2xl font-semibold">Audit Trail</h2>
         <div className="mt-5 rounded-lg bg-white px-5 py-8">
-          <div className="flex flex-col items-center justify-between md:flex-row">
+          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-10">
             <CustomInput
               labelFor="merchantId"
               label="Username/Staff ID"
-              containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 md:w-[400px]"
+              containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
               inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
               inputType="text"
               placeholder="Enter here"
             />
-            <div className="mt-2 flex items-center justify-between gap-4">
+            <div className="mt-2 flex items-center justify-between gap-5">
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <Box sx={{ display: 'flex', gap: 2 }}>
                   <DatePicker

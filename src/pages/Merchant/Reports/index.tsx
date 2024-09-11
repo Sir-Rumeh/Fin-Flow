@@ -276,67 +276,63 @@ const Reports = () => {
         <h2 className="text-2xl font-semibold">Reporting</h2>
         <div className="mt-5 rounded-lg bg-white px-5 py-8">
           <div className="flex items-center justify-between">
-            <p className="my-3 text-lg font-semibold">Generate Report</p>
+            <p className="my-3 text-xl font-semibold">Generate Report</p>
           </div>
           <div className="h-[2px] w-full bg-grayPrimary"></div>
-          <div className="mt-4 flex flex-col items-center gap-x-20 md:flex-row">
-            <div className="mt-8 flex items-center justify-between gap-x-16">
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <Box sx={{ display: 'flex', gap: 5 }}>
-                  <DatePicker
-                    label="Start Date"
-                    sx={{
-                      height: '50px',
-                      width: '230px',
-                      '& .MuiInputBase-root': {
-                        height: '50px',
-                        borderRadius: '8px',
-                      },
-                      '& .MuiOutlinedInput-root': {
-                        borderRadius: '8px',
-                      },
-                    }}
-                  />
-                  <DatePicker
-                    label="End Date"
-                    sx={{
-                      height: '50px',
-                      width: '230px',
-                      '& .MuiInputBase-root': {
-                        height: '50px',
-                        borderRadius: '8px',
-                      },
-                      '& .MuiOutlinedInput-root': {
-                        borderRadius: '8px',
-                      },
-                    }}
-                  />
-                </Box>
-              </LocalizationProvider>
-            </div>
-            <div className="mb-8 flex w-full items-center gap-x-16">
-              <CustomSelect
-                labelFor="reportType"
-                label="Report Type"
-                containerStyles="h-[50px] md:w-[230px]"
-                selectStyles="h-[50px] px-2"
-                options={['Mandate Status Report', 'Transaction Reports']}
-                placeholder="Select here"
-                icon={<DarkArrowDown height="20" width="20" styles="mt-1 mr-1" />}
-                onSelect={handleSelect}
+          <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DatePicker
+                label="Start Date"
+                sx={{
+                  height: '50px',
+                  width: '100%',
+                  marginTop: '32px',
+                  '& .MuiInputBase-root': {
+                    height: '50px',
+                    borderRadius: '8px',
+                  },
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '8px',
+                  },
+                }}
               />
-              <CustomSelect
-                labelFor="status"
-                label="Status"
-                containerStyles=" h-[50px] md:w-[230px]"
-                selectStyles="h-[50px] px-2"
-                options={['Mandate Status Report', 'Transaction Reports']}
-                placeholder="Select here"
-                icon={<DarkArrowDown height="20" width="20" styles="mt-1 mr-1" />}
+              <DatePicker
+                label="End Date"
+                sx={{
+                  height: '50px',
+                  width: '100%',
+                  marginTop: '32px',
+                  '& .MuiInputBase-root': {
+                    height: '50px',
+                    borderRadius: '8px',
+                  },
+                  '& .MuiOutlinedInput-root': {
+                    borderRadius: '8px',
+                  },
+                }}
               />
-            </div>
+            </LocalizationProvider>
+            <CustomSelect
+              labelFor="reportType"
+              label="Report Type"
+              containerStyles="h-[50px] w-full mb-10"
+              selectStyles="h-[50px] px-2"
+              options={['Mandate Status Report', 'Transaction Reports']}
+              placeholder="Select here"
+              icon={<DarkArrowDown height="20" width="20" styles="mt-1 mr-1" />}
+              onSelect={handleSelect}
+            />
+            <CustomSelect
+              labelFor="status"
+              label="Status"
+              containerStyles="w-full h-[50px]"
+              selectStyles="h-[50px] px-2"
+              options={['Mandate Status Report', 'Transaction Reports']}
+              placeholder="Select here"
+              icon={<DarkArrowDown height="20" width="20" styles="mt-1 mr-1" />}
+            />
           </div>
-          <div className="mt-5 flex justify-end">
+          <div className="mt-10 flex justify-end">
             <ButtonComponent
               onClick={() => {}}
               title="Generate Report"
@@ -464,8 +460,8 @@ const Reports = () => {
         {selectedReportType === ReportsType.MandateStatusReports && (
           <div className="mt-10 rounded-lg bg-white px-5 py-5">
             <div className="mt-10 rounded-lg bg-white px-5 py-5">
-              <div className="flex items-center justify-between">
-                <p className="text-xl font-bold">
+              <div className="flex items-center justify-between gap-2">
+                <p className="text-lg font-bold md:text-xl">
                   Mandate Status Report (June 2023 to August 2023)
                 </p>
                 <ButtonComponent
@@ -515,8 +511,8 @@ const Reports = () => {
               </div>
               <div className="mt-5 rounded-lg border px-4 py-6">
                 <div className="">
-                  <div className="flex items-center justify-between">
-                    <p className="text-xl font-semibold">All Mandates Reports</p>
+                  <div className="flex flex-col items-center justify-between gap-2 md:flex-row">
+                    <p className="text-lg font-semibold md:text-xl">All Mandates Reports</p>
                     <div className="flex items-center gap-4">
                       <ButtonComponent
                         onClick={() => {}}

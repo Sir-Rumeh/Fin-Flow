@@ -147,6 +147,8 @@ const MandatetManagement = () => {
     {
       field: 'actions',
       headerName: 'Action',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead ',
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
@@ -166,14 +168,14 @@ const MandatetManagement = () => {
         };
 
         return (
-          <div className="-ml-1 h-full border-none">
+          <div className="h-full border-none">
             <CustomPopover
               popoverId={params?.row.id}
               buttonIcon={<PopoverTitle title="Actions" />}
               translationX={-40}
               translationY={50}
             >
-              <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
+              <div className="flex w-[8rem] flex-col rounded-md p-1 text-[12px]">
                 <Link
                   to={`/${appRoutes.merchantDashboard.mandateManagement.mandateDetails}`}
                   className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
@@ -260,7 +262,7 @@ const MandatetManagement = () => {
     <>
       <div className="px-5 py-5">
         <div className="flex items-center justify-between">
-          <h2 className="text-2xl font-semibold">Mandate Management</h2>
+          <h2 className="text-xl font-semibold md:text-2xl">Mandate Management</h2>
           <ButtonComponent
             onClick={() =>
               navigate(`/${appRoutes.merchantDashboard.mandateManagement.createMandate}`)
@@ -284,7 +286,7 @@ const MandatetManagement = () => {
                 width="150px"
                 height="45px"
               />
-              <div className="flex h-[45px] w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2">
+              <div className="flex h-[45px] w-[150px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2 md:w-[309px]">
                 <SearchIcon />
                 <input
                   type="text"

@@ -7,7 +7,7 @@ import { ToastContainer } from 'react-toastify';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <div className="font-Gotham">
+    <div className="">
       <TabContextProvider>
         <App />
         <ToastContainer

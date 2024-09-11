@@ -10,7 +10,11 @@ const Tab: React.FC<TabProps> = ({ label, count, isActive, onClick, inactiveColo
   return (
     <div className="flex cursor-pointer flex-col gap-2" onClick={onClick}>
       <div className="flex items-center gap-2">
-        <p className={`font-semibold ${isActive ? 'text-blue-500' : inactiveColor}`}>{label}</p>
+        <p
+          className={`text-sm font-semibold md:text-[16px] ${isActive ? 'text-blue-500' : inactiveColor}`}
+        >
+          {label}
+        </p>
         {count && (
           <span className="rounded-[20px] bg-graySecondary px-3 py-[1px] text-sm text-blue-500">
             {count}

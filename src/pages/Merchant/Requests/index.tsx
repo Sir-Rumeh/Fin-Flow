@@ -129,9 +129,9 @@ const MandateRequests = () => {
     <>
       <div className="px-5 py-5">
         <h2 className="text-2xl font-semibold">Requests</h2>
-        <div className="mt-5 rounded-lg bg-white px-5 py-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-10">
+        <div className="mt-5 w-full rounded-lg bg-white px-5 py-5">
+          <div className="flex flex-col items-center justify-between gap-4 lg:flex-row lg:gap-0">
+            <div className="flex items-center gap-4 md:gap-5 lg:gap-10">
               <Tab
                 label="Pending"
                 count={20}
