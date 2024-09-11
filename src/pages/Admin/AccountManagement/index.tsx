@@ -112,10 +112,10 @@ const AccountManagement = () => {
             <CustomPopover
               popoverId={params?.row.id}
               buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-45}
-              translationY={50}
+              translationX={-15}
+              translationY={45}
             >
-              <div className="flex w-[8rem] flex-col rounded-md p-1">
+              <div className="flex flex-col rounded-md p-1">
                 <button
                   onClick={() =>
                     navigate({

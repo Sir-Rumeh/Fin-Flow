@@ -14,7 +14,7 @@ type Props = {
   className?: string;
   placeholder?: string;
   type?: string;
-  name?: string;
+  name: string;
   disabled?: boolean;
   fullWidth?: boolean;
   variant?: 'filled' | 'outlined' | 'standard';
@@ -22,6 +22,7 @@ type Props = {
   error?: boolean;
   helperText?: string;
   startIcon?: any;
+  formik?: any;
 };
 
 const FormInput = (props: Props) => {
@@ -29,44 +30,54 @@ const FormInput = (props: Props) => {
     return props.startIcon;
   };
   return (
-    <TextField
-      label={props.label}
-      required={props.required}
-      disabled={props.disabled}
-      id={props.id}
-      name={props.name}
-      value={props.value}
-      color="secondary"
-      placeholder={props.placeholder}
-      size="small"
-      sx={{
-        width: props.width ? props.width : '100%',
-        maxHeight: props.height ? props.height : '3rem',
-        height: props.height ? props.height : '3rem',
-        '& .MuiInputBase-root': {
-          height: '100%',
-          padding: '0',
-        },
-      }}
-      tabIndex={0}
-      InputProps={{
-        readOnly: props.readonly,
-        style: { borderRadius: '6px' },
-        startAdornment: (
-          <InputAdornment
-            position="start"
-            className={`${props.startIcon ? 'ml-4' : 'ml-[6px]'} flex items-center justify-center`}
-          >
-            {props.startIcon && <Icon />}
-          </InputAdornment>
-        ),
-      }}
-      onChange={props.onChange}
-      error={props.error}
-      fullWidth={props.fullWidth}
-      helperText={props.helperText}
-      type={props.type}
-    />
+    <div className="relative w-full">
+      <TextField
+        label={props.label}
+        required={props.required}
+        disabled={props.disabled}
+        id={props.id}
+        name={props.name}
+        value={props.value}
+        color="secondary"
+        placeholder={props.placeholder}
+        size="small"
+        sx={{
+          width: props.width ? props.width : '100%',
+          maxHeight: props.height ? props.height : '3rem',
+          height: props.height ? props.height : '3rem',
+          '& .MuiInputBase-root': {
+            height: '100%',
+            padding: '0',
+          },
+        }}
+        tabIndex={0}
+        InputProps={{
+          readOnly: props.readonly,
+          style: {
+            borderRadius: '6px',
+          },
+
+          startAdornment: (
+            <InputAdornment
+              position="start"
+              className={`${props.startIcon ? 'ml-4' : 'ml-[6px]'} flex items-center justify-center`}
+            >
+              {props.startIcon && <Icon />}
+            </InputAdornment>
+          ),
+        }}
+        onChange={props.onChange}
+        error={props.error}
+        fullWidth={props.fullWidth}
+        // helperText={props.helperText}
+        type={props.type}
+      />
+      {props.formik?.touched[props.name] && props.formik?.errors[props.name] && (
+        <p className={`absolute top-14 text-xs italic text-red-400`}>
+          {props.formik?.errors[props.name]}
+        </p>
+      )}
+    </div>
   );
 };
 

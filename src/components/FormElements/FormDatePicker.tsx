@@ -8,12 +8,13 @@ interface Props {
   formik: any;
   width?: string;
   label?: string;
+  placeholder?: string;
   initialDate?: string;
   useTouched?: boolean;
 }
 
 const FormDatePicker = (props: Props) => {
-  const { formik, name, width, label, initialDate, useTouched = true } = props;
+  const { formik, name, width, label, initialDate, useTouched = true, placeholder } = props;
 
   const getPickerBorder = () => {
     if (
@@ -35,7 +36,7 @@ const FormDatePicker = (props: Props) => {
               height: '3.1rem',
               borderRadius: '10px',
               '&.Mui-focused fieldset': {
-                border: '1px solid black',
+                border: '1px solid gray',
               },
               '&.Mui-focused': {
                 color: 'black',
@@ -58,7 +59,7 @@ const FormDatePicker = (props: Props) => {
               transform: 'translate(0, 60%) scale(1)',
             },
           }}
-          label={label ? label : null}
+          label={placeholder ? placeholder : null}
           format="DD/MM/YYYY"
           value={formik.values[props.name] ? dayjs(formik.values[name]) : null}
           onChange={(newValue) => {

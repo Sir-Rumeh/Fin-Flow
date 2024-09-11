@@ -78,7 +78,7 @@ const TableFilter = ({
               closeCard={closeFilterCard}
               scale="80%"
             >
-              <div className="relative h-auto flex-col overflow-y-hidden p-6 lg:pb-12">
+              <div className="relative h-auto flex-col overflow-y-hidden px-6 pt-4 lg:pb-10">
                 <div className="flex w-full items-center justify-between">
                   <h3 className="text-lg font-bold">Filter By</h3>
                   <button
@@ -96,7 +96,7 @@ const TableFilter = ({
                   </button>
                 </div>
 
-                <div className="mt-6">
+                <div className="mt-4">
                   <h3 className="font-bold">Date</h3>
                   <div className="relative mt-2 flex w-full flex-col justify-between gap-4 overflow-hidden sm:flex-row sm:items-center">
                     <div className="mt-2">
