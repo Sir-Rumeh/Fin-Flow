@@ -29,7 +29,7 @@ const TextAreaComponent: React.FC<TextAreaProps> = ({ label, value, onChange, em
   return (
     <>
       <textarea
-        className="focus:shadow-outline-purple w-full rounded-xl rounded-br-none border border-purplePrimary bg-white p-3 font-sans text-sm font-normal leading-5 hover:border-purple-500 focus:border-purple-500 focus-visible:outline-0 xl:h-[5.5rem]"
+        className="focus:shadow-outline-purple w-full rounded-xl rounded-br-none border border-purplePrimary bg-white p-3 font-gotham text-sm font-normal leading-5 hover:border-purple-500 focus:border-purple-500 focus-visible:outline-0 xl:h-[5.5rem]"
         ref={textAreaRef}
         onChange={handleInputChange}
         placeholder={label}

@@ -2,6 +2,7 @@ import { DataGrid, gridClasses } from '@mui/x-data-grid';
 import TableLogo from 'assets/images/table_logo.png';
 import { useState } from 'react';
 import { useMediaQuery } from '@mui/material';
+import 'assets/fonts/Gotham.css';
 
 interface CustomTableProps {
   tableData: any;

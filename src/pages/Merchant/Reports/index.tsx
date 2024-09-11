@@ -41,7 +41,7 @@ const style = {
   borderRadius: '10px',
   boxShadow: 10,
   p: 4,
-  fontFamily: 'sans-serif',
+  // fontFamily: 'sans-serif',
 };
 
 const Reports = () => {

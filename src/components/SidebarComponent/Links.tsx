@@ -80,7 +80,7 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
                       : 'text-white'
                   } w-full rounded-md px-3 py-2 pl-6 opacity-[100%] hover:bg-yellowPrimary hover:text-black`}
                 >
-                  <p className="z-[999]">{childRoute.name}</p>
+                  <p className="z-[999] text-sm 3xl:text-base">{childRoute.name}</p>
                 </Link>
               );
             })}
@@ -129,7 +129,7 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
                     {route.icon ? route.icon : <ArrowDownIcon />}{' '}
                   </span>
                   <p
-                    className={`leading-1 ml-4 flex ${
+                    className={`leading-1 ml-4 flex text-sm 3xl:text-base ${
                       isRouteActive ? 'font-semibold text-white' : 'font-normal text-white'
                     }`}
                   >
