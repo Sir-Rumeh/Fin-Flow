@@ -18,6 +18,7 @@ import { Typography, useMediaQuery } from '@mui/material';
 import CustomInput from 'components/FormElements/CustomInput';
 import FormDatePicker from 'components/FormElements/FormDatePicker';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
+import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 
 const AuditTrail = () => {
   const navigate = useNavigate();
@@ -181,7 +182,23 @@ const AuditTrail = () => {
             </div>
             <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
           </Typography>
-          <div className="mt-2"></div>
+          <Typography id="modal-modal-description">
+            <div className="mt-5 rounded-xl bg-white">
+              <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+                <div className="flex items-center justify-between">
+                  <p className="my-3 text-lg font-semibold">Log Details</p>
+                </div>
+                <div className="h-[2px] w-full bg-grayPrimary"></div>
+                <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[30px]">
+                  <DetailsCard title="Reference" content="12345" />
+                  <DetailsCard title="Account Name" content="John Wick" />
+                  <DetailsCard title="Affected Module" content="Account Management" />
+                  <DetailsCard title="Performed Action" content="Disable Account" />
+                  <DetailsCard title="Date Performed" content="12/12/2024 - 03:00pm" />
+                </div>
+              </div>
+            </div>
+          </Typography>
         </CustomModal>
       )}
     </>
