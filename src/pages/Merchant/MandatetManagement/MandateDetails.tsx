@@ -36,7 +36,7 @@ const style = {
   borderRadius: '10px',
   boxShadow: 24,
   p: 4,
-  fontFamily: 'sans-serif',
+  // fontFamily: 'sans-serif',
 };
 
 const MandateDetails = () => {

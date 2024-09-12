@@ -15,6 +15,7 @@ import ApprovedIcon from 'assets/icons/ApprovedIcon';
 import DashboardCard from 'components/common/DashboardCards/DashboardCard';
 import SubTitleIconGreen from 'assets/icons/SubTitleIconGreen';
 import SubTitleIconYellow from 'assets/icons/SubTitleIconYellow';
+import CustomInput from 'components/FormElements/CustomInput';
 
 const MerchantDisableRequestDetails = () => {
   const navigate = useNavigate();
@@ -191,23 +192,14 @@ const MerchantDisableRequestDetails = () => {
             'You are about to reject this disable merchant request, would you want to proceed with this?'
           }
           feedback={
-            <div className="w-full px-9">
-              <FormInput
-                id="reasonForRejection"
-                name={'reasonForRejection'}
-                placeholder={'Reason For Rejection'}
-                label={'Reason For Rejection'}
-                height={'3rem'}
-                value={formik.values.reasonForRejection}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.reasonForRejection && Boolean(formik.errors.reasonForRejection)
-                }
-                helperText={
-                  formik.touched.reasonForRejection && formik.errors.reasonForRejection
-                    ? formik.errors.reasonForRejection
-                    : ''
-                }
+            <div className="w-full md:col-span-1">
+              <CustomInput
+                labelFor="reasonForRejection"
+                label="Reason For Rejection"
+                inputType="text"
+                placeholder="Type here"
+                maxW="w-full"
+                formik={formik}
               />
             </div>
           }

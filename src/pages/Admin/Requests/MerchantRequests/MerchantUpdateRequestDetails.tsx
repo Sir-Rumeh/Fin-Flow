@@ -12,6 +12,7 @@ import FormInput from 'components/FormElements/FormInput';
 import { useFormik } from 'formik';
 import { reasonForRejectionSchema } from 'utils/formValidators';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
+import CustomInput from 'components/FormElements/CustomInput';
 
 const MerchantUpdateRequestDetails = () => {
   const navigate = useNavigate();
@@ -169,23 +170,14 @@ const MerchantUpdateRequestDetails = () => {
             'You are about to reject this merchant update request, would you want to proceed with this?'
           }
           feedback={
-            <div className="w-full px-9">
-              <FormInput
-                id="reasonForRejection"
-                name={'reasonForRejection'}
-                placeholder={'Reason For Rejection'}
-                label={'Reason For Rejection'}
-                height={'3rem'}
-                value={formik.values.reasonForRejection}
-                onChange={formik.handleChange}
-                error={
-                  formik.touched.reasonForRejection && Boolean(formik.errors.reasonForRejection)
-                }
-                helperText={
-                  formik.touched.reasonForRejection && formik.errors.reasonForRejection
-                    ? formik.errors.reasonForRejection
-                    : ''
-                }
+            <div className="w-full md:col-span-1">
+              <CustomInput
+                labelFor="reasonForRejection"
+                label="Reason For Rejection"
+                inputType="text"
+                placeholder="Type here"
+                maxW="w-full"
+                formik={formik}
               />
             </div>
           }

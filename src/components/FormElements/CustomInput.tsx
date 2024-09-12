@@ -35,14 +35,12 @@ const CustomInput = ({
         {label}
       </label>
       <div
-        className={`${!formik?.errors[labelFor] && 'hover:border-black'} ${containerStyles} ${!containerStyles && `${defaultContainerStyles} ${maxW} `} ${
+        className={`${!formik?.errors[labelFor] && ''} ${containerStyles} ${!containerStyles && `${defaultContainerStyles} ${maxW} `} ${
           useTouched && formik?.touched[labelFor] && formik?.errors[labelFor]
             ? 'border-red-400'
             : ''
         } ${
-          useTouched && !formik?.touched[labelFor] && formik?.errors[labelFor]
-            ? 'hover:border-black'
-            : ''
+          useTouched && !formik?.touched[labelFor] && formik?.errors[labelFor] ? '' : ''
         } ${!useTouched && formik?.errors[labelFor] ? 'border-red-400' : ''} `}
       >
         <input

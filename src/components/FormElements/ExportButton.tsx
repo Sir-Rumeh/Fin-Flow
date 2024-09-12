@@ -33,6 +33,7 @@ const ExportBUtton = (props: Props) => {
               color="#5C068C"
               border={1}
               customPaddingX="1.3rem"
+              fontWeight={600}
             />
           }
           translationX={8}

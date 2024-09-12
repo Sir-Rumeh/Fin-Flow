@@ -14,6 +14,7 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
+import { Button } from '@mui/material';
 
 const MerchantManagement = () => {
   const printPdfRef = useRef(null);
@@ -121,10 +122,10 @@ const MerchantManagement = () => {
             <CustomPopover
               popoverId={params?.row.id}
               buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-40}
-              translationY={50}
+              translationX={-15}
+              translationY={45}
             >
-              <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
+              <div className="flex flex-col rounded-md p-1">
                 <button
                   onClick={() =>
                     navigate({
@@ -240,7 +241,7 @@ const MerchantManagement = () => {
                 <CustomTable
                   tableData={muiDashboardMerchantsList}
                   columns={columns}
-                  rowCount={20}
+                  rowCount={74}
                 />
               </div>
             </div>

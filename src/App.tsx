@@ -4,6 +4,7 @@ import { ThemeProvider } from '@mui/system';
 import { theme } from './theme';
 import { LocalizationProvider } from '@mui/x-date-pickers';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import 'assets/fonts/Gotham.css';
 const ApplicationRoutes = lazy(() => import('./routes'));
 
 function App() {

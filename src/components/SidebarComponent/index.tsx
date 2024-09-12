@@ -16,7 +16,7 @@ const Sidebar = (props: {
   const { open, onClose, userRole } = props;
   return (
     <div
-      className={`sm:none font-circular-std duration-175 linear fixed !z-50 flex min-h-full flex-col bg-purplePrimary shadow-2xl shadow-white/5 transition-all md:!z-50 lg:!z-50 lg:w-[20vw] xl:!z-0 ${
+      className={`sm:none font-circular-std duration-175 linear fixed !z-50 flex min-h-full flex-col bg-purplePrimary shadow-2xl shadow-white/5 transition-all md:!z-50 md:w-[20vw] lg:!z-50 xl:!z-0 ${
         open ? 'translate-x-0' : '-translate-x-96'
       }`}
     >
@@ -49,7 +49,7 @@ const Sidebar = (props: {
               <span className="font-medium text-white">
                 <SignoutIcon />
               </span>
-              <p className="md:font-lg ml-4 font-medium text-[#DC2626]">Sign Out</p>
+              <p className="md:font-lg ml-4 text-[#DC2626] 3xl:text-lg">Sign Out</p>
             </li>
           </button>
         </ul>

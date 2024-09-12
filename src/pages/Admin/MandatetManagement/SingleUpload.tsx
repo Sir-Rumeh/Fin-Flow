@@ -131,10 +131,20 @@ const SingleUpload = () => {
                 />
               </div>
               <div className="w-full md:col-span-1">
-                <FormDatePicker name={'startDate'} formik={formik} label="Start Date" />
+                <FormDatePicker
+                  name={'startDate'}
+                  formik={formik}
+                  label="Start Date"
+                  placeholder="Select date"
+                />
               </div>
               <div className="w-full md:col-span-1">
-                <FormDatePicker name={'endDate'} formik={formik} label="End Date" />
+                <FormDatePicker
+                  name={'endDate'}
+                  formik={formik}
+                  label="End Date"
+                  placeholder="Select date"
+                />
               </div>
               <div className="md:col-span-1">
                 <FormSelect
