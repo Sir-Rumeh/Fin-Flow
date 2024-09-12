@@ -410,7 +410,7 @@ const MandatetManagement = () => {
           </Typography>
           <div className="mt-2">
             <div className="">
-              <div className="flex items-center justify-between">
+              <div className="slide-down flex items-center justify-between">
                 <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10">
                   <CustomTabs
                     tabs={tabsList}
@@ -418,7 +418,7 @@ const MandatetManagement = () => {
                     setActiveTab={setActiveTransactionTab}
                   />
                 </div>
-                <div className="slide-down flexitems-center justify-end">
+                <div className="flexitems-center justify-end">
                   <TableFilter
                     name={'searchTransactionHistory'}
                     placeholder={'Search Transactions'}

@@ -22,7 +22,7 @@ const CustomModal = ({ title, isOpen, setIsOpen, children, width = '700px', padd
     top: '50%',
     left: '50%',
     transform: `translate(-50%, -50%) ${
-      isMobile ? 'scale(0.6)' : isTablet ? 'scale(0.8)' : 'scale(1)'
+      isMobile ? 'scale(0.8)' : isTablet ? 'scale(0.8)' : 'scale(1)'
     }`,
     transition: 'transform 0.3s ease-in-out',
     width: '100%',

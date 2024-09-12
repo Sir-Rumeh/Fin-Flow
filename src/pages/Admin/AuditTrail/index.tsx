@@ -123,22 +123,27 @@ const AuditTrail = () => {
               </div>
               <div className="relative flex w-full items-center gap-4">
                 <span className="absolute bottom-20 font-semibold">Date Range</span>
-                <FormDatePicker
-                  name={'startDate'}
-                  formik={formik}
-                  label="Start Date"
-                  placeholder="DD/MM/YY"
-                  showLabel={false}
-                />
-                <FormDatePicker
-                  name={'endDate'}
-                  formik={formik}
-                  label="End Date"
-                  placeholder="DD/MM/YY"
-                  showLabel={false}
-                />
+                <div className="w-full">
+                  <FormDatePicker
+                    name={'startDate'}
+                    formik={formik}
+                    label="Start Date"
+                    placeholder="DD/MM/YY"
+                    showLabel={false}
+                    width="100%"
+                  />
+                </div>
+                <div className="w-full">
+                  <FormDatePicker
+                    name={'endDate'}
+                    formik={formik}
+                    label="End Date"
+                    placeholder="DD/MM/YY"
+                    showLabel={false}
+                  />
+                </div>
               </div>
-              <div className="mt-2 flex items-end md:justify-end">
+              <div className="mt-2 flex md:justify-end">
                 <ButtonComponent
                   variant="contained"
                   color="white"
@@ -183,18 +188,18 @@ const AuditTrail = () => {
             <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
           </Typography>
           <Typography id="modal-modal-description">
-            <div className="mt-5 rounded-xl bg-white">
-              <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+            <div className="slide-down mt-5 bg-white">
+              <div className="rounded-[12px] border-[3px] border-grayPrimary px-6 py-4">
                 <div className="flex items-center justify-between">
                   <p className="my-3 text-lg font-semibold">Log Details</p>
                 </div>
                 <div className="h-[2px] w-full bg-grayPrimary"></div>
-                <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[30px]">
+                <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-y-[20px]">
                   <DetailsCard title="Reference" content="12345" />
                   <DetailsCard title="Account Name" content="John Wick" />
                   <DetailsCard title="Affected Module" content="Account Management" />
                   <DetailsCard title="Performed Action" content="Disable Account" />
-                  <DetailsCard title="Date Performed" content="12/12/2024 - 03:00pm" />
+                  <DetailsCard title="Date Performed" content="12/12/2024 ; 12:12:12" />
                 </div>
               </div>
             </div>
