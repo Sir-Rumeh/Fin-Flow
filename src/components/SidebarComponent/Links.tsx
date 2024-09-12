@@ -42,7 +42,7 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
                 {route.icon ? route.icon : <ArrowDownIcon />}{' '}
               </span>
               <p
-                className={`leading-1 ml-4 flex ${
+                className={`leading-1 ml-4 flex text-sm 3xl:text-base ${
                   isParentRouteActive ? 'font-semibold text-white' : 'font-normal text-white'
                 }`}
               >
