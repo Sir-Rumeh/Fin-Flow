@@ -51,9 +51,9 @@ const TableFilter = ({
   };
   return (
     <>
-      <div className="flex w-full flex-col items-start gap-x-2 gap-y-3 py-2 md:flex-row md:items-center">
+      <div className="flex w-full items-center gap-2 py-2">
         {showOptionsFilter && (
-          <div className="">
+          <div className="-ml-4 sm:-ml-0">
             <CustomPopover
               popoverId={2}
               buttonIcon={
@@ -146,7 +146,7 @@ const TableFilter = ({
         )}
 
         <form onSubmit={formik.handleSubmit} noValidate>
-          <div className="flex h-[2.67rem] w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-[#a772c4] px-3 py-2">
+          <div className="flex h-[2.67rem] cursor-pointer items-center gap-2 rounded-lg border border-[#a772c4] px-3 py-2 sm:w-[309px]">
             <SearchIcon className="scale-110" />
             <input
               type="text"

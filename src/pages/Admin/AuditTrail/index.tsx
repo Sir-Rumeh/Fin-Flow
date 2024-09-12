@@ -143,7 +143,7 @@ const AuditTrail = () => {
                   />
                 </div>
               </div>
-              <div className="mt-2 flex md:justify-end">
+              <div className="mt-[6px] flex md:justify-end">
                 <ButtonComponent
                   variant="contained"
                   color="white"
@@ -153,7 +153,7 @@ const AuditTrail = () => {
                   title="Continue"
                   customPaddingX="2rem"
                   width={isSmallWidth ? '10rem' : undefined}
-                  height="2.8rem"
+                  height="3rem"
                   onClick={() => {
                     setShowFilteredAudit(true);
                   }}
@@ -164,8 +164,22 @@ const AuditTrail = () => {
 
           {showFilteredAudit && (
             <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
+              <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
+                <h2 className="text-xl font-bold text-lightPurple">Staff Name: Abimbola Adeyemi</h2>
+                <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
+                  <ExportBUtton />
+                </div>
+              </div>
+              <h3 className="mt-2 w-full rounded-tl-xl rounded-tr-xl border px-3 py-4 text-lg font-semibold">
+                Activities between June to July, 2024
+              </h3>
               <div className="w-full">
-                <CustomTable tableData={auditTrailList} columns={columns} rowCount={1003} />
+                <CustomTable
+                  tableData={auditTrailList}
+                  columns={columns}
+                  rowCount={1003}
+                  defaultAnimation={false}
+                />
               </div>
             </div>
           )}

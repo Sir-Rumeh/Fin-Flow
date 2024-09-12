@@ -10,9 +10,15 @@ interface CustomTableProps {
   tableData: any;
   columns: any;
   rowCount: number;
+  defaultAnimation?: boolean;
 }
 
-function CustomTable({ tableData, columns, rowCount }: CustomTableProps): JSX.Element {
+function CustomTable({
+  tableData,
+  columns,
+  rowCount,
+  defaultAnimation = true,
+}: CustomTableProps): JSX.Element {
   const isSmallWidth = useMediaQuery('(max-width:1440px)');
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
@@ -37,7 +43,7 @@ function CustomTable({ tableData, columns, rowCount }: CustomTableProps): JSX.El
   }, [rowCount, paginationSplitPosition]);
 
   return (
-    <div className="slide-down w-full">
+    <div className={`${defaultAnimation ? 'slide-down' : ''} w-full`}>
       {tableData?.length > 0 ? (
         <div className="w-full">
           <DataGrid
@@ -86,7 +92,7 @@ function CustomTable({ tableData, columns, rowCount }: CustomTableProps): JSX.El
               {paginationCountArray?.map((count: number) => {
                 return (
                   <button
-                    className={`flex cursor-pointer items-center rounded-sm border border-gray-300 ${paginationData.pageNumber === count ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
+                    className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData.pageNumber === count ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
                     onClick={() =>
                       setPaginationData((prev) => {
                         return {
@@ -107,7 +113,7 @@ function CustomTable({ tableData, columns, rowCount }: CustomTableProps): JSX.El
               <div className="relative flex items-center justify-evenly gap-x-5">
                 <span className="flex h-full items-end text-2xl">...</span>
                 <button
-                  className={`flex cursor-pointer items-center rounded-sm border border-gray-300 ${paginationData.pageNumber === paginationCount ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
+                  className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData.pageNumber === paginationCount ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
                   onClick={() => {
                     setPaginationData((prev) => {
                       return {
