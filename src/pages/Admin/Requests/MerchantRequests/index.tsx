@@ -177,7 +177,7 @@ const MerchantRequests = () => {
               <CustomTable
                 tableData={pendingDashboardMerchantsList}
                 columns={columns}
-                rowCount={20}
+                rowCount={73}
               />
             </div>
           </div>

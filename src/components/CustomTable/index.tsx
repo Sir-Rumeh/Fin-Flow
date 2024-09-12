@@ -82,7 +82,7 @@ function CustomTable({ tableData, columns, rowCount }: CustomTableProps): JSX.El
             >
               <ChevronLeft />
             </button>
-            <div className="flex w-auto items-center justify-evenly gap-x-5">
+            <div className="no-scrollbar flex w-auto items-center justify-evenly gap-x-5 overflow-x-scroll">
               {paginationCountArray?.map((count: number) => {
                 return (
                   <button
@@ -108,14 +108,20 @@ function CustomTable({ tableData, columns, rowCount }: CustomTableProps): JSX.El
                 <span className="flex h-full items-end text-2xl">...</span>
                 <button
                   className={`flex cursor-pointer items-center rounded-sm border border-gray-300 ${paginationData.pageNumber === paginationCount ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
-                  onClick={() =>
+                  onClick={() => {
                     setPaginationData((prev) => {
                       return {
                         ...prev,
                         pageNumber: paginationCount,
                       };
-                    })
-                  }
+                    });
+                    setPaginationSplitPosition((prev) => {
+                      return {
+                        x1: paginationCount - 5,
+                        x2: 5,
+                      };
+                    });
+                  }}
                 >
                   {paginationCount}
                 </button>

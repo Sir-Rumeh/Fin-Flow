@@ -25,14 +25,14 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
         onClick={() => {
           setIsChildrenOpen(!isChildrenOpen);
         }}
-        className={`${isChildrenOpen ? '' : 'mb-3'} ${
+        className={`flex px-2 py-3 ${isChildrenOpen ? '' : 'mb-3'} ${
           isParentRouteActive
-            ? 'fade-in-right relative flex border-r-[5px] border-yellowPrimary bg-[linear-gradient(89.92deg,_#60088C_0.07%,_#A11E90_92.22%)] px-2 py-3 hover:cursor-pointer'
-            : 'relative flex px-2 py-3 hover:cursor-pointer hover:bg-[#69397a]'
+            ? 'fade-in-right relative border-r-[5px] border-yellowPrimary bg-[linear-gradient(89.92deg,_#60088C_0.07%,_#A11E90_92.22%)] hover:cursor-pointer'
+            : 'relative hover:cursor-pointer hover:bg-[#69397a]'
         }`}
       >
         <div className="w-full">
-          <div className="my-[3px] flex cursor-pointer items-center justify-between px-5">
+          <div className="my-[3px] flex cursor-pointer items-center justify-between px-3 2xl:px-6">
             <div className="flex items-center">
               <span
                 className={`${
@@ -114,13 +114,13 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
           return (
             <Link key={route.layout + route.path} to={route.layout + '/' + route.path}>
               <div
-                className={`${
+                className={`mb-3 flex px-2 py-3 ${
                   isRouteActive
-                    ? 'fade-in-right relative mb-3 flex border-r-[5px] border-yellowPrimary bg-[linear-gradient(89.92deg,_#60088C_0.07%,_#A11E90_92.22%)] px-2 py-3 hover:cursor-pointer'
-                    : 'relative mb-3 flex px-2 py-3 hover:cursor-pointer hover:bg-[#69397a]'
+                    ? 'fade-in-right relative border-r-[5px] border-yellowPrimary bg-[linear-gradient(89.92deg,_#60088C_0.07%,_#A11E90_92.22%)] hover:cursor-pointer'
+                    : 'relative hover:cursor-pointer hover:bg-[#69397a]'
                 }`}
               >
-                <li className="my-[3px] flex cursor-pointer items-center px-5">
+                <li className="my-[3px] flex cursor-pointer items-center px-3 2xl:px-6">
                   <span
                     className={`${
                       isRouteActive ? 'font-bold text-white' : 'font-medium text-white'

@@ -26,7 +26,7 @@ const Sidebar = (props: {
       >
         <WhiteClose className="" />
       </span>
-      <div className={`mx-[25px] mt-[25px] flex items-center`}>
+      <div className={`mt-[25px] flex w-full items-center px-5 2xl:px-8`}>
         <div className="flex w-full items-center pr-6">
           <FcmbIcon />
           <p className="pl-4 text-base font-medium text-white">Easy Pay</p>

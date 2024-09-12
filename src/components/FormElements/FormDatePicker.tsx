@@ -11,10 +11,20 @@ interface Props {
   placeholder?: string;
   initialDate?: string;
   useTouched?: boolean;
+  showLabel?: boolean;
 }
 
 const FormDatePicker = (props: Props) => {
-  const { formik, name, width, label, initialDate, useTouched = true, placeholder } = props;
+  const {
+    formik,
+    name,
+    width,
+    label,
+    initialDate,
+    useTouched = true,
+    placeholder,
+    showLabel = true,
+  } = props;
 
   const getPickerBorder = () => {
     if (
@@ -27,7 +37,7 @@ const FormDatePicker = (props: Props) => {
   return (
     <>
       <div className="relative mb-4 mt-6 flex flex-col gap-2">
-        <label className="absolute bottom-16 font-semibold">{label}</label>
+        {showLabel && <label className="absolute bottom-16 font-semibold">{label}</label>}
         <DatePicker
           sx={{
             width: width ? width : '100%',

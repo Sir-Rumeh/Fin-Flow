@@ -370,7 +370,7 @@ const MandateDetails = () => {
         >
           <Typography id="modal-modal-title" variant="h6" component="h2">
             <div className="flex items-center justify-between">
-              <h1 className="text-xl">Transaction History Details</h1>
+              <h1 className="text-xl font-semibold">Transaction History Details</h1>
               <button className="scale-[110%]" onClick={() => closeModal('openTransactionHistory')}>
                 <CloseIcon />
               </button>
@@ -408,7 +408,7 @@ const MandateDetails = () => {
                 <CustomTable
                   tableData={transactionHistory}
                   columns={transactionsTableColumn}
-                  rowCount={20}
+                  rowCount={73}
                 />
               </div>
             </div>
@@ -425,7 +425,7 @@ const MandateDetails = () => {
         >
           <Typography id="modal-modal-title" variant="h6" component="h2">
             <div className="slide-down flex items-center justify-between">
-              <h1 className="text-xl">Modify Mandate Details</h1>
+              <h1 className="text-xl font-semibold">Modify Mandate Details</h1>
               <button className="scale-[110%]" onClick={() => closeModal('editMandate')}>
                 <CloseIcon />
               </button>

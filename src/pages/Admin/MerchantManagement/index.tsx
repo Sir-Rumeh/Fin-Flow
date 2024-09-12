@@ -14,7 +14,7 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
-import { Button } from '@mui/material';
+import { Button, useMediaQuery } from '@mui/material';
 
 const MerchantManagement = () => {
   const printPdfRef = useRef(null);
@@ -183,6 +183,8 @@ const MerchantManagement = () => {
     },
   ];
 
+  const isSmallWidth = useMediaQuery('(max-width:370px)');
+
   return (
     <>
       <section className="p-2 md:p-4">
@@ -199,6 +201,7 @@ const MerchantManagement = () => {
               type="button"
               title="Onboard Merchant"
               customPaddingX="1.4rem"
+              width={isSmallWidth ? '10rem' : undefined}
               onClick={() => {
                 navigate({
                   pathname: `/${appRoutes.adminDashboard.merchantManagement.createMerchant}`,
@@ -209,13 +212,13 @@ const MerchantManagement = () => {
         </div>
         <div className="mt-5">
           <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-4">
-            <div className="flex w-full flex-col items-center justify-between gap-y-4 border-b pb-3 lg:flex-row">
+            <div className="flex w-full flex-col gap-y-4 border-b pb-3 lg:flex-row lg:items-center">
               <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-start">
                 <div className="">
                   <TableFilter
-                    name={'searchMerchantName'}
-                    placeholder={'Search Merchant Name'}
-                    label={'Search Merchant'}
+                    name={'searchMandate'}
+                    placeholder={'Search Mandate'}
+                    label={'Search Mandate'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
                     handleOptionsFilter={() => {}}
@@ -226,13 +229,8 @@ const MerchantManagement = () => {
                   />
                 </div>
               </div>
-              <div className="flex w-full items-center justify-end gap-8 lg:w-[50%]">
-                <ExportBUtton
-                  fileName="Merchants List.csv"
-                  data={muiDashboardMerchantsList}
-                  headers={headers}
-                  printPdfRef={printPdfRef}
-                />
+              <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
+                <ExportBUtton />
               </div>
             </div>
 

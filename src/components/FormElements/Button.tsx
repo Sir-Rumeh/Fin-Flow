@@ -27,7 +27,6 @@ type Props = {
 };
 
 const ButtonComponent = (props: Props) => {
-  const isSmallWidth = useMediaQuery('(max-width:1440px)');
   return (
     <div
       className={`flex h-full flex-col items-center justify-center ${props.customClass} scale-75 sm:scale-[80%] md:scale-100`}

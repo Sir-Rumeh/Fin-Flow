@@ -14,10 +14,11 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
+import { useMediaQuery } from '@mui/material';
 
 const AccountManagement = () => {
-  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const navigate = useNavigate();
   const [modals, setModals] = useState({
     confirmDisable: false,
     disableSuccessful: false,
@@ -173,6 +174,8 @@ const AccountManagement = () => {
     },
   ];
 
+  const isSmallWidth = useMediaQuery('(max-width:370px)');
+
   return (
     <>
       <section className="p-2 md:p-4">
@@ -189,6 +192,7 @@ const AccountManagement = () => {
               type="button"
               title="Add New Account"
               customPaddingX="1.4rem"
+              width={isSmallWidth ? '10rem' : undefined}
               onClick={() => {
                 navigate({
                   pathname: `/${appRoutes.adminDashboard.accountManagement.createAccount}`,
@@ -199,13 +203,13 @@ const AccountManagement = () => {
         </div>
         <div className="mt-5">
           <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-4">
-            <div className="flex w-full flex-col items-center justify-between gap-y-4 border-b pb-3 lg:flex-row">
+            <div className="flex w-full flex-col gap-y-4 border-b pb-3 lg:flex-row lg:items-center">
               <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-start">
                 <div className="">
                   <TableFilter
-                    name={'searchAccount'}
-                    placeholder={'Search Account'}
-                    label={'Search Account'}
+                    name={'searchMandate'}
+                    placeholder={'Search Mandate'}
+                    label={'Search Mandate'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
                     handleOptionsFilter={() => {}}
@@ -216,14 +220,14 @@ const AccountManagement = () => {
                   />
                 </div>
               </div>
-              <div className="flex w-full items-center justify-end gap-8 lg:w-[50%]">
+              <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
                 <ExportBUtton />
               </div>
             </div>
 
             <div className="mt-6 w-full">
               <div className="w-full">
-                <CustomTable tableData={accountRequestsList} columns={columns} rowCount={20} />
+                <CustomTable tableData={accountRequestsList} columns={columns} rowCount={73} />
               </div>
             </div>
           </div>
