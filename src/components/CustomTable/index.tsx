@@ -154,10 +154,7 @@ function CustomTable({
             <button
               className="cursor-pointer"
               onClick={() => {
-                if (
-                  paginationSplitPosition.x1 + 5 <= paginationCount &&
-                  paginationSplitPosition.x2 + 5 <= paginationCount
-                ) {
+                if (paginationSplitPosition.x1 + 5 <= paginationCount) {
                   setPaginationSplitPosition((prev) => {
                     return {
                       x1: prev.x1 + 5,
