@@ -1,7 +1,5 @@
 import type { Dispatch, SetStateAction } from 'react';
-import CloseIcon from 'assets/icons/CloseIcon';
 import Box from '@mui/material/Box';
-import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { useMediaQuery } from '@mui/material';
 
@@ -33,7 +31,8 @@ const CustomModal = ({ title, isOpen, setIsOpen, children, width = '700px', padd
     borderRadius: '1rem',
     boxShadow: 24,
     px: paddingX ? paddingX : 5,
-    py: 6,
+    pt: 6,
+    pb: 5,
   };
   const handleClose = () => setIsOpen(false);
   return (

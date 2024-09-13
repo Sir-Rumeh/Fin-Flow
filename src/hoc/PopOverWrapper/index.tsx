@@ -12,6 +12,8 @@ interface Props {
   closeOnClick?: boolean;
   closeCard?: boolean;
   cardWidth?: string;
+  customPaddingX?: number | string;
+  scale?: string;
 }
 
 const CustomPopover = ({
@@ -24,10 +26,14 @@ const CustomPopover = ({
   closeOnClick = true,
   closeCard,
   cardWidth,
+  customPaddingX,
+  scale,
 }: Props) => {
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | HTMLDivElement | null>(null);
 
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleClick = (
+    event: React.MouseEvent<HTMLButtonElement> | React.MouseEvent<HTMLDivElement>,
+  ) => {
     setAnchorEl(event.currentTarget);
   };
 
@@ -43,8 +49,18 @@ const CustomPopover = ({
   }, [closeCard]);
 
   return (
-    <div className="">
-      <Button aria-describedby={id} onClick={handleClick} className="w-full normal-case">
+    <div className="relative h-full w-full">
+      <Button
+        sx={{
+          width: '100%',
+          fontFamily: " 'Gotham', sans-serif ",
+          paddingLeft: customPaddingX ? customPaddingX : undefined,
+          paddingRight: customPaddingX ? customPaddingX : undefined,
+        }}
+        aria-describedby={id}
+        onClick={handleClick}
+        className="w-full normal-case"
+      >
         {buttonIcon}
       </Button>
       <Popover
@@ -69,11 +85,12 @@ const CustomPopover = ({
               borderRadius: `${borderRadius ? borderRadius : ''}`,
               display: `${!children ? 'none' : 'block'}`,
               width: `${cardWidth ? cardWidth : 'auto'}`,
+              scale: scale ? scale : undefined,
             },
           },
         }}
       >
-        <div className="rounded-full">{children}</div>
+        <div className="rounded-full text-xs">{children}</div>
       </Popover>
     </div>
   );

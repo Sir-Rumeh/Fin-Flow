@@ -15,9 +15,14 @@ import { useTabContext } from '../../../context/TabContext';
 import { RequestType } from 'utils/enums';
 import Tab from 'components/Tabs';
 import CustomTable from 'components/CustomTable';
+import ButtonComponent from 'components/FormElements/Button';
+import TableFilter from 'components/TableFilter';
+import { useState } from 'react';
+import { useFormik } from 'formik';
 
 const MandateRequests = () => {
   const { tab, setTab } = useTabContext();
+  const [searchTerm, setSearchTerm] = useState('');
 
   const MandateTableColumn: GridColDef[] = [
     {
@@ -64,13 +69,13 @@ const MandateRequests = () => {
 
         switch (params.value) {
           case RequestType.Creation:
-            return renderIcon(CreationRequestIcon, 'text-greenPrimary');
+            return renderIcon(CreationRequestIcon, 'text-greenPrimary font-semibold');
           case RequestType.Update:
-            return renderIcon(UpdateRequestIcon, 'text-lightPurple');
+            return renderIcon(UpdateRequestIcon, 'text-lightPurple font-semibold');
           case RequestType.Disable:
-            return renderIcon(DisableRequestIcon, 'text-yellowNeutral');
+            return renderIcon(DisableRequestIcon, 'text-yellowNeutral font-semibold');
           case RequestType.Deletion:
-            return renderIcon(DeleteRequestIcon, 'text-redSecondary');
+            return renderIcon(DeleteRequestIcon, 'text-redSecondary font-semibold');
           default:
             return <span>{params.value}</span>;
         }
@@ -104,7 +109,7 @@ const MandateRequests = () => {
         if (!route) return <span>View Details</span>;
 
         return (
-          <Link to={`/${route}`} className="cursor-pointer font-medium text-lightPurple">
+          <Link to={`/${route}`} className="cursor-pointer font-semibold text-lightPurple">
             View Details
           </Link>
         );
@@ -124,6 +129,18 @@ const MandateRequests = () => {
         return [];
     }
   };
+
+  const formik = useFormik({
+    initialValues: {
+      searchMerchantName: '',
+      fromDateFilter: '',
+      toDateFilter: '',
+      statusFilter: '',
+    },
+    onSubmit: (values) => {
+      setSearchTerm('');
+    },
+  });
 
   return (
     <>
@@ -154,19 +171,19 @@ const MandateRequests = () => {
                 inactiveColor="text-red-500"
               />
             </div>
-            <div className="flex items-center gap-3">
-              <button className="flex cursor-pointer items-center gap-3 rounded-lg border border-lightPurple px-4 py-2 text-lightPurple">
-                <p>Filter by</p>
-                <FilterIcon />
-              </button>
-              <div className="flex w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2">
-                <SearchIcon />
-                <input
-                  type="text"
-                  className="w-full border-none focus:border-none focus:outline-none"
-                  placeholder="Search"
-                />
-              </div>
+            <div className="">
+              <TableFilter
+                name={'searchMerchantName'}
+                placeholder={'Search Merchant Name'}
+                label={'Search Merchant'}
+                value={searchTerm}
+                setSearch={setSearchTerm}
+                handleOptionsFilter={() => {}}
+                formik={formik}
+                fromDateName={'fromDateFilter'}
+                toDateName={'toDateFilter'}
+                selectName={'statusFilter'}
+              />
             </div>
           </div>
           <div className="mt-4 h-[2px] w-full bg-grayPrimary"></div>

@@ -1,5 +1,5 @@
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import TableFilter from 'components/TableFilter';
 import CustomTable from 'components/CustomTable';
 import appRoutes from 'utils/constants/routes';
@@ -14,8 +14,10 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
+import { Button } from '@mui/material';
 
 const MerchantManagement = () => {
+  const printPdfRef = useRef(null);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [modals, setModals] = useState({
@@ -46,6 +48,14 @@ const MerchantManagement = () => {
       setSearchTerm('');
     },
   });
+
+  const headers = [
+    { label: 'Merchant ID', key: 'id' },
+    { label: 'Merchant Name', key: 'merchantName' },
+    { label: 'CIF Number', key: 'cif' },
+    { label: 'Status', key: 'status' },
+    { label: 'Date Requested', key: 'dateRequested' },
+  ];
 
   const columns: GridColDef[] = [
     {
@@ -104,6 +114,7 @@ const MerchantManagement = () => {
     {
       field: 'actions',
       headerName: 'Action',
+      width: 110,
       headerClassName: 'ag-thead ',
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
@@ -112,10 +123,10 @@ const MerchantManagement = () => {
             <CustomPopover
               popoverId={params?.row.id}
               buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-40}
-              translationY={50}
+              translationX={-15}
+              translationY={45}
             >
-              <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
+              <div className="flex flex-col rounded-md p-1">
                 <button
                   onClick={() =>
                     navigate({
@@ -217,16 +228,21 @@ const MerchantManagement = () => {
                 </div>
               </div>
               <div className="flex w-full items-center justify-end gap-8 lg:w-[50%]">
-                <ExportBUtton />
+                <ExportBUtton
+                  fileName="Merchants List.csv"
+                  data={muiDashboardMerchantsList}
+                  headers={headers}
+                  printPdfRef={printPdfRef}
+                />
               </div>
             </div>
 
             <div className="mt-6 w-full">
-              <div className="w-full">
+              <div ref={printPdfRef} className="w-full">
                 <CustomTable
                   tableData={muiDashboardMerchantsList}
                   columns={columns}
-                  rowCount={20}
+                  rowCount={74}
                 />
               </div>
             </div>

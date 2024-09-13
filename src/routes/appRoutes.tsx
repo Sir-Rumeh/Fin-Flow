@@ -43,9 +43,12 @@ import CreateMerchant from 'pages/Admin/MerchantManagement/CreateMerchant';
 import UserDetails from 'pages/Merchant/UserManagement/UserDetails';
 import UserIcon from 'assets/icons/UserIcon';
 import StaffUserManagement from 'pages/Admin/StaffUserManagement';
-import ProfileDetails from 'pages/Admin/ProfileManagement/ProfileDetails';
-import CreateProfile from 'pages/Admin/ProfileManagement/CreateProfile';
-import EditProfile from 'pages/Admin/ProfileManagement/EditProfile';
+import AdminProfileDetails from 'pages/Admin/ProfileManagement/ProfileDetails';
+import AdminCreateProfile from 'pages/Admin/ProfileManagement/CreateProfile';
+import AdminEditProfile from 'pages/Admin/ProfileManagement/EditProfile';
+import AdminAccountDetails from 'pages/Admin/AccountManagement/AccountDetails';
+import AdminCreateAccount from 'pages/Admin/AccountManagement/CreateAccount';
+import AdminEditAccount from 'pages/Admin/AccountManagement/EditAccount';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -89,14 +92,14 @@ const adminRoutes: RoutesType[] = [
         component: <MandateRequestsRoutes />,
       },
       {
-        name: 'Account Requests',
-        path: 'accounts/*',
-        component: <AccountRequestsRoutes />,
-      },
-      {
         name: 'Profile Requests',
         path: 'profiles/*',
         component: <ProfileRequestsRoutes />,
+      },
+      {
+        name: 'Account Requests',
+        path: 'accounts/*',
+        component: <AccountRequestsRoutes />,
       },
     ],
   },
@@ -160,17 +163,17 @@ const adminRoutes: RoutesType[] = [
       {
         name: 'Profile Details',
         path: 'profile-details',
-        component: <ProfileDetails />,
+        component: <AdminProfileDetails />,
       },
       {
         name: 'Create Profile',
         path: 'create-profile',
-        component: <CreateProfile />,
+        component: <AdminCreateProfile />,
       },
       {
         name: 'Edit Profile',
         path: 'edit-profile',
-        component: <EditProfile />,
+        component: <AdminEditProfile />,
       },
     ],
   },
@@ -182,6 +185,23 @@ const adminRoutes: RoutesType[] = [
     component: <AdminAccountManagement />,
     rolesWithAccess: [AdminUserRoles.Onboarding],
     willChildLinkShow: false,
+    children: [
+      {
+        name: 'Account Details',
+        path: 'account-details',
+        component: <AdminAccountDetails />,
+      },
+      {
+        name: 'Create Account',
+        path: 'create-account',
+        component: <AdminCreateAccount />,
+      },
+      {
+        name: 'Edit Account',
+        path: 'edit-account',
+        component: <AdminEditAccount />,
+      },
+    ],
   },
   {
     name: 'Audit Trail',

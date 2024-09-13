@@ -4,6 +4,7 @@ import App from './App';
 import './index.css';
 import { TabContextProvider } from './context/TabContext';
 import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

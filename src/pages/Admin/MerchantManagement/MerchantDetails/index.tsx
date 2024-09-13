@@ -87,7 +87,7 @@ const MerchantDetails = () => {
               translationX={8}
               translationY={54}
             >
-              <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
+              <div className="flex w-[8rem] flex-col rounded-md p-1">
                 <button
                   onClick={() =>
                     navigate({

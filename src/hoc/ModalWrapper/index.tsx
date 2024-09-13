@@ -32,16 +32,16 @@ export const ModalWrapper = ({
   return (
     <>
       <CustomModal isOpen={isOpen} setIsOpen={setIsOpen} width={width}>
-        <div className="mb-4 w-full p-1 text-center">
+        <div className="mb-4 w-full p-1 px-6 text-center">
           <div className="mb-6 flex flex-col items-center justify-center gap-y-3">
             {icon}
             <h2 className="text-2xl font-bold">{title}</h2>
           </div>
-          <div className="mb-8 text-xl tracking-wider">{info}</div>
-          <div className="mt-6 w-full">{feedback}</div>
-          <div className="mt-[2.5rem]">
+          <div className="text-xl tracking-wider">{info}</div>
+          {feedback && <div className="mt-20 w-full">{feedback}</div>}
+          <div className="mt-10 w-full">
             {type === 'confirmation' && (
-              <div className="flex items-center justify-center gap-x-5">
+              <div className="flex items-center justify-between gap-x-5">
                 <ButtonComponent
                   color="#5C068C"
                   borderColor="#5C068C"
@@ -50,6 +50,7 @@ export const ModalWrapper = ({
                   height="3rem"
                   onClick={() => setIsOpen(false)}
                   title="No, Cancel"
+                  fontWeight={900}
                 />
                 <ButtonComponent
                   color="white"
@@ -60,6 +61,7 @@ export const ModalWrapper = ({
                   hoverBackgroundColor={hoverBackgroundColor ? hoverBackgroundColor : ''}
                   onClick={proceedAction}
                   title="Yes, Proceed"
+                  fontWeight={900}
                 />
               </div>
             )}
@@ -69,6 +71,7 @@ export const ModalWrapper = ({
                 color="white"
                 type="button"
                 title="Okay"
+                fontWeight={900}
                 onClick={proceedAction}
               />
             )}

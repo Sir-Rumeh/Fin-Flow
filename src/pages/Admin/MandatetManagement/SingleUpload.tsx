@@ -10,6 +10,9 @@ import { useState } from 'react';
 import ChevronDown from 'assets/icons/ChevronDown';
 import { useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
+import CustomFileUpload from 'components/FormElements/CustomFileUpload';
+import { addSingleMandateSchema } from 'utils/formValidators';
+import FormSelect from 'components/FormElements/FormSelect';
 
 const SingleUpload = () => {
   const navigate = useNavigate();
@@ -29,21 +32,28 @@ const SingleUpload = () => {
 
   const formik = useFormik({
     initialValues: {
+      mandateType: '',
+      merchantId: '',
       startDate: '',
       endDate: '',
+      supportingDocument: '',
     },
-    onSubmit: (values: any) => {},
+    validationSchema: addSingleMandateSchema,
+    onSubmit: (values: any) => {
+      openModal('confirmCreate');
+    },
   });
+
+  const dayToApplyOptions = [
+    { value: 'Day 1', label: 'Day 1' },
+    { value: 'Day 2', label: 'Day 2' },
+    { value: 'Day 3', label: 'Day 3' },
+    { value: 'Day 4', label: 'Day 4' },
+  ];
   return (
     <>
       <div className="slide-down mt-5 rounded-lg bg-white px-5 py-10">
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-          }}
-          noValidate
-          className="relative w-full"
-        >
+        <form onSubmit={formik.handleSubmit} noValidate className="relative w-full">
           <div className="">
             <FormContentContainer
               title="Mandate Details"
@@ -53,11 +63,29 @@ const SingleUpload = () => {
                     <p className="font-semibold">Mandate Type:</p>
                     <div className="flex items-center gap-2 rounded-lg bg-lilacPurple px-4 py-3">
                       <div className="flex items-center gap-1">
-                        <input type="radio" className="h-4 w-4" />
+                        <label htmlFor="variable">
+                          <input
+                            type="radio"
+                            className="h-4 w-4"
+                            name="variable"
+                            value={'Variable'}
+                            checked={formik.values.mandateType === 'Variable'}
+                            onChange={() => formik.setFieldValue('mandateType', 'Variable')}
+                          />
+                        </label>
                         <p>Variable</p>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <input type="radio" className="h-4 w-4" />
+                      <div className="ml-2 flex items-center gap-1">
+                        <label htmlFor="variable">
+                          <input
+                            type="radio"
+                            className="h-4 w-4"
+                            name="fixed"
+                            value={'Fixed'}
+                            checked={formik.values.mandateType === 'Fixed'}
+                            onChange={() => formik.setFieldValue('mandateType', 'Fixed')}
+                          />
+                        </label>
                         <p>Fixed</p>
                       </div>
                     </div>
@@ -72,6 +100,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -102,39 +131,43 @@ const SingleUpload = () => {
                 />
               </div>
               <div className="w-full md:col-span-1">
-                <FormDatePicker name={'startDate'} formik={formik} label="Start Date" />
+                <FormDatePicker
+                  name={'startDate'}
+                  formik={formik}
+                  label="Start Date"
+                  placeholder="Select date"
+                />
               </div>
               <div className="w-full md:col-span-1">
-                <FormDatePicker name={'endDate'} formik={formik} label="End Date" />
+                <FormDatePicker
+                  name={'endDate'}
+                  formik={formik}
+                  label="End Date"
+                  placeholder="Select date"
+                />
               </div>
               <div className="md:col-span-1">
-                <CustomInput
-                  maxW="full"
+                <FormSelect
                   labelFor="dayToApply"
                   label="Day to Apply"
-                  inputType="text"
-                  placeholder="Enter here"
-                  icon={<ChevronDown />}
+                  formik={formik}
+                  options={dayToApplyOptions}
                 />
               </div>
               <div className="md:col-span-1">
-                <CustomInput
-                  maxW="full"
+                <FormSelect
                   labelFor="frequency"
                   label="Frequency"
-                  inputType="text"
-                  placeholder="Enter here"
-                  icon={<ChevronDown />}
+                  formik={formik}
+                  options={dayToApplyOptions}
                 />
               </div>
               <div className="md:col-span-1">
-                <CustomInput
-                  maxW="full"
+                <FormSelect
                   labelFor="service"
                   label="Service"
-                  inputType="text"
-                  placeholder="Enter here"
-                  icon={<ChevronDown />}
+                  formik={formik}
+                  options={dayToApplyOptions}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -165,13 +198,10 @@ const SingleUpload = () => {
                 />
               </div>
               <div className="w-full md:col-span-1">
-                <CustomInput
+                <CustomFileUpload
                   labelFor="supportingDocument"
                   label="Upload Supporting Document"
-                  inputType="file"
-                  containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1"
-                  inputStyles="focus:outline-none focus:ring-0"
-                  maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-2">
@@ -344,13 +374,10 @@ const SingleUpload = () => {
                   color="white"
                   backgroundColor="#5C068C"
                   hoverBackgroundColor="#2F0248"
-                  type="button"
+                  type="submit"
                   title="Add Mandate"
                   customPaddingX="1.5rem"
                   width="10rem"
-                  onClick={() => {
-                    openModal('confirmCreate');
-                  }}
                 />
               </div>
             </div>

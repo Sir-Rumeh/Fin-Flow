@@ -1,12 +1,12 @@
-import FormInput from 'components/FormElements/FormInput';
 import ButtonComponent from 'components/FormElements/Button';
 import { Dispatch, SetStateAction, useState } from 'react';
 import CustomPopover from 'hoc/PopOverWrapper';
 import MuiDatePicker from 'components/FormElements/DatePicker';
-import SelectComponent from 'components/FormElements/SelectComponent';
 import { statusDropdownOptions } from 'utils/constants';
 import { FilterIcon } from 'assets/icons';
 import SearchIcon from 'assets/icons/SearchIcon';
+import { useMediaQuery } from '@mui/material';
+import FormSelect from 'components/FormElements/FormSelect';
 
 interface TableFilterProps {
   name: string;
@@ -20,6 +20,8 @@ interface TableFilterProps {
   toDateName: string;
   selectName: string;
   showOptionsFilter?: boolean;
+  translationX?: number;
+  translationY?: number;
 }
 
 const TableFilter = ({
@@ -34,9 +36,13 @@ const TableFilter = ({
   toDateName,
   selectName,
   showOptionsFilter = true,
+  translationX,
+  translationY,
 }: TableFilterProps) => {
   const [closeFilterCard, setCloseFilterCard] = useState(false);
   const [pulse, setPulse] = useState(false);
+  const isSmallWidth = useMediaQuery('(max-width:1440px)');
+  const isMediumWidth = useMediaQuery('(min-width:1024px) and (max-width:1280px)');
 
   const clearFilter = () => {
     formik.setFieldValue(fromDateName, null);
@@ -45,7 +51,7 @@ const TableFilter = ({
   };
   return (
     <>
-      <div className="flex w-full flex-col items-start gap-x-4 gap-y-3 py-2 md:flex-row md:items-center">
+      <div className="flex w-full flex-col items-start gap-x-2 gap-y-3 py-2 md:flex-row md:items-center">
         {showOptionsFilter && (
           <div className="">
             <CustomPopover
@@ -54,23 +60,26 @@ const TableFilter = ({
                 <ButtonComponent
                   title="Filter by"
                   children={
-                    <div className="ml-1">
+                    <div className={`${isSmallWidth ? 'scale-95' : 'scale-100'} ml-1`}>
                       <FilterIcon />
                     </div>
                   }
-                  color="#5C068C"
+                  color="grey"
+                  borderColor="#a772c4"
                   border={1}
-                  customPaddingX="1.3rem"
+                  customPaddingX="1rem"
+                  width={isMediumWidth ? '8rem' : undefined}
                 />
               }
               closeOnClick={false}
-              translationX={8}
-              translationY={56}
+              translationX={translationX ? translationX : 8}
+              translationY={translationY ? translationY : 56}
               borderRadius="1.7rem"
               closeCard={closeFilterCard}
+              scale="80%"
             >
-              <div className="flex-col p-6">
-                <div className="flex items-center justify-between">
+              <div className="relative h-auto flex-col overflow-y-hidden px-6 pt-4 lg:pb-10">
+                <div className="flex w-full items-center justify-between">
                   <h3 className="text-lg font-bold">Filter By</h3>
                   <button
                     type="button"
@@ -81,13 +90,13 @@ const TableFilter = ({
                         setPulse(false);
                       }, 300);
                     }}
-                    className={`${pulse ? 'scale-95 animate-pulse opacity-85 duration-75' : 'scale-100'} rounded-lg px-3 py-1 font-semibold text-[#B42318] hover:bg-[#f8efed]`}
+                    className={`text-lg ${pulse ? 'scale-95 animate-pulse opacity-85 duration-75' : 'scale-100'} rounded-lg px-3 py-1 font-semibold text-[#B42318] hover:bg-[#f8efed]`}
                   >
                     Clear Filter
                   </button>
                 </div>
 
-                <div className="mt-6">
+                <div className="mt-4">
                   <h3 className="font-bold">Date</h3>
                   <div className="relative mt-2 flex w-full flex-col justify-between gap-4 overflow-hidden sm:flex-row sm:items-center">
                     <div className="mt-2">
@@ -99,20 +108,15 @@ const TableFilter = ({
                   </div>
                 </div>
 
-                <div className="mt-6">
-                  <h3 className="font-bold">Status</h3>
-                  <div className="relative mt-2 flex w-full flex-col justify-between gap-4 overflow-hidden sm:flex-row sm:items-center">
-                    <div className="mt-2 w-full">
-                      <SelectComponent
-                        name={selectName}
-                        formik={formik}
-                        options={statusDropdownOptions}
-                        label={formik.values[selectName] ? 'Status' : 'All'}
-                        maxWidth={700}
-                        initialItem=""
-                      />
-                    </div>
-                  </div>
+                <div className="mt-12">
+                  <FormSelect
+                    labelFor={selectName}
+                    label="Status"
+                    formik={formik}
+                    options={statusDropdownOptions}
+                    scrollableOptions
+                    labelFontWeight="font-bold"
+                  />
                 </div>
 
                 <div className="mt-8 flex w-full justify-between sm:items-center sm:gap-4">
@@ -142,16 +146,19 @@ const TableFilter = ({
         )}
 
         <form onSubmit={formik.handleSubmit} noValidate>
-          <FormInput
-            name={name}
-            placeholder={placeholder}
-            label={label}
-            width={'20rem'}
-            height={'2.8rem'}
-            value={value}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
-            startIcon={<SearchIcon />}
-          />
+          <div className="flex h-[2.67rem] w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-[#a772c4] px-3 py-2">
+            <SearchIcon className="scale-110" />
+            <input
+              type="text"
+              className="w-full border-none focus:border-none focus:outline-none"
+              name={name}
+              placeholder={placeholder}
+              width={'20rem'}
+              height={'100%'}
+              value={value}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
+            />
+          </div>
         </form>
       </div>
     </>

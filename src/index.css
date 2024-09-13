@@ -115,6 +115,11 @@ body {
 	}
 }
 
+
+body {
+	font-family: 'Gotham', sans-serif;
+ }
+
 .loader {
 	position: fixed;
 	top: 0;
@@ -228,3 +233,12 @@ body {
 	font-weight: bolder;
   }
 
+
+  .gotham-grid,   .MuiDataGrid-cell, .gotham-grid, .MuiDataGrid-columnHeader{
+	font-family: 'Gotham', sans-serif;
+ }
+
+
+ .hide-pagination .MuiTablePagination-root {
+	display: none;
+ }

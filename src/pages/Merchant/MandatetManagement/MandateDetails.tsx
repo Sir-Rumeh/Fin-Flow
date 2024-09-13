@@ -10,7 +10,6 @@ import {
 } from 'assets/icons';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import ButtonComponent from 'components/FormElements/Button';
-import { BiSearch } from 'react-icons/bi';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import appRoutes from 'utils/constants/routes';
@@ -24,6 +23,7 @@ import { transactionHistory } from 'utils/constants';
 import TableLogo from 'assets/images/table_logo.png';
 import { Popover } from '@mui/material';
 import WhiteArrowDown from 'assets/icons/WhiteArrowDown';
+import SearchIcon from 'assets/icons/SearchIcon';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -36,7 +36,6 @@ const style = {
   borderRadius: '10px',
   boxShadow: 24,
   p: 4,
-  fontFamily: 'sans-serif',
 };
 
 const MandateDetails = () => {
@@ -129,15 +128,15 @@ const MandateDetails = () => {
   return (
     <>
       <div className="px-5 py-5">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-4">
           <Link
             to={`/${appRoutes.merchantDashboard.mandateManagement.index}`}
             className="cursor-pointer text-sm text-darkgray"
           >
             Mandate Management
           </Link>{' '}
-          <ArrowRightIcon style="mt-[2px]" />
-          <span className="text-sm font-medium text-lightPurple">Request Details</span>
+          <ArrowRightIcon style="" />
+          <span className="text-sm font-semibold text-lightPurple">Request Details</span>
         </div>
         <div className="mt-4 flex items-center justify-between">
           <h2 className="mt-3 text-xl font-semibold">Request ID : Req123456</h2>
@@ -148,8 +147,9 @@ const MandateDetails = () => {
             backgroundColor="#5C068C"
             hoverBackgroundColor="#5C067C"
             color="white"
-            width="150px"
+            width="141px"
             height="50px"
+            fontSize="16px"
           />
         </div>
         <div className="mt-5 rounded-lg bg-white px-5 py-10">
@@ -288,7 +288,7 @@ const MandateDetails = () => {
                     />
                   </div>
                   <div className="flex h-[45px] w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2">
-                    <BiSearch className="h-6 w-6" />
+                    <SearchIcon className="h-6 w-6" />
                     <input
                       type="text"
                       className="w-full border-none focus:border-none focus:outline-none"
@@ -356,10 +356,10 @@ const MandateDetails = () => {
                     closeModal('openModifyMandate');
                   }}
                   title="Save"
-                  backgroundColor="#5C068C"
                   color="white"
                   width="200px"
                   height="50px"
+                  hoverBackgroundColor="#5C070C"
                 />
               </div>
             </Typography>
@@ -478,7 +478,7 @@ const MandateDetails = () => {
           horizontal: 'left',
         }}
       >
-        <Typography sx={{ p: 2 }}>
+        <Typography sx={{ p: 2, fontFamily: " 'Gotham', sans-serif " }}>
           <div className="flex w-[8rem] flex-col rounded-md p-1 text-[12px]">
             <button
               type="button"

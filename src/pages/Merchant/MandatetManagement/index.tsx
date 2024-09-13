@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import {
@@ -26,6 +26,10 @@ import Modal from '@mui/material/Modal';
 import Tab from 'components/Tabs';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
+import TableFilter from 'components/TableFilter';
+import { useFormik } from 'formik';
+import ExportBUtton from 'components/FormElements/ExportButton';
+import CustomTable from 'components/CustomTable';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -38,11 +42,12 @@ const style = {
   borderRadius: '10px',
   boxShadow: 24,
   p: 4,
-  fontFamily: 'sans-serif',
+  fontFamily: "'Gotham', sans-serif",
 };
 
 const MandatetManagement = () => {
   const [tab, setTab] = useState(1);
+  const [searchTerm, setSearchTerm] = useState('');
 
   const [modals, setModals] = useState({
     openTransactionHistory: false,
@@ -66,6 +71,18 @@ const MandatetManagement = () => {
   const closeModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
+
+  const formik = useFormik({
+    initialValues: {
+      searchMerchantName: '',
+      fromDateFilter: '',
+      toDateFilter: '',
+      statusFilter: '',
+    },
+    onSubmit: (values) => {
+      setSearchTerm('');
+    },
+  });
 
   const MandateTableColumn: GridColDef[] = [
     {
@@ -114,14 +131,26 @@ const MandatetManagement = () => {
           switch (requestType) {
             case RequestType.Creation:
             case RequestType.Enabled:
-              return { IconComponent: CreationRequestIcon, colorClass: 'text-greenPrimary' };
+              return {
+                IconComponent: CreationRequestIcon,
+                colorClass: 'text-greenPrimary font-semibold',
+              };
             case RequestType.Update:
-              return { IconComponent: UpdateRequestIcon, colorClass: 'text-lightPurple' };
+              return {
+                IconComponent: UpdateRequestIcon,
+                colorClass: 'text-lightPurple font-semibold',
+              };
             case RequestType.Disable:
-              return { IconComponent: DisableRequestIcon, colorClass: 'text-yellowNeutral' };
+              return {
+                IconComponent: DisableRequestIcon,
+                colorClass: 'text-yellowNeutral font-semibold',
+              };
             case RequestType.Deletion:
             case RequestType.Disabled:
-              return { IconComponent: DeleteRequestIcon, colorClass: 'text-redSecondary' };
+              return {
+                IconComponent: DeleteRequestIcon,
+                colorClass: 'text-redSecondary font-semibold',
+              };
             default:
               return null;
           }
@@ -147,8 +176,7 @@ const MandatetManagement = () => {
     {
       field: 'actions',
       headerName: 'Action',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
+      width: 120,
       headerClassName: 'ag-thead ',
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
@@ -171,7 +199,7 @@ const MandatetManagement = () => {
           <div className="h-full border-none">
             <CustomPopover
               popoverId={params?.row.id}
-              buttonIcon={<PopoverTitle title="Actions" />}
+              buttonIcon={<PopoverTitle title="ACTIONS" />}
               translationX={-40}
               translationY={50}
             >
@@ -270,56 +298,31 @@ const MandatetManagement = () => {
             title="Create Mandate"
             backgroundColor="#5C068C"
             color="white"
-            width="200px"
-            height="50px"
+            width="160px"
+            height="42px"
+            fontWeight={600}
           />
         </div>
         <div className="mt-5 rounded-lg bg-white px-5 py-5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <ButtonComponent
-                onClick={() => {}}
-                title="Filter by"
-                children={<FilterIcon styles="ml-3" />}
-                color="#5C068C"
-                border={1}
-                width="150px"
-                height="45px"
-              />
-              <div className="flex h-[45px] w-[150px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2 md:w-[309px]">
-                <SearchIcon />
-                <input
-                  type="text"
-                  className="w-full border-none focus:border-none focus:outline-none"
-                  placeholder="Search"
-                />
-              </div>
-            </div>
-            <ButtonComponent
-              onClick={() => {}}
-              title="Export"
-              children={<DarkArrowDown styles="ml-2" height="20" width="20" />}
-              color="#5C068C"
-              border={1}
-              width="150px"
-              height="45px"
+            <TableFilter
+              name={'searchMerchantName'}
+              placeholder={'Search '}
+              label={'Search Merchant'}
+              value={searchTerm}
+              setSearch={setSearchTerm}
+              handleOptionsFilter={() => {}}
+              formik={formik}
+              fromDateName={'fromDateFilter'}
+              toDateName={'toDateFilter'}
+              selectName={'statusFilter'}
             />
+            <ExportBUtton />
           </div>
           <div className="mt-4 h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-6 w-full">
             {mandateList.length > 0 ? (
-              <DataGrid
-                rows={mandateList}
-                columns={MandateTableColumn}
-                sx={{
-                  border: 0,
-                }}
-                rowHeight={70}
-                columnHeaderHeight={70}
-                disableRowSelectionOnClick
-                disableColumnMenu
-                pagination
-              />
+              <CustomTable tableData={mandateList} columns={MandateTableColumn} rowCount={20} />
             ) : (
               <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
                 <div>
@@ -343,7 +346,7 @@ const MandatetManagement = () => {
           <Box sx={style}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
               <div className="flex items-center justify-between">
-                <h1>Transaction History Details</h1>
+                <h1 className="font-gotham">Transaction History Details</h1>
                 <button onClick={() => closeModal('openTransactionHistory')}>
                   <CloseIcon />
                 </button>
@@ -353,7 +356,7 @@ const MandatetManagement = () => {
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
               <div className="">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center justify-between gap-4 font-gotham">
                     <Tab
                       label="Successful"
                       count={20}
@@ -369,7 +372,7 @@ const MandatetManagement = () => {
                       inactiveColor="text-red-500"
                     />
                   </div>
-                  <div className="flex h-[45px] w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2">
+                  <div className="flex h-[42px] w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2 font-gotham">
                     <SearchIcon />
                     <input
                       type="text"
@@ -381,17 +384,10 @@ const MandatetManagement = () => {
                 <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
                 <div className="mt-6">
                   {transactionHistory.length > 0 ? (
-                    <DataGrid
-                      rows={transactionHistory}
+                    <CustomTable
+                      tableData={transactionHistory}
                       columns={TransactionsTableColumn}
-                      sx={{
-                        border: 0,
-                      }}
-                      rowHeight={70}
-                      columnHeaderHeight={70}
-                      disableRowSelectionOnClick
-                      disableColumnMenu
-                      pagination
+                      rowCount={20}
                     />
                   ) : (
                     <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
@@ -418,7 +414,7 @@ const MandatetManagement = () => {
         >
           <Box sx={style}>
             <Typography id="modal-modal-title" variant="h6" component="h2">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between font-gotham">
                 <h1 className="font-semibold">Modify Mandate Details</h1>
                 <button onClick={() => closeModal('openModifyMandate')}>
                   <CloseIcon />
@@ -427,7 +423,7 @@ const MandatetManagement = () => {
               <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-2 font-gotham">
                 <label htmlFor="modifiedAmount">Modify Amount</label>
                 <input type="text" className="b h-[50px] w-full rounded-lg border px-2" />
               </div>
@@ -440,8 +436,10 @@ const MandatetManagement = () => {
                   title="Save"
                   backgroundColor="#5C068C"
                   color="white"
-                  width="200px"
-                  height="50px"
+                  width="155px"
+                  height="42px"
+                  fontWeight={600}
+                  fontSize="14px"
                 />
               </div>
             </Typography>

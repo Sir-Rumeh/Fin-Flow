@@ -19,7 +19,7 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
   }, [location.pathname]);
 
   return (
-    <>
+    <div key={route.layout + route.path} className="">
       <div
         key={route.layout + route.path}
         onClick={() => {
@@ -42,7 +42,7 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
                 {route.icon ? route.icon : <ArrowDownIcon />}{' '}
               </span>
               <p
-                className={`leading-1 ml-4 flex ${
+                className={`leading-1 ml-4 flex text-sm 3xl:text-base ${
                   isParentRouteActive ? 'font-semibold text-white' : 'font-normal text-white'
                 }`}
               >
@@ -66,7 +66,7 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
       </div>
       {isChildrenOpen && (
         <div className="fade-in-down mb-3 p-1">
-          <div className="mb-3 flex flex-col items-start justify-center gap-y-1 bg-purpleSecondary px-6 pb-4 pt-2">
+          <div className="mb-3 flex flex-col items-start justify-center gap-y-1 bg-purpleSecondary px-3 pb-4 pt-2 2xl:px-6">
             {route.children?.map((childRoute: any) => {
               const isChildRouteActive = activeRoute(childRoute.path.replace('/*', ''));
               const linkTo = `${route.layout}/${route.path}/${childRoute.path.replace('/*', '')}`;
@@ -80,14 +80,14 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
                       : 'text-white'
                   } w-full rounded-md px-3 py-2 pl-6 opacity-[100%] hover:bg-yellowPrimary hover:text-black`}
                 >
-                  <p className="z-[999]">{childRoute.name}</p>
+                  <p className="z-[999] text-sm 3xl:text-base">{childRoute.name}</p>
                 </Link>
               );
             })}
           </div>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
@@ -109,11 +109,7 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
         const conditionToShowNestedLinks =
           route.willChildLinkShow && route.children && route.children.length > 0;
         if (conditionToShowNestedLinks) {
-          return (
-            <>
-              <NestedLink route={route} key={route.layout + route.path + 'nested'} />
-            </>
-          );
+          return <NestedLink route={route} key={route.layout + route.path + 'nested'} />;
         } else {
           return (
             <Link key={route.layout + route.path} to={route.layout + '/' + route.path}>
@@ -133,7 +129,7 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
                     {route.icon ? route.icon : <ArrowDownIcon />}{' '}
                   </span>
                   <p
-                    className={`leading-1 ml-4 flex ${
+                    className={`leading-1 ml-4 flex text-sm 3xl:text-base ${
                       isRouteActive ? 'font-semibold text-white' : 'font-normal text-white'
                     }`}
                   >

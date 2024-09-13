@@ -13,8 +13,8 @@ const MerchantDashboardMandateDetails = () => {
         >
           All Requests
         </Link>
-        <ArrowRightIcon style="mt-[2px]" />
-        <span className="text-sm font-medium text-lightPurple">Request Details</span>
+        <ArrowRightIcon style="" />
+        <span className="text-sm font-semibold text-lightPurple">Request Details</span>
       </div>
       <h2 className="mt-3 text-xl font-semibold">Request ID : Req123456</h2>
       <div className="mt-5 rounded-lg bg-white px-5 py-10">

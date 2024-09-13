@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, useMediaQuery } from '@mui/material';
 import { MouseEvent } from 'react';
 
 type Props = {
@@ -9,6 +9,8 @@ type Props = {
   height?: string;
   border?: number;
   textSize?: number;
+  fontWeight?: number;
+  fontSize?: string;
   borderColor?: string;
   variant?: 'contained' | 'outlined' | 'text';
   type?: 'button' | 'submit' | 'reset';
@@ -26,6 +28,7 @@ type Props = {
 };
 
 const ButtonComponent = (props: Props) => {
+  const isSmallWidth = useMediaQuery('(max-width:1440px)');
   return (
     <div
       className={`flex h-full flex-col items-center justify-center ${props.customClass} scale-75 sm:scale-[80%] md:scale-100`}
@@ -36,9 +39,10 @@ const ButtonComponent = (props: Props) => {
         variant={props.variant}
         type={props.type}
         sx={{
+          fontFamily: " 'Gotham', sans-serif ",
           width: props.width ? props.width : '100%',
-          height: props.height ? props.height : '2.8rem',
-          borderRadius: '6px',
+          height: props.height ? props.height : '2.67rem',
+          borderRadius: '8px',
           color: props.color,
           ':hover': {
             color: props.hoverColor,
@@ -48,10 +52,12 @@ const ButtonComponent = (props: Props) => {
           border: props.border,
           borderColor: props.borderColor,
           textTransform: 'capitalize',
-          fontSize: props.textSize ? props.textSize : 16,
+          // fontSize: props.textSize ? props.textSize : isSmallWidth ? 16 : 16,
+          fontSize: props.fontSize,
+          fontWeight: props.fontWeight ? props.fontWeight : undefined,
           display: 'flex',
           alignContent: props.alignContent ? props.alignContent : 'center',
-          justifyContent: 'flex',
+          justifyContent: 'between',
           rowGap: '2px',
           padding: '5px',
           paddingX: props.customPaddingX ? props.customPaddingX : '8px',

@@ -155,7 +155,7 @@ const MandateDetails = () => {
               translationX={8}
               translationY={54}
             >
-              <div className="flex flex-col rounded-md p-1 text-sm">
+              <div className="flex flex-col rounded-md p-1">
                 <button
                   onClick={() => openModal('openTransactionHistory')}
                   type="button"

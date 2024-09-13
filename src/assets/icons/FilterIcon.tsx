@@ -14,10 +14,10 @@ const FilterIcon = ({ styles }: FilterIconProps) => {
     >
       <path
         d="M4.5 7H19.5M7 12H17M10 17H14"
-        stroke="#5C068C"
-        stroke-width="1.5"
-        stroke-linecap="round"
-        stroke-linejoin="round"
+        stroke="#535353"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
       />
     </svg>
   );

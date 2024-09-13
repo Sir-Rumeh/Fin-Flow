@@ -9,6 +9,7 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
+import FormSelect from 'components/FormElements/FormSelect';
 
 function EditProfile() {
   const navigate = useNavigate();
@@ -32,6 +33,13 @@ function EditProfile() {
       openModal('confirmEdit');
     },
   });
+
+  const dayToApplyOptions = [
+    { value: 'Day 1', label: 'Day 1' },
+    { value: 'Day 2', label: 'Day 2' },
+    { value: 'Day 3', label: 'Day 3' },
+    { value: 'Day 4', label: 'Day 4' },
+  ];
   return (
     <>
       <div className="px-5 py-1">
@@ -111,13 +119,11 @@ function EditProfile() {
                   />
 
                   <div className="md:col-span-2">
-                    <CustomInput
+                    <FormSelect
                       labelFor="role"
                       label="Assign Role"
-                      inputType="text"
-                      placeholder="Enter here"
-                      maxW="w-full"
-                      icon={<ChevronDown />}
+                      formik={formik}
+                      options={dayToApplyOptions}
                     />
                   </div>
                 </div>

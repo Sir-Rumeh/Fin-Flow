@@ -7,11 +7,11 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import ButtonComponent from 'components/FormElements/Button';
-import { Box, Modal, Typography } from '@mui/material';
-import { BiSearch } from 'react-icons/bi';
+import { Box, createTheme, Modal, ThemeProvider, Typography } from '@mui/material';
 import Popover from '@mui/material/Popover';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import Tab from 'components/Tabs';
+import SearchIcon from 'assets/icons/SearchIcon';
 import { ReportsType, RequestType } from 'utils/enums';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
@@ -29,6 +29,9 @@ import {
 } from 'assets/icons';
 import CustomSelect from 'components/FormElements/CustomSelect';
 import { useTabContext } from '../../../context/TabContext';
+import ExportBUtton from 'components/FormElements/ExportButton';
+import TableFilter from 'components/TableFilter';
+import { useFormik } from 'formik';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -41,11 +44,12 @@ const style = {
   borderRadius: '10px',
   boxShadow: 10,
   p: 4,
-  fontFamily: 'sans-serif',
+  // fontFamily: 'sans-serif',
 };
 
 const Reports = () => {
   const { tab, setTab } = useTabContext();
+  const [searchTerm, setSearchTerm] = useState('');
 
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
@@ -72,6 +76,24 @@ const Reports = () => {
     setSelectedReportType(value);
     console.log(selectedReportType);
   };
+
+  const theme = createTheme({
+    typography: {
+      fontFamily: '"Gotham", sans-serif',
+    },
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      searchMerchantName: '',
+      fromDateFilter: '',
+      toDateFilter: '',
+      statusFilter: '',
+    },
+    onSubmit: (values) => {
+      setSearchTerm('');
+    },
+  });
 
   const TransactionsReportsTableColumn: GridColDef[] = [
     {
@@ -167,14 +189,26 @@ const Reports = () => {
           switch (requestType) {
             case RequestType.Creation:
             case RequestType.Enabled:
-              return { IconComponent: CreationRequestIcon, colorClass: 'text-greenPrimary' };
+              return {
+                IconComponent: CreationRequestIcon,
+                colorClass: 'text-greenPrimary font-semibold',
+              };
             case RequestType.Update:
-              return { IconComponent: UpdateRequestIcon, colorClass: 'text-lightPurple' };
+              return {
+                IconComponent: UpdateRequestIcon,
+                colorClass: 'text-lightPurple font-semibold',
+              };
             case RequestType.Disable:
-              return { IconComponent: DisableRequestIcon, colorClass: 'text-yellowNeutral' };
+              return {
+                IconComponent: DisableRequestIcon,
+                colorClass: 'text-yellowNeutral font-semibold',
+              };
             case RequestType.Deletion:
             case RequestType.Disabled:
-              return { IconComponent: DeleteRequestIcon, colorClass: 'text-redSecondary' };
+              return {
+                IconComponent: DeleteRequestIcon,
+                colorClass: 'text-redSecondary font-semibold',
+              };
             default:
               return null;
           }
@@ -200,6 +234,7 @@ const Reports = () => {
     {
       field: 'actions',
       headerName: 'Action',
+      width: 120,
       headerClassName: 'ag-thead ',
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
@@ -210,19 +245,11 @@ const Reports = () => {
         const buttonTitle = isEnabled ? 'Disable' : 'Enable';
         const buttonColorClass = isEnabled ? 'text-red-400' : 'text-greenPrimary';
 
-        // const selectModal = () => {
-        //   if (buttonTitle === 'Enable') {
-        //     return openModal('openEnableMandate');
-        //   } else {
-        //     return openModal('openDisableMandate');
-        //   }
-        // };
-
         return (
           <div className="-ml-1 h-full border-none">
             <CustomPopover
               popoverId={params?.row.id}
-              buttonIcon={<PopoverTitle title="Actions" />}
+              buttonIcon={<PopoverTitle title="ACTIONS" />}
               translationX={-40}
               translationY={50}
             >
@@ -252,7 +279,6 @@ const Reports = () => {
                   onClick={() => {}}
                   className={`w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary ${buttonColorClass}`}
                 >
-                  {/* {buttonTitle} */}
                   Enable
                 </button>
                 <button
@@ -280,38 +306,40 @@ const Reports = () => {
           </div>
           <div className="h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-            <LocalizationProvider dateAdapter={AdapterDayjs}>
-              <DatePicker
-                label="Start Date"
-                sx={{
-                  height: '50px',
-                  width: '100%',
-                  marginTop: '32px',
-                  '& .MuiInputBase-root': {
+            <ThemeProvider theme={theme}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Start Date"
+                  sx={{
                     height: '50px',
-                    borderRadius: '8px',
-                  },
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '8px',
-                  },
-                }}
-              />
-              <DatePicker
-                label="End Date"
-                sx={{
-                  height: '50px',
-                  width: '100%',
-                  marginTop: '32px',
-                  '& .MuiInputBase-root': {
+                    width: '100%',
+                    marginTop: '32px',
+                    '& .MuiInputBase-root': {
+                      height: '50px',
+                      borderRadius: '8px',
+                    },
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '8px',
+                    },
+                  }}
+                />
+                <DatePicker
+                  label="End Date"
+                  sx={{
                     height: '50px',
-                    borderRadius: '8px',
-                  },
-                  '& .MuiOutlinedInput-root': {
-                    borderRadius: '8px',
-                  },
-                }}
-              />
-            </LocalizationProvider>
+                    width: '100%',
+                    marginTop: '32px',
+                    '& .MuiInputBase-root': {
+                      height: '50px',
+                      borderRadius: '8px',
+                    },
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '8px',
+                    },
+                  }}
+                />
+              </LocalizationProvider>
+            </ThemeProvider>
             <CustomSelect
               labelFor="reportType"
               label="Report Type"
@@ -350,50 +378,7 @@ const Reports = () => {
               <p className="text-xl font-bold">
                 Mono Tech Transaction Report Details (June 2023 to August 2023)
               </p>
-              <ButtonComponent
-                onClick={(e) => handleClick(e)}
-                title="Export"
-                children={<DarkArrowDown styles="ml-2" height="20" width="20" />}
-                color="#5C068C"
-                border={1}
-                width="150px"
-                height="45px"
-              />
-
-              <Popover
-                id={id}
-                open={open}
-                anchorEl={anchorEl}
-                onClose={handleClose}
-                anchorOrigin={{
-                  vertical: 'bottom',
-                  horizontal: 'left',
-                }}
-              >
-                <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
-                  <button
-                    type="button"
-                    onClick={() => {}}
-                    className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
-                  >
-                    CSV
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {}}
-                    className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
-                  >
-                    Excel
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {}}
-                    className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
-                  >
-                    PDF
-                  </button>
-                </div>
-              </Popover>
+              <ExportBUtton />
             </div>
             <div className="mt-5 rounded-lg border px-4 py-6">
               <div className="">
@@ -414,24 +399,19 @@ const Reports = () => {
                       inactiveColor="text-red-500"
                     />
                   </div>
-                  <div className="flex items-center gap-4">
-                    <ButtonComponent
-                      onClick={() => {}}
-                      title="Filter by"
-                      children={<FilterIcon styles="ml-2" />}
-                      color="#5C068C"
-                      border={1}
-                      width="150px"
-                      height="45px"
+                  <div className="">
+                    <TableFilter
+                      name={'searchMerchantName'}
+                      placeholder={'Search '}
+                      label={'Search Merchant'}
+                      value={searchTerm}
+                      setSearch={setSearchTerm}
+                      handleOptionsFilter={() => {}}
+                      formik={formik}
+                      fromDateName={'fromDateFilter'}
+                      toDateName={'toDateFilter'}
+                      selectName={'statusFilter'}
                     />
-                    <div className="flex h-[45px] w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2">
-                      <BiSearch className="h-6 w-6" />
-                      <input
-                        type="text"
-                        className="w-full border-none focus:border-none focus:outline-none"
-                        placeholder="Search"
-                      />
-                    </div>
                   </div>
                 </div>
                 <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
@@ -460,77 +440,29 @@ const Reports = () => {
         {selectedReportType === ReportsType.MandateStatusReports && (
           <div className="mt-10 rounded-lg bg-white px-5 py-5">
             <div className="mt-10 rounded-lg bg-white px-5 py-5">
-              <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center justify-between">
                 <p className="text-lg font-bold md:text-xl">
                   Mandate Status Report (June 2023 to August 2023)
                 </p>
-                <ButtonComponent
-                  onClick={(e) => handleClick(e)}
-                  title="Export"
-                  children={<DarkArrowDown styles="ml-2" height="20" width="20" />}
-                  color="#5C068C"
-                  border={1}
-                  width="150px"
-                  height="45px"
-                />
-
-                <Popover
-                  id={id}
-                  open={open}
-                  anchorEl={anchorEl}
-                  onClose={handleClose}
-                  anchorOrigin={{
-                    vertical: 'bottom',
-                    horizontal: 'left',
-                  }}
-                >
-                  <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
-                    <button
-                      type="button"
-                      onClick={() => {}}
-                      className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
-                    >
-                      CSV
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {}}
-                      className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
-                    >
-                      Excel
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => {}}
-                      className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
-                    >
-                      PDF
-                    </button>
-                  </div>
-                </Popover>
+                <ExportBUtton />
               </div>
               <div className="mt-5 rounded-lg border px-4 py-6">
                 <div className="">
-                  <div className="flex flex-col items-center justify-between gap-2 md:flex-row">
+                  <div className="flex flex-col items-center justify-between md:flex-row">
                     <p className="text-lg font-semibold md:text-xl">All Mandates Reports</p>
-                    <div className="flex items-center gap-4">
-                      <ButtonComponent
-                        onClick={() => {}}
-                        title="Filter by"
-                        children={<FilterIcon styles="ml-2" />}
-                        color="#5C068C"
-                        border={1}
-                        width="150px"
-                        height="45px"
+                    <div className="">
+                      <TableFilter
+                        name={'searchMerchantName'}
+                        placeholder={'Search '}
+                        label={'Search Merchant'}
+                        value={searchTerm}
+                        setSearch={setSearchTerm}
+                        handleOptionsFilter={() => {}}
+                        formik={formik}
+                        fromDateName={'fromDateFilter'}
+                        toDateName={'toDateFilter'}
+                        selectName={'statusFilter'}
                       />
-                      <div className="flex h-[45px] w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2">
-                        <BiSearch className="h-6 w-6" />
-                        <input
-                          type="text"
-                          className="w-full border-none focus:border-none focus:outline-none"
-                          placeholder="Search"
-                        />
-                      </div>
                     </div>
                   </div>
                   <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>

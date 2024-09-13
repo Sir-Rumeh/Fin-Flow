@@ -12,20 +12,6 @@ import { ArrowRightIcon, DarkArrowDown, DownloadIcon, SuccessModalIcon } from 'a
 import { useDropzone } from 'react-dropzone';
 import CustomSelect from 'components/FormElements/CustomSelect';
 
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 700,
-  bgcolor: 'background.paper',
-  border: 'none',
-  borderRadius: '10px',
-  boxShadow: 24,
-  p: 4,
-  fontFamily: 'sans-serif',
-};
-
 const CreateMandate = () => {
   const { tab, setTab } = useTabContext();
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
@@ -439,8 +425,9 @@ const CreateMandate = () => {
                   border={1}
                   borderColor="#5C067C"
                   color="#5C067C"
-                  width="150px"
+                  width="143px"
                   height="40px"
+                  fontWeight={600}
                 />
                 <ButtonComponent
                   onClick={() => openModal('addMandate')}
@@ -448,8 +435,9 @@ const CreateMandate = () => {
                   backgroundColor="#5C068C"
                   hoverBackgroundColor="#5C067C"
                   color="white"
-                  width="150px"
+                  width="143px"
                   height="40px"
+                  fontWeight={600}
                 />
               </div>
             </div>
