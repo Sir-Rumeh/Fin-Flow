@@ -78,7 +78,7 @@ const TableFilter = ({
               closeCard={closeFilterCard}
               scale="80%"
             >
-              <div className="relative h-auto flex-col overflow-y-hidden px-6 pt-4 lg:pb-10">
+              <div className="relative h-auto flex-col overflow-y-hidden px-6 pt-4 lg:pb-14">
                 <div className="flex w-full items-center justify-between">
                   <h3 className="text-lg font-bold">Filter By</h3>
                   <button
@@ -90,7 +90,7 @@ const TableFilter = ({
                         setPulse(false);
                       }, 300);
                     }}
-                    className={`text-lg ${pulse ? 'scale-95 animate-pulse opacity-85 duration-75' : 'scale-100'} rounded-lg px-3 py-1 font-semibold text-[#B42318] hover:bg-[#f8efed]`}
+                    className={`text-lg ${pulse ? 'scale-95 duration-75' : 'scale-100'} rounded-lg px-3 py-1 font-semibold text-[#B42318] hover:bg-[#f8efed]`}
                   >
                     Clear Filter
                   </button>
@@ -128,6 +128,7 @@ const TableFilter = ({
                       height="3rem"
                       onClick={() => setCloseFilterCard(!closeFilterCard)}
                       title="Cancel"
+                      fontWeight={500}
                     />
                   </div>
                   <div className="relative w-[50%] sm:w-[15rem]">
@@ -137,6 +138,7 @@ const TableFilter = ({
                       variant="contained"
                       onClick={handleOptionsFilter}
                       title="Filter"
+                      fontWeight={500}
                     />
                   </div>
                 </div>

@@ -177,7 +177,7 @@ const AuditTrail = () => {
                 <CustomTable
                   tableData={auditTrailList}
                   columns={columns}
-                  rowCount={1003}
+                  rowCount={257}
                   defaultAnimation={false}
                 />
               </div>

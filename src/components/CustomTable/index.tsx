@@ -24,7 +24,7 @@ function CustomTable({
     pageNumber: 1,
     pageSize: 10,
   });
-  const [paginationCountArray, setPaginationCountArray] = useState<number[]>([]);
+  const [paginationCountArray, setPaginationCountArray] = useState<(string | number)[]>([]);
   const [paginationCount, setPaginationCount] = useState(0);
   const [paginationSplitPosition, setPaginationSplitPosition] = useState({
     x1: 0,
@@ -38,6 +38,7 @@ function CustomTable({
     for (let i = 1; i <= pagiCount; i++) {
       arr.push(i);
     }
+
     const newArr = arr.splice(paginationSplitPosition.x1, paginationSplitPosition.x2);
     setPaginationCountArray(newArr);
   }, [rowCount, paginationSplitPosition]);
@@ -54,6 +55,9 @@ function CustomTable({
                 fontSize: isSmallWidth ? '12px' : '14px',
               },
               border: 0,
+              '& .MuiDataGrid-columnHeaders': {
+                fontSize: isSmallWidth ? '14px' : '16px',
+              },
               [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]: {
                 outline: 'none',
               },
@@ -76,12 +80,24 @@ function CustomTable({
             <button
               onClick={() => {
                 if (paginationSplitPosition.x1 > 0) {
-                  setPaginationSplitPosition((prev) => {
-                    return {
-                      x1: (prev.x1 || 0) - 5,
-                      x2: (prev.x2 || 0) - 5,
-                    };
-                  });
+                  if (
+                    paginationSplitPosition.x1 === paginationCount - 5 &&
+                    paginationSplitPosition.x1 - 5 < 0
+                  ) {
+                    setPaginationSplitPosition((prev) => {
+                      return {
+                        x1: 0,
+                        x2: 5,
+                      };
+                    });
+                  } else {
+                    setPaginationSplitPosition((prev) => {
+                      return {
+                        x1: prev.x1 - 5,
+                        x2: prev.x1 - 5,
+                      };
+                    });
+                  }
                 }
               }}
               className="cursor-pointer"
@@ -89,9 +105,10 @@ function CustomTable({
               <ChevronLeft />
             </button>
             <div className="no-scrollbar flex w-auto items-center justify-evenly gap-x-5 overflow-x-scroll">
-              {paginationCountArray?.map((count: number) => {
+              {paginationCountArray?.map((count: number | any, index) => {
                 return (
                   <button
+                    key={index}
                     className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData.pageNumber === count ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
                     onClick={() =>
                       setPaginationData((prev) => {
@@ -124,7 +141,7 @@ function CustomTable({
                     setPaginationSplitPosition((prev) => {
                       return {
                         x1: paginationCount - 5,
-                        x2: 5,
+                        x2: paginationCount,
                       };
                     });
                   }}
@@ -137,11 +154,14 @@ function CustomTable({
             <button
               className="cursor-pointer"
               onClick={() => {
-                if (paginationData.pageNumber !== paginationSplitPosition.x2) {
+                if (
+                  paginationSplitPosition.x1 + 5 <= paginationCount &&
+                  paginationSplitPosition.x2 + 5 <= paginationCount
+                ) {
                   setPaginationSplitPosition((prev) => {
                     return {
-                      x1: (prev.x1 || 0) + 5,
-                      x2: (prev.x2 || 0) + 5,
+                      x1: prev.x1 + 5,
+                      x2: prev.x1 + 5,
                     };
                   });
                 }
