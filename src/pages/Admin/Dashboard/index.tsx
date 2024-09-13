@@ -218,7 +218,7 @@ const Dashboard = () => {
         </div>
         <div className="relative mt-5 flex items-center justify-center rounded-md bg-white p-2 md:p-4">
           <div className="w-full">
-            <CustomTable tableData={muiDashboardMerchantsList} columns={columns} rowCount={20} />
+            <CustomTable tableData={muiDashboardMerchantsList} columns={columns} rowCount={73} />
           </div>
         </div>
       </section>

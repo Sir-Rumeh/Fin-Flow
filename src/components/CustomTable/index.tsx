@@ -10,15 +10,21 @@ interface CustomTableProps {
   tableData: any;
   columns: any;
   rowCount: number;
+  defaultAnimation?: boolean;
 }
 
-function CustomTable({ tableData, columns, rowCount }: CustomTableProps): JSX.Element {
+function CustomTable({
+  tableData,
+  columns,
+  rowCount,
+  defaultAnimation = true,
+}: CustomTableProps): JSX.Element {
   const isSmallWidth = useMediaQuery('(max-width:1440px)');
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
     pageSize: 10,
   });
-  const [paginationCountArray, setPaginationCountArray] = useState<number[]>([]);
+  const [paginationCountArray, setPaginationCountArray] = useState<(string | number)[]>([]);
   const [paginationCount, setPaginationCount] = useState(0);
   const [paginationSplitPosition, setPaginationSplitPosition] = useState({
     x1: 0,
@@ -32,12 +38,13 @@ function CustomTable({ tableData, columns, rowCount }: CustomTableProps): JSX.El
     for (let i = 1; i <= pagiCount; i++) {
       arr.push(i);
     }
+
     const newArr = arr.splice(paginationSplitPosition.x1, paginationSplitPosition.x2);
     setPaginationCountArray(newArr);
   }, [rowCount, paginationSplitPosition]);
 
   return (
-    <div className="slide-down w-full">
+    <div className={`${defaultAnimation ? 'slide-down' : ''} w-full`}>
       {tableData?.length > 0 ? (
         <div className="w-full">
           <DataGrid
@@ -48,6 +55,9 @@ function CustomTable({ tableData, columns, rowCount }: CustomTableProps): JSX.El
                 fontSize: isSmallWidth ? '12px' : '14px',
               },
               border: 0,
+              '& .MuiDataGrid-columnHeaders': {
+                fontSize: isSmallWidth ? '14px' : '16px',
+              },
               [`& .${gridClasses.cell}:focus, & .${gridClasses.cell}:focus-within`]: {
                 outline: 'none',
               },
@@ -70,23 +80,36 @@ function CustomTable({ tableData, columns, rowCount }: CustomTableProps): JSX.El
             <button
               onClick={() => {
                 if (paginationSplitPosition.x1 > 0) {
-                  setPaginationSplitPosition((prev) => {
-                    return {
-                      x1: (prev.x1 || 0) - 5,
-                      x2: (prev.x2 || 0) - 5,
-                    };
-                  });
+                  if (
+                    paginationSplitPosition.x1 === paginationCount - 5 &&
+                    paginationSplitPosition.x1 - 5 < 0
+                  ) {
+                    setPaginationSplitPosition((prev) => {
+                      return {
+                        x1: 0,
+                        x2: 5,
+                      };
+                    });
+                  } else {
+                    setPaginationSplitPosition((prev) => {
+                      return {
+                        x1: prev.x1 - 5,
+                        x2: prev.x1 - 5,
+                      };
+                    });
+                  }
                 }
               }}
               className="cursor-pointer"
             >
               <ChevronLeft />
             </button>
-            <div className="flex w-auto items-center justify-evenly gap-x-5">
-              {paginationCountArray?.map((count: number) => {
+            <div className="no-scrollbar flex w-auto items-center justify-evenly gap-x-5 overflow-x-scroll">
+              {paginationCountArray?.map((count: number | any, index) => {
                 return (
                   <button
-                    className={`flex cursor-pointer items-center rounded-sm border border-gray-300 ${paginationData.pageNumber === count ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
+                    key={index}
+                    className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData.pageNumber === count ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
                     onClick={() =>
                       setPaginationData((prev) => {
                         return {
@@ -107,15 +130,21 @@ function CustomTable({ tableData, columns, rowCount }: CustomTableProps): JSX.El
               <div className="relative flex items-center justify-evenly gap-x-5">
                 <span className="flex h-full items-end text-2xl">...</span>
                 <button
-                  className={`flex cursor-pointer items-center rounded-sm border border-gray-300 ${paginationData.pageNumber === paginationCount ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
-                  onClick={() =>
+                  className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData.pageNumber === paginationCount ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
+                  onClick={() => {
                     setPaginationData((prev) => {
                       return {
                         ...prev,
                         pageNumber: paginationCount,
                       };
-                    })
-                  }
+                    });
+                    setPaginationSplitPosition((prev) => {
+                      return {
+                        x1: paginationCount - 5,
+                        x2: paginationCount,
+                      };
+                    });
+                  }}
                 >
                   {paginationCount}
                 </button>
@@ -125,11 +154,11 @@ function CustomTable({ tableData, columns, rowCount }: CustomTableProps): JSX.El
             <button
               className="cursor-pointer"
               onClick={() => {
-                if (paginationData.pageNumber !== paginationSplitPosition.x2) {
+                if (paginationSplitPosition.x1 + 5 <= paginationCount) {
                   setPaginationSplitPosition((prev) => {
                     return {
-                      x1: (prev.x1 || 0) + 5,
-                      x2: (prev.x2 || 0) + 5,
+                      x1: prev.x1 + 5,
+                      x2: prev.x1 + 5,
                     };
                   });
                 }

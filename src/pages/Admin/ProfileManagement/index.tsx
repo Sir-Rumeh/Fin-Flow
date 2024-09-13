@@ -14,6 +14,7 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
+import { useMediaQuery } from '@mui/material';
 
 const ProfileManagement = () => {
   const navigate = useNavigate();
@@ -173,6 +174,8 @@ const ProfileManagement = () => {
     },
   ];
 
+  const isSmallWidth = useMediaQuery('(max-width:370px)');
+
   return (
     <>
       <section className="p-2 md:p-4">
@@ -189,6 +192,7 @@ const ProfileManagement = () => {
               type="button"
               title="Add New Profile"
               customPaddingX="1.4rem"
+              width={isSmallWidth ? '10rem' : undefined}
               onClick={() => {
                 navigate({
                   pathname: `/${appRoutes.adminDashboard.profileManagement.createProfile}`,
@@ -199,13 +203,13 @@ const ProfileManagement = () => {
         </div>
         <div className="mt-5">
           <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-4">
-            <div className="flex w-full flex-col items-center justify-between gap-y-4 border-b pb-3 lg:flex-row">
+            <div className="flex w-full flex-col gap-y-4 border-b pb-3 lg:flex-row lg:items-center">
               <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-start">
                 <div className="">
                   <TableFilter
-                    name={'searchProfile'}
-                    placeholder={'Search Profile'}
-                    label={'Search Profile'}
+                    name={'searchMandate'}
+                    placeholder={'Search Mandate'}
+                    label={'Search Mandate'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
                     handleOptionsFilter={() => {}}
@@ -216,14 +220,14 @@ const ProfileManagement = () => {
                   />
                 </div>
               </div>
-              <div className="flex w-full items-center justify-end gap-8 lg:w-[50%]">
+              <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
                 <ExportBUtton />
               </div>
             </div>
 
             <div className="mt-6 w-full">
               <div className="w-full">
-                <CustomTable tableData={profileManagementList} columns={columns} rowCount={20} />
+                <CustomTable tableData={profileManagementList} columns={columns} rowCount={73} />
               </div>
             </div>
           </div>

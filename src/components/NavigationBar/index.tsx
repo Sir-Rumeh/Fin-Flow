@@ -34,7 +34,7 @@ const Navbar = (props: { onOpenSidenav: () => void }) => {
           <div className="flex">
             <div className="relative flex items-center justify-center p-1">
               <NotificationIcon />
-              <span className="absolute -right-2 -top-2 w-8 scale-75 rounded-3xl bg-lightRed p-1 text-center font-semibold text-red-400">
+              <span className="absolute -right-2 -top-2 hidden w-8 scale-75 rounded-3xl bg-lightRed p-1 text-center font-semibold text-red-400">
                 50
               </span>
             </div>

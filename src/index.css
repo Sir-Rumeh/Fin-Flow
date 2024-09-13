@@ -211,14 +211,12 @@ body {
 /* MUI TABLE STYLING */
 	.ad-thead {
 		background-color: #F4F4F4;
-		font-size: 18px;
 		font-weight: 700;
   }
   
   .ag-thead {
 	background-color: #F4F4F4;
-	font-size: 16px;
-	font-weight: bolder;
+	font-weight: bold;
   }
   
   .bold-header {
@@ -229,7 +227,6 @@ body {
   .gotham-grid,   .MuiDataGrid-cell, .gotham-grid, .MuiDataGrid-columnHeader{
 	font-family: 'Gotham', sans-serif;
  }
-
 
  .hide-pagination .MuiTablePagination-root {
 	display: none;

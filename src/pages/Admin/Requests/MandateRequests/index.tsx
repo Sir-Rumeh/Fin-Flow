@@ -182,7 +182,7 @@ const MandateRequests = () => {
               </div>
             </div>
             <div className="mt-6 w-full">
-              <CustomTable tableData={mandateRequestsList} columns={columns} rowCount={20} />
+              <CustomTable tableData={mandateRequestsList} columns={columns} rowCount={73} />
             </div>
           </div>
         </div>
