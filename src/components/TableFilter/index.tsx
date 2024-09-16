@@ -155,7 +155,6 @@ const TableFilter = ({
               className="w-full border-none focus:border-none focus:outline-none"
               name={name}
               placeholder={placeholder}
-              width={'20rem'}
               height={'100%'}
               value={value}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}

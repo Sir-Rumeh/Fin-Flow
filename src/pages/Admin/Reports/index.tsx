@@ -3,7 +3,7 @@ import { useState } from 'react';
 import CustomTable from 'components/CustomTable';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { CloseIcon, CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
-import { auditTrailList } from 'utils/constants';
+import { auditTrailList, mandateRequestsList, transactionHistory } from 'utils/constants';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 import { Typography, useMediaQuery } from '@mui/material';
@@ -18,10 +18,17 @@ import appRoutes from 'utils/constants/routes';
 import FormSelect from 'components/FormElements/FormSelect';
 import DownloadIcon from 'assets/icons/DownloadIcon';
 import TableFilter from 'components/TableFilter';
+import { ModalWrapper } from 'hoc/ModalWrapper';
+import RedAlertIcon from 'assets/icons/RedAlertIcon';
+import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
+import CustomTabs from 'hoc/CustomTabs';
+import { TabsProps } from 'utils/interfaces';
 
 const Reports = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
+  let mandateType = 'Fixed';
   const [modals, setModals] = useState({
     confirmDisable: false,
     disableSuccessful: false,
@@ -71,6 +78,21 @@ const Reports = () => {
   const itemStatus = [
     { value: 'Enabled', label: 'Enabled' },
     { value: 'Disabled', label: 'Disabled' },
+  ];
+
+  const total = 20;
+
+  const tabsList: TabsProps[] = [
+    {
+      tabIndex: 1,
+      tabName: 'Successful',
+      tabTotal: total,
+    },
+    {
+      tabIndex: 2,
+      tabName: 'Failed',
+      tabTotal: total,
+    },
   ];
 
   const mandateColumns: GridColDef[] = [
@@ -250,6 +272,52 @@ const Reports = () => {
       },
     },
   ];
+  const transactionsReportColumn: GridColDef[] = [
+    {
+      field: 'accountId',
+      headerName: 'Account ID',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
+    {
+      field: 'mandateId',
+      headerName: 'Mandate ID',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
+    {
+      field: 'amount',
+      headerName: 'Amount',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
+    {
+      field: 'date',
+      headerName: 'Date',
+      width: screen.width < 1000 ? 50 : 50,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+      valueGetter: (params: any) => new Date(params).toLocaleDateString(),
+    },
+    {
+      field: 'actions',
+      headerName: 'Action',
+      headerClassName: 'ag-thead ',
+      sortable: false,
+      width: 180,
+      renderCell: (params) => {
+        return (
+          <button className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple">
+            <DownloadIcon />
+            Download Receipt
+          </button>
+        );
+      },
+    },
+  ];
 
   const isSmallWidth = useMediaQuery('(max-width:370px)');
 
@@ -300,13 +368,15 @@ const Reports = () => {
                   label="Merchant"
                   formik={formik}
                   options={merchants}
+                  scrollableOptions
+                  scrollableHeight="h-[8rem]"
                 />
               </div>
               <div className="w-full">
                 <FormSelect labelFor="status" label="Status" formik={formik} options={itemStatus} />
               </div>
             </div>
-            <div className="mt-4 flex w-full items-center justify-end py-1">
+            <div className="flex w-full items-center justify-end py-1">
               <ButtonComponent
                 variant="contained"
                 color="white"
@@ -316,13 +386,15 @@ const Reports = () => {
                 title="Generate Report"
                 customPaddingX="1.4rem"
                 onClick={() => {
+                  if (!formik.values.reportType)
+                    return formik.setFieldError('reportType', 'Report Type is required');
                   setShowFilteredReport(true);
                 }}
               />
             </div>
           </div>
 
-          {showFilteredReport && (
+          {showFilteredReport && formik.values.reportType === 'Mandate Status Reports' && (
             <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
               <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
                 <h2 className="text-xl font-bold">
@@ -332,42 +404,320 @@ const Reports = () => {
                   <ExportBUtton />
                 </div>
               </div>
-              <div className="mt-1 flex w-full flex-col justify-between gap-y-4 rounded-md border px-3 pt-2 2xl:flex-row 2xl:items-center">
-                <h3 className="w-full py-4 text-xl font-semibold tracking-wide lg:w-[50%]">
-                  All Mandates Reports
-                </h3>
-                <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
-                  <div>
-                    <TableFilter
-                      name={'searchMandateReport'}
-                      placeholder={'Search'}
-                      label={'Search'}
-                      value={searchTerm}
-                      setSearch={setSearchTerm}
-                      handleOptionsFilter={() => {}}
-                      formik={formik}
-                      fromDateName={'fromDateFilter'}
-                      toDateName={'toDateFilter'}
-                      selectName={'statusFilter'}
-                    />
+              <div className="mt-1 w-full rounded-md border px-3 pt-2">
+                <div className="flex w-full flex-col justify-between gap-y-4 border-b 2xl:flex-row 2xl:items-center">
+                  <h3 className="w-full text-xl font-semibold tracking-wide lg:w-[50%]">
+                    All Mandates Reports
+                  </h3>
+                  <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
+                    <div>
+                      <TableFilter
+                        name={'searchMandateReport'}
+                        placeholder={'Search'}
+                        label={'Search'}
+                        value={searchTerm}
+                        setSearch={setSearchTerm}
+                        handleOptionsFilter={() => {}}
+                        formik={formik}
+                        fromDateName={'fromDateFilter'}
+                        toDateName={'toDateFilter'}
+                        selectName={'statusFilter'}
+                      />
+                    </div>
                   </div>
                 </div>
+                <div className="w-full">
+                  <CustomTable
+                    tableData={mandateRequestsList}
+                    columns={mandateColumns}
+                    rowCount={257}
+                    defaultAnimation={false}
+                    paginationData={paginationData}
+                    setPaginationData={setPaginationData}
+                  />
+                </div>
               </div>
+            </div>
+          )}
+          {showFilteredReport && formik.values.reportType === 'Transaction Reports' && (
+            <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
+              <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
+                <h2 className="text-xl font-bold">
+                  Mono Tech Transaction Report Details (June 2023 to August 2023)
+                </h2>
+                <div className="flex w-full items-center lg:w-[20%] lg:justify-end">
+                  <ExportBUtton />
+                </div>
+              </div>
+              <div className="mt-1 w-full rounded-md border px-3 pt-2">
+                <div className="slide-down flex w-full flex-col justify-between border-b pb-1 lg:flex-row lg:items-center">
+                  <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10">
+                    <CustomTabs
+                      tabs={tabsList}
+                      activeTab={activeTransactionTab}
+                      setActiveTab={setActiveTransactionTab}
+                    />
+                  </div>
+                  <div className="flex w-full items-center lg:justify-end">
+                    <div className="">
+                      <TableFilter
+                        name={'searchTransactionHistory'}
+                        placeholder={'Search'}
+                        label={'Search Transactions'}
+                        value={searchTerm}
+                        setSearch={setSearchTerm}
+                        handleOptionsFilter={() => {}}
+                        formik={formik}
+                        fromDateName={'fromDateFilter'}
+                        toDateName={'toDateFilter'}
+                        selectName={'statusFilter'}
+                      />
+                    </div>
+                  </div>
+                </div>
 
-              {/* <div className="w-full">
-                <CustomTable
-                  tableData={auditTrailList}
-                  columns={columns}
-                  rowCount={257}
-                  defaultAnimation={false}
-                  paginationData={paginationData}
-                  setPaginationData={setPaginationData}
-                />
-              </div> */}
+                <div className="mt-4 w-full">
+                  <CustomTable
+                    tableData={transactionHistory}
+                    columns={transactionsReportColumn}
+                    rowCount={73}
+                    defaultAnimation={false}
+                    paginationData={paginationData}
+                    setPaginationData={setPaginationData}
+                  />
+                </div>
+              </div>
             </div>
           )}
         </div>
       </section>
+      {modals.confirmDisable && (
+        <ModalWrapper
+          isOpen={modals.confirmDisable}
+          setIsOpen={() => closeModal('confirmDisable')}
+          title={'Disable Mandate?'}
+          info={'You are about to disable this mandate, would you want to proceed with this?'}
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
+          proceedAction={() => {
+            closeModal('confirmDisable');
+            openModal('disableSuccessful');
+          }}
+        />
+      )}
+      {modals.disableSuccessful && (
+        <ModalWrapper
+          isOpen={modals.disableSuccessful}
+          setIsOpen={() => closeModal('disableSuccessful')}
+          title={'Success!!'}
+          info={'You have successfully disabled this mandate'}
+          icon={<ActionSuccessIcon />}
+          type={'completed'}
+          proceedAction={() => {
+            closeModal('disableSuccessful');
+          }}
+        />
+      )}
+      {modals.confirmEnable && (
+        <ModalWrapper
+          isOpen={modals.confirmEnable}
+          setIsOpen={() => closeModal('confirmEnable')}
+          title={'Enable Mandate?'}
+          info={'You are about to enable this mandate, would you want to proceed with this?'}
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
+          proceedAction={() => {
+            closeModal('confirmEnable');
+            openModal('enableSuccessful');
+          }}
+        />
+      )}
+      {modals.enableSuccessful && (
+        <ModalWrapper
+          isOpen={modals.enableSuccessful}
+          setIsOpen={() => closeModal('enableSuccessful')}
+          title={'Success!!'}
+          info={'You have successfully enabled this mandate'}
+          icon={<ActionSuccessIcon />}
+          type={'completed'}
+          proceedAction={() => {
+            closeModal('enableSuccessful');
+          }}
+        />
+      )}
+      {modals.confirmDelete && (
+        <ModalWrapper
+          isOpen={modals.confirmDelete}
+          setIsOpen={() => closeModal('confirmDelete')}
+          title={'Delete Mandate?'}
+          info={'You are about to delete this mandate, would you want to proceed with this?'}
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
+          proceedAction={() => {
+            closeModal('confirmDelete');
+            openModal('deleteSuccessful');
+          }}
+        />
+      )}
+      {modals.deleteSuccessful && (
+        <ModalWrapper
+          isOpen={modals.deleteSuccessful}
+          setIsOpen={() => closeModal('deleteSuccessful')}
+          title={'Success!!'}
+          info={'You have successfully deleted this mandate'}
+          icon={<ActionSuccessIcon />}
+          type={'completed'}
+          proceedAction={() => {
+            closeModal('deleteSuccessful');
+          }}
+        />
+      )}
+
+      {modals.openTransactionHistory && (
+        <CustomModal
+          isOpen={modals.openTransactionHistory}
+          setIsOpen={() => closeModal('openTransactionHistory')}
+          width={'900px'}
+          paddingX={0}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            <div className="flex items-center justify-between">
+              <h1 className="text-xl font-semibold">Transaction History Details</h1>
+              <button className="scale-[110%]" onClick={() => closeModal('openTransactionHistory')}>
+                <CloseIcon />
+              </button>
+            </div>
+            <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
+          </Typography>
+          <div className="mt-2">
+            <div className="">
+              <div className="slide-down flex items-center justify-between">
+                <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10">
+                  <CustomTabs
+                    tabs={tabsList}
+                    activeTab={activeTransactionTab}
+                    setActiveTab={setActiveTransactionTab}
+                  />
+                </div>
+                <div className="flexitems-center justify-end">
+                  <TableFilter
+                    name={'searchTransactionHistory'}
+                    placeholder={'Search Transactions'}
+                    label={'Search Transactions'}
+                    value={searchTerm}
+                    setSearch={setSearchTerm}
+                    handleOptionsFilter={() => {}}
+                    formik={formik}
+                    fromDateName={'fromDateFilter'}
+                    toDateName={'toDateFilter'}
+                    selectName={'statusFilter'}
+                    showOptionsFilter={false}
+                  />
+                </div>
+              </div>
+              <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
+              <div className="slide-down mt-6">
+                <CustomTable
+                  tableData={transactionHistory}
+                  columns={transactionsTableColumn}
+                  rowCount={73}
+                />
+              </div>
+            </div>
+          </div>
+        </CustomModal>
+      )}
+      {modals.editMandate && (
+        <CustomModal
+          isOpen={modals.editMandate}
+          setIsOpen={() => closeModal('editMandate')}
+          width={'800px'}
+          paddingX={0}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            <div className="slide-down flex items-center justify-between">
+              <h1 className="text-xl font-semibold">Modify Mandate Details</h1>
+              <button className="scale-[110%]" onClick={() => closeModal('editMandate')}>
+                <CloseIcon />
+              </button>
+            </div>
+            <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
+          </Typography>
+          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+            {mandateType === 'Variable' ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+                noValidate
+                className="slide-down mt-8 w-full"
+              >
+                <div className="mt-14 flex flex-col items-end gap-x-8 gap-y-4 md:flex-row md:items-center md:justify-between">
+                  <div className="w-full">
+                    <CustomInput
+                      labelFor="modifiedAmount"
+                      label="Modify Amount"
+                      inputType="text"
+                      placeholder="Enter here"
+                      maxW="w-full"
+                      verticalMargin={false}
+                    />
+                  </div>
+                  <ButtonComponent
+                    variant="contained"
+                    color="white"
+                    backgroundColor="#5C068C"
+                    hoverBackgroundColor="#2F0248"
+                    type="submit"
+                    title="Save"
+                    height="3rem"
+                    width="9rem"
+                    customPaddingX="1.4rem"
+                    onClick={() => {
+                      closeModal('editMandate');
+                      openModal('confirmEdit');
+                    }}
+                  />
+                </div>
+              </form>
+            ) : (
+              <span className="slide-down flex items-center justify-start gap-1">
+                <h3 className="text-red-300">Error:</h3>
+                <h3 className="">You cannot modify a fixed mandate</h3>
+              </span>
+            )}
+          </Typography>
+        </CustomModal>
+      )}
+      {modals.confirmEdit && (
+        <ModalWrapper
+          isOpen={modals.confirmEdit}
+          setIsOpen={() => closeModal('confirmEdit')}
+          title={'Save Changes?'}
+          info={
+            'You are about to save changes made to this mandate, would you want to proceed with this?'
+          }
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
+          proceedAction={() => {
+            closeModal('confirmEdit');
+            openModal('editSuccessful');
+          }}
+        />
+      )}
+      {modals.editSuccessful && (
+        <ModalWrapper
+          isOpen={modals.editSuccessful}
+          setIsOpen={() => closeModal('editSuccessful')}
+          title={'Success!!'}
+          info={'You have successfully saved new changes'}
+          icon={<ActionSuccessIcon />}
+          type={'completed'}
+          proceedAction={() => {
+            closeModal('editSuccessful');
+          }}
+        />
+      )}
     </>
   );
 };

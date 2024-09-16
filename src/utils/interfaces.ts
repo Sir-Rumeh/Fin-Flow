@@ -80,6 +80,7 @@ export interface AuditDataRow {
 export interface TransactionsDataRow {
   id: number;
   accountId: number;
+  mandateId: number | string;
   amount: string;
   date: string;
 }

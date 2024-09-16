@@ -14,6 +14,7 @@ type CustomInputProps = {
   height?: string;
   options: Option[];
   scrollableOptions?: boolean;
+  scrollableHeight?: string;
   labelFontWeight?: string;
 };
 
@@ -22,9 +23,10 @@ const FormSelect = ({
   label,
   height,
   formik,
-  useTouched = true,
+  useTouched = false,
   options,
   scrollableOptions = false,
+  scrollableHeight = 'h-[10rem]',
   labelFontWeight,
 }: CustomInputProps) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -37,7 +39,7 @@ const FormSelect = ({
   };
   return (
     <>
-      <div className="relative mb-4 mt-6 h-auto w-full">
+      <div className="relative z-[999] mb-4 mt-6 h-auto w-full">
         <label
           htmlFor={labelFor}
           className={`${labelFontWeight ? labelFontWeight : 'font-semibold'} absolute bottom-16`}
@@ -76,7 +78,7 @@ const FormSelect = ({
 
         {isOpen && (
           <div
-            className={`${scrollableOptions ? 'no-scrollbar h-[11rem] overflow-y-scroll' : ''} slide-downward absolute z-[999] mt-1 flex w-full flex-col rounded-sm bg-white text-sm shadow`}
+            className={`${scrollableOptions ? `no-scrollbar overflow-y-scroll ${scrollableHeight}` : ''} slide-downward absolute z-[999] mt-1 flex w-full flex-col rounded-sm bg-white text-sm shadow`}
           >
             {options.map((option) => {
               return (

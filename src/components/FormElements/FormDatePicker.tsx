@@ -21,7 +21,7 @@ const FormDatePicker = (props: Props) => {
     width,
     label,
     initialDate,
-    useTouched = true,
+    useTouched = false,
     placeholder,
     showLabel = true,
   } = props;
