@@ -20,6 +20,12 @@ const MerchantManagement = () => {
   const printPdfRef = useRef(null);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [paginationData, setPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
+
   const [modals, setModals] = useState({
     confirmDisableMerchant: false,
     disableSuccessful: false,
@@ -239,7 +245,9 @@ const MerchantManagement = () => {
                 <CustomTable
                   tableData={muiDashboardMerchantsList}
                   columns={columns}
-                  rowCount={74}
+                  rowCount={124}
+                  paginationData={paginationData}
+                  setPaginationData={setPaginationData}
                 />
               </div>
             </div>

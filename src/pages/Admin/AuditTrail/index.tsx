@@ -27,6 +27,11 @@ const AuditTrail = () => {
   });
   const [showFilteredAudit, setShowFilteredAudit] = useState(false);
 
+  const [paginationData, setPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
+
   const openModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: true }));
   };
@@ -121,7 +126,7 @@ const AuditTrail = () => {
                   formik={formik}
                 />
               </div>
-              <div className="relative flex w-full items-center gap-4">
+              <div className="relative flex w-full items-center gap-2">
                 <span className="absolute bottom-20 font-semibold">Date Range</span>
                 <div className="w-full">
                   <FormDatePicker
@@ -133,6 +138,7 @@ const AuditTrail = () => {
                     width="100%"
                   />
                 </div>
+                <p className="h-[1px] w-[20px] bg-gray-500"></p>
                 <div className="w-full">
                   <FormDatePicker
                     name={'endDate'}
@@ -179,6 +185,8 @@ const AuditTrail = () => {
                   columns={columns}
                   rowCount={257}
                   defaultAnimation={false}
+                  paginationData={paginationData}
+                  setPaginationData={setPaginationData}
                 />
               </div>
             </div>

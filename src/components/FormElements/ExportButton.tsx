@@ -39,7 +39,7 @@ const ExportBUtton = (props: Props) => {
           translationX={8}
           translationY={56}
         >
-          <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
+          <div className="flex w-[7.1rem] flex-col rounded-md p-1 text-sm">
             <button
               type="button"
               className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
