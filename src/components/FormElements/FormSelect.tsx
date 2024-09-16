@@ -66,7 +66,7 @@ const FormSelect = ({
                 ? selectedOption
                 : scrollableOptions
                   ? options[0].value
-                  : 'Select Here'}
+                  : 'Select here'}
             </p>
             <i className="scale-125">
               <DarkArrowDown />
@@ -76,7 +76,7 @@ const FormSelect = ({
 
         {isOpen && (
           <div
-            className={`${scrollableOptions ? 'no-scrollbar h-[11rem] overflow-y-scroll' : ''} slide-downward absolute z-[999] mt-1 flex w-full flex-col rounded-md bg-white text-sm shadow`}
+            className={`${scrollableOptions ? 'no-scrollbar h-[11rem] overflow-y-scroll' : ''} slide-downward absolute z-[999] mt-1 flex w-full flex-col rounded-sm bg-white text-sm shadow`}
           >
             {options.map((option) => {
               return (
@@ -84,7 +84,7 @@ const FormSelect = ({
                   key={option.label}
                   onClick={() => handleChange(option)}
                   type="button"
-                  className="w-full border-b px-3 py-3 text-start text-[16px] hover:bg-purpleSecondary"
+                  className="w-full border-b px-3 py-3 text-start text-[16px] hover:bg-lilacPurple"
                 >
                   {option.label}
                 </button>

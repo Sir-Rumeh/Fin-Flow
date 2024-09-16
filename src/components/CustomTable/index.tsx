@@ -30,7 +30,7 @@ function CustomTable({
 }: CustomTableProps): JSX.Element {
   const isSmallWidth = useMediaQuery('(max-width:1440px)');
 
-  const [paginationCountArray, setPaginationCountArray] = useState<(string | number)[]>([]);
+  const [paginationCountArray, setPaginationCountArray] = useState<number[]>([]);
   const [paginationCount, setPaginationCount] = useState(0);
   const [paginationSplitPosition, setPaginationSplitPosition] = useState({
     x1: 0,
@@ -85,6 +85,8 @@ function CustomTable({
           <>
             <div className="-mt-5 flex w-full items-center justify-start gap-x-5 p-3">
               <button
+                disabled={paginationCountArray[0] === 1}
+                className={`cursor-pointer ${paginationCountArray[0] === 1 ? 'opacity-30' : ''}`}
                 onClick={() => {
                   if (paginationSplitPosition.x1 > 0) {
                     if (
@@ -107,12 +109,11 @@ function CustomTable({
                     }
                   }
                 }}
-                className="cursor-pointer"
               >
                 <ChevronLeft />
               </button>
 
-              {paginationCountArray[0] !== 1 && (
+              {paginationCountArray[0] >= 11 && (
                 <div className="relative flex items-center justify-evenly gap-x-5">
                   <button
                     className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData?.pageNumber === 1 ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
@@ -185,7 +186,10 @@ function CustomTable({
               )}
 
               <button
-                className="cursor-pointer"
+                disabled={
+                  paginationCountArray[paginationCountArray?.length - 1] === paginationCount
+                }
+                className={`cursor-pointer ${paginationCountArray[paginationCountArray?.length - 1] === paginationCount ? 'opacity-30' : ''}`}
                 onClick={() => {
                   if (paginationSplitPosition.x1 + 5 < paginationCount) {
                     setPaginationSplitPosition((prev) => {

@@ -28,9 +28,7 @@ type Props = {
 
 const ButtonComponent = (props: Props) => {
   return (
-    <div
-      className={`flex h-full w-full flex-col items-center justify-center ${props.customClass} `}
-    >
+    <div className={`0 flex h-full flex-col items-center justify-center ${props.customClass} `}>
       <Button
         disabled={props.disabled}
         onClick={props.onClick}

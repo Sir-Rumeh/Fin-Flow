@@ -34,11 +34,11 @@ function EditProfile() {
     },
   });
 
-  const dayToApplyOptions = [
-    { value: 'Day 1', label: 'Day 1' },
-    { value: 'Day 2', label: 'Day 2' },
-    { value: 'Day 3', label: 'Day 3' },
-    { value: 'Day 4', label: 'Day 4' },
+  const roles = [
+    { value: 'Role One', label: 'Role One' },
+    { value: 'Role Two', label: 'Role Two' },
+    { value: 'Role Three', label: 'Role Three' },
+    { value: 'Role Four', label: 'Role Four' },
   ];
   return (
     <>
@@ -123,7 +123,7 @@ function EditProfile() {
                       labelFor="role"
                       label="Assign Role"
                       formik={formik}
-                      options={dayToApplyOptions}
+                      options={roles}
                     />
                   </div>
                 </div>
@@ -135,7 +135,6 @@ function EditProfile() {
                     hoverBackgroundColor="#2F0248"
                     type="submit"
                     title="Save"
-                    width="8rem"
                     customPaddingX="1.4rem"
                   />
                 </div>

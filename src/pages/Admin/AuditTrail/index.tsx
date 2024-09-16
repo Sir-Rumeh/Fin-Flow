@@ -1,17 +1,9 @@
 import ButtonComponent from 'components/FormElements/Button';
 import { useState } from 'react';
-import TableFilter from 'components/TableFilter';
 import CustomTable from 'components/CustomTable';
-import appRoutes from 'utils/constants/routes';
-import { createSearchParams, useNavigate } from 'react-router-dom';
-import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { CloseIcon, CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
-import { accountRequestsList, auditTrailList } from 'utils/constants';
-import CustomPopover from 'hoc/PopOverWrapper';
-import PopoverTitle from 'components/common/PopoverTitle';
-import { ModalWrapper } from 'hoc/ModalWrapper';
-import RedAlertIcon from 'assets/icons/RedAlertIcon';
-import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
+import { GridColDef } from '@mui/x-data-grid';
+import { CloseIcon } from 'assets/icons';
+import { auditTrailList } from 'utils/constants';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 import { Typography, useMediaQuery } from '@mui/material';
@@ -21,7 +13,6 @@ import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 
 const AuditTrail = () => {
-  const navigate = useNavigate();
   const [modals, setModals] = useState({
     viewDetails: false,
   });
@@ -138,7 +129,6 @@ const AuditTrail = () => {
                     width="100%"
                   />
                 </div>
-                <p className="h-[1px] w-[20px] bg-gray-500"></p>
                 <div className="w-full">
                   <FormDatePicker
                     name={'endDate'}

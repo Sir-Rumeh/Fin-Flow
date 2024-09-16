@@ -31,7 +31,7 @@ const FormDatePicker = (props: Props) => {
       (useTouched && formik?.touched[name] && formik?.errors[name]) ||
       (!useTouched && formik?.errors[name])
     ) {
-      return 'border-red-400';
+      return '1px solid red';
     } else return '';
   };
   return (
@@ -69,7 +69,7 @@ const FormDatePicker = (props: Props) => {
               transform: 'translate(0, 60%) scale(1)',
             },
           }}
-          label={placeholder ? placeholder : null}
+          label={!formik.values[props.name] && placeholder ? placeholder : null}
           format="DD/MM/YYYY"
           value={formik.values[props.name] ? dayjs(formik.values[name]) : null}
           onChange={(newValue) => {
