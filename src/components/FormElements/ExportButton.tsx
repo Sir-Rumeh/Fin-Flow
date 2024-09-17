@@ -21,22 +21,24 @@ const ExportBUtton = (props: Props) => {
   });
 
   return (
-    <div className={`relative ${props.customClass}`}>
+    <div className={`relative ${props.customClass} -ml-4 sm:-ml-0`}>
       <div className="">
         <CustomPopover
           popoverId={3}
           buttonIcon={
-            <ButtonComponent
-              onClick={() => {}}
-              title="Export"
-              children={<ExportButtonArrowDown className="ml-1" />}
-              color="#5C068C"
-              border={1}
-              customPaddingX="1.3rem"
-              fontWeight={600}
-              height="42px"
-              width="128px"
-            />
+            <>
+              <ButtonComponent
+                onClick={() => {}}
+                title="Export"
+                children={<ExportButtonArrowDown className="ml-1" />}
+                color="#5C068C"
+                border={1}
+                customPaddingX="1.3rem"
+                fontWeight={600}
+                height="42px"
+                width="128px"
+              />
+            </>
           }
           translationX={8}
           translationY={56}

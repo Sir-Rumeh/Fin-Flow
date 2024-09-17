@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import appRoutes, { BASE_ROUTES } from 'utils/constants/routes';
 import { userLoginValidationSchema } from 'utils/formValidators';
+import CustomInput from 'components/FormElements/CustomInput';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
@@ -35,39 +36,24 @@ const AdminLogin = () => {
             </h2>
 
             <form onSubmit={formik.handleSubmit}>
-              <div className="mt-[1rem]">
-                <FormInput
-                  id="email"
-                  name="email"
-                  placeholder="Enter your email"
-                  label="Email"
-                  width="100%"
-                  height="3rem"
-                  value={formik.values.email}
+              <div className="mt-[2.5rem] w-full">
+                <CustomInput
+                  labelFor="email"
+                  label="Email Address"
+                  inputType="text"
+                  placeholder="Enter a valid email"
+                  maxW="w-full"
                   formik={formik}
-                  onChange={formik.handleChange}
-                  error={formik.touched.email && Boolean(formik.errors.email)}
-                  helperText={
-                    formik.touched.email && formik.errors.email ? formik.errors.email : ''
-                  }
                 />
               </div>
-              <div className="mt-[2.5rem]">
-                <FormInput
-                  id="password"
-                  name="password"
-                  placeholder="Your password"
+              <div className="mt-[4rem] w-full">
+                <CustomInput
+                  labelFor="password"
                   label="Password"
-                  type="password"
-                  width="100%"
-                  height="3rem"
-                  value={formik.values.password}
+                  inputType="text"
+                  placeholder="Enter password"
+                  maxW="w-full"
                   formik={formik}
-                  onChange={formik.handleChange}
-                  error={formik.touched.password && Boolean(formik.errors.password)}
-                  helperText={
-                    formik.touched.password && formik.errors.password ? formik.errors.password : ''
-                  }
                 />
               </div>
               <div className="mt-[2.5rem] w-full">

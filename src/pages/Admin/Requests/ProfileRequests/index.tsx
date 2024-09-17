@@ -177,7 +177,7 @@ const ProfileRequests = () => {
               </div>
             </div>
             <div className="mt-6 w-full">
-              <CustomTable tableData={profileRequestsList} columns={columns} rowCount={20} />
+              <CustomTable tableData={profileRequestsList} columns={columns} rowCount={73} />
             </div>
           </div>
         </div>

@@ -14,7 +14,7 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
-import { Typography } from '@mui/material';
+import { Typography, useMediaQuery } from '@mui/material';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import { TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
@@ -253,6 +253,8 @@ const MandatetManagement = () => {
     },
   ];
 
+  const isSmallWidth = useMediaQuery('(max-width:370px)');
+
   return (
     <>
       <section className="p-2 md:p-4">
@@ -269,6 +271,7 @@ const MandatetManagement = () => {
               type="button"
               title="Create Mandate"
               customPaddingX="1.4rem"
+              width={isSmallWidth ? '10rem' : undefined}
               onClick={() => {
                 navigate({
                   pathname: `/${appRoutes.adminDashboard.mandateManagement.createMandate}`,
@@ -279,7 +282,7 @@ const MandatetManagement = () => {
         </div>
         <div className="mt-5">
           <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-4">
-            <div className="flex w-full flex-col items-center justify-between gap-y-4 border-b pb-3 lg:flex-row">
+            <div className="flex w-full flex-col gap-y-4 border-b pb-3 lg:flex-row lg:items-center">
               <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-start">
                 <div className="">
                   <TableFilter
@@ -296,13 +299,13 @@ const MandatetManagement = () => {
                   />
                 </div>
               </div>
-              <div className="flex w-full items-center justify-end gap-8 lg:w-[50%]">
+              <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
                 <ExportBUtton />
               </div>
             </div>
 
             <div className="mt-6 w-full">
-              <CustomTable tableData={mandateRequestsList} columns={columns} rowCount={20} />
+              <CustomTable tableData={mandateRequestsList} columns={columns} rowCount={73} />
             </div>
           </div>
         </div>
@@ -398,7 +401,7 @@ const MandatetManagement = () => {
         >
           <Typography id="modal-modal-title" variant="h6" component="h2">
             <div className="flex items-center justify-between">
-              <h1 className="text-xl">Transaction History Details</h1>
+              <h1 className="text-xl font-semibold">Transaction History Details</h1>
               <button className="scale-[110%]" onClick={() => closeModal('openTransactionHistory')}>
                 <CloseIcon />
               </button>
@@ -407,7 +410,7 @@ const MandatetManagement = () => {
           </Typography>
           <div className="mt-2">
             <div className="">
-              <div className="flex items-center justify-between">
+              <div className="slide-down flex items-center justify-between">
                 <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10">
                   <CustomTabs
                     tabs={tabsList}
@@ -415,7 +418,7 @@ const MandatetManagement = () => {
                     setActiveTab={setActiveTransactionTab}
                   />
                 </div>
-                <div className="slide-down flexitems-center justify-end">
+                <div className="flexitems-center justify-end">
                   <TableFilter
                     name={'searchTransactionHistory'}
                     placeholder={'Search Transactions'}
@@ -436,7 +439,7 @@ const MandatetManagement = () => {
                 <CustomTable
                   tableData={transactionHistory}
                   columns={transactionsTableColumn}
-                  rowCount={20}
+                  rowCount={73}
                 />
               </div>
             </div>
@@ -452,7 +455,7 @@ const MandatetManagement = () => {
         >
           <Typography id="modal-modal-title" variant="h6" component="h2">
             <div className="slide-down flex items-center justify-between">
-              <h1 className="text-xl">Modify Mandate Details</h1>
+              <h1 className="text-xl font-semibold">Modify Mandate Details</h1>
               <button className="scale-[110%]" onClick={() => closeModal('editMandate')}>
                 <CloseIcon />
               </button>

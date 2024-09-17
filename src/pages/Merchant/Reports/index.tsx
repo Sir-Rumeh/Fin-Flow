@@ -8,10 +8,8 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import ButtonComponent from 'components/FormElements/Button';
 import { Box, createTheme, Modal, ThemeProvider, Typography } from '@mui/material';
-import Popover from '@mui/material/Popover';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import Tab from 'components/Tabs';
-import SearchIcon from 'assets/icons/SearchIcon';
 import { ReportsType, RequestType } from 'utils/enums';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
@@ -24,7 +22,6 @@ import {
   DeleteRequestIcon,
   DisableRequestIcon,
   DownloadIcon,
-  FilterIcon,
   UpdateRequestIcon,
 } from 'assets/icons';
 import CustomSelect from 'components/FormElements/CustomSelect';
@@ -44,7 +41,6 @@ const style = {
   borderRadius: '10px',
   boxShadow: 10,
   p: 4,
-  // fontFamily: 'sans-serif',
 };
 
 const Reports = () => {
@@ -249,9 +245,9 @@ const Reports = () => {
           <div className="-ml-1 h-full border-none">
             <CustomPopover
               popoverId={params?.row.id}
-              buttonIcon={<PopoverTitle title="ACTIONS" />}
-              translationX={-40}
-              translationY={50}
+              buttonIcon={<PopoverTitle title="Actions" />}
+              translationX={-15}
+              translationY={45}
             >
               <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
                 <Link
@@ -260,34 +256,30 @@ const Reports = () => {
                 >
                   View Details
                 </Link>
-                <button
-                  type="button"
+                <div
                   onClick={() => {}}
                   className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
                 >
                   View Transactions
-                </button>
-                <button
-                  type="button"
+                </div>
+                <div
                   onClick={() => {}}
                   className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
                 >
                   Update Amount
-                </button>
-                <button
-                  type="button"
+                </div>
+                <div
                   onClick={() => {}}
                   className={`w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary ${buttonColorClass}`}
                 >
                   Enable
-                </button>
-                <button
-                  type="button"
+                </div>
+                <div
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                   onClick={() => {}}
                 >
                   Delete
-                </button>
+                </div>
               </div>
             </CustomPopover>
           </div>
@@ -361,15 +353,17 @@ const Reports = () => {
             />
           </div>
           <div className="mt-10 flex justify-end">
-            <ButtonComponent
-              onClick={() => {}}
-              title="Generate Report"
-              backgroundColor="#5C068C"
-              hoverBackgroundColor="#2F0248"
-              color="white"
-              width="180px"
-              height="45px"
-            />
+            <div className="">
+              <ButtonComponent
+                onClick={() => {}}
+                title="Generate Report"
+                backgroundColor="#5C068C"
+                hoverBackgroundColor="#2F0248"
+                color="white"
+                width="180px"
+                height="45px"
+              />
+            </div>
           </div>
         </div>
         {selectedReportType === ReportsType.TransactionReports && (

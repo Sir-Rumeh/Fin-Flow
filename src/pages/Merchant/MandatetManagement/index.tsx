@@ -1,14 +1,12 @@
-import { useRef, useState } from 'react';
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { DataGrid, GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import {
   CloseIcon,
   CreationRequestIcon,
-  DarkArrowDown,
   DeleteRequestIcon,
   DisableRequestIcon,
   DownloadIcon,
-  FilterIcon,
   SearchIcon,
   SuccessModalIcon,
   UpdateRequestIcon,
@@ -199,9 +197,9 @@ const MandatetManagement = () => {
           <div className="h-full border-none">
             <CustomPopover
               popoverId={params?.row.id}
-              buttonIcon={<PopoverTitle title="ACTIONS" />}
-              translationX={-40}
-              translationY={50}
+              buttonIcon={<PopoverTitle title="Actions" />}
+              translationX={-15}
+              translationY={45}
             >
               <div className="flex w-[8rem] flex-col rounded-md p-1 text-[12px]">
                 <Link
@@ -291,17 +289,19 @@ const MandatetManagement = () => {
       <div className="px-5 py-5">
         <div className="flex items-center justify-between">
           <h2 className="text-xl font-semibold md:text-2xl">Mandate Management</h2>
-          <ButtonComponent
-            onClick={() =>
-              navigate(`/${appRoutes.merchantDashboard.mandateManagement.createMandate}`)
-            }
-            title="Create Mandate"
-            backgroundColor="#5C068C"
-            color="white"
-            width="160px"
-            height="42px"
-            fontWeight={600}
-          />
+          <div className="">
+            <ButtonComponent
+              onClick={() =>
+                navigate(`/${appRoutes.merchantDashboard.mandateManagement.createMandate}`)
+              }
+              title="Create Mandate"
+              backgroundColor="#5C068C"
+              color="white"
+              width="160px"
+              height="42px"
+              fontWeight={600}
+            />
+          </div>
         </div>
         <div className="mt-5 rounded-lg bg-white px-5 py-5">
           <div className="flex items-center justify-between">

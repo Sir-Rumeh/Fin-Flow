@@ -4,8 +4,6 @@ import {
   CreationRequestIcon,
   DeleteRequestIcon,
   DisableRequestIcon,
-  FilterIcon,
-  SearchIcon,
   UpdateRequestIcon,
 } from 'assets/icons';
 import { approvedMandateList, pendingMandateList, rejectedMandateList } from 'utils/constants';
@@ -15,7 +13,6 @@ import { useTabContext } from '../../../context/TabContext';
 import { RequestType } from 'utils/enums';
 import Tab from 'components/Tabs';
 import CustomTable from 'components/CustomTable';
-import ButtonComponent from 'components/FormElements/Button';
 import TableFilter from 'components/TableFilter';
 import { useState } from 'react';
 import { useFormik } from 'formik';
