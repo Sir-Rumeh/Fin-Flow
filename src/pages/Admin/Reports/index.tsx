@@ -339,7 +339,7 @@ const Reports = () => {
             <div className="mt-8 grid w-full grid-cols-1 gap-4 py-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               <div className="relative flex w-full items-center">
                 <span className="absolute bottom-20 font-semibold">Date Range</span>
-                <div className="mt-2 flex w-full items-center rounded-lg border border-gray-300">
+                <div className="relative mt-2 flex w-full items-center rounded-lg border border-gray-300">
                   <div className="w-full">
                     <FormDatePicker
                       name={'startDate'}
@@ -352,7 +352,7 @@ const Reports = () => {
                       hideBorder
                     />
                   </div>
-                  <div className="h-[2px] w-[16px] bg-gray-300"></div>
+                  <div className="absolute left-[48%] h-[2px] w-[10px] bg-gray-300"></div>
                   <div className="w-full">
                     <FormDatePicker
                       name={'endDate'}

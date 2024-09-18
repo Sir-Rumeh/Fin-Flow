@@ -71,6 +71,13 @@ const FormDatePicker = (props: Props) => {
                 },
               },
             },
+            '& .MuiInputBase-input': {
+              width: hideBorder ? '4.6rem' : undefined,
+              paddingLeft: hideBorder ? '8px' : undefined,
+            },
+            '& .MuiInputAdornment-root': {
+              marginLeft: '2px',
+            },
             '& .MuiInputLabel-root': {
               visibility: 'visible',
               '&.Mui-focused': {
