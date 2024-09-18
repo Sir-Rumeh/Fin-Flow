@@ -55,6 +55,7 @@ const CustomPopover = ({
           width: '100%',
           paddingLeft: customPaddingX ? customPaddingX : undefined,
           paddingRight: customPaddingX ? customPaddingX : undefined,
+          textTransform: 'capitalize',
         }}
         aria-describedby={id}
         onClick={handleClick}

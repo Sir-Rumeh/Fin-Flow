@@ -1,3 +1,6 @@
+import EyeIcon from 'assets/icons/EyeIcon';
+import EyeSlashIcon from 'assets/icons/EyeSlashIcon';
+
 type CustomInputProps = {
   labelFor: string;
   label: string;
@@ -12,6 +15,9 @@ type CustomInputProps = {
   formik?: any;
   useTouched?: boolean;
   verticalMargin?: boolean;
+  passwordInput?: boolean;
+  iconState?: boolean;
+  handleInputType?: (e: any) => void;
 };
 
 const CustomInput = ({
@@ -24,39 +30,71 @@ const CustomInput = ({
   placeholder,
   defaultContainerStyles = 'flex h-auto items-center justify-between rounded-lg border border-gray-300 px-1 ',
   maxW = 'md:w-[327px]',
-  defaultInputStyles = 'h-[3rem] w-full px-2 focus:outline-none focus:ring-0 ',
+  defaultInputStyles = 'h-[3rem] w-full px-2 focus:outline-none focus:ring-0',
   formik,
   useTouched = true,
   verticalMargin = true,
+  passwordInput = false,
+  iconState,
+  handleInputType = () => {},
 }: CustomInputProps) => {
   return (
     <div className={`relative ${verticalMargin && 'mb-4 mt-6'} flex h-auto flex-col gap-2`}>
       <label htmlFor={labelFor} className="absolute bottom-16 font-semibold">
         {label}
       </label>
-      <div
-        className={`${!formik?.errors[labelFor] && 'hover:border-black'} ${containerStyles} ${!containerStyles && `${defaultContainerStyles} ${maxW} `} ${
-          useTouched && formik?.touched[labelFor] && formik?.errors[labelFor]
-            ? 'border-red-400'
-            : ''
-        } ${
-          useTouched && !formik?.touched[labelFor] && formik?.errors[labelFor]
-            ? 'hover:border-black'
-            : ''
-        } ${!useTouched && formik?.errors[labelFor] ? 'border-red-400' : ''} `}
-      >
-        <input
-          type={inputType}
-          className={`${inputStyles} ${!inputStyles && defaultInputStyles}`}
-          placeholder={placeholder}
-          name={labelFor}
-          id={labelFor}
-          onChange={formik?.handleChange}
-          value={formik?.values.labelFor}
-          onBlur={() => formik?.handleBlur}
-        />
-        {icon}
-      </div>
+
+      {passwordInput ? (
+        <div
+          className={`${!formik?.errors[labelFor] && 'hover:border-black'} ${containerStyles} ${!containerStyles && `${defaultContainerStyles} ${maxW} `} ${
+            useTouched && formik?.touched[labelFor] && formik?.errors[labelFor]
+              ? 'border-red-400'
+              : ''
+          } ${
+            useTouched && !formik?.touched[labelFor] && formik?.errors[labelFor]
+              ? 'hover:border-black'
+              : ''
+          } ${!useTouched && formik?.errors[labelFor] ? 'border-red-400' : ''} `}
+        >
+          <input
+            type={inputType}
+            className={`${inputStyles} ${!inputStyles && defaultInputStyles} `}
+            placeholder={placeholder}
+            name={labelFor}
+            id={labelFor}
+            onChange={formik?.handleChange}
+            value={formik?.values.labelFor}
+            onBlur={() => formik?.handleBlur}
+          />
+          <div onClick={handleInputType} className="cursor-pointer pr-1">
+            {!iconState ? <EyeIcon /> : <EyeSlashIcon />}
+          </div>
+        </div>
+      ) : (
+        <div
+          className={`${!formik?.errors[labelFor] && 'hover:border-black'} ${containerStyles} ${!containerStyles && `${defaultContainerStyles} ${maxW} `} ${
+            useTouched && formik?.touched[labelFor] && formik?.errors[labelFor]
+              ? 'border-red-400'
+              : ''
+          } ${
+            useTouched && !formik?.touched[labelFor] && formik?.errors[labelFor]
+              ? 'hover:border-black'
+              : ''
+          } ${!useTouched && formik?.errors[labelFor] ? 'border-red-400' : ''} `}
+        >
+          <input
+            type={inputType}
+            className={`${inputStyles} ${!inputStyles && defaultInputStyles} `}
+            placeholder={placeholder}
+            name={labelFor}
+            id={labelFor}
+            onChange={formik?.handleChange}
+            value={formik?.values.labelFor}
+            onBlur={() => formik?.handleBlur}
+          />
+          {icon}
+        </div>
+      )}
 
       {useTouched
         ? formik?.touched[labelFor] &&

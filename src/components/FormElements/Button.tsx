@@ -47,7 +47,6 @@ const ButtonComponent = (props: Props) => {
           border: props.border,
           borderColor: props.borderColor,
           textTransform: 'capitalize',
-          // fontSize: props.textSize ? props.textSize : isSmallWidth ? 16 : 16,
           fontWeight: props.fontWeight ? props.fontWeight : undefined,
           display: 'flex',
           alignContent: props.alignContent ? props.alignContent : 'center',

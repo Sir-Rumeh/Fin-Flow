@@ -222,9 +222,9 @@ const MerchantManagement = () => {
               <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-start">
                 <div className="">
                   <TableFilter
-                    name={'searchMandate'}
-                    placeholder={'Search Mandate'}
-                    label={'Search Mandate'}
+                    name={'searchMerchantName'}
+                    placeholder={'Search Merchant'}
+                    label={'Search Merchant'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
                     handleOptionsFilter={() => {}}

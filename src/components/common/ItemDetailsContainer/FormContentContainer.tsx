@@ -9,7 +9,7 @@ interface ContainerProps {
 export default function FormContentContainer({ title, titleExtension, children }: ContainerProps) {
   return (
     <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
-      <div className="border-grayInput flex items-center justify-between border-b-[1px]">
+      <div className="border-grayInput flex items-center justify-between border-b-[1px] pb-2">
         <p className="my-3 text-lg font-semibold">{title}</p>
         {titleExtension}
       </div>

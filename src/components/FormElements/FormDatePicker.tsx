@@ -12,6 +12,8 @@ interface Props {
   initialDate?: string;
   useTouched?: boolean;
   showLabel?: boolean;
+  customPicker?: boolean;
+  hideBorder?: boolean;
 }
 
 const FormDatePicker = (props: Props) => {
@@ -24,6 +26,8 @@ const FormDatePicker = (props: Props) => {
     useTouched = false,
     placeholder,
     showLabel = true,
+    customPicker = false,
+    hideBorder = false,
   } = props;
 
   const getPickerBorder = () => {
@@ -36,18 +40,25 @@ const FormDatePicker = (props: Props) => {
   };
   return (
     <>
-      <div className="relative mb-4 mt-6 flex flex-col gap-2">
+      <div className={`${hideBorder ? '' : 'mb-4 mt-6'} relative flex flex-col gap-2`}>
         {showLabel && <label className="absolute bottom-16 font-semibold">{label}</label>}
         <DatePicker
           sx={{
             width: width ? width : '100%',
             '& .MuiOutlinedInput-root': {
+              '&.MuiOutlinedInput-notchedOutline': {
+                border: 'none',
+              },
               border: getPickerBorder(),
               height: '3.1rem',
               borderRadius: '10px',
               '&.Mui-focused fieldset': {
-                border: '1px solid gray',
+                border: hideBorder ? 'none' : '1px solid black',
               },
+              '& fieldset': {
+                border: hideBorder ? 'none' : undefined,
+              },
+
               '&.Mui-focused': {
                 color: 'black',
               },
@@ -65,8 +76,12 @@ const FormDatePicker = (props: Props) => {
               '&.Mui-focused': {
                 visibility: 'hidden',
               },
+              fontSize: customPicker ? '12px' : '16px',
+              color: '#9CA3AF',
               paddingLeft: '0.7rem',
-              transform: 'translate(0, 60%) scale(1)',
+              transform: customPicker
+                ? 'translate(0, 100%) scale(1)'
+                : 'translate(0, 60%) scale(1)',
             },
           }}
           label={!formik.values[props.name] && placeholder ? placeholder : null}

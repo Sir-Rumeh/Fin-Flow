@@ -70,6 +70,7 @@ const Reports = () => {
     { value: 'Transaction Reports', label: 'Transaction Reports' },
   ];
   const merchants = [
+    { value: 'All', label: 'All' },
     { value: 'Merchant One', label: 'Merchant One' },
     { value: 'Merchant Two', label: 'Merchant Two' },
     { value: 'Merchant Three', label: 'Merchant Three' },
@@ -320,6 +321,7 @@ const Reports = () => {
   ];
 
   const isSmallWidth = useMediaQuery('(max-width:370px)');
+  const isLargeWidth = useMediaQuery('(min-width:1320px)');
 
   return (
     <>
@@ -331,27 +333,37 @@ const Reports = () => {
         </div>
         <div className="mt-5">
           <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 pb-6 md:p-4 md:pb-8">
-            <div className="mt-6 grid w-full grid-cols-1 gap-4 py-1 sm:grid-cols-2 md:grid-cols-4">
-              <div className="relative flex w-full items-center gap-2">
+            <div className="flex w-full items-center justify-start border-b pb-2">
+              <h2 className="text-xl font-semibold tracking-wide">Generate Report</h2>
+            </div>
+            <div className="mt-8 grid w-full grid-cols-1 gap-4 py-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              <div className="relative flex w-full items-center">
                 <span className="absolute bottom-20 font-semibold">Date Range</span>
-                <div className="w-full">
-                  <FormDatePicker
-                    name={'startDate'}
-                    formik={formik}
-                    label="Start Date"
-                    placeholder="DD/MM/YY"
-                    showLabel={false}
-                    width="100%"
-                  />
-                </div>
-                <div className="w-full">
-                  <FormDatePicker
-                    name={'endDate'}
-                    formik={formik}
-                    label="End Date"
-                    placeholder="DD/MM/YY"
-                    showLabel={false}
-                  />
+                <div className="mt-2 flex w-full items-center rounded-lg border border-gray-300">
+                  <div className="w-full">
+                    <FormDatePicker
+                      name={'startDate'}
+                      formik={formik}
+                      label="Start Date"
+                      placeholder="DD/MM/YY"
+                      showLabel={false}
+                      customPicker
+                      width="100%"
+                      hideBorder
+                    />
+                  </div>
+                  <div className="h-[2px] w-[16px] bg-gray-300"></div>
+                  <div className="w-full">
+                    <FormDatePicker
+                      name={'endDate'}
+                      formik={formik}
+                      label="End Date"
+                      placeholder="DD/MM/YY"
+                      showLabel={false}
+                      customPicker
+                      hideBorder
+                    />
+                  </div>
                 </div>
               </div>
               <div className="w-full">
@@ -369,7 +381,7 @@ const Reports = () => {
                   formik={formik}
                   options={merchants}
                   scrollableOptions
-                  scrollableHeight="h-[8rem]"
+                  scrollableHeight="max-h-[10rem]"
                 />
               </div>
               <div className="w-full">
@@ -393,7 +405,6 @@ const Reports = () => {
               />
             </div>
           </div>
-
           {showFilteredReport && formik.values.reportType === 'Mandate Status Reports' && (
             <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
               <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
@@ -422,6 +433,7 @@ const Reports = () => {
                         fromDateName={'fromDateFilter'}
                         toDateName={'toDateFilter'}
                         selectName={'statusFilter'}
+                        translationX={isLargeWidth ? 300 : undefined}
                       />
                     </div>
                   </div>
@@ -471,6 +483,7 @@ const Reports = () => {
                         fromDateName={'fromDateFilter'}
                         toDateName={'toDateFilter'}
                         selectName={'statusFilter'}
+                        translationX={isLargeWidth ? 300 : undefined}
                       />
                     </div>
                   </div>

@@ -45,7 +45,7 @@ const CustomModal = ({ title, isOpen, setIsOpen, children, width = '700px', padd
         aria-describedby="modal-modal-description"
       >
         <Box sx={boxStyle}>
-          <div className="flex flex-col space-y-6">
+          <div className="custom-scrollbar flex max-h-[70dvh] flex-col space-y-6 overflow-y-scroll">
             <div className="px-4">{children}</div>
           </div>
         </Box>

@@ -16,6 +16,7 @@ import {
 import { RequestTypes } from 'utils/enums';
 import CustomTable from 'components/CustomTable';
 import { useFormik } from 'formik';
+import { useMediaQuery } from '@mui/material';
 
 const MandateRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -150,6 +151,7 @@ const MandateRequests = () => {
       },
     },
   ];
+  const isLargeWidth = useMediaQuery('(min-width:1320px)');
   return (
     <>
       <section className="p-2 md:p-4">
@@ -177,6 +179,7 @@ const MandateRequests = () => {
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}
                     selectName={'statusFilter'}
+                    translationX={isLargeWidth ? 350 : undefined}
                   />
                 </div>
               </div>
