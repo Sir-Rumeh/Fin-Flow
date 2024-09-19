@@ -352,7 +352,7 @@ const Reports = () => {
                       hideBorder
                     />
                   </div>
-                  <div className="absolute left-[48%] h-[2px] w-[10px] bg-gray-300"></div>
+                  <div className="absolute left-[47%] h-[2px] w-[10px] bg-gray-300"></div>
                   <div className="w-full">
                     <FormDatePicker
                       name={'endDate'}
@@ -656,7 +656,7 @@ const Reports = () => {
             </div>
             <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          <div id="modal-modal-description" className="mt-2">
             {mandateType === 'Variable' ? (
               <form
                 onSubmit={(e) => {
@@ -699,7 +699,7 @@ const Reports = () => {
                 <h3 className="">You cannot modify a fixed mandate</h3>
               </span>
             )}
-          </Typography>
+          </div>
         </CustomModal>
       )}
       {modals.confirmEdit && (

@@ -49,6 +49,10 @@ import AdminEditProfile from 'pages/Admin/ProfileManagement/EditProfile';
 import AdminAccountDetails from 'pages/Admin/AccountManagement/AccountDetails';
 import AdminCreateAccount from 'pages/Admin/AccountManagement/CreateAccount';
 import AdminEditAccount from 'pages/Admin/AccountManagement/EditAccount';
+import AdminAddUser from 'pages/Admin/StaffUserManagement/AddSingleUser';
+import AdminAddBulkUsers from 'pages/Admin/StaffUserManagement/AddBulkUsers';
+import AdminEditUser from 'pages/Admin/StaffUserManagement/EditUser';
+import AdminStaffUserDetails from 'pages/Admin/StaffUserManagement/UserDetails';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -229,6 +233,28 @@ const adminRoutes: RoutesType[] = [
     component: <StaffUserManagement />,
     rolesWithAccess: [AdminUserRoles.Admin],
     willChildLinkShow: false,
+    children: [
+      {
+        name: 'Staff User Details',
+        path: 'staff-user-details',
+        component: <AdminStaffUserDetails />,
+      },
+      {
+        name: 'Create Staff User',
+        path: 'create-staff-user',
+        component: <AdminAddUser />,
+      },
+      {
+        name: 'Create Bulk Staff Users',
+        path: 'create-bulk-staff-users',
+        component: <AdminAddBulkUsers />,
+      },
+      {
+        name: 'Edit Staff User',
+        path: 'edit-staff-user',
+        component: <AdminEditUser />,
+      },
+    ],
   },
 ];
 

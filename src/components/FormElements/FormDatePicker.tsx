@@ -76,7 +76,7 @@ const FormDatePicker = (props: Props) => {
               paddingLeft: hideBorder ? '8px' : undefined,
             },
             '& .MuiInputAdornment-root': {
-              marginLeft: '2px',
+              marginLeft: '-7px',
             },
             '& .MuiInputLabel-root': {
               visibility: 'visible',

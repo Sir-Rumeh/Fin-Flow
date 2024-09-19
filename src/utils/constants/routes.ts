@@ -78,6 +78,10 @@ export const appRoutes = {
     },
     staffUserManagement: {
       index: `${BASE_ROUTES.ADMIN}/staff-user-management`,
+      staffUserDetails: `${BASE_ROUTES.ADMIN}/staff-user-management/staff-user-details`,
+      createStaffUser: `${BASE_ROUTES.ADMIN}/staff-user-management/create-staff-user`,
+      createBulkStaffUsers: `${BASE_ROUTES.ADMIN}/staff-user-management/create-bulk-staff-users`,
+      editStaffUser: `${BASE_ROUTES.ADMIN}/staff-user-management/edit-staff-user`,
     },
   },
   merchantDashboard: {

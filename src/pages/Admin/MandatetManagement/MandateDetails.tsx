@@ -432,7 +432,7 @@ const MandateDetails = () => {
             </div>
             <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          <div id="modal-modal-description" className="mt-2">
             {mandateType === 'Variable' ? (
               <form
                 onSubmit={(e) => {
@@ -476,7 +476,7 @@ const MandateDetails = () => {
                 </span>
               </Typography>
             )}
-          </Typography>
+          </div>
         </CustomModal>
       )}
       {modals.confirmEdit && (
