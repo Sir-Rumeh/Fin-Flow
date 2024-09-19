@@ -49,8 +49,8 @@ function EditAccount() {
           <h2 className="mt-3 text-xl font-semibold">Modify Account Details</h2>
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-10">
-          <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-8">
-            <form onSubmit={formik.handleSubmit} noValidate className="relative w-full 2xl:w-[80%]">
+          <div className="w-full rounded-[5px] border-[3px] border-grayPrimary px-6 py-8 2xl:w-[80%]">
+            <form onSubmit={formik.handleSubmit} noValidate className="relative w-full">
               <div className="slide-down">
                 <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
                   <CustomInput
@@ -105,7 +105,7 @@ function EditAccount() {
                     hoverBackgroundColor="#2F0248"
                     type="submit"
                     title="Save"
-                    width="8rem"
+                    width="7rem"
                     customPaddingX="1.4rem"
                   />
                 </div>

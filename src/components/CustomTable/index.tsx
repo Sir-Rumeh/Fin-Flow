@@ -83,10 +83,10 @@ function CustomTable({
             hideFooterPagination
           />
           <>
-            <div className="-mt-5 flex w-full items-center justify-start gap-x-5 p-3">
+            <div className="-mt-5 flex w-full items-center justify-start gap-x-2 p-3 md:gap-x-3 2xl:gap-x-5">
               <button
                 disabled={paginationCountArray[0] === 1}
-                className={`cursor-pointer ${paginationCountArray[0] === 1 ? 'opacity-30' : ''}`}
+                className={`scale-[85%] cursor-pointer 2xl:scale-100 ${paginationCountArray[0] === 1 ? 'opacity-30' : ''}`}
                 onClick={() => {
                   if (paginationSplitPosition.x1 > 0) {
                     if (
@@ -114,7 +114,7 @@ function CustomTable({
               </button>
 
               {paginationCountArray[0] >= 11 && (
-                <div className="relative flex items-center justify-evenly gap-x-5">
+                <div className="relative flex scale-[85%] items-center justify-evenly gap-x-5 2xl:scale-100">
                   <button
                     className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData?.pageNumber === 1 ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
                     onClick={() => {
@@ -138,7 +138,7 @@ function CustomTable({
                 </div>
               )}
 
-              <div className="no-scrollbar flex w-auto items-center justify-evenly gap-x-5 overflow-x-scroll">
+              <div className="no-scrollbar flex w-auto scale-[85%] items-center justify-evenly gap-x-5 overflow-x-scroll 2xl:scale-100">
                 {paginationCountArray?.map((count: number | any, index) => {
                   return (
                     <button
@@ -161,7 +161,7 @@ function CustomTable({
               </div>
 
               {paginationCountArray[paginationCountArray?.length - 1] !== paginationCount && (
-                <div className="relative flex items-center justify-evenly gap-x-5">
+                <div className="relative flex scale-[85%] items-center justify-evenly gap-x-5 2xl:scale-100">
                   <span className="flex h-full items-end text-2xl">...</span>
                   <button
                     className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData?.pageNumber === paginationCount ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
@@ -189,7 +189,7 @@ function CustomTable({
                 disabled={
                   paginationCountArray[paginationCountArray?.length - 1] === paginationCount
                 }
-                className={`cursor-pointer ${paginationCountArray[paginationCountArray?.length - 1] === paginationCount ? 'opacity-30' : ''}`}
+                className={`scale-[85%] cursor-pointer 2xl:scale-100 ${paginationCountArray[paginationCountArray?.length - 1] === paginationCount ? 'opacity-30' : ''}`}
                 onClick={() => {
                   if (paginationSplitPosition.x1 + 5 < paginationCount) {
                     setPaginationSplitPosition((prev) => {

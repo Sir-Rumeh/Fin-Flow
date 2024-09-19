@@ -39,6 +39,7 @@ function AddUser() {
     { value: 'Audit Role', label: 'Audit Role' },
     { value: 'Reporting Role', label: 'Reporting Role' },
   ];
+
   return (
     <>
       <div className="px-5 py-1">
@@ -56,10 +57,10 @@ function AddUser() {
           <h2 className="mt-3 text-xl font-semibold">Add New Staff User </h2>
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-10">
-          <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-8">
-            <form onSubmit={formik.handleSubmit} noValidate className="relative w-full">
+          <div className="w-full rounded-[5px] border-[3px] border-grayPrimary px-6 py-8 2xl:w-[80%]">
+            <form onSubmit={formik.handleSubmit} noValidate className="relativew-full">
               <div className="slide-down">
-                <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
+                <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
                   <CustomInput
                     labelFor="userName"
                     label="Enter User Name"
@@ -73,14 +74,6 @@ function AddUser() {
                     label="Enter First Name"
                     inputType="text"
                     placeholder="Enter first name"
-                    maxW="w-full"
-                    formik={formik}
-                  />
-                  <CustomInput
-                    labelFor="middleName"
-                    label="Enter Middle Name"
-                    inputType="text"
-                    placeholder="Enter middle name"
                     maxW="w-full"
                     formik={formik}
                   />
@@ -133,6 +126,7 @@ function AddUser() {
                     hoverBackgroundColor="#2F0248"
                     type="submit"
                     title="Add User"
+                    width="8rem"
                     customPaddingX="1.4rem"
                   />
                 </div>
