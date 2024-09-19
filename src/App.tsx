@@ -1,21 +1,18 @@
 import { lazy, Suspense } from 'react';
 import LoadingIndicator from 'components/common/LoadingIndicator';
-import { ThemeProvider } from '@mui/system';
-import { theme } from './theme';
-import { LocalizationProvider } from '@mui/x-date-pickers';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import 'assets/fonts/Gotham.css';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 const ApplicationRoutes = lazy(() => import('./routes'));
 
 function App() {
+  const queryClient = new QueryClient();
+
   return (
-    <Suspense fallback={<LoadingIndicator />}>
-      <LocalizationProvider dateAdapter={AdapterDayjs}>
-        <ThemeProvider theme={theme}>
-          <ApplicationRoutes />
-        </ThemeProvider>
-      </LocalizationProvider>
-    </Suspense>
+    <QueryClientProvider client={queryClient}>
+      <Suspense fallback={<LoadingIndicator />}>
+        <ApplicationRoutes />
+      </Suspense>
+    </QueryClientProvider>
   );
 }
 

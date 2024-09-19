@@ -40,7 +40,43 @@ export const editMerchantSchema = Yup.object().shape({
   merchantCode: Yup.string().required('Merchant Code is required'),
   merchantCIF: Yup.string().required('Merchant CIF is required'),
 });
+
 export const addSingleMandateSchema = Yup.object().shape({
   supportingDocument: Yup.string().required('Supporting Document is required'),
   merchantId: Yup.string().required('Supporting Document is required'),
+});
+
+export const createMandateSchema = Yup.object().shape({
+  variableType: Yup.string().required('variable type is required'),
+  merchantId: Yup.string().required('Merchant ID is required'),
+  merchantCode: Yup.string().required('Merchant Code is required'),
+  productId: Yup.string().required('Product ID is required'),
+  amount: Yup.number()
+    .required('Amount is required')
+    .positive('Amount must be a positive number')
+    .typeError('Amount must be a number'),
+  startDate: Yup.string().required('Start date is required'),
+  endDate: Yup.string().required('End date is required'),
+  dayToApply: Yup.string().required('Day to apply is required'),
+  frequency: Yup.string().required('Frequency is required'),
+  service: Yup.string().required('Service is required'),
+  accountName: Yup.string().required('Account name is required'),
+  accountNumber: Yup.string().required('Account number is required'),
+  bankCode: Yup.string().required('Bank code is required'),
+  fileExtension: Yup.string().required('File is required'),
+  narration: Yup.string().required('Narration is required'),
+  payerName: Yup.string().required('Payer name is required'),
+  payerEmailAddress: Yup.string().required('Payer email address is required'),
+  payerPhoneNumber: Yup.string().required('Payer phone number is required'),
+  payerAddress: Yup.string().required('Payer address is required'),
+  payeeName: Yup.string().required('Payee name is required'),
+  payeeEmailAddress: Yup.string().required('Payee email address is required'),
+  payeePhoneNumber: Yup.string().required('Payee phone number is required'),
+  payeeAddress: Yup.string().required('Payee address is required'),
+  biller: Yup.string().required('Biller is required'),
+  billerId: Yup.string().required('Biller id is required'),
+  billerAccountNumber: Yup.string().required('Biller account number id is required'),
+  billerAccountName: Yup.string().required('Biller account name id is required'),
+  billerBankCode: Yup.string().required('Biller bank code id is required'),
+  billerBankName: Yup.string().required('Biller bank name id is required'),
 });

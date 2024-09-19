@@ -100,59 +100,64 @@ const AuditTrail = () => {
       <div className="px-5 py-5">
         <h2 className="text-2xl font-semibold">Audit Trail</h2>
         <div className="mt-5 rounded-lg bg-white px-5 py-8">
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-10">
+          <div className="grid grid-cols-1 content-center items-center justify-center gap-10 md:grid-cols-2 lg:grid-cols-4">
             <CustomInput
               labelFor="merchantId"
               label="Username/Staff ID"
-              containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
-              inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+              containerStyles="w-full flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full mb-[8px]"
+              inputStyles="h-[40px] w-full lg:w-[300px] px-2 focus:outline-none focus:ring-0"
               inputType="text"
               placeholder="Enter here"
             />
-            <div className="mt-2 flex items-center justify-between gap-5">
-              <ThemeProvider theme={theme}>
-                <LocalizationProvider dateAdapter={AdapterDayjs}>
-                  <Box sx={{ display: 'flex', gap: 2 }}>
-                    <DatePicker
-                      label="Start Date"
-                      sx={{
-                        height: '50px',
-                        '& .MuiInputBase-root': {
-                          height: '50px',
-                          borderRadius: '8px',
-                        },
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '8px',
-                        },
-                      }}
-                    />
-                    <DatePicker
-                      label="End Date"
-                      sx={{
-                        height: '50px',
-                        '& .MuiInputBase-root': {
-                          height: '50px',
-                          borderRadius: '8px',
-                        },
-                        '& .MuiOutlinedInput-root': {
-                          borderRadius: '8px',
-                        },
-                      }}
-                    />
-                  </Box>
-                </LocalizationProvider>
-              </ThemeProvider>
-              <ButtonComponent
-                onClick={() => {}}
-                title="Continue"
-                backgroundColor="#5C068C"
-                hoverBackgroundColor="#2F0248"
-                color="white"
-                width="150px"
-                height="50px"
-                fontWeight={600}
-              />
-            </div>
+
+            <ThemeProvider theme={theme}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="Start Date"
+                  sx={{
+                    height: '50px',
+                    width: '100%',
+                    '& .MuiInputBase-root': {
+                      height: '50px',
+                      borderRadius: '8px',
+                    },
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '8px',
+                    },
+                  }}
+                />
+              </LocalizationProvider>
+            </ThemeProvider>
+
+            <ThemeProvider theme={theme}>
+              <LocalizationProvider dateAdapter={AdapterDayjs}>
+                <DatePicker
+                  label="End Date"
+                  sx={{
+                    height: '50px',
+                    width: '100%',
+                    '& .MuiInputBase-root': {
+                      height: '50px',
+                      borderRadius: '8px',
+                    },
+                    '& .MuiOutlinedInput-root': {
+                      borderRadius: '8px',
+                    },
+                  }}
+                />
+              </LocalizationProvider>
+            </ThemeProvider>
+
+            <ButtonComponent
+              onClick={() => {}}
+              title="Continue"
+              backgroundColor="#5C068C"
+              hoverBackgroundColor="#2F0248"
+              color="white"
+              width="150px"
+              height="50px"
+              fontWeight={600}
+            />
           </div>
         </div>
         <div className="mt-10 rounded-lg bg-white px-5 py-5">

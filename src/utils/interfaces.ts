@@ -96,3 +96,33 @@ export interface DataTableState {
   pageSize: number;
   pageNumber: number;
 }
+
+export interface MandateRequest {
+  mandateId: string;
+  merchantId: string;
+  accountId: string;
+  mandateCode: string;
+  productId: string;
+  amount: number;
+  startDate: string;
+  endDate: string;
+  dayToApply: string;
+  frequency: string;
+  service: string;
+  accountName: string;
+  accountNumber: string;
+  bankCode: string;
+  supportingDocument: string;
+  narration: string;
+  payerName: string;
+  payeeName: string;
+  payerEmailAddress: string;
+  payerPhoneNumber: string;
+  payerAddress: string;
+  payeeEmailAddress: string;
+  payeePhoneNumber: string;
+  payeeAddress: string;
+  biller: string;
+  billerID: string;
+  billerAccountNumber: string;
+}

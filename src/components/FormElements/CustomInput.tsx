@@ -31,7 +31,7 @@ const CustomInput = ({
 }: CustomInputProps) => {
   return (
     <div className={`relative ${verticalMargin && 'mb-4 mt-6'} flex h-auto flex-col gap-2`}>
-      <label htmlFor={labelFor} className="absolute bottom-16 font-semibold">
+      <label htmlFor={labelFor} className="absolute bottom-14 font-semibold">
         {label}
       </label>
       <div
