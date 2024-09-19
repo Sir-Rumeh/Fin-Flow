@@ -116,7 +116,7 @@ const ProfileDetails = () => {
           </div>
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
-          <div className="rounded-lg bg-lilacPurple px-6 py-4">
+          <div className="rounded-lg bg-lilacPurple px-6 py-4 pb-6">
             <h3 className="text-md font-semibold md:text-xl">Merchant Accounts</h3>
             <div className="mt-4 flex flex-col items-center justify-between gap-6 gap-x-4 md:flex-row">
               <DashboardCard
