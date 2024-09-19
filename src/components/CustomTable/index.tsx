@@ -6,11 +6,18 @@ import 'assets/fonts/Gotham.css';
 import ChevronLeft from 'assets/icons/ChevronLeft';
 import ChevronRightIcon from 'assets/icons/ChevronRightIcon';
 
+interface PaginationProps {
+  pageNumber: number;
+  pageSize: number;
+}
+
 interface CustomTableProps {
   tableData: any;
   columns: any;
   rowCount: number;
   defaultAnimation?: boolean;
+  paginationData?: PaginationProps;
+  setPaginationData?: React.Dispatch<React.SetStateAction<PaginationProps>>;
 }
 
 function CustomTable({
@@ -18,13 +25,12 @@ function CustomTable({
   columns,
   rowCount,
   defaultAnimation = true,
+  paginationData,
+  setPaginationData,
 }: CustomTableProps): JSX.Element {
   const isSmallWidth = useMediaQuery('(max-width:1440px)');
-  const [paginationData, setPaginationData] = useState({
-    pageNumber: 1,
-    pageSize: 10,
-  });
-  const [paginationCountArray, setPaginationCountArray] = useState<(string | number)[]>([]);
+
+  const [paginationCountArray, setPaginationCountArray] = useState<number[]>([]);
   const [paginationCount, setPaginationCount] = useState(0);
   const [paginationSplitPosition, setPaginationSplitPosition] = useState({
     x1: 0,
@@ -32,16 +38,17 @@ function CustomTable({
   });
 
   useEffect(() => {
-    const pagiCount = Math.ceil(rowCount / 10);
-    setPaginationCount(pagiCount);
-    let arr = [];
-    for (let i = 1; i <= pagiCount; i++) {
-      arr.push(i);
+    if (paginationData) {
+      const pagiCount = Math.ceil(rowCount / paginationData?.pageSize);
+      setPaginationCount(pagiCount);
+      let arr = [];
+      for (let i = 1; i <= pagiCount; i++) {
+        arr.push(i);
+      }
+      const newArr = arr.splice(paginationSplitPosition.x1, paginationSplitPosition.x2);
+      setPaginationCountArray(newArr);
     }
-
-    const newArr = arr.splice(paginationSplitPosition.x1, paginationSplitPosition.x2);
-    setPaginationCountArray(newArr);
-  }, [rowCount, paginationSplitPosition]);
+  }, [rowCount, paginationSplitPosition, paginationData]);
 
   return (
     <div className={`${defaultAnimation ? 'slide-down' : ''} w-full`}>
@@ -71,102 +78,133 @@ function CustomTable({
             disableRowSelectionOnClick
             disableColumnMenu
             pageSizeOptions={[10, 50, 100]}
-            paginationModel={{ page: paginationData.pageNumber, pageSize: paginationData.pageSize }}
             paginationMode="server"
             rowCount={rowCount}
             hideFooterPagination
           />
-          <div className="-mt-5 flex w-full items-center justify-start gap-x-5 p-3">
-            <button
-              onClick={() => {
-                if (paginationSplitPosition.x1 > 0) {
-                  if (
-                    paginationSplitPosition.x1 === paginationCount - 5 &&
-                    paginationSplitPosition.x1 - 5 < 0
-                  ) {
+          <>
+            <div className="-mt-5 flex w-full items-center justify-start gap-x-5 p-3">
+              <button
+                disabled={paginationCountArray[0] === 1}
+                className={`cursor-pointer ${paginationCountArray[0] === 1 ? 'opacity-30' : ''}`}
+                onClick={() => {
+                  if (paginationSplitPosition.x1 > 0) {
+                    if (
+                      paginationSplitPosition.x1 === paginationCount - 5 &&
+                      paginationSplitPosition.x1 - 5 < 0
+                    ) {
+                      setPaginationSplitPosition((prev) => {
+                        return {
+                          x1: 0,
+                          x2: 5,
+                        };
+                      });
+                    } else {
+                      setPaginationSplitPosition((prev) => {
+                        return {
+                          x1: prev.x1 - 5,
+                          x2: prev.x2,
+                        };
+                      });
+                    }
+                  }
+                }}
+              >
+                <ChevronLeft />
+              </button>
+
+              {paginationCountArray[0] >= 11 && (
+                <div className="relative flex items-center justify-evenly gap-x-5">
+                  <button
+                    className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData?.pageNumber === 1 ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
+                    onClick={() => {
+                      setPaginationData?.((prev) => {
+                        return {
+                          ...prev,
+                          pageNumber: 1,
+                        };
+                      });
+                      setPaginationSplitPosition((prev) => {
+                        return {
+                          x1: 0,
+                          x2: prev.x2,
+                        };
+                      });
+                    }}
+                  >
+                    {1}
+                  </button>
+                  <span className="flex h-full items-end text-2xl">...</span>
+                </div>
+              )}
+
+              <div className="no-scrollbar flex w-auto items-center justify-evenly gap-x-5 overflow-x-scroll">
+                {paginationCountArray?.map((count: number | any, index) => {
+                  return (
+                    <button
+                      key={index}
+                      className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData?.pageNumber === count ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
+                      onClick={() =>
+                        setPaginationData?.((prev) => {
+                          return {
+                            ...prev,
+                            pageSize: 10,
+                            pageNumber: count,
+                          };
+                        })
+                      }
+                    >
+                      {count}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {paginationCountArray[paginationCountArray?.length - 1] !== paginationCount && (
+                <div className="relative flex items-center justify-evenly gap-x-5">
+                  <span className="flex h-full items-end text-2xl">...</span>
+                  <button
+                    className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData?.pageNumber === paginationCount ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
+                    onClick={() => {
+                      setPaginationData?.((prev) => {
+                        return {
+                          ...prev,
+                          pageNumber: paginationCount,
+                        };
+                      });
+                      setPaginationSplitPosition((prev) => {
+                        return {
+                          x1: paginationCount - 5,
+                          x2: prev.x2,
+                        };
+                      });
+                    }}
+                  >
+                    {paginationCount}
+                  </button>
+                </div>
+              )}
+
+              <button
+                disabled={
+                  paginationCountArray[paginationCountArray?.length - 1] === paginationCount
+                }
+                className={`cursor-pointer ${paginationCountArray[paginationCountArray?.length - 1] === paginationCount ? 'opacity-30' : ''}`}
+                onClick={() => {
+                  if (paginationSplitPosition.x1 + 5 < paginationCount) {
                     setPaginationSplitPosition((prev) => {
                       return {
-                        x1: 0,
-                        x2: 5,
-                      };
-                    });
-                  } else {
-                    setPaginationSplitPosition((prev) => {
-                      return {
-                        x1: prev.x1 - 5,
-                        x2: prev.x1 - 5,
+                        x1: prev.x1 + 5,
+                        x2: prev.x2,
                       };
                     });
                   }
-                }
-              }}
-              className="cursor-pointer"
-            >
-              <ChevronLeft />
-            </button>
-            <div className="no-scrollbar flex w-auto items-center justify-evenly gap-x-5 overflow-x-scroll">
-              {paginationCountArray?.map((count: number | any, index) => {
-                return (
-                  <button
-                    key={index}
-                    className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData.pageNumber === count ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
-                    onClick={() =>
-                      setPaginationData((prev) => {
-                        return {
-                          ...prev,
-                          pageSize: 10,
-                          pageNumber: count,
-                        };
-                      })
-                    }
-                  >
-                    {count}
-                  </button>
-                );
-              })}
+                }}
+              >
+                <ChevronRightIcon />
+              </button>
             </div>
-
-            {paginationCountArray[paginationCountArray?.length - 1] !== paginationCount && (
-              <div className="relative flex items-center justify-evenly gap-x-5">
-                <span className="flex h-full items-end text-2xl">...</span>
-                <button
-                  className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData.pageNumber === paginationCount ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
-                  onClick={() => {
-                    setPaginationData((prev) => {
-                      return {
-                        ...prev,
-                        pageNumber: paginationCount,
-                      };
-                    });
-                    setPaginationSplitPosition((prev) => {
-                      return {
-                        x1: paginationCount - 5,
-                        x2: paginationCount,
-                      };
-                    });
-                  }}
-                >
-                  {paginationCount}
-                </button>
-              </div>
-            )}
-
-            <button
-              className="cursor-pointer"
-              onClick={() => {
-                if (paginationSplitPosition.x1 + 5 <= paginationCount) {
-                  setPaginationSplitPosition((prev) => {
-                    return {
-                      x1: prev.x1 + 5,
-                      x2: prev.x1 + 5,
-                    };
-                  });
-                }
-              }}
-            >
-              <ChevronRightIcon />
-            </button>
-          </div>
+          </>
         </div>
       ) : (
         <div className="slide-down mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">

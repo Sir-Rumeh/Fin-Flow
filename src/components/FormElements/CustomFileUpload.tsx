@@ -63,7 +63,7 @@ const CustomFileUpload = ({
             />
             <button
               type="button"
-              className="flex h-full w-full cursor-pointer items-center justify-center bg-gradient-to-r from-[#2F0248] to-yellow-800 bg-clip-text text-center font-semibold text-transparent"
+              className="flex h-full w-full cursor-pointer items-center justify-center bg-gradient-to-r from-[#5C068C] to-[#2F0248] bg-clip-text text-center font-semibold text-transparent"
               onClick={() => {
                 if (fileRef.current) {
                   fileRef.current.click();

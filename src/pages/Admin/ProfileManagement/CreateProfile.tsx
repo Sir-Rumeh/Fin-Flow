@@ -34,11 +34,11 @@ function CreateProfile() {
     },
   });
 
-  const dayToApplyOptions = [
-    { value: 'Day 1', label: 'Day 1' },
-    { value: 'Day 2', label: 'Day 2' },
-    { value: 'Day 3', label: 'Day 3' },
-    { value: 'Day 4', label: 'Day 4' },
+  const roles = [
+    { value: 'Role One', label: 'Role One' },
+    { value: 'Role Two', label: 'Role Two' },
+    { value: 'Role Three', label: 'Role Three' },
+    { value: 'Role Four', label: 'Role Four' },
   ];
   return (
     <>
@@ -122,11 +122,11 @@ function CreateProfile() {
                       labelFor="role"
                       label="Assign Role"
                       formik={formik}
-                      options={dayToApplyOptions}
+                      options={roles}
                     />
                   </div>
                 </div>
-                <div className="mt-6 flex items-center justify-end">
+                <div className="mt-6 flex w-full items-center justify-end">
                   <ButtonComponent
                     variant="contained"
                     color="white"
@@ -134,7 +134,6 @@ function CreateProfile() {
                     hoverBackgroundColor="#2F0248"
                     type="submit"
                     title="Add Profile"
-                    width="10rem"
                     customPaddingX="1.4rem"
                   />
                 </div>

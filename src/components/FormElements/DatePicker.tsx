@@ -20,7 +20,7 @@ const MuiDatePicker = (props: Props) => {
             borderRadius: '10px',
           },
         }}
-        label={props.label ? props.label : null}
+        label={!props.formik.values[props.name] && props.label ? props.label : null}
         format="DD/MM/YYYY"
         value={props.formik.values[props.name] ? dayjs(props.formik.values[props.name]) : null}
         onChange={(newValue) => {

@@ -207,9 +207,9 @@ const ProfileManagement = () => {
               <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-start">
                 <div className="">
                   <TableFilter
-                    name={'searchMandate'}
-                    placeholder={'Search Mandate'}
-                    label={'Search Mandate'}
+                    name={'searchProfile'}
+                    placeholder={'Search Profile'}
+                    label={'Search Profile'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
                     handleOptionsFilter={() => {}}
