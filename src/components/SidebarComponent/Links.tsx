@@ -7,10 +7,23 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
   const navigate = useNavigate();
   const [isChildrenOpen, setIsChildrenOpen] = useState(false);
 
-  const activeRoute = (routeName: string) => {
-    return location.pathname.includes(routeName);
+  const activeRoute = (routeName: string, stringPosition: number) => {
+    const pathSegments = location.pathname.split('/');
+    const adminIndex = pathSegments.indexOf('admin');
+    const merchantIndex = pathSegments.indexOf('merchant');
+
+    if (adminIndex !== -1 && pathSegments.length > adminIndex + stringPosition) {
+      return pathSegments[adminIndex + stringPosition] === routeName;
+    } else if (
+      adminIndex === -1 &&
+      merchantIndex !== -1 &&
+      pathSegments.length > merchantIndex + stringPosition
+    ) {
+      return pathSegments[merchantIndex + stringPosition] === routeName;
+    }
+    return false;
   };
-  const isParentRouteActive = activeRoute(route.path);
+  const isParentRouteActive = activeRoute(route.path, 1);
 
   useEffect(() => {
     if (!location.pathname.includes(route.path)) {
@@ -68,7 +81,7 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
         <div className="fade-in-down mb-3 p-1">
           <div className="mb-3 flex flex-col items-start justify-center gap-y-1 bg-purpleSecondary px-3 pb-4 pt-2 2xl:px-6">
             {route.children?.map((childRoute: any) => {
-              const isChildRouteActive = activeRoute(childRoute.path.replace('/*', ''));
+              const isChildRouteActive = activeRoute(childRoute.path.replace('/*', ''), 2);
               const linkTo = `${route.layout}/${route.path}/${childRoute.path.replace('/*', '')}`;
               return (
                 <Link
@@ -96,14 +109,27 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
 
   const { routes } = props;
 
-  const activeRoute = (routeName: string) => {
-    return location.pathname.includes(routeName);
+  const activeRoute = (routeName: string, stringPosition: number) => {
+    const pathSegments = location.pathname.split('/');
+    const adminIndex = pathSegments.indexOf('admin');
+    const merchantIndex = pathSegments.indexOf('merchant');
+
+    if (adminIndex !== -1 && pathSegments.length > adminIndex + stringPosition) {
+      return pathSegments[adminIndex + stringPosition] === routeName;
+    } else if (
+      adminIndex === -1 &&
+      merchantIndex !== -1 &&
+      pathSegments.length > merchantIndex + stringPosition
+    ) {
+      return pathSegments[merchantIndex + stringPosition] === routeName;
+    }
+    return false;
   };
 
   const createLinks = (routes: RoutesType[]) => {
     return routes.map((route) => {
       const isRouteValid = route.layout === '/admin' || route.layout === '/merchant';
-      const isRouteActive = activeRoute(route.path);
+      const isRouteActive = activeRoute(route.path, 1);
 
       if (isRouteValid) {
         const conditionToShowNestedLinks =

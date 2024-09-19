@@ -395,6 +395,7 @@ export const staffUsersList: StaffUserDataRow[] = [
     dateRequested: '2015-03-25T12:00:00-06:30',
     dateCreated: '2015-03-25T12:00:00-06:30',
     dateAdded: '2015-03-25T12:00:00-06:30',
+    requestType: 'Creation',
   },
   {
     id: 2,
@@ -406,6 +407,7 @@ export const staffUsersList: StaffUserDataRow[] = [
     dateRequested: '2015-03-25T12:00:00-06:30',
     dateCreated: '2015-03-25T12:00:00-06:30',
     dateAdded: '2015-03-25T12:00:00-06:30',
+    requestType: 'Update',
   },
   {
     id: 3,
@@ -417,6 +419,7 @@ export const staffUsersList: StaffUserDataRow[] = [
     dateRequested: '2015-03-25T12:00:00-06:30',
     dateCreated: '2015-03-25T12:00:00-06:30',
     dateAdded: '2015-03-25T12:00:00-06:30',
+    requestType: 'Deletion',
   },
   {
     id: 4,
@@ -428,6 +431,7 @@ export const staffUsersList: StaffUserDataRow[] = [
     dateRequested: '2015-03-25T12:00:00-06:30',
     dateCreated: '2015-03-25T12:00:00-06:30',
     dateAdded: '2015-03-25T12:00:00-06:30',
+    requestType: 'Disable',
   },
   {
     id: 5,
@@ -439,6 +443,7 @@ export const staffUsersList: StaffUserDataRow[] = [
     dateRequested: '2015-03-25T12:00:00-06:30',
     dateCreated: '2015-03-25T12:00:00-06:30',
     dateAdded: '2015-03-25T12:00:00-06:30',
+    requestType: 'Creation',
   },
   {
     id: 6,
@@ -450,6 +455,7 @@ export const staffUsersList: StaffUserDataRow[] = [
     dateRequested: '2015-03-25T12:00:00-06:30',
     dateCreated: '2015-03-25T12:00:00-06:30',
     dateAdded: '2015-03-25T12:00:00-06:30',
+    requestType: 'Update',
   },
   {
     id: 7,
@@ -461,6 +467,7 @@ export const staffUsersList: StaffUserDataRow[] = [
     dateRequested: '2015-03-25T12:00:00-06:30',
     dateCreated: '2015-03-25T12:00:00-06:30',
     dateAdded: '2015-03-25T12:00:00-06:30',
+    requestType: 'Disable',
   },
   {
     id: 8,
@@ -472,6 +479,7 @@ export const staffUsersList: StaffUserDataRow[] = [
     dateRequested: '2015-03-25T12:00:00-06:30',
     dateCreated: '2015-03-25T12:00:00-06:30',
     dateAdded: '2015-03-25T12:00:00-06:30',
+    requestType: 'Update',
   },
   {
     id: 9,
@@ -483,6 +491,7 @@ export const staffUsersList: StaffUserDataRow[] = [
     dateRequested: '2015-03-25T12:00:00-06:30',
     dateCreated: '2015-03-25T12:00:00-06:30',
     dateAdded: '2015-03-25T12:00:00-06:30',
+    requestType: 'Deletion',
   },
   {
     id: 10,
@@ -494,6 +503,7 @@ export const staffUsersList: StaffUserDataRow[] = [
     dateRequested: '2015-03-25T12:00:00-06:30',
     dateCreated: '2015-03-25T12:00:00-06:30',
     dateAdded: '2015-03-25T12:00:00-06:30',
+    requestType: 'Update',
   },
 ];
 

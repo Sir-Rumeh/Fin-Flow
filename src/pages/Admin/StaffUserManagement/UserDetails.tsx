@@ -136,7 +136,7 @@ const UserDetails = () => {
               <DetailsCard title="Email Address" content="john.doe@fcmb.com" />
               <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
               <DetailsCard title="Role" content="Maker" />
-              <DetailsCard title="Category" content="Syscon Staffs" />
+              <DetailsCard title="Category" content="Syscon Staff" />
             </ItemDetailsContainer>
           </div>
         </div>

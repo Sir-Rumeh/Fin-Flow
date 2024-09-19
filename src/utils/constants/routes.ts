@@ -83,6 +83,13 @@ export const appRoutes = {
       createBulkStaffUsers: `${BASE_ROUTES.ADMIN}/staff-user-management/create-bulk-staff-users`,
       editStaffUser: `${BASE_ROUTES.ADMIN}/staff-user-management/edit-staff-user`,
     },
+    staffUserRequests: {
+      index: `${BASE_ROUTES.ADMIN}/staff-user-requests`,
+      staffUserCreationRequest: `${BASE_ROUTES.ADMIN}/staff-user-requests/creation-request-details`,
+      staffUserDeletionRequest: `${BASE_ROUTES.ADMIN}/staff-user-requests/deletion-request-details`,
+      staffUserUpdateRequest: `${BASE_ROUTES.ADMIN}/staff-user-requests/update-request-details`,
+      staffUserDisableRequest: `${BASE_ROUTES.ADMIN}/staff-user-requests/disable-request-details`,
+    },
   },
   merchantDashboard: {
     dashboard: {

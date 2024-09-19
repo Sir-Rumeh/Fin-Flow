@@ -78,6 +78,7 @@ export interface StaffUserDataRow {
   dateCreated: string;
   dateRequested?: string;
   dateAdded: string;
+  requestType: string;
 }
 
 export interface AuditDataRow {
