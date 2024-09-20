@@ -15,13 +15,12 @@ import { checkRoute } from 'utils/helpers';
 import SubTitleIconGreen from 'assets/icons/SubTitleIconGreen';
 import SubTitleIconYellow from 'assets/icons/SubTitleIconYellow';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
-import ButtonComponent from 'components/FormElements/Button';
-import WhiteArrowDown from 'assets/icons/WhiteArrowDown';
 import CustomPopover from 'hoc/PopOverWrapper';
 import { useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
+import DetailsActionButton from 'components/common/DetailsActionButton';
 
 const MerchantDetails = () => {
   const navigate = useNavigate();
@@ -72,22 +71,11 @@ const MerchantDetails = () => {
           <div className="w-auto">
             <CustomPopover
               popoverId={1}
-              buttonIcon={
-                <ButtonComponent
-                  variant="contained"
-                  color="white"
-                  backgroundColor="#5C068C"
-                  hoverBackgroundColor="#2F0248"
-                  endIcon={<WhiteArrowDown />}
-                  type="button"
-                  title="Actions"
-                  customPaddingX="1.4rem"
-                />
-              }
+              buttonIcon={<DetailsActionButton />}
               translationX={8}
               translationY={54}
             >
-              <div className="flex w-[8rem] flex-col rounded-md p-1">
+              <div className="flex w-[7.4rem] flex-col rounded-md p-1">
                 <button
                   onClick={() =>
                     navigate({

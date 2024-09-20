@@ -352,7 +352,7 @@ const Reports = () => {
                       hideBorder
                     />
                   </div>
-                  <div className="absolute left-[47%] h-[2px] w-[10px] bg-gray-300"></div>
+                  <div className="absolute left-[50%] h-[2px] w-[6px] bg-gray-300"></div>
                   <div className="w-full">
                     <FormDatePicker
                       name={'endDate'}

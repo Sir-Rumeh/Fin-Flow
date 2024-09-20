@@ -1,16 +1,14 @@
-import { Link, createSearchParams, useSearchParams, useNavigate } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import { UpdateRequestIcon } from 'assets/icons';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
 import appRoutes from 'utils/constants/routes';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
 import ButtonComponent from 'components/FormElements/Button';
-import WhiteArrowDown from 'assets/icons/WhiteArrowDown';
 import CustomPopover from 'hoc/PopOverWrapper';
 import { useState } from 'react';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import { Typography } from '@mui/material';
-
 import CustomTabs from 'hoc/CustomTabs';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
@@ -25,6 +23,7 @@ import { useFormik } from 'formik';
 import CustomInput from 'components/FormElements/CustomInput';
 import ChevronRight from 'assets/icons/ChevronRight';
 import CloseIcon from 'assets/icons/CloseIcon';
+import DetailsActionButton from 'components/common/DetailsActionButton';
 
 const MandateDetails = () => {
   const navigate = useNavigate();
@@ -119,6 +118,7 @@ const MandateDetails = () => {
       },
     },
   ];
+
   return (
     <>
       <div className="px-5 py-1">
@@ -140,18 +140,7 @@ const MandateDetails = () => {
           <div className="w-auto">
             <CustomPopover
               popoverId={1}
-              buttonIcon={
-                <ButtonComponent
-                  variant="contained"
-                  color="white"
-                  backgroundColor="#5C068C"
-                  hoverBackgroundColor="#2F0248"
-                  endIcon={<WhiteArrowDown />}
-                  type="button"
-                  title="Actions"
-                  customPaddingX="1.4rem"
-                />
-              }
+              buttonIcon={<DetailsActionButton />}
               translationX={8}
               translationY={54}
             >

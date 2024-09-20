@@ -3,17 +3,13 @@ import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
 import appRoutes from 'utils/constants/routes';
-import ApprovedIcon from 'assets/icons/ApprovedIcon';
-import ButtonComponent from 'components/FormElements/Button';
-import WhiteArrowDown from 'assets/icons/WhiteArrowDown';
 import CustomPopover from 'hoc/PopOverWrapper';
 import { useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
-import DashboardCard from 'components/common/DashboardCards/DashboardCard';
-import SubTitleIconYellow from 'assets/icons/SubTitleIconYellow';
 import { CreationRequestIcon, UpdateRequestIcon } from 'assets/icons';
+import DetailsActionButton from 'components/common/DetailsActionButton';
 
 const UserDetails = () => {
   const navigate = useNavigate();
@@ -59,22 +55,11 @@ const UserDetails = () => {
           <div className="w-auto">
             <CustomPopover
               popoverId={1}
-              buttonIcon={
-                <ButtonComponent
-                  variant="contained"
-                  color="white"
-                  backgroundColor="#5C068C"
-                  hoverBackgroundColor="#2F0248"
-                  endIcon={<WhiteArrowDown />}
-                  type="button"
-                  title="Actions"
-                  customPaddingX="1.4rem"
-                />
-              }
+              buttonIcon={<DetailsActionButton />}
               translationX={8}
               translationY={54}
             >
-              <div className="flex w-[8rem] flex-col rounded-md p-1">
+              <div className="flex w-[7.2rem] flex-col rounded-md p-1">
                 <button
                   onClick={() =>
                     navigate({
