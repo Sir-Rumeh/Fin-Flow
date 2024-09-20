@@ -190,7 +190,7 @@ const AuditTrail = () => {
           width={'800px'}
           paddingX={0}
         >
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <div id="modal-modal-title">
             <div className="flex items-center justify-between">
               <h1 className="text-xl font-semibold">Log Details</h1>
               <button className="scale-[110%]" onClick={() => closeModal('viewDetails')}>
@@ -198,8 +198,8 @@ const AuditTrail = () => {
               </button>
             </div>
             <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
-          </Typography>
-          <Typography id="modal-modal-description">
+          </div>
+          <div id="modal-modal-description">
             <div className="slide-down mt-5 bg-white">
               <div className="rounded-[12px] border-[3px] border-grayPrimary px-6 py-4">
                 <div className="flex items-center justify-between">
@@ -211,11 +211,11 @@ const AuditTrail = () => {
                   <DetailsCard title="Account Name" content="John Wick" />
                   <DetailsCard title="Affected Module" content="Account Management" />
                   <DetailsCard title="Performed Action" content="Disable Account" />
-                  <DetailsCard title="Date Performed" content="12/12/2024 ; 12:12:12" />
+                  <DetailsCard title="Date Performed" content="12/12/2024 : 12:12:12" />
                 </div>
               </div>
             </div>
-          </Typography>
+          </div>
         </CustomModal>
       )}
     </>

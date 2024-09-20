@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { useMediaQuery } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 
@@ -38,6 +39,8 @@ const FormDatePicker = (props: Props) => {
       return '1px solid red';
     } else return '';
   };
+
+  const isMediumWidth = useMediaQuery('(min-width:992px) and (max-width:1320px)');
   return (
     <>
       <div className={`${hideBorder ? '' : 'mb-4 mt-6'} relative flex flex-col gap-2`}>
@@ -72,11 +75,14 @@ const FormDatePicker = (props: Props) => {
               },
             },
             '& .MuiInputBase-input': {
-              width: hideBorder ? '4.6rem' : undefined,
+              width: !hideBorder ? undefined : isMediumWidth ? '4.4rem' : '4.8rem',
+              fontSize: isMediumWidth ? '12px' : undefined,
               paddingLeft: hideBorder ? '8px' : undefined,
             },
             '& .MuiInputAdornment-root': {
-              marginLeft: '2px',
+              position: 'absolute',
+              right: 10,
+              scale: isMediumWidth ? '80%' : '%',
             },
             '& .MuiInputLabel-root': {
               visibility: 'visible',

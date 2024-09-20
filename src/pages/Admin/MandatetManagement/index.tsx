@@ -418,7 +418,7 @@ const MandatetManagement = () => {
                     setActiveTab={setActiveTransactionTab}
                   />
                 </div>
-                <div className="flexitems-center justify-end">
+                <div className="flex items-center justify-end">
                   <TableFilter
                     name={'searchTransactionHistory'}
                     placeholder={'Search Transactions'}
@@ -462,7 +462,7 @@ const MandatetManagement = () => {
             </div>
             <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
           </Typography>
-          <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+          <div id="modal-modal-description" className="mt-2">
             {mandateType === 'Variable' ? (
               <form
                 onSubmit={(e) => {
@@ -505,7 +505,7 @@ const MandatetManagement = () => {
                 <h3 className="">You cannot modify a fixed mandate</h3>
               </span>
             )}
-          </Typography>
+          </div>
         </CustomModal>
       )}
       {modals.confirmEdit && (

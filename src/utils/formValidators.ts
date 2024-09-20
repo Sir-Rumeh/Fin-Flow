@@ -41,6 +41,6 @@ export const editMerchantSchema = Yup.object().shape({
   merchantCIF: Yup.string().required('Merchant CIF is required'),
 });
 export const addSingleMandateSchema = Yup.object().shape({
+  merchantId: Yup.string().required('Merchant ID is required'),
   supportingDocument: Yup.string().required('Supporting Document is required'),
-  merchantId: Yup.string().required('Supporting Document is required'),
 });

@@ -49,6 +49,16 @@ import AdminEditProfile from 'pages/Admin/ProfileManagement/EditProfile';
 import AdminAccountDetails from 'pages/Admin/AccountManagement/AccountDetails';
 import AdminCreateAccount from 'pages/Admin/AccountManagement/CreateAccount';
 import AdminEditAccount from 'pages/Admin/AccountManagement/EditAccount';
+import AdminAddUser from 'pages/Admin/StaffUserManagement/AddSingleUser';
+import AdminAddBulkUsers from 'pages/Admin/StaffUserManagement/AddBulkUsers';
+import AdminEditUser from 'pages/Admin/StaffUserManagement/EditUser';
+import AdminStaffUserDetails from 'pages/Admin/StaffUserManagement/UserDetails';
+import StaffUserRequests from 'pages/Admin/Requests/StaffUserRequests';
+import StaffUserCreationRequestDetails from 'pages/Admin/Requests/StaffUserRequests/StaffUserCreationRequestDetails';
+import StaffUserDeletionRequestDetails from 'pages/Admin/Requests/StaffUserRequests/StaffUserDeletionRequestDetails';
+import StaffUserUpdateRequestDetails from 'pages/Admin/Requests/StaffUserRequests/StaffUserUpdateRequestDetails';
+import StaffUserDisableRequestDetails from 'pages/Admin/Requests/StaffUserRequests/StaffUserDisableRequestDetails';
+import UserRequestsIcon from 'assets/icons/UserRequestsIcon';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -229,6 +239,59 @@ const adminRoutes: RoutesType[] = [
     component: <StaffUserManagement />,
     rolesWithAccess: [AdminUserRoles.Admin],
     willChildLinkShow: false,
+    children: [
+      {
+        name: 'Staff User Details',
+        path: 'staff-user-details',
+        component: <AdminStaffUserDetails />,
+      },
+      {
+        name: 'Create Staff User',
+        path: 'create-staff-user',
+        component: <AdminAddUser />,
+      },
+      {
+        name: 'Create Bulk Staff Users',
+        path: 'create-bulk-staff-users',
+        component: <AdminAddBulkUsers />,
+      },
+      {
+        name: 'Edit Staff User',
+        path: 'edit-staff-user',
+        component: <AdminEditUser />,
+      },
+    ],
+  },
+  {
+    name: 'User Requests',
+    layout: `/${BASE_ROUTES.ADMIN}`,
+    path: 'staff-user-requests',
+    icon: <UserRequestsIcon />,
+    component: <StaffUserRequests />,
+    rolesWithAccess: [AdminUserRoles.Admin],
+    willChildLinkShow: false,
+    children: [
+      {
+        name: 'Creation Request Details',
+        path: 'creation-request-details',
+        component: <StaffUserCreationRequestDetails />,
+      },
+      {
+        name: 'Deletion Request Details',
+        path: 'deletion-request-details',
+        component: <StaffUserDeletionRequestDetails />,
+      },
+      {
+        name: 'Update Request Details',
+        path: 'update-request-details',
+        component: <StaffUserUpdateRequestDetails />,
+      },
+      {
+        name: 'Disable Request Details',
+        path: 'disable-request-details',
+        component: <StaffUserDisableRequestDetails />,
+      },
+    ],
   },
 ];
 

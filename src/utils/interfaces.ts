@@ -68,6 +68,19 @@ export interface UserDataRow {
   dateRequested?: string;
 }
 
+export interface StaffUserDataRow {
+  id: number;
+  employeeId: string;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+  dateCreated: string;
+  dateRequested?: string;
+  dateAdded: string;
+  requestType: string;
+}
+
 export interface AuditDataRow {
   id: number;
   referenceNumber: number;
