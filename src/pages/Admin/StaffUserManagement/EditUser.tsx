@@ -110,7 +110,7 @@ function EditUser() {
                     maxW="w-full"
                     formik={formik}
                   />
-                  <div className="md:col-span-2">
+                  <div className="sm:col-span-2">
                     <FormSelect
                       labelFor="role"
                       label="Assign Role"
