@@ -58,6 +58,7 @@ import StaffUserCreationRequestDetails from 'pages/Admin/Requests/StaffUserReque
 import StaffUserDeletionRequestDetails from 'pages/Admin/Requests/StaffUserRequests/StaffUserDeletionRequestDetails';
 import StaffUserUpdateRequestDetails from 'pages/Admin/Requests/StaffUserRequests/StaffUserUpdateRequestDetails';
 import StaffUserDisableRequestDetails from 'pages/Admin/Requests/StaffUserRequests/StaffUserDisableRequestDetails';
+import UserRequestsIcon from 'assets/icons/UserRequestsIcon';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -262,10 +263,10 @@ const adminRoutes: RoutesType[] = [
     ],
   },
   {
-    name: 'Staff User Requests',
+    name: 'User Requests',
     layout: `/${BASE_ROUTES.ADMIN}`,
     path: 'staff-user-requests',
-    icon: <UserIcon />,
+    icon: <UserRequestsIcon />,
     component: <StaffUserRequests />,
     rolesWithAccess: [AdminUserRoles.Admin],
     willChildLinkShow: false,
