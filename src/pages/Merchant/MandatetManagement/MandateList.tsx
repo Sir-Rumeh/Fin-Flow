@@ -55,13 +55,13 @@ const MandateTableColumn: GridColDef[] = [
 
       switch (params.value) {
         case 'Creation':
-          return renderIcon(CreationRequestIcon, 'text-greenPrimary');
+          return renderIcon(CreationRequestIcon, 'text-greenPrimary font-semibold');
         case 'Update':
-          return renderIcon(UpdateRequestIcon, 'text-lightPurple');
+          return renderIcon(UpdateRequestIcon, 'text-lightPurple font-semibold');
         case 'Disable':
-          return renderIcon(DisableRequestIcon, 'text-yellowNeutral');
+          return renderIcon(DisableRequestIcon, 'text-yellowNeutral font-semibold');
         case 'Deletion':
-          return renderIcon(DeleteRequestIcon, 'text-redSecondary');
+          return renderIcon(DeleteRequestIcon, 'text-redSecondary font-semibold');
         default:
           return <span>{params.value}</span>;
       }
@@ -84,7 +84,7 @@ const MandateTableColumn: GridColDef[] = [
       return (
         <Link
           to={`/${appRoutes.merchantDashboard.dashboard.mandateDetails}`}
-          className="cursor-pointer font-medium text-lightPurple"
+          className="cursor-pointer font-semibold text-lightPurple"
         >
           View Details
         </Link>

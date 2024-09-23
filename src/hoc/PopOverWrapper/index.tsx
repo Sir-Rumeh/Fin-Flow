@@ -53,6 +53,7 @@ const CustomPopover = ({
       <Button
         sx={{
           width: '100%',
+          fontFamily: " 'Gotham', sans-serif ",
           paddingLeft: customPaddingX ? customPaddingX : undefined,
           paddingRight: customPaddingX ? customPaddingX : undefined,
           textTransform: 'capitalize',
@@ -90,7 +91,7 @@ const CustomPopover = ({
           },
         }}
       >
-        <div className="w-full rounded-full text-xs">{children}</div>
+        <div className="rounded-full text-xs">{children}</div>
       </Popover>
     </div>
   );

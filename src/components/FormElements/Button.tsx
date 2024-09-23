@@ -10,6 +10,7 @@ type Props = {
   border?: number;
   textSize?: number;
   fontWeight?: number;
+  fontSize?: string;
   borderColor?: string;
   variant?: 'contained' | 'outlined' | 'text';
   type?: 'button' | 'submit' | 'reset';
@@ -36,9 +37,10 @@ const ButtonComponent = (props: Props) => {
         variant={props.variant}
         type={props.type}
         sx={{
+          fontFamily: " 'Gotham', sans-serif ",
           width: props.width ? props.width : '100%',
           height: props.height ? props.height : '2.67rem',
-          borderRadius: '6px',
+          borderRadius: '8px',
           color: props.color,
           ':hover': {
             color: props.hoverColor,
@@ -49,6 +51,8 @@ const ButtonComponent = (props: Props) => {
           border: props.border,
           borderColor: props.borderColor,
           textTransform: 'capitalize',
+          // fontSize: props.textSize ? props.textSize : isSmallWidth ? 16 : 16,
+          fontSize: props.fontSize,
           fontWeight: props.fontWeight ? props.fontWeight : undefined,
           display: 'flex',
           alignContent: props.alignContent ? props.alignContent : 'center',

@@ -1,14 +1,30 @@
 import { Link } from 'react-router-dom';
 import { GridColDef } from '@mui/x-data-grid';
-import { CreationRequestIcon, DeleteRequestIcon, FilterIcon } from 'assets/icons';
+import { CreationRequestIcon, DeleteRequestIcon, FilterIcon, SearchIcon } from 'assets/icons';
 import { pendingMandateList, UserManagementList } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
 import TableLogo from 'assets/images/table_logo.png';
 import { RequestType } from 'utils/enums';
 import CustomTable from 'components/CustomTable';
-import SearchIcon from 'assets/icons/SearchIcon';
+import TableFilter from 'components/TableFilter';
+import { useFormik } from 'formik';
+import { useState } from 'react';
 
 const UserManagement = () => {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const formik = useFormik({
+    initialValues: {
+      searchMerchantName: '',
+      fromDateFilter: '',
+      toDateFilter: '',
+      statusFilter: '',
+    },
+    onSubmit: (values) => {
+      setSearchTerm('');
+    },
+  });
+
   const UserTableColumn: GridColDef[] = [
     {
       field: 'accountId',
@@ -47,9 +63,9 @@ const UserManagement = () => {
 
         switch (params.value) {
           case RequestType.Enabled:
-            return renderIcon(CreationRequestIcon, 'text-greenPrimary');
+            return renderIcon(CreationRequestIcon, 'text-greenPrimary font-semibold');
           case RequestType.Disabled:
-            return renderIcon(DeleteRequestIcon, 'text-redSecondary');
+            return renderIcon(DeleteRequestIcon, 'text-redSecondary font-semibold');
           default:
             return <span>{params.value}</span>;
         }
@@ -71,7 +87,7 @@ const UserManagement = () => {
       renderCell: () => (
         <Link
           to={`/${appRoutes.merchantDashboard.userManagement.userDetails}`}
-          className="cursor-pointer font-medium text-lightPurple"
+          className="cursor-pointer font-semibold text-lightPurple"
         >
           View Details
         </Link>
@@ -85,20 +101,18 @@ const UserManagement = () => {
         <h2 className="text-2xl font-semibold">User Management</h2>
         <div className="mt-5 rounded-lg bg-white px-5 py-5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <button className="flex cursor-pointer items-center gap-3 rounded-lg border border-lightPurple px-4 py-2 text-lightPurple">
-                <p>Filter by</p>
-                <FilterIcon />
-              </button>
-              <div className="flex w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2">
-                <SearchIcon className="h-6 w-6" />
-                <input
-                  type="text"
-                  className="w-full border-none focus:border-none focus:outline-none"
-                  placeholder="Search"
-                />
-              </div>
-            </div>
+            <TableFilter
+              name={'searchMerchantName'}
+              placeholder={'Search '}
+              label={'Search Merchant'}
+              value={searchTerm}
+              setSearch={setSearchTerm}
+              handleOptionsFilter={() => {}}
+              formik={formik}
+              fromDateName={'fromDateFilter'}
+              toDateName={'toDateFilter'}
+              selectName={'statusFilter'}
+            />
           </div>
           <div className="mt-4 h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-6 w-full">

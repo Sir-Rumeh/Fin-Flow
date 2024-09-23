@@ -56,8 +56,8 @@ const DeletionRequestDetails = () => {
         >
           Mandate Requests
         </Link>
-        <ArrowRightIcon style="mt-[2px]" />
-        <span className="text-sm text-lightPurple">Request Details</span>
+        <ArrowRightIcon style="" />
+        <span className="text-sm font-medium text-lightPurple">Request Details</span>
       </div>
       <div className="mt-4 flex items-center justify-between">
         <h2 className="mt-3 text-xl font-semibold">Request ID : Req123456</h2>
@@ -70,6 +70,8 @@ const DeletionRequestDetails = () => {
               border={2}
               width="150px"
               height="50px"
+              fontWeight={600}
+              fontSize="16px"
             />
             <ButtonComponent
               onClick={() => openModal('confirmApprove')}
@@ -78,6 +80,7 @@ const DeletionRequestDetails = () => {
               color="white"
               width="150px"
               height="50px"
+              fontSize="16px"
             />
           </div>
         )}
@@ -89,6 +92,7 @@ const DeletionRequestDetails = () => {
             color="white"
             width="200px"
             height="50px"
+            fontSize="16px"
           />
         )}
       </div>

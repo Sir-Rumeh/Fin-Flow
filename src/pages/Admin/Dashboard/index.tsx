@@ -109,6 +109,7 @@ const Dashboard = () => {
       field: 'actions',
       headerName: 'Action',
       headerClassName: 'ag-thead ',
+      width: screen.width < 1000 ? 200 : 110,
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
         return (

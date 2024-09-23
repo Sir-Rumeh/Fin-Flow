@@ -40,3 +40,9 @@ export enum ReportsType {
   TransactionReports = 'Transaction Reports',
   MandateStatusReports = 'Mandate Status Report',
 }
+
+export enum MandateRequestStatus {
+  Approved = 'Approved',
+  Declined = 'Declined',
+  Pending = 'Pending',
+}

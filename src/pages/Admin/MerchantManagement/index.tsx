@@ -14,7 +14,7 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
-import { Button, useMediaQuery } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 
 const MerchantManagement = () => {
   const printPdfRef = useRef(null);
@@ -120,6 +120,7 @@ const MerchantManagement = () => {
     {
       field: 'actions',
       headerName: 'Action',
+      width: 110,
       headerClassName: 'ag-thead ',
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {

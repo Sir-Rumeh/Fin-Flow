@@ -8,6 +8,8 @@ import SuccessModalIcon from './SuccessModalIcon';
 import ArrowRightIcon from './ArrowRight';
 import DarkArrowDown from './DarkArrowDown';
 import CloseIcon from './CloseIcon';
+import SearchIcon from './SearchIcon';
+import DownloadIcon from './DownloadIcon';
 
 export {
   DashboardCardArrowIcon,
@@ -20,4 +22,6 @@ export {
   ArrowRightIcon,
   DarkArrowDown,
   CloseIcon,
+  SearchIcon,
+  DownloadIcon,
 };

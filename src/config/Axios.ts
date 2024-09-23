@@ -1,9 +1,8 @@
 import axios from 'axios';
 import store from 'store/index';
 import { AppConfig } from './index';
-import { generateHeader } from 'utils/helpers/index';
+import { generateHeader, notifySuccess, notifyError } from 'utils/helpers/index';
 import { uiStartLoading, uiStopLoading } from 'store/reducers/LoadingSlice';
-import { notifyError } from 'utils/helpers/index';
 
 const AxiosClient = axios.create({
   baseURL: AppConfig.SERVER_URL,
@@ -42,29 +41,33 @@ AxiosClient.interceptors.request.use(
 
 AxiosClient.interceptors.response.use(
   (response) => {
-    if (response.status === 200 && !response.data?.status) {
-      dispatch(uiStopLoading());
-      notifyError(response.data.message);
-      return;
+    console.log(response);
+    dispatch(uiStopLoading());
+
+    if (response.status === 200) {
+      // notifySuccess(response.data.responseMessage);
+      return response;
     }
     dispatch(uiStopLoading());
-    return response.data;
+    return response;
   },
   async (error) => {
+    console.log(error);
+
     if (error?.response?.status === 401) {
       // dispatch(logout());
       dispatch(uiStopLoading());
       notifyError('Your session timed out, sign in again to continue');
       window.location.href = '/login';
-    } else if (error?.response?.status === 500) {
+    } else if (error?.status === 500) {
       dispatch(uiStopLoading());
-      notifyError('Something went wrong');
+      notifyError(error?.message);
     }
 
     dispatch(uiStopLoading());
-    notifyError(
-      error?.response?.data?.Message ? error?.response?.data?.Message : 'Something went wrong',
-    );
+    // notifyError(
+    //   error?.response?.data?.Message ? error?.response?.data?.Message : 'Something went wrong',
+    // );
     return Promise.reject(error);
   },
 );
