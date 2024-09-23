@@ -126,3 +126,12 @@ export interface MandateRequest {
   billerID: string;
   billerAccountNumber: string;
 }
+
+export interface QueryParams {
+  mandateCode: string | undefined;
+  status: string | undefined;
+  pageNo: number | undefined;
+  pageSize: number | undefined;
+  sortBy: string | undefined;
+  sortOrder: string | undefined;
+}

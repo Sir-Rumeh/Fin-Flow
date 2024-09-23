@@ -109,45 +109,34 @@ const AuditTrail = () => {
               inputType="text"
               placeholder="Enter here"
             />
-
-            <ThemeProvider theme={theme}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label="Start Date"
-                  sx={{
-                    height: '50px',
-                    width: '100%',
-                    '& .MuiInputBase-root': {
-                      height: '50px',
-                      borderRadius: '8px',
-                    },
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: '8px',
-                    },
-                  }}
-                />
-              </LocalizationProvider>
-            </ThemeProvider>
-
-            <ThemeProvider theme={theme}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label="End Date"
-                  sx={{
-                    height: '50px',
-                    width: '100%',
-                    '& .MuiInputBase-root': {
-                      height: '50px',
-                      borderRadius: '8px',
-                    },
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: '8px',
-                    },
-                  }}
-                />
-              </LocalizationProvider>
-            </ThemeProvider>
-
+            <DatePicker
+              label="Start Date"
+              sx={{
+                height: '50px',
+                width: '100%',
+                '& .MuiInputBase-root': {
+                  height: '50px',
+                  borderRadius: '8px',
+                },
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '8px',
+                },
+              }}
+            />
+            <DatePicker
+              label="End Date"
+              sx={{
+                height: '50px',
+                width: '100%',
+                '& .MuiInputBase-root': {
+                  height: '50px',
+                  borderRadius: '8px',
+                },
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '8px',
+                },
+              }}
+            />
             <ButtonComponent
               onClick={() => {}}
               title="Continue"

@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { GridColDef } from '@mui/x-data-grid';
 import {
@@ -6,20 +7,31 @@ import {
   DisableRequestIcon,
   UpdateRequestIcon,
 } from 'assets/icons';
-import { approvedMandateList, pendingMandateList, rejectedMandateList } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
 import TableLogo from 'assets/images/table_logo.png';
 import { useTabContext } from '../../../context/TabContext';
-import { RequestType } from 'utils/enums';
+import { MandateRequestStatus, RequestType } from 'utils/enums';
 import Tab from 'components/Tabs';
 import CustomTable from 'components/CustomTable';
 import TableFilter from 'components/TableFilter';
-import { useState } from 'react';
 import { useFormik } from 'formik';
+import { useQuery } from '@tanstack/react-query';
+import { getMandateRequests } from 'config/actions/dashboard-actions';
+import { QueryParams } from 'utils/interfaces';
+import { Box, CircularProgress } from '@mui/material';
 
 const MandateRequests = () => {
   const { tab, setTab } = useTabContext();
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    mandateCode: '',
+    status: MandateRequestStatus.Pending,
+    pageNo: 1,
+    pageSize: 10,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
 
   const MandateTableColumn: GridColDef[] = [
     {
@@ -79,7 +91,7 @@ const MandateRequests = () => {
       },
     },
     {
-      field: 'dateRequested',
+      field: 'dateCreated',
       headerName: 'Date Requested',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -92,40 +104,32 @@ const MandateRequests = () => {
       width: 150,
       headerClassName: 'ag-thead',
       renderCell: (params) => {
+        console.log(params.id);
+
         const route =
-          params.row.requestType === 'Creation'
+          params.row.requestType === RequestType.Creation
             ? appRoutes.merchantDashboard.requests.createRequestDetails
-            : params.row.requestType === 'Update'
+            : params.row.requestType === RequestType.Update
               ? appRoutes.merchantDashboard.requests.updateRequestDetails
-              : params.row.requestType === 'Disable'
+              : params.row.requestType === RequestType.Disable
                 ? appRoutes.merchantDashboard.requests.disableRequestDetails
-                : params.row.requestType === 'Deletion'
+                : params.row.requestType === RequestType.Deletion
                   ? appRoutes.merchantDashboard.requests.deletionRequestDetails
                   : null;
 
         if (!route) return <span>View Details</span>;
 
         return (
-          <Link to={`/${route}`} className="cursor-pointer font-semibold text-lightPurple">
+          <Link
+            to={`/${appRoutes.merchantDashboard.requests.createRequestDetails}/${params.id}`}
+            className="cursor-pointer font-semibold text-lightPurple"
+          >
             View Details
           </Link>
         );
       },
     },
   ];
-
-  const getCurrentMandateList = () => {
-    switch (tab) {
-      case 1:
-        return pendingMandateList;
-      case 2:
-        return approvedMandateList;
-      case 3:
-        return rejectedMandateList;
-      default:
-        return [];
-    }
-  };
 
   const formik = useFormik({
     initialValues: {
@@ -139,6 +143,30 @@ const MandateRequests = () => {
     },
   });
 
+  const { isLoading, data } = useQuery({
+    queryKey: ['mandateRequests', queryParams],
+    queryFn: ({ queryKey }) => getMandateRequests(queryKey[1] as QueryParams),
+    enabled: !!queryParams.status,
+  });
+
+  const handleTabClick = (tabIndex: number) => {
+    setTab(tabIndex);
+    const status =
+      tabIndex === 1
+        ? MandateRequestStatus.Pending
+        : tabIndex === 2
+          ? MandateRequestStatus.Approved
+          : tabIndex === 3
+            ? MandateRequestStatus.Declined
+            : '';
+
+    setQueryParams((prev) => ({ ...prev, status }));
+  };
+
+  useEffect(() => {
+    setTab(1);
+  }, []);
+
   return (
     <>
       <div className="px-5 py-5">
@@ -150,21 +178,30 @@ const MandateRequests = () => {
                 label="Pending"
                 count={20}
                 isActive={tab === 1}
-                onClick={() => setTab(1)}
+                onClick={() => {
+                  setTab(1);
+                  handleTabClick(1);
+                }}
                 inactiveColor="text-yellow-500"
               />
               <Tab
                 label="Approved"
                 count={20}
                 isActive={tab === 2}
-                onClick={() => setTab(2)}
+                onClick={() => {
+                  setTab(2);
+                  handleTabClick(2);
+                }}
                 inactiveColor="text-green-500"
               />
               <Tab
                 label="Rejected"
                 count={20}
                 isActive={tab === 3}
-                onClick={() => setTab(3)}
+                onClick={() => {
+                  setTab(3);
+                  handleTabClick(3);
+                }}
                 inactiveColor="text-red-500"
               />
             </div>
@@ -185,9 +222,15 @@ const MandateRequests = () => {
           </div>
           <div className="mt-4 h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-6 w-full">
-            {getCurrentMandateList()?.length > 0 ? (
+            {isLoading ? (
+              <div className="flex h-[30vh] flex-col items-center justify-center">
+                <Box sx={{ display: 'flex' }}>
+                  <CircularProgress />
+                </Box>
+              </div>
+            ) : data?.responseData?.items?.length > 0 ? (
               <CustomTable
-                tableData={getCurrentMandateList()}
+                tableData={data?.responseData?.items}
                 columns={MandateTableColumn}
                 rowCount={20}
               />
@@ -197,7 +240,11 @@ const MandateRequests = () => {
                   <img src={TableLogo} alt="group_logo" />
                 </div>
                 <div className="mt-8 text-center">
-                  <h3 className="text-2xl font-bold">Oops! No Active Mandates</h3>
+                  <h3 className="text-2xl font-bold">
+                    {tab === 1 && `Oops! No Pending Mandates`}
+                    {tab === 2 && `Oops! No Approved Mandates`}
+                    {tab === 3 && `Oops! No Rejected Mandates`}
+                  </h3>
                 </div>
               </div>
             )}

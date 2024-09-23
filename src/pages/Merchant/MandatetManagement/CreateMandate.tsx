@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import Tab from 'components/Tabs';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useTabContext } from '../../../context/TabContext';
 import appRoutes from 'utils/constants/routes';
-import { CalendarIcon, DatePicker } from '@mui/x-date-pickers';
+import { DatePicker } from '@mui/x-date-pickers';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
@@ -13,18 +13,17 @@ import { useDropzone } from 'react-dropzone';
 import CustomSelect from 'components/FormElements/CustomSelect';
 import { useFormik } from 'formik';
 import { createMandateSchema } from 'utils/formValidators';
-import { createTheme, ThemeProvider } from '@mui/material';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import dayjs from 'dayjs';
 import { useMutation } from '@tanstack/react-query';
 import { addMandateRequest } from 'config/actions/dashboard-actions';
 import { MandateRequest } from 'utils/interfaces';
+import { notifyError } from 'utils/helpers';
 
 const CreateMandate = () => {
   const { tab, setTab } = useTabContext();
   const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
   const [mandateRequest, setMandateRequest] = useState<MandateRequest>();
+  const navigate = useNavigate();
 
   const [modals, setModals] = useState({
     addMandate: false,
@@ -45,19 +44,17 @@ const CreateMandate = () => {
     </li>
   ));
 
-  const theme = createTheme({
-    typography: {
-      fontFamily: '"Gotham", sans-serif',
-    },
-  });
-
   const addMandateRequestMutation = useMutation({
     mutationFn: (payload: MandateRequest | undefined) => addMandateRequest(payload),
     onSuccess: () => {
       closeModal('addMandate');
       openModal('confirmAddMandate');
+      navigate(`/${appRoutes.merchantDashboard.mandateManagement.index}`);
     },
-    onError: (error) => console.log(error.message),
+    onError: (error) => {
+      closeModal('addMandate');
+      notifyError(error.message);
+    },
   });
 
   const formik = useFormik({
@@ -208,7 +205,7 @@ const CreateMandate = () => {
                       labelFor="merchantId"
                       label="Merchant ID"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
                       formik={formik}
@@ -217,7 +214,7 @@ const CreateMandate = () => {
                       labelFor="merchantCode"
                       label="Merchant Code"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
                       formik={formik}
@@ -226,7 +223,7 @@ const CreateMandate = () => {
                       labelFor="productId"
                       label="Product ID"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
                       formik={formik}
@@ -237,75 +234,67 @@ const CreateMandate = () => {
                       labelFor="amount"
                       label="Amount"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px] mt-[4px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="number"
                       placeholder="Enter here"
                       formik={formik}
                     />
-
-                    <ThemeProvider theme={theme}>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <div className="flex flex-col gap-1">
-                          <label htmlFor="startDate" className="font-semibold text-black">
-                            Start Date
-                          </label>
-                          <DatePicker
-                            label="Start Date"
-                            value={formik.values.startDate}
-                            onChange={(newValue) => {
-                              formik.setFieldValue('startDate', newValue);
-                            }}
-                            sx={{
-                              height: '50px',
-                              width: {
-                                xs: '100%',
-                                sm: '100%',
-                                md: '327px',
-                              },
-                              '& .MuiInputBase-root': {
-                                height: '50px',
-                                borderRadius: '8px',
-                              },
-                              '& .MuiOutlinedInput-root': {
-                                borderRadius: '8px',
-                              },
-                            }}
-                          />
-                        </div>
-                      </LocalizationProvider>
-                    </ThemeProvider>
-
-                    <ThemeProvider theme={theme}>
-                      <LocalizationProvider dateAdapter={AdapterDayjs}>
-                        <div className="flex flex-col gap-1">
-                          <label htmlFor="endDate" className="font-semibold">
-                            End Date
-                          </label>
-                          <DatePicker
-                            label="End Date"
-                            value={formik.values.endDate}
-                            onChange={(newValue) => {
-                              formik.setFieldValue('endDate', newValue);
-                            }}
-                            sx={{
-                              height: '50px',
-                              width: {
-                                xs: '100%',
-                                sm: '100%',
-                                md: '327px',
-                              },
-                              '& .MuiInputBase-root': {
-                                height: '50px',
-                                borderRadius: '8px',
-                              },
-                              '& .MuiOutlinedInput-root': {
-                                borderRadius: '8px',
-                              },
-                            }}
-                          />
-                        </div>
-                      </LocalizationProvider>
-                    </ThemeProvider>
+                    <div className="flex flex-col gap-1">
+                      <label htmlFor="startDate" className="font-semibold text-black">
+                        Start Date
+                      </label>
+                      <DatePicker
+                        label="Start Date"
+                        value={formik.values.startDate}
+                        onChange={(newValue) => {
+                          formik.setFieldValue('startDate', newValue);
+                        }}
+                        sx={{
+                          height: '50px',
+                          width: {
+                            xs: '100%',
+                            sm: '100%',
+                            md: '100%',
+                            lg: '327px',
+                          },
+                          '& .MuiInputBase-root': {
+                            height: '50px',
+                            borderRadius: '8px',
+                          },
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: '8px',
+                          },
+                        }}
+                      />
+                    </div>
+                    <div className="flex flex-col gap-1">
+                      <label htmlFor="endDate" className="font-semibold">
+                        End Date
+                      </label>
+                      <DatePicker
+                        label="End Date"
+                        value={formik.values.endDate}
+                        onChange={(newValue) => {
+                          formik.setFieldValue('endDate', newValue);
+                        }}
+                        sx={{
+                          height: '50px',
+                          width: {
+                            xs: '100%',
+                            sm: '100%',
+                            md: '100%',
+                            lg: '327px',
+                          },
+                          '& .MuiInputBase-root': {
+                            height: '50px',
+                            borderRadius: '8px',
+                          },
+                          '& .MuiOutlinedInput-root': {
+                            borderRadius: '8px',
+                          },
+                        }}
+                      />
+                    </div>
                   </div>
                   <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-3">
                     <CustomSelect
@@ -353,7 +342,7 @@ const CreateMandate = () => {
                       labelFor="accountName"
                       label="Account Name"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
                       formik={formik}
@@ -362,7 +351,7 @@ const CreateMandate = () => {
                       labelFor="accountNumber"
                       label="Account Number"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
                       formik={formik}
@@ -371,7 +360,7 @@ const CreateMandate = () => {
                       labelFor="bankCode"
                       label="Bank Code"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
                       formik={formik}
@@ -413,7 +402,7 @@ const CreateMandate = () => {
                       labelFor="payerName"
                       label="Payer Name"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
                       formik={formik}
@@ -422,7 +411,7 @@ const CreateMandate = () => {
                       labelFor="payerEmailAddress"
                       label="Payer Email Address"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
                       formik={formik}
@@ -431,7 +420,7 @@ const CreateMandate = () => {
                       labelFor="payerPhoneNumber"
                       label="Payer Phone Number"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
                       formik={formik}
@@ -464,7 +453,7 @@ const CreateMandate = () => {
                       labelFor="payeeName"
                       label="Payee Name"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
                       formik={formik}
@@ -473,7 +462,7 @@ const CreateMandate = () => {
                       labelFor="payeeEmailAddress"
                       label="Payee Email Address"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
                       formik={formik}
@@ -482,7 +471,7 @@ const CreateMandate = () => {
                       labelFor="payeePhoneNumber"
                       label="Payee Phone Number"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
                       formik={formik}
@@ -514,7 +503,7 @@ const CreateMandate = () => {
                       labelFor="biller"
                       label="Biller"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
                       formik={formik}
@@ -523,7 +512,7 @@ const CreateMandate = () => {
                       labelFor="billerId"
                       label="Biller ID"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
                       formik={formik}
@@ -532,7 +521,7 @@ const CreateMandate = () => {
                       labelFor="billerAccountNumber"
                       label="Biller Account Number"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
                       formik={formik}
@@ -543,7 +532,7 @@ const CreateMandate = () => {
                       labelFor="billerAccountName"
                       label="Biller Account Name"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
                       formik={formik}
@@ -552,7 +541,7 @@ const CreateMandate = () => {
                       labelFor="billerBankCode"
                       label="Biller Bank Code"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
                       formik={formik}
@@ -561,7 +550,7 @@ const CreateMandate = () => {
                       labelFor="billerBankName"
                       label="Biller Bank Name"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
-                      inputStyles="h-[40px] w-[300px] px-2 focus:outline-none focus:ring-0"
+                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
                       formik={formik}

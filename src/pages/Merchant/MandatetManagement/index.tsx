@@ -11,7 +11,7 @@ import {
   SuccessModalIcon,
   UpdateRequestIcon,
 } from 'assets/icons';
-import { mandateList, transactionHistory } from 'utils/constants';
+import { transactionHistory } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
 import TableLogo from 'assets/images/table_logo.png';
 import { RequestType } from 'utils/enums';
@@ -28,6 +28,19 @@ import TableFilter from 'components/TableFilter';
 import { useFormik } from 'formik';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import CustomTable from 'components/CustomTable';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { QueryParams } from 'utils/interfaces';
+import {
+  deleteMandate,
+  disableMandate,
+  enableMandate,
+  getMandates,
+  updateMandate,
+} from 'config/actions/dashboard-actions';
+import { updateMandateSchema } from 'utils/formValidators';
+import CustomInput from 'components/FormElements/CustomInput';
+import { notifyError } from 'utils/helpers';
+import { CircularProgress } from '@mui/material';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -44,8 +57,19 @@ const style = {
 };
 
 const MandatetManagement = () => {
+  const navigate = useNavigate();
   const [tab, setTab] = useState(1);
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedMandateId, setSelectedMandateId] = useState<string | undefined>('');
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    mandateCode: '',
+    status: '',
+    pageNo: 1,
+    pageSize: 10,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
 
   const [modals, setModals] = useState({
     openTransactionHistory: false,
@@ -59,8 +83,6 @@ const MandatetManagement = () => {
     openDeleteProfile: false,
     confirmDeleteProfile: false,
   });
-
-  const navigate = useNavigate();
 
   const openModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: true }));
@@ -79,6 +101,17 @@ const MandatetManagement = () => {
     },
     onSubmit: (values) => {
       setSearchTerm('');
+    },
+  });
+
+  const modifyMandateValidation = useFormik({
+    initialValues: {
+      amount: null,
+    },
+    validationSchema: updateMandateSchema,
+    onSubmit: (values) => {
+      openModal('confirmModifyMandate');
+      closeModal('openModifyMandate');
     },
   });
 
@@ -112,42 +145,38 @@ const MandatetManagement = () => {
       headerClassName: 'ag-thead',
     },
     {
-      field: 'requestType',
+      field: 'status',
       headerName: 'Request Type',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       renderCell: (params) => {
-        const renderIcon = (IconComponent: any, colorClass: any) => (
+        const renderIcon = (IconComponent: any, colorClass: any, text: string) => (
           <div className="flex items-center gap-2">
             <IconComponent />
-            <span className={`mb-0 ${colorClass}`}>{params.value}</span>
+            <span className={`mb-0 ${colorClass}`}>{text}</span>
           </div>
         );
 
-        const getIconAndColor = (requestType: RequestType) => {
+        const getIconAndColor = (requestType: string) => {
           switch (requestType) {
-            case RequestType.Creation:
-            case RequestType.Enabled:
+            case 'Approved':
               return {
                 IconComponent: CreationRequestIcon,
                 colorClass: 'text-greenPrimary font-semibold',
+                text: 'Enabled',
               };
-            case RequestType.Update:
-              return {
-                IconComponent: UpdateRequestIcon,
-                colorClass: 'text-lightPurple font-semibold',
-              };
-            case RequestType.Disable:
-              return {
-                IconComponent: DisableRequestIcon,
-                colorClass: 'text-yellowNeutral font-semibold',
-              };
-            case RequestType.Deletion:
-            case RequestType.Disabled:
+            case 'Declined':
               return {
                 IconComponent: DeleteRequestIcon,
                 colorClass: 'text-redSecondary font-semibold',
+                text: 'Disabled',
+              };
+            case 'Pending':
+              return {
+                IconComponent: DisableRequestIcon,
+                colorClass: 'text-yellowNeutral font-semibold',
+                text: 'Pending',
               };
             default:
               return null;
@@ -157,14 +186,14 @@ const MandatetManagement = () => {
         const iconAndColor = getIconAndColor(params.value);
 
         if (iconAndColor) {
-          return renderIcon(iconAndColor.IconComponent, iconAndColor.colorClass);
+          return renderIcon(iconAndColor.IconComponent, iconAndColor.colorClass, iconAndColor.text);
         }
 
         return <span>{params.value}</span>;
       },
     },
     {
-      field: 'dateRequested',
+      field: 'dateCreated',
       headerName: 'Date Requested',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -203,7 +232,7 @@ const MandatetManagement = () => {
             >
               <div className="flex w-[8rem] flex-col rounded-md p-1 text-[12px]">
                 <Link
-                  to={`/${appRoutes.merchantDashboard.mandateManagement.mandateDetails}`}
+                  to={`/${appRoutes.merchantDashboard.mandateManagement.mandateDetails}/${params.id}`}
                   className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
                 >
                   View Details
@@ -217,14 +246,20 @@ const MandatetManagement = () => {
                 </button>
                 <button
                   type="button"
-                  onClick={() => openModal('openModifyMandate')}
+                  onClick={() => {
+                    setSelectedMandateId(params.row.id);
+                    openModal('openModifyMandate');
+                  }}
                   className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
                 >
                   Update Amount
                 </button>
                 <button
                   type="button"
-                  onClick={() => selectModal()}
+                  onClick={() => {
+                    setSelectedMandateId(params.row.id);
+                    selectModal();
+                  }}
                   className={`w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary ${buttonColorClass}`}
                 >
                   {buttonTitle}
@@ -232,7 +267,10 @@ const MandatetManagement = () => {
                 <button
                   type="button"
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
-                  onClick={() => openModal('openDeleteProfile')}
+                  onClick={() => {
+                    setSelectedMandateId(params.row.id);
+                    openModal('openDeleteProfile');
+                  }}
                 >
                   Delete
                 </button>
@@ -284,6 +322,59 @@ const MandatetManagement = () => {
     },
   ];
 
+  const { isLoading, data } = useQuery({
+    queryKey: ['mandates', queryParams],
+    queryFn: ({ queryKey }) => getMandates(queryKey[1] as QueryParams),
+  });
+
+  const updateMandateMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => updateMandate(requestId),
+    onSuccess: () => {
+      openModal('saveModifyMandate');
+      closeModal('confirmModifyMandate');
+    },
+    onError: (error) => {
+      closeModal('confirmModifyMandate');
+      notifyError(error?.message);
+    },
+  });
+
+  const enableMandateMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => enableMandate(requestId),
+    onSuccess: () => {
+      openModal('confirmEnableMandate');
+      closeModal('openEnableMandate');
+    },
+    onError: (error) => {
+      closeModal('openEnableMandate');
+      notifyError(error?.message);
+    },
+  });
+
+  const disableMandateMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => disableMandate(requestId),
+    onSuccess: () => {
+      openModal('confirmDisableMandate');
+      closeModal('openDisableMandate');
+    },
+    onError: (error) => {
+      closeModal('openDisableMandate');
+      notifyError(error?.message);
+    },
+  });
+
+  const deleteMandateMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => deleteMandate(requestId),
+    onSuccess: () => {
+      openModal('confirmDeleteProfile');
+      closeModal('openDeleteProfile');
+    },
+    onError: (error) => {
+      closeModal('openDeleteProfile');
+      notifyError(error?.message);
+    },
+  });
+
   return (
     <>
       <div className="px-5 py-5">
@@ -296,6 +387,7 @@ const MandatetManagement = () => {
               }
               title="Create Mandate"
               backgroundColor="#5C068C"
+              hoverBackgroundColor="#2F0248"
               color="white"
               width="160px"
               height="42px"
@@ -321,8 +413,18 @@ const MandatetManagement = () => {
           </div>
           <div className="mt-4 h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-6 w-full">
-            {mandateList.length > 0 ? (
-              <CustomTable tableData={mandateList} columns={MandateTableColumn} rowCount={20} />
+            {isLoading ? (
+              <div className="flex h-[30vh] flex-col items-center justify-center">
+                <Box sx={{ display: 'flex' }}>
+                  <CircularProgress />
+                </Box>
+              </div>
+            ) : data?.responseData?.items?.length > 0 ? (
+              <CustomTable
+                tableData={data.responseData.items}
+                columns={MandateTableColumn}
+                rowCount={20}
+              />
             ) : (
               <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
                 <div>
@@ -423,25 +525,34 @@ const MandatetManagement = () => {
               <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
             </Typography>
             <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <div className="flex flex-col gap-2 font-gotham">
-                <label htmlFor="modifiedAmount">Modify Amount</label>
-                <input type="text" className="b h-[50px] w-full rounded-lg border px-2" />
-              </div>
-              <div className="mt-4 flex justify-end">
-                <ButtonComponent
-                  onClick={() => {
-                    openModal('confirmModifyMandate');
-                    closeModal('openModifyMandate');
-                  }}
-                  title="Save"
-                  backgroundColor="#5C068C"
-                  color="white"
-                  width="155px"
-                  height="42px"
-                  fontWeight={600}
-                  fontSize="14px"
-                />
-              </div>
+              <form onSubmit={modifyMandateValidation.handleSubmit}>
+                <div className="flex flex-col gap-2 font-gotham">
+                  <CustomInput
+                    labelFor="amount"
+                    label="Modify Amount"
+                    containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full mt-[4px]"
+                    inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
+                    inputType="number"
+                    placeholder="Enter here"
+                    formik={modifyMandateValidation}
+                  />
+                </div>
+                <div className="mt-4 flex justify-end">
+                  <div className="">
+                    <ButtonComponent
+                      type="submit"
+                      title="Save"
+                      backgroundColor="#5C068C"
+                      hoverBackgroundColor="#5C067C"
+                      color="white"
+                      width="155px"
+                      height="42px"
+                      fontWeight={600}
+                      fontSize="14px"
+                    />
+                  </div>
+                </div>
+              </form>
             </Typography>
           </Box>
         </Modal>
@@ -457,8 +568,7 @@ const MandatetManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            openModal('saveModifyMandate');
-            closeModal('confirmModifyMandate');
+            updateMandateMutation.mutate(selectedMandateId);
           }}
         />
       )}
@@ -482,8 +592,7 @@ const MandatetManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            openModal('confirmEnableMandate');
-            closeModal('openEnableMandate');
+            enableMandateMutation.mutate(selectedMandateId);
           }}
         />
       )}
@@ -507,8 +616,7 @@ const MandatetManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            openModal('confirmDisableMandate');
-            closeModal('openDisableMandate');
+            disableMandateMutation.mutate(selectedMandateId);
           }}
         />
       )}
@@ -532,8 +640,7 @@ const MandatetManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            openModal('confirmDeleteProfile');
-            closeModal('openDeleteProfile');
+            deleteMandateMutation.mutate(selectedMandateId);
           }}
         />
       )}

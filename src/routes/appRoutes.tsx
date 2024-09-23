@@ -260,7 +260,7 @@ const merchantRoutes: RoutesType[] = [
     children: [
       {
         name: 'Create Request Details',
-        path: 'creation-request-details',
+        path: 'creation-request-details/:id',
         component: <CreationRequestDetails />,
       },
       {
@@ -291,7 +291,7 @@ const merchantRoutes: RoutesType[] = [
     children: [
       {
         name: 'Mandate Details',
-        path: 'mandate-details',
+        path: 'mandate-details/:id',
         component: <MandateDetails />,
       },
       {

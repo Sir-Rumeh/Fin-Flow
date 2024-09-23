@@ -42,13 +42,14 @@ AxiosClient.interceptors.request.use(
 AxiosClient.interceptors.response.use(
   (response) => {
     console.log(response);
-    if (response.status === 200 && !response.data?.status) {
-      dispatch(uiStopLoading());
-      notifySuccess(response.data.responseMessage);
-      return;
+    dispatch(uiStopLoading());
+
+    if (response.status === 200) {
+      // notifySuccess(response.data.responseMessage);
+      return response;
     }
     dispatch(uiStopLoading());
-    return response.data;
+    return response;
   },
   async (error) => {
     console.log(error);

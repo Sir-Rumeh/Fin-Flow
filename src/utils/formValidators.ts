@@ -80,3 +80,10 @@ export const createMandateSchema = Yup.object().shape({
   billerBankCode: Yup.string().required('Biller bank code id is required'),
   billerBankName: Yup.string().required('Biller bank name id is required'),
 });
+
+export const updateMandateSchema = Yup.object().shape({
+  amount: Yup.number()
+    .required('Amount is required')
+    .positive('Amount must be a positive number')
+    .typeError('Amount must be a number'),
+});
