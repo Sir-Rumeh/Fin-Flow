@@ -114,7 +114,7 @@ export interface DataTableState {
 export interface MandateRequest {
   mandateId: string;
   merchantId: string;
-  accountId: string;
+  accountId?: string;
   mandateCode: string;
   productId: string;
   amount: number;

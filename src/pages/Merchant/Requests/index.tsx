@@ -34,13 +34,13 @@ const MandateRequests = () => {
   });
 
   const MandateTableColumn: GridColDef[] = [
-    {
-      field: 'accountId',
-      headerName: 'Account ID',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-    },
+    // {
+    //   field: 'accountId',
+    //   headerName: 'Account ID',
+    //   width: screen.width < 1000 ? 200 : undefined,
+    //   flex: screen.width >= 1000 ? 1 : undefined,
+    //   headerClassName: 'ag-thead',
+    // },
     {
       field: 'merchantId',
       headerName: 'Merchant ID',
@@ -79,6 +79,8 @@ const MandateRequests = () => {
         switch (params.value) {
           case RequestType.Creation:
             return renderIcon(CreationRequestIcon, 'text-greenPrimary font-semibold');
+          case RequestType.Enable:
+            return renderIcon(CreationRequestIcon, 'text-greenPrimary font-semibold');
           case RequestType.Update:
             return renderIcon(UpdateRequestIcon, 'text-lightPurple font-semibold');
           case RequestType.Disable:
@@ -109,13 +111,15 @@ const MandateRequests = () => {
         const route =
           params.row.requestType === RequestType.Creation
             ? appRoutes.merchantDashboard.requests.createRequestDetails
-            : params.row.requestType === RequestType.Update
-              ? appRoutes.merchantDashboard.requests.updateRequestDetails
-              : params.row.requestType === RequestType.Disable
-                ? appRoutes.merchantDashboard.requests.disableRequestDetails
-                : params.row.requestType === RequestType.Deletion
-                  ? appRoutes.merchantDashboard.requests.deletionRequestDetails
-                  : null;
+            : params.row.requestType === RequestType.Enable
+              ? appRoutes.merchantDashboard.requests.createRequestDetails
+              : params.row.requestType === RequestType.Update
+                ? appRoutes.merchantDashboard.requests.updateRequestDetails
+                : params.row.requestType === RequestType.Disable
+                  ? appRoutes.merchantDashboard.requests.disableRequestDetails
+                  : params.row.requestType === RequestType.Deletion
+                    ? appRoutes.merchantDashboard.requests.deletionRequestDetails
+                    : null;
 
         if (!route) return <span>View Details</span>;
 

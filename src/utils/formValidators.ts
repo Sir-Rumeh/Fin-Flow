@@ -47,7 +47,7 @@ export const addSingleMandateSchema = Yup.object().shape({
 });
 
 export const createMandateSchema = Yup.object().shape({
-  variableType: Yup.string().required('variable type is required'),
+  mandateType: Yup.string().required('mandate type is required'),
   merchantId: Yup.string().required('Merchant ID is required'),
   merchantCode: Yup.string().required('Merchant Code is required'),
   productId: Yup.string().required('Product ID is required'),
@@ -63,7 +63,7 @@ export const createMandateSchema = Yup.object().shape({
   accountName: Yup.string().required('Account name is required'),
   accountNumber: Yup.string().required('Account number is required'),
   bankCode: Yup.string().required('Bank code is required'),
-  fileExtension: Yup.string().required('File is required'),
+  supportingDocument: Yup.string().required('File is required'),
   narration: Yup.string().required('Narration is required'),
   payerName: Yup.string().required('Payer name is required'),
   payerEmailAddress: Yup.string().required('Payer email address is required'),

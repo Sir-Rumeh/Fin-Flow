@@ -49,7 +49,6 @@ const CreateMandate = () => {
     onSuccess: () => {
       closeModal('addMandate');
       openModal('confirmAddMandate');
-      navigate(`/${appRoutes.merchantDashboard.mandateManagement.index}`);
     },
     onError: (error) => {
       closeModal('addMandate');
@@ -67,12 +66,13 @@ const CreateMandate = () => {
       startDate: null,
       endDate: null,
       dayToApply: '',
+      mandateType: '',
       frequency: '',
       service: '',
       accountName: '',
       accountNumber: '',
       bankCode: '',
-      fileExtension: '',
+      supportingDocument: '',
       narration: '',
       payerName: '',
       payerEmailAddress: '',
@@ -93,17 +93,18 @@ const CreateMandate = () => {
     onSubmit: (values) => {
       const formattedStartDate = dayjs(values.startDate).toISOString();
       const formattedEndDate = dayjs(values.endDate).toISOString();
+      console.log(values);
 
       const payload = {
         mandateId: '',
         merchantId: values.merchantId,
-        accountId: 'A001',
-        mandateCode: 'MND-CODE-9876',
+        mandateCode: values.merchantCode,
         productId: values.productId,
         amount: parseFloat(values.amount),
         startDate: formattedStartDate,
         endDate: formattedEndDate,
         dayToApply: '15',
+        mandateType: values.mandateType,
         frequency: values.frequency,
         service: values.service,
         accountName: values.accountName,
@@ -171,26 +172,26 @@ const CreateMandate = () => {
                       <div className="flex items-center gap-1">
                         <input
                           type="radio"
-                          name="variableType"
-                          value="variable"
+                          name="mandateType"
+                          value="Variable"
                           className="h-4 w-4"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
-                          checked={formik.values.variableType === 'variable'}
+                          checked={formik.values.mandateType === 'variable'}
                         />
                         <label htmlFor="variableType-variable">Variable</label>
                       </div>
                       <div className="flex items-center gap-1">
                         <input
                           type="radio"
-                          name="variableType"
-                          value="fixed"
+                          name="mandateType"
+                          value="Fixed"
                           className="h-4 w-4"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
-                          checked={formik.values.variableType === 'fixed'}
+                          checked={formik.values.mandateType === 'fixed'}
                         />
-                        <label htmlFor="variableType-fixed">Fixed</label>
+                        <label htmlFor="mandateType-fixed">Fixed</label>
                       </div>
                       {formik.touched.variableType && formik.errors.variableType && (
                         <p className="text-red-400">{formik.errors.variableType}</p>
@@ -296,7 +297,7 @@ const CreateMandate = () => {
                       />
                     </div>
                   </div>
-                  <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-3">
+                  <div className="mt-10 grid grid-cols-1 gap-20 lg:grid-cols-3 lg:gap-10">
                     <CustomSelect
                       labelFor="dayToApply"
                       label="Day to Apply"
@@ -369,7 +370,7 @@ const CreateMandate = () => {
                   <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-3">
                     <div className="col-span-3 lg:col-span-1">
                       <CustomInput
-                        labelFor="fileExtension"
+                        labelFor="supportingDocument"
                         label="Upload Supporting Document"
                         containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
                         inputStyles="w-full focus:outline-none focus:ring-0"
@@ -657,6 +658,7 @@ const CreateMandate = () => {
           proceedAction={() => {
             formik.resetForm();
             closeModal('confirmAddMandate');
+            navigate(`/${appRoutes.merchantDashboard.requests.index}`);
           }}
         />
       )}
