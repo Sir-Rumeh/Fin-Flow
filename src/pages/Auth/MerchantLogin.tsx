@@ -6,9 +6,15 @@ import { useFormik } from 'formik';
 import appRoutes, { BASE_ROUTES } from 'utils/constants/routes';
 import { userLoginValidationSchema } from 'utils/formValidators';
 import CustomInput from 'components/FormElements/CustomInput';
+import { useState } from 'react';
 
 const MerchantLogin = () => {
   const navigate = useNavigate();
+  const [inputTypeState, setInputTypeState] = useState(false);
+
+  const onHandleInputType = () => {
+    setInputTypeState(!inputTypeState);
+  };
 
   const formik = useFormik({
     initialValues: {
@@ -50,10 +56,13 @@ const MerchantLogin = () => {
                 <CustomInput
                   labelFor="password"
                   label="Password"
-                  inputType="text"
                   placeholder="Enter password"
                   maxW="w-full"
                   formik={formik}
+                  passwordInput
+                  inputType={inputTypeState ? 'text' : 'password'}
+                  iconState={inputTypeState}
+                  handleInputType={onHandleInputType}
                 />
               </div>
               <div className="mt-[2.5rem] w-full">

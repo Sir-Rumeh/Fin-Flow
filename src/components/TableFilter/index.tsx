@@ -42,6 +42,7 @@ const TableFilter = ({
   const [closeFilterCard, setCloseFilterCard] = useState(false);
   const [pulse, setPulse] = useState(false);
   const isSmallWidth = useMediaQuery('(max-width:1440px)');
+  const isMobileWidth = useMediaQuery('(max-width:575px)');
   const isMediumWidth = useMediaQuery('(min-width:1024px) and (max-width:1280px)');
 
   const clearFilter = () => {
@@ -57,19 +58,18 @@ const TableFilter = ({
             <CustomPopover
               popoverId={2}
               buttonIcon={
-                <ButtonComponent
-                  title="Filter by"
-                  children={
-                    <div className={`${isSmallWidth ? 'scale-95' : 'scale-100'} ml-1`}>
+                <>
+                  <div
+                    className={`flex items-center justify-between gap-x-1 rounded-[6px] border border-[#a772c4] px-[0.9rem] py-[8px] text-gray-400`}
+                  >
+                    <p>Filter by</p>
+                    <div
+                      className={`${isMobileWidth ? 'scale-75' : isSmallWidth ? 'scale-95' : 'scale-100'} `}
+                    >
                       <FilterIcon />
                     </div>
-                  }
-                  color="grey"
-                  borderColor="#a772c4"
-                  border={1}
-                  customPaddingX="1rem"
-                  width={isMediumWidth ? '8rem' : undefined}
-                />
+                  </div>
+                </>
               }
               closeOnClick={false}
               translationX={translationX ? translationX : 8}
@@ -78,7 +78,7 @@ const TableFilter = ({
               closeCard={closeFilterCard}
               scale="80%"
             >
-              <div className="relative h-auto flex-col overflow-y-hidden px-6 pt-4 lg:pb-14">
+              <div className="relative h-auto flex-col overflow-y-hidden px-6 pb-14 pt-4">
                 <div className="flex w-full items-center justify-between">
                   <h3 className="text-lg font-bold">Filter By</h3>
                   <button
@@ -155,7 +155,6 @@ const TableFilter = ({
               className="w-full border-none focus:border-none focus:outline-none"
               name={name}
               placeholder={placeholder}
-              width={'20rem'}
               height={'100%'}
               value={value}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}

@@ -38,7 +38,7 @@ const AccountManagement = () => {
 
   const formik = useFormik({
     initialValues: {
-      searchProfile: '',
+      searchAccount: '',
       fromDateFilter: '',
       toDateFilter: '',
       statusFilter: '',
@@ -207,9 +207,9 @@ const AccountManagement = () => {
               <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-start">
                 <div className="">
                   <TableFilter
-                    name={'searchMandate'}
-                    placeholder={'Search Mandate'}
-                    label={'Search Mandate'}
+                    name={'searchAccount'}
+                    placeholder={'Search Account'}
+                    label={'Search Account'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
                     handleOptionsFilter={() => {}}

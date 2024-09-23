@@ -3,7 +3,7 @@ import TableFilter from 'components/TableFilter';
 import { TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
 import { TabsListTabNames } from 'utils/enums';
-import { accountRequestsList } from 'utils/constants';
+import { accountRequestsList, staffUsersList } from 'utils/constants';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { createSearchParams, Link } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
@@ -18,10 +18,14 @@ import CustomTable from 'components/CustomTable';
 import { useFormik } from 'formik';
 import { useMediaQuery } from '@mui/material';
 
-const AccountRequests = () => {
+const StaffUserRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const total = 20;
   const [activeTab, setActiveTab] = useState(TabsListTabNames.Pending);
+  const [paginationData, setPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
   const tabsList: TabsProps[] = [
     {
       tabIndex: 1,
@@ -54,30 +58,27 @@ const AccountRequests = () => {
 
   const columns: GridColDef[] = [
     {
-      field: 'merchantId',
-      headerName: 'Merchant ID',
+      field: 'employeeId',
+      headerName: 'Staff ID',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
-      sortable: false,
     },
     {
-      field: 'accountNumber',
-      headerName: 'Account Number',
+      field: 'name',
+      headerName: 'Staff Name',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
-      sortable: false,
     },
     {
-      field: 'cif',
-      headerName: 'CIF Number',
+      field: 'email',
+      headerName: 'Email Address',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       sortable: false,
     },
-
     {
       field: 'requestType',
       headerName: 'Request Type',
@@ -121,13 +122,13 @@ const AccountRequests = () => {
       renderCell: (params: GridRenderCellParams) => {
         const route =
           params?.row.requestType === RequestTypes.Creation
-            ? `/${appRoutes.adminDashboard.requests.accountRequests.accountCreationRequest}`
+            ? `/${appRoutes.adminDashboard.staffUserRequests.staffUserCreationRequest}`
             : params?.row.requestType === RequestTypes.Deletion
-              ? `/${appRoutes.adminDashboard.requests.accountRequests.accountDeletionRequest}`
+              ? `/${appRoutes.adminDashboard.staffUserRequests.staffUserDeletionRequest}`
               : params?.row.requestType === RequestTypes.Update
-                ? `/${appRoutes.adminDashboard.requests.accountRequests.accountUpdateRequest}`
+                ? `/${appRoutes.adminDashboard.staffUserRequests.staffUserUpdateRequest}`
                 : params?.row.requestType === RequestTypes.Disable
-                  ? `/${appRoutes.adminDashboard.requests.accountRequests.accountDisableRequest}`
+                  ? `/${appRoutes.adminDashboard.staffUserRequests.staffUserDisableRequest}`
                   : undefined;
         return (
           <div className="">
@@ -151,7 +152,7 @@ const AccountRequests = () => {
       <section className="p-2 md:p-4">
         <div className="fade-in-down my-2 flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold md:text-2xl">Account Requests</h1>
+            <h1 className="text-lg font-semibold md:text-2xl">Staff User Requests</h1>
           </div>
         </div>
         <div className="">
@@ -163,9 +164,9 @@ const AccountRequests = () => {
               <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
                 <div className="">
                   <TableFilter
-                    name={'searchAccount'}
-                    placeholder={'Search Account'}
-                    label={'Search Account'}
+                    name={'searchStaffUser'}
+                    placeholder={'Search Staff User'}
+                    label={'Search Staff User'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
                     handleOptionsFilter={() => {}}
@@ -179,7 +180,13 @@ const AccountRequests = () => {
               </div>
             </div>
             <div className="mt-6 w-full">
-              <CustomTable tableData={accountRequestsList} columns={columns} rowCount={73} />
+              <CustomTable
+                tableData={staffUsersList}
+                columns={columns}
+                rowCount={143}
+                paginationData={paginationData}
+                setPaginationData={setPaginationData}
+              />
             </div>
           </div>
         </div>
@@ -188,4 +195,4 @@ const AccountRequests = () => {
   );
 };
 
-export default AccountRequests;
+export default StaffUserRequests;

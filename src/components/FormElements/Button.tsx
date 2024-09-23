@@ -28,10 +28,9 @@ type Props = {
 };
 
 const ButtonComponent = (props: Props) => {
+  const isSmallWidth = useMediaQuery('(max-width:570px)');
   return (
-    <div
-      className={`flex h-full w-full flex-col items-center justify-center ${props.customClass} `}
-    >
+    <div className={`0 flex h-full flex-col items-center justify-center ${props.customClass} `}>
       <Button
         disabled={props.disabled}
         onClick={props.onClick}
@@ -45,9 +44,10 @@ const ButtonComponent = (props: Props) => {
           color: props.color,
           ':hover': {
             color: props.hoverColor,
-            background: props.hoverBackgroundColor,
+            backgroundColor: props.hoverBackgroundColor,
+            boxShadow: 'none',
           },
-          background: props.backgroundColor,
+          backgroundColor: props.backgroundColor,
           border: props.border,
           borderColor: props.borderColor,
           textTransform: 'capitalize',
@@ -59,7 +59,7 @@ const ButtonComponent = (props: Props) => {
           justifyContent: 'between',
           rowGap: '2px',
           padding: '5px',
-          paddingX: props.customPaddingX ? props.customPaddingX : '8px',
+          paddingX: props.customPaddingX && !isSmallWidth ? props.customPaddingX : '8px',
         }}
         fullWidth={props.fullWidth}
         startIcon={props.startIcon}

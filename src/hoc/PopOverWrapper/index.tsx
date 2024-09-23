@@ -56,6 +56,7 @@ const CustomPopover = ({
           fontFamily: " 'Gotham', sans-serif ",
           paddingLeft: customPaddingX ? customPaddingX : undefined,
           paddingRight: customPaddingX ? customPaddingX : undefined,
+          textTransform: 'capitalize',
         }}
         aria-describedby={id}
         onClick={handleClick}

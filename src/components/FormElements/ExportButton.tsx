@@ -27,23 +27,20 @@ const ExportBUtton = (props: Props) => {
           popoverId={3}
           buttonIcon={
             <>
-              <ButtonComponent
-                onClick={() => {}}
-                title="Export"
-                children={<ExportButtonArrowDown className="ml-1" />}
-                color="#5C068C"
-                border={1}
-                customPaddingX="1.3rem"
-                fontWeight={600}
-                height="42px"
-                width="128px"
-              />
+              <div
+                className={`flex items-center justify-between gap-x-1 rounded-[6px] border border-[#5C068C] px-[1.2rem] py-[8px] font-[600] text-[#5C068C]`}
+              >
+                <p>Export</p>
+                <div className="scale-[80%]">
+                  <ExportButtonArrowDown />
+                </div>
+              </div>
             </>
           }
           translationX={8}
           translationY={56}
         >
-          <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
+          <div className="flex w-[7.1rem] flex-col rounded-md p-1 text-sm">
             <button
               type="button"
               className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"

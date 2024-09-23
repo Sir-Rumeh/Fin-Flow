@@ -3,22 +3,20 @@
 @tailwind utilities;
 
 
-/* @font-face {
-  font-family: 'Gotham';
-  src: url('./assets/fonts/Gotham-Light.otf') format('opentype');
-  font-weight: normal;
-  font-style: normal;
-}
-
-body {
-	font-family: 'Gotham', sans-serif;
-} */
-
 @layer utilities {
 	/* Hide scrollbar for Chrome, Safari and Opera */
 	.no-scrollbar::-webkit-scrollbar {
 		display: none;
 	}
+	.custom-scrollbar::-webkit-scrollbar {
+		width: 3px; 
+	}
+
+	.custom-scrollbar::-webkit-scrollbar-thumb {
+		background-color: rgba(0, 0, 0, 0.5);
+		border-radius: 10px; 
+	 }
+  
 	/* Hide scrollbar for IE, Edge and Firefox */
 	.no-scrollbar {
 		-ms-overflow-style: none; /* IE and Edge */
@@ -119,6 +117,8 @@ body {
 body {
 	font-family: 'Gotham', sans-serif;
  }
+ 
+
 
 .loader {
 	position: fixed;

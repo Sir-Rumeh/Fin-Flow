@@ -12,6 +12,7 @@ import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import CustomTable from 'components/CustomTable';
+import { chartsGridClasses } from '@mui/x-charts/ChartsGrid';
 
 const Dashboard = () => {
   const barAxisX = [
@@ -38,13 +39,18 @@ const Dashboard = () => {
       },
     ],
     height: 290,
-    marginBottom: 20,
+    marginbottom: 20,
     sx: {
       [`.${axisClasses.bottom} .${axisClasses.label}`]: {
         transform: 'translate(0, 2px)',
       },
       [`.${axisClasses.left} .${axisClasses.label}`]: {
         transform: 'translate(-4px, 0)',
+      },
+      [`& .${chartsGridClasses.line}`]: {
+        strokeDasharray: 'none',
+        strokeWidth: 1,
+        stroke: '#ECECEC',
       },
     },
   };
@@ -162,8 +168,8 @@ const Dashboard = () => {
             <h1 className="text-lg font-semibold md:text-2xl">Welcome Back, Anita!</h1>
           </div>
         </div>
-        <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[300px_1fr]">
-          <div className="slide-down w-full rounded-md border bg-white p-4 sm:w-[300px]">
+        <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[300px_1fr] 2xl:grid-cols-[320px_1fr]">
+          <div className="slide-down w-full rounded-md border bg-white p-4 sm:w-[300px] 2xl:w-[320px]">
             <div className="border-b pb-2">
               <h3 className="text-md font-semibold md:text-lg">Onboarded Merchant</h3>
             </div>
@@ -198,7 +204,8 @@ const Dashboard = () => {
               <h3 className="text-md font-semibold md:text-lg">Merchant Onboarding Analytics</h3>
             </div>
             <BarChart
-              series={[{ data: barData }]}
+              grid={{ horizontal: true }}
+              series={[{ data: barData, type: 'bar' }]}
               xAxis={[
                 {
                   data: barAxisX,

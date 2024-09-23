@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
+import { useMediaQuery } from '@mui/material';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import dayjs from 'dayjs';
 
@@ -12,6 +13,8 @@ interface Props {
   initialDate?: string;
   useTouched?: boolean;
   showLabel?: boolean;
+  customPicker?: boolean;
+  hideBorder?: boolean;
 }
 
 const FormDatePicker = (props: Props) => {
@@ -21,9 +24,11 @@ const FormDatePicker = (props: Props) => {
     width,
     label,
     initialDate,
-    useTouched = true,
+    useTouched = false,
     placeholder,
     showLabel = true,
+    customPicker = false,
+    hideBorder = false,
   } = props;
 
   const getPickerBorder = () => {
@@ -31,23 +36,32 @@ const FormDatePicker = (props: Props) => {
       (useTouched && formik?.touched[name] && formik?.errors[name]) ||
       (!useTouched && formik?.errors[name])
     ) {
-      return 'border-red-400';
+      return '1px solid red';
     } else return '';
   };
+
+  const isMediumWidth = useMediaQuery('(min-width:992px) and (max-width:1320px)');
   return (
     <>
-      <div className="relative mb-4 mt-6 flex flex-col gap-2">
+      <div className={`${hideBorder ? '' : 'mb-4 mt-6'} relative flex flex-col gap-2`}>
         {showLabel && <label className="absolute bottom-16 font-semibold">{label}</label>}
         <DatePicker
           sx={{
             width: width ? width : '100%',
             '& .MuiOutlinedInput-root': {
+              '&.MuiOutlinedInput-notchedOutline': {
+                border: 'none',
+              },
               border: getPickerBorder(),
               height: '3.1rem',
               borderRadius: '10px',
               '&.Mui-focused fieldset': {
-                border: '1px solid gray',
+                border: hideBorder ? 'none' : '1px solid black',
               },
+              '& fieldset': {
+                border: hideBorder ? 'none' : undefined,
+              },
+
               '&.Mui-focused': {
                 color: 'black',
               },
@@ -60,16 +74,30 @@ const FormDatePicker = (props: Props) => {
                 },
               },
             },
+            '& .MuiInputBase-input': {
+              width: !hideBorder ? undefined : isMediumWidth ? '4.4rem' : '4.8rem',
+              fontSize: isMediumWidth ? '12px' : undefined,
+              paddingLeft: hideBorder ? '8px' : undefined,
+            },
+            '& .MuiInputAdornment-root': {
+              position: 'absolute',
+              right: 10,
+              scale: isMediumWidth ? '80%' : '%',
+            },
             '& .MuiInputLabel-root': {
               visibility: 'visible',
               '&.Mui-focused': {
                 visibility: 'hidden',
               },
+              fontSize: customPicker ? '12px' : '16px',
+              color: '#9CA3AF',
               paddingLeft: '0.7rem',
-              transform: 'translate(0, 60%) scale(1)',
+              transform: customPicker
+                ? 'translate(0, 100%) scale(1)'
+                : 'translate(0, 60%) scale(1)',
             },
           }}
-          label={placeholder ? placeholder : null}
+          label={!formik.values[props.name] && placeholder ? placeholder : null}
           format="DD/MM/YYYY"
           value={formik.values[props.name] ? dayjs(formik.values[name]) : null}
           onChange={(newValue) => {

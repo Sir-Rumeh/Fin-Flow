@@ -3,10 +3,10 @@ export enum UserLoginRoles {
   Merchant = 'Merchant',
 }
 export enum AdminUserRoles {
-  Admin = 'Admin',
-  Onboarding = 'Onboarding',
-  Audit = 'Audit',
-  Reporting = 'Reporting',
+  Admin = 'Admin Role',
+  Onboarding = 'Onboarding Role',
+  Audit = 'Audit Role',
+  Reporting = 'Reporting Role',
 }
 
 export enum RequestTypes {

@@ -1,17 +1,9 @@
 import ButtonComponent from 'components/FormElements/Button';
 import { useState } from 'react';
-import TableFilter from 'components/TableFilter';
 import CustomTable from 'components/CustomTable';
-import appRoutes from 'utils/constants/routes';
-import { createSearchParams, useNavigate } from 'react-router-dom';
-import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { CloseIcon, CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
-import { accountRequestsList, auditTrailList } from 'utils/constants';
-import CustomPopover from 'hoc/PopOverWrapper';
-import PopoverTitle from 'components/common/PopoverTitle';
-import { ModalWrapper } from 'hoc/ModalWrapper';
-import RedAlertIcon from 'assets/icons/RedAlertIcon';
-import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
+import { GridColDef } from '@mui/x-data-grid';
+import { CloseIcon } from 'assets/icons';
+import { auditTrailList } from 'utils/constants';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 import { Typography, useMediaQuery } from '@mui/material';
@@ -21,11 +13,15 @@ import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 
 const AuditTrail = () => {
-  const navigate = useNavigate();
   const [modals, setModals] = useState({
     viewDetails: false,
   });
   const [showFilteredAudit, setShowFilteredAudit] = useState(false);
+
+  const [paginationData, setPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
 
   const openModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: true }));
@@ -121,7 +117,7 @@ const AuditTrail = () => {
                   formik={formik}
                 />
               </div>
-              <div className="relative flex w-full items-center gap-4">
+              <div className="relative flex w-full items-center gap-2">
                 <span className="absolute bottom-20 font-semibold">Date Range</span>
                 <div className="w-full">
                   <FormDatePicker
@@ -179,6 +175,8 @@ const AuditTrail = () => {
                   columns={columns}
                   rowCount={257}
                   defaultAnimation={false}
+                  paginationData={paginationData}
+                  setPaginationData={setPaginationData}
                 />
               </div>
             </div>
@@ -192,7 +190,7 @@ const AuditTrail = () => {
           width={'800px'}
           paddingX={0}
         >
-          <Typography id="modal-modal-title" variant="h6" component="h2">
+          <div id="modal-modal-title">
             <div className="flex items-center justify-between">
               <h1 className="text-xl font-semibold">Log Details</h1>
               <button className="scale-[110%]" onClick={() => closeModal('viewDetails')}>
@@ -200,8 +198,8 @@ const AuditTrail = () => {
               </button>
             </div>
             <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
-          </Typography>
-          <Typography id="modal-modal-description">
+          </div>
+          <div id="modal-modal-description">
             <div className="slide-down mt-5 bg-white">
               <div className="rounded-[12px] border-[3px] border-grayPrimary px-6 py-4">
                 <div className="flex items-center justify-between">
@@ -213,11 +211,11 @@ const AuditTrail = () => {
                   <DetailsCard title="Account Name" content="John Wick" />
                   <DetailsCard title="Affected Module" content="Account Management" />
                   <DetailsCard title="Performed Action" content="Disable Account" />
-                  <DetailsCard title="Date Performed" content="12/12/2024 ; 12:12:12" />
+                  <DetailsCard title="Date Performed" content="12/12/2024 : 12:12:12" />
                 </div>
               </div>
             </div>
-          </Typography>
+          </div>
         </CustomModal>
       )}
     </>
