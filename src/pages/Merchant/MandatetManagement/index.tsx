@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { GridColDef, GridRenderCellParams, GridTreeNodeWithRender } from '@mui/x-data-grid';
 import {
   CloseIcon,
   CreationRequestIcon,
@@ -116,13 +116,13 @@ const MandatetManagement = () => {
   });
 
   const MandateTableColumn: GridColDef[] = [
-    {
-      field: 'accountId',
-      headerName: 'Account ID',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-    },
+    // {
+    //   field: 'accountId',
+    //   headerName: 'Account ID',
+    //   width: screen.width < 1000 ? 200 : undefined,
+    //   flex: screen.width >= 1000 ? 1 : undefined,
+    //   headerClassName: 'ag-thead',
+    // },
     {
       field: 'merchantId',
       headerName: 'Merchant ID',
@@ -146,50 +146,41 @@ const MandatetManagement = () => {
     },
     {
       field: 'status',
-      headerName: 'Request Type',
+      headerName: 'Status',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       renderCell: (params) => {
-        const renderIcon = (IconComponent: any, colorClass: any, text: string) => (
+        const renderIcon = (IconComponent: any, colorClass: string, text: string) => (
           <div className="flex items-center gap-2">
             <IconComponent />
             <span className={`mb-0 ${colorClass}`}>{text}</span>
           </div>
         );
 
-        const getIconAndColor = (requestType: string) => {
-          switch (requestType) {
-            case 'Approved':
-              return {
-                IconComponent: CreationRequestIcon,
-                colorClass: 'text-greenPrimary font-semibold',
-                text: 'Enabled',
-              };
-            case 'Declined':
-              return {
-                IconComponent: DeleteRequestIcon,
-                colorClass: 'text-redSecondary font-semibold',
-                text: 'Disabled',
-              };
-            case 'Pending':
-              return {
-                IconComponent: DisableRequestIcon,
-                colorClass: 'text-yellowNeutral font-semibold',
-                text: 'Pending',
-              };
-            default:
-              return null;
+        const getIconAndColor = (
+          requestType: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>,
+          isActive: boolean,
+        ) => {
+          if (isActive) {
+            return {
+              IconComponent: CreationRequestIcon,
+              colorClass: 'text-greenPrimary font-semibold',
+              text: 'Enabled',
+            };
+          } else {
+            return {
+              IconComponent: DeleteRequestIcon,
+              colorClass: 'text-redSecondary font-semibold',
+              text: 'Disabled',
+            };
           }
         };
 
-        const iconAndColor = getIconAndColor(params.value);
+        const isActive = params?.row?.isActive;
+        const iconAndColor = getIconAndColor(params.value, isActive);
 
-        if (iconAndColor) {
-          return renderIcon(iconAndColor.IconComponent, iconAndColor.colorClass, iconAndColor.text);
-        }
-
-        return <span>{params.value}</span>;
+        return renderIcon(iconAndColor.IconComponent, iconAndColor.colorClass, iconAndColor.text);
       },
     },
     {
@@ -207,12 +198,8 @@ const MandatetManagement = () => {
       headerClassName: 'ag-thead ',
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
-        const requestType = params.row.requestType;
-
-        const isEnabled = requestType === RequestType.Enabled;
-
-        const buttonTitle = isEnabled ? 'Disable' : 'Enable';
-        const buttonColorClass = isEnabled ? 'text-red-400' : 'text-greenPrimary';
+        const buttonTitle = params.row.isActive ? 'Disable' : 'Enable';
+        const buttonColorClass = params.row.isActive ? 'text-red-400' : 'text-greenPrimary';
 
         const selectModal = () => {
           if (buttonTitle === 'Enable') {

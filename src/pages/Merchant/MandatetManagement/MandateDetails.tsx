@@ -146,12 +146,7 @@ const MandateDetails = () => {
     queryFn: ({ queryKey }) => getMandateById(queryKey[1]),
   });
 
-  let buttonTitle = 'Disable';
-  if (data?.responseData?.status === MandateRequestStatus.Approved) {
-    buttonTitle = 'Enable';
-  } else if (data?.responseData?.status === MandateRequestStatus.Declined) {
-    buttonTitle = 'Disable';
-  }
+  let buttonTitle = data?.responseData?.isActive ? 'Disable' : 'Enable';
 
   const selectModal = () => {
     if (buttonTitle === 'Enable') {
@@ -369,7 +364,13 @@ const MandateDetails = () => {
               <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
                 <DetailsCard title="ID" content="12345678" />
                 <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
-                <DetailsCard title="Date Approved" content={data?.responseData?.dateApproved} />
+                <DetailsCard
+                  title="Date Approved"
+                  content={
+                    data?.responseData?.dateApproved &&
+                    new Date(data.responseData.dateApproved).toLocaleDateString()
+                  }
+                />
               </div>
             </div>
           </div>
