@@ -1,4 +1,4 @@
-import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate, useParams } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import { UpdateRequestIcon } from 'assets/icons';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
@@ -8,7 +8,7 @@ import ButtonComponent from 'components/FormElements/Button';
 import CustomPopover from 'hoc/PopOverWrapper';
 import { useState } from 'react';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
-import { Typography } from '@mui/material';
+import { Box, CircularProgress, Typography } from '@mui/material';
 import CustomTabs from 'hoc/CustomTabs';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
@@ -24,15 +24,23 @@ import CustomInput from 'components/FormElements/CustomInput';
 import ChevronRight from 'assets/icons/ChevronRight';
 import CloseIcon from 'assets/icons/CloseIcon';
 import DetailsActionButton from 'components/common/DetailsActionButton';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  deleteMandate,
+  disableMandate,
+  enableMandate,
+  getMandateById,
+  updateMandate,
+} from 'config/actions/dashboard-actions';
+import { capitalize, notifyError } from 'utils/helpers';
+import { updateMandateSchema } from 'utils/formValidators';
 
 const MandateDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
+  const mandateId = searchParams?.get('id') || '';
   const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
   const [searchTerm, setSearchTerm] = useState('');
-  const id = searchParams?.get('id') || '';
-  let mandateType = 'Variable';
-  let mandateStatus = 'Disabled';
 
   const [modals, setModals] = useState({
     confirmDisable: false,
@@ -61,6 +69,16 @@ const MandateDetails = () => {
     },
     onSubmit: (values: any) => {
       setSearchTerm('');
+    },
+  });
+
+  const modifyMandateFormik = useFormik({
+    initialValues: {
+      amount: '',
+    },
+    validationSchema: updateMandateSchema,
+    onSubmit: (values) => {
+      openModal('confirmEdit');
     },
   });
 
@@ -119,6 +137,60 @@ const MandateDetails = () => {
     },
   ];
 
+  const { isLoading, data, refetch, isFetching } = useQuery({
+    queryKey: ['mandates', mandateId],
+    queryFn: ({ queryKey }) => getMandateById(queryKey[1]),
+  });
+
+  const updateMandateMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => updateMandate(requestId),
+    onSuccess: () => {
+      closeModal('editMandate');
+      closeModal('confirmEdit');
+      openModal('editSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmEdit');
+      notifyError(error?.message);
+    },
+  });
+
+  const enableMandateMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => enableMandate(requestId),
+    onSuccess: () => {
+      closeModal('confirmEnable');
+      openModal('enableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmEnable');
+      notifyError(error?.message);
+    },
+  });
+
+  const disableMandateMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => disableMandate(requestId),
+    onSuccess: () => {
+      closeModal('confirmDisable');
+      openModal('disableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDisable');
+      notifyError(error?.message);
+    },
+  });
+
+  const deleteMandateMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => deleteMandate(requestId),
+    onSuccess: () => {
+      closeModal('confirmDelete');
+      openModal('deleteSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDelete');
+      notifyError(error?.message);
+    },
+  });
+
   return (
     <>
       <div className="px-5 py-1">
@@ -135,7 +207,7 @@ const MandateDetails = () => {
 
         <div className="slide-down mt-3 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold md:text-2xl">Mandate ID : Req123456</h2>
+            <h2 className="text-lg font-semibold md:text-2xl">{`Mandate ID : ${data?.responseData?.id}`}</h2>
           </div>
           <div className="w-auto">
             <CustomPopover
@@ -153,7 +225,7 @@ const MandateDetails = () => {
                   View Transactions
                 </button>
 
-                {mandateType === 'Variable' && (
+                {data?.responseData?.mandateType === 'Variable' && (
                   <button
                     onClick={() => openModal('editMandate')}
                     type="button"
@@ -163,7 +235,7 @@ const MandateDetails = () => {
                   </button>
                 )}
 
-                {mandateStatus === 'Enabled' && (
+                {data?.responseData?.isActive ? (
                   <button
                     type="button"
                     onClick={() => openModal('confirmDisable')}
@@ -171,8 +243,7 @@ const MandateDetails = () => {
                   >
                     Disable
                   </button>
-                )}
-                {mandateStatus === 'Disabled' && (
+                ) : (
                   <button
                     type="button"
                     onClick={() => openModal('confirmEnable')}
@@ -181,6 +252,7 @@ const MandateDetails = () => {
                     Enable
                   </button>
                 )}
+
                 <button
                   type="button"
                   onClick={() => openModal('confirmDelete')}
@@ -192,82 +264,144 @@ const MandateDetails = () => {
             </CustomPopover>
           </div>
         </div>
+        {isLoading || isFetching ? (
+          <div className="flex h-[30vh] flex-col items-center justify-center">
+            <Box sx={{ display: 'flex' }}>
+              <CircularProgress sx={{ color: '#5C068C' }} />
+            </Box>
+          </div>
+        ) : (
+          <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
+            <div className="">
+              <ItemDetailsContainer
+                title="Mandate Details"
+                titleExtension={
+                  <>
+                    <div className="flex items-center justify-end gap-2">
+                      <p className="text-sm text-darkgray">Mandate Type:</p>
+                      <UpdateRequestIcon />
+                      <p className="mb-[1px] font-semibold text-lightPurple">
+                        {capitalize(data?.responseData?.mandateType)}
+                      </p>
+                    </div>
+                  </>
+                }
+              >
+                {/* <DetailsCard title="Account ID" content={data?.responseData?.accountId} /> */}
+                <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
+                <DetailsCard title="Merchant Code" content={data?.responseData?.mandateCode} />
+                <DetailsCard
+                  title="Date Created"
+                  content={
+                    data?.responseData?.dateCreated &&
+                    new Date(data.responseData.dateCreated).toLocaleDateString()
+                  }
+                />
+                <DetailsCard title="Product ID" content={data?.responseData?.productId} />
+                <DetailsCard
+                  title="Amount"
+                  content={data?.responseData?.amount}
+                  contentClassName="text-lightPurple"
+                />
+                <DetailsCard
+                  title="Effective Date"
+                  content={
+                    data?.responseData?.startDate &&
+                    new Date(data.responseData.startDate).toLocaleDateString()
+                  }
+                />
+                <DetailsCard
+                  title="End Date"
+                  content={
+                    data?.responseData?.endDate &&
+                    new Date(data.responseData.endDate).toLocaleDateString()
+                  }
+                />
+                <DetailsCard title="Day to apply" content={data?.responseData?.dayToApply} />
+                <DetailsCard title="Frequency" content={data?.responseData?.frequency} />
+                <DetailsCard title="Service" content={data?.responseData?.service} />
+                <DetailsCard title="Narration" content={data?.responseData?.narration} />
+                <DetailsCard title="Account Number" content={data?.responseData?.accountNumber} />
+                <DetailsCard title="Account Name" content={data?.responseData?.accountName} />
+                <DetailsCard title="Bank Code" content={data?.responseData?.bankCode} />
+              </ItemDetailsContainer>
+            </div>
 
-        <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
-          <div className="">
-            <ItemDetailsContainer
-              title="Mandate Details"
-              titleExtension={
-                <>
-                  <div className="flex items-center justify-end gap-2">
-                    <p className="text-sm text-darkgray">Mandate Type:</p>
-                    <UpdateRequestIcon />
-                    <p className="mb-[1px] font-semibold text-lightPurple">{mandateType}</p>
-                  </div>
-                </>
-              }
-            >
-              <DetailsCard title="Account ID" content="1234545" />
-              <DetailsCard title="Merchant ID" content="1234545" />
-              <DetailsCard title="Merchant Code" content="1234545" />
-              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
-              <DetailsCard title="Merchant ID" content="1234545" />
-              <DetailsCard title="Amount" content="N5,000,000" />
-              <DetailsCard title="Effective Date" content="12/12/2024" />
-              <DetailsCard title="End Date" content="12/12/2024" />
-              <DetailsCard title="Day to Apply" content="13th" />
-              <DetailsCard title="Frequency" content="Monthly" />
-              <DetailsCard title="Service" content="Life Insurance" />
-              <DetailsCard title="Narration" content="Mandate Narration" />
-              <DetailsCard title="Account Number" content="0909887674" />
-              <DetailsCard title="Account Name" content="Fair Money" />
-              <DetailsCard title="Bank Code" content="1234545" />
-            </ItemDetailsContainer>
-          </div>
+            <div className="mt-10">
+              <ItemDetailsContainer title="Payer Details">
+                <DetailsCard title="Payer Name" content={data?.responseData?.payerName} />
+                <DetailsCard title="Address" content={data?.responseData?.payerAddress} />
+                <DetailsCard
+                  title="Email Address"
+                  content={data?.responseData?.payerEmailAddress}
+                />
+                <DetailsCard title="Phone Number" content={data?.responseData?.payerPhoneNumber} />
+              </ItemDetailsContainer>
+            </div>
+            <div className="mt-10">
+              <ItemDetailsContainer title="Payee Details">
+                <DetailsCard title="Payee Name" content={data?.responseData?.payeeName} />
+                <DetailsCard title="Address" content={data?.responseData?.payeeAddress} />
+                <DetailsCard
+                  title="Email Address"
+                  content={data?.responseData?.payeeEmailAddress}
+                />
+                <DetailsCard title="Phone Number" content={data?.responseData?.payeePhoneNumber} />
+              </ItemDetailsContainer>
+            </div>
+            <div className="mt-10">
+              <ItemDetailsContainer
+                title="Biller Details"
+                titleExtension={
+                  <>
+                    <div className="flex items-center justify-end gap-2">
+                      <p className="text-sm text-darkgray">Biller Code:</p>
+                      <p className="mb-[1px] font-semibold text-lightPurple">
+                        {data?.responseData?.billerId}
+                      </p>
+                    </div>
+                  </>
+                }
+              >
+                <DetailsCard
+                  title="Biller Account Number"
+                  content={data?.responseData?.billerAccountNumber}
+                />
+                <DetailsCard title="Bank Name" content={data?.responseData?.bankName} />
+                <DetailsCard title="Account Name" content={data?.responseData?.accountName} />
+                <DetailsCard title="Bank Code" content={data?.responseData?.bankCode} />
+              </ItemDetailsContainer>
+            </div>
 
-          <div className="mt-10">
-            <ItemDetailsContainer title="Payer Details">
-              <DetailsCard title="Payer Name" content="Ugobest Venture" />
-              <DetailsCard title="Email Address" content="ugobest@gmal.com" />
-              <DetailsCard title="Phone Number" content="09093874628" />
-              <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
-            </ItemDetailsContainer>
-          </div>
-          <div className="mt-10">
-            <ItemDetailsContainer title="Payee Details">
-              <DetailsCard title="Payee Name" content="Ugobest Venture" />
-              <DetailsCard title="Email Address" content="ugobest@gmal.com" />
-              <DetailsCard title="Phone Number" content="09093874628" />
-              <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
-            </ItemDetailsContainer>
-          </div>
-          <div className="mt-10">
-            <ItemDetailsContainer title="Biller Details">
-              <DetailsCard title="Biller Account Number" content="9093874628" />
-              <DetailsCard title="Bank Name" content="Access" />
-              <DetailsCard title="Account Name" content="Ugobest Venture" />
-              <DetailsCard title="Biller Code" content="123545" />
-              <DetailsCard title="Bank Code" content=";74628" />
-            </ItemDetailsContainer>
-          </div>
+            <div className="mt-10">
+              <ItemDetailsContainer title="Creator Details">
+                <DetailsCard title="ID" content={data?.responseData?.creatorId} />
+                <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
+                <DetailsCard
+                  title="Date Created"
+                  content={
+                    data?.responseData?.dateCreated &&
+                    new Date(data.responseData.dateCreated).toLocaleDateString()
+                  }
+                />
+              </ItemDetailsContainer>
+            </div>
 
-          <div className="mt-10">
-            <ItemDetailsContainer title="Creator Details">
-              <DetailsCard title="ID" content="9344243" />
-              <DetailsCard title="Created By" content="John Doe" />
-              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
-              <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
-            </ItemDetailsContainer>
+            <div className="mt-10">
+              <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
+                <DetailsCard title="ID" content={data?.responseData?.approverId} />
+                <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
+                <DetailsCard
+                  title="Date Approved"
+                  content={
+                    data?.responseData?.dateApproved &&
+                    new Date(data.responseData.dateApproved).toLocaleDateString()
+                  }
+                />
+              </ItemDetailsContainer>
+            </div>
           </div>
-
-          <div className="mt-10">
-            <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
-              <DetailsCard title="ID" content="9344243" />
-              <DetailsCard title="Approved By" content="John Doe" />
-              <DetailsCard title="Date Approved" content="12/12/2024 : 03:00pm" />
-            </ItemDetailsContainer>
-          </div>
-        </div>
+        )}
       </div>
       {modals.confirmDisable && (
         <ModalWrapper
@@ -278,8 +412,7 @@ const MandateDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDisable');
-            openModal('disableSuccessful');
+            disableMandateMutation.mutate(data?.responseData?.id);
           }}
         />
       )}
@@ -292,6 +425,7 @@ const MandateDetails = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('disableSuccessful');
           }}
         />
@@ -305,8 +439,7 @@ const MandateDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmEnable');
-            openModal('enableSuccessful');
+            enableMandateMutation.mutate(data?.responseData?.id);
           }}
         />
       )}
@@ -319,6 +452,7 @@ const MandateDetails = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('enableSuccessful');
           }}
         />
@@ -332,8 +466,7 @@ const MandateDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDelete');
-            openModal('deleteSuccessful');
+            deleteMandateMutation.mutate(data?.responseData?.id);
           }}
         />
       )}
@@ -346,7 +479,98 @@ const MandateDetails = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('deleteSuccessful');
+            navigate({
+              pathname: `/${appRoutes.adminDashboard.mandateManagement.index}`,
+            });
+          }}
+        />
+      )}
+
+      {modals.editMandate && (
+        <CustomModal
+          isOpen={modals.editMandate}
+          setIsOpen={() => closeModal('editMandate')}
+          width={'800px'}
+          paddingX={0}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            <div className="slide-down flex items-center justify-between">
+              <h1 className="text-xl font-semibold">Modify Mandate Details</h1>
+              <button className="scale-[110%]" onClick={() => closeModal('editMandate')}>
+                <CloseIcon />
+              </button>
+            </div>
+            <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
+          </Typography>
+          <div id="modal-modal-description" className="mt-2">
+            {data?.responseData?.mandateType === 'Variable' ? (
+              <form
+                onSubmit={modifyMandateFormik.handleSubmit}
+                noValidate
+                className="slide-down mt-8 w-full pb-8"
+              >
+                <div className="mt-14 flex flex-col items-end gap-x-8 gap-y-4 md:flex-row md:items-center md:justify-between">
+                  <div className="w-full">
+                    <CustomInput
+                      labelFor="amount"
+                      label="Modify Amount"
+                      inputType="text"
+                      placeholder="Enter here"
+                      maxW="w-full"
+                      verticalMargin={false}
+                      formik={modifyMandateFormik}
+                    />
+                  </div>
+                  <ButtonComponent
+                    variant="contained"
+                    color="white"
+                    backgroundColor="#5C068C"
+                    hoverBackgroundColor="#2F0248"
+                    type="submit"
+                    title="Save"
+                    height="3rem"
+                    width="9rem"
+                    customPaddingX="1.4rem"
+                  />
+                </div>
+              </form>
+            ) : (
+              <span className="slide-down flex items-center justify-start gap-1">
+                <h3 className="text-red-300">Error:</h3>
+                <h3 className="">You cannot modify a fixed mandate</h3>
+              </span>
+            )}
+          </div>
+        </CustomModal>
+      )}
+      {modals.confirmEdit && (
+        <ModalWrapper
+          isOpen={modals.confirmEdit}
+          setIsOpen={() => closeModal('confirmEdit')}
+          title={'Save Changes?'}
+          info={
+            'You are about to save changes made to this mandate, would you want to proceed with this?'
+          }
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
+          proceedAction={() => {
+            updateMandateMutation.mutate(data?.responseData?.id);
+          }}
+        />
+      )}
+      {modals.editSuccessful && (
+        <ModalWrapper
+          isOpen={modals.editSuccessful}
+          setIsOpen={() => closeModal('editSuccessful')}
+          title={'Success!!'}
+          info={'You have successfully saved new changes'}
+          icon={<ActionSuccessIcon />}
+          type={'completed'}
+          proceedAction={() => {
+            refetch();
+            closeModal('editSuccessful');
           }}
         />
       )}
@@ -403,100 +627,6 @@ const MandateDetails = () => {
             </div>
           </Typography>
         </CustomModal>
-      )}
-
-      {modals.editMandate && (
-        <CustomModal
-          isOpen={modals.editMandate}
-          setIsOpen={() => closeModal('editMandate')}
-          width={'800px'}
-          paddingX={0}
-        >
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            <div className="slide-down flex items-center justify-between">
-              <h1 className="text-xl font-semibold">Modify Mandate Details</h1>
-              <button className="scale-[110%]" onClick={() => closeModal('editMandate')}>
-                <CloseIcon />
-              </button>
-            </div>
-            <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
-          </Typography>
-          <div id="modal-modal-description" className="mt-2">
-            {mandateType === 'Variable' ? (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                }}
-                noValidate
-                className="slide-down mt-8 w-full"
-              >
-                <div className="mt-14 flex flex-col items-end gap-x-8 gap-y-4 md:flex-row md:items-center md:justify-between">
-                  <div className="w-full">
-                    <CustomInput
-                      labelFor="modifiedAmount"
-                      label="Modify Amount"
-                      inputType="text"
-                      placeholder="Enter here"
-                      maxW="w-full"
-                      verticalMargin={false}
-                    />
-                  </div>
-                  <ButtonComponent
-                    variant="contained"
-                    color="white"
-                    backgroundColor="#5C068C"
-                    hoverBackgroundColor="#2F0248"
-                    type="submit"
-                    title="Save"
-                    height="3rem"
-                    width="9rem"
-                    customPaddingX="1.4rem"
-                    onClick={() => {
-                      openModal('confirmEdit');
-                    }}
-                  />
-                </div>
-              </form>
-            ) : (
-              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-                <span className="slide-down flex items-center justify-start gap-1">
-                  <h3 className="text-red-300">Error:</h3>
-                  <h3 className="">You cannot modify a fixed mandate</h3>
-                </span>
-              </Typography>
-            )}
-          </div>
-        </CustomModal>
-      )}
-      {modals.confirmEdit && (
-        <ModalWrapper
-          isOpen={modals.confirmEdit}
-          setIsOpen={() => closeModal('confirmEdit')}
-          title={'Save Changes?'}
-          info={
-            'You are about to save changes made to this mandate, would you want to proceed with this?'
-          }
-          icon={<RedAlertIcon />}
-          type={'confirmation'}
-          proceedAction={() => {
-            closeModal('editMandate');
-            closeModal('confirmEdit');
-            openModal('editSuccessful');
-          }}
-        />
-      )}
-      {modals.editSuccessful && (
-        <ModalWrapper
-          isOpen={modals.editSuccessful}
-          setIsOpen={() => closeModal('editSuccessful')}
-          title={'Success!!'}
-          info={'You have successfully saved new changes'}
-          icon={<ActionSuccessIcon />}
-          type={'completed'}
-          proceedAction={() => {
-            closeModal('editSuccessful');
-          }}
-        />
       )}
     </>
   );

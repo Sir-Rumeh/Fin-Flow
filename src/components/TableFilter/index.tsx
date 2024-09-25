@@ -126,7 +126,7 @@ const TableFilter = ({
                       borderColor="#5C068C"
                       border={0.5}
                       height="3rem"
-                      onClick={() => setCloseFilterCard(!closeFilterCard)}
+                      onClick={() => setCloseFilterCard(true)}
                       title="Cancel"
                       fontWeight={500}
                     />
@@ -134,9 +134,14 @@ const TableFilter = ({
                   <div className="relative w-[50%] sm:w-[15rem]">
                     <ButtonComponent
                       color="white"
+                      backgroundColor="#5C068C"
+                      hoverBackgroundColor="#2F0248"
                       height="3rem"
                       variant="contained"
-                      onClick={handleOptionsFilter}
+                      onClick={() => {
+                        handleOptionsFilter();
+                        setCloseFilterCard(true);
+                      }}
                       title="Filter"
                       fontWeight={500}
                     />

@@ -57,6 +57,12 @@ const CustomPopover = ({
           paddingLeft: customPaddingX ? customPaddingX : undefined,
           paddingRight: customPaddingX ? customPaddingX : undefined,
           textTransform: 'capitalize',
+          '& .MuiTouchRipple-root': {
+            color: '#5C068C',
+          },
+          ':hover': {
+            color: '#5C068C',
+          },
         }}
         aria-describedby={id}
         onClick={handleClick}
