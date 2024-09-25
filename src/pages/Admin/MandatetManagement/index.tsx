@@ -131,7 +131,7 @@ const MandatetManagement = () => {
             <CustomPopover
               popoverId={params?.row.id}
               buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-55}
+              translationX={-45}
               translationY={45}
             >
               <div className="flex flex-col rounded-md p-1">

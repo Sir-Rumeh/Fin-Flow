@@ -8,9 +8,10 @@ interface CustomTabProps {
   activeTab: string;
   width?: string;
   setActiveTab: Dispatch<React.SetStateAction<TabsListTabNames | any>>;
+  backgroundColor?: string;
 }
 
-const CustomTabs = ({ tabs, activeTab, setActiveTab, width }: CustomTabProps) => {
+const CustomTabs = ({ tabs, activeTab, setActiveTab, width, backgroundColor }: CustomTabProps) => {
   return (
     <>
       {tabs?.map((tab) => {
@@ -27,12 +28,10 @@ const CustomTabs = ({ tabs, activeTab, setActiveTab, width }: CustomTabProps) =>
               }}
               textSize={40}
             >
-              <span className={`flex w-full items-center justify-start gap-2 py-3 text-base`}>
-                <span
-                  className={`flex items-center font-semibold ${activeTab === tab.tabName ? '' : 'text-blackInput'} `}
-                >
-                  {tab.tabName}
-                </span>
+              <span
+                className={`flex w-full items-center justify-start gap-2 py-3 text-base ${activeTab === tab.tabName ? 'text-[#5C068C]' : 'text-blackInput'}`}
+              >
+                <span className={`flex items-center font-semibold`}>{tab.tabName}</span>
                 {tab.tabTotal && (
                   <span className="rounded-2xl border border-purpleSecondary bg-purple-100 px-2">
                     {tab.tabTotal}
