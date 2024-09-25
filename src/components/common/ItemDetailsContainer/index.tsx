@@ -13,8 +13,7 @@ export default function ItemDetailsContainer({ title, titleExtension, children }
         <p className="my-3 text-lg font-semibold">{title}</p>
         {titleExtension}
       </div>
-      {/* <div className="mt-6 flex flex-col justify-start gap-5 md:flex-row md:gap-x-5"> */}
-      <div className="mt-6 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+      <div className="mt-6 grid grid-cols-1 gap-[20px] sm:grid-cols-2 md:grid-cols-3 md:gap-[50px]">
         {children}
       </div>
     </div>
