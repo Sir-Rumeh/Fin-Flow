@@ -384,43 +384,44 @@ const MandatetManagement = () => {
             />
           </div>
         </div>
-        <div className="mt-5">
-          <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-4">
-            <div className="flex w-full flex-col gap-y-4 border-b pb-3 lg:flex-row lg:items-center">
-              <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-start">
-                <div className="">
-                  <TableFilter
-                    name={'searchMandate'}
-                    placeholder={'Search Mandate'}
-                    label={'Search Mandate'}
-                    value={searchTerm}
-                    setSearch={setSearchTerm}
-                    handleOptionsFilter={() => refetch()}
-                    formik={formik}
-                    fromDateName={'fromDateFilter'}
-                    toDateName={'toDateFilter'}
-                    selectName={'statusFilter'}
+
+        {isLoading || isFetching ? (
+          <div className="flex h-[30vh] flex-col items-center justify-center">
+            <Box sx={{ display: 'flex' }}>
+              <CircularProgress sx={{ color: '#5C068C' }} />
+            </Box>
+          </div>
+        ) : (
+          <div className="mt-5">
+            <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-4">
+              <div className="flex w-full flex-col gap-y-4 border-b pb-3 lg:flex-row lg:items-center">
+                <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-start">
+                  <div className="">
+                    <TableFilter
+                      name={'searchMandate'}
+                      placeholder={'Search Mandate'}
+                      label={'Search Mandate'}
+                      value={searchTerm}
+                      setSearch={setSearchTerm}
+                      handleOptionsFilter={() => refetch()}
+                      formik={formik}
+                      fromDateName={'fromDateFilter'}
+                      toDateName={'toDateFilter'}
+                      selectName={'statusFilter'}
+                    />
+                  </div>
+                </div>
+                <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
+                  <ExportBUtton
+                    data={data?.responseData?.items}
+                    printPdfRef={printPdfRef}
+                    headers={excelHeaders}
+                    fileName="mandates.csv"
                   />
                 </div>
               </div>
-              <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
-                <ExportBUtton
-                  data={data?.responseData?.items}
-                  printPdfRef={printPdfRef}
-                  headers={excelHeaders}
-                  fileName="mandates.csv"
-                />
-              </div>
-            </div>
 
-            <div className="mt-6 w-full">
-              {isLoading || isFetching ? (
-                <div className="flex h-[30vh] flex-col items-center justify-center">
-                  <Box sx={{ display: 'flex' }}>
-                    <CircularProgress sx={{ color: '#5C068C' }} />
-                  </Box>
-                </div>
-              ) : (
+              <div className="mt-6 w-full">
                 <div ref={printPdfRef} className="w-full">
                   <CustomTable
                     tableData={data?.responseData?.items}
@@ -430,10 +431,10 @@ const MandatetManagement = () => {
                     setPaginationData={setPaginationData}
                   />
                 </div>
-              )}
+              </div>
             </div>
           </div>
-        </div>
+        )}
       </section>
 
       {modals.confirmDisable && (

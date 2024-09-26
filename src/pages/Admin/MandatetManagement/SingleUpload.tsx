@@ -11,11 +11,17 @@ import ChevronDown from 'assets/icons/ChevronDown';
 import { useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
 import CustomFileUpload from 'components/FormElements/CustomFileUpload';
-import { addSingleMandateSchema } from 'utils/formValidators';
+import { addSingleMandateSchema, createMandateSchema } from 'utils/formValidators';
 import FormSelect from 'components/FormElements/FormSelect';
+import { MandateRequest } from 'utils/interfaces';
+import { useMutation } from '@tanstack/react-query';
+import { addMandateRequest } from 'config/actions/dashboard-actions';
+import { notifyError } from 'utils/helpers';
+import dayjs from 'dayjs';
 
 const SingleUpload = () => {
   const navigate = useNavigate();
+  const [mandateRequest, setMandateRequest] = useState<MandateRequest>();
 
   const [modals, setModals] = useState({
     confirmCreate: false,
@@ -30,16 +36,87 @@ const SingleUpload = () => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
 
+  const addMandateRequestMutation = useMutation({
+    mutationFn: (payload: MandateRequest | undefined) => addMandateRequest(payload),
+    onSuccess: () => {
+      closeModal('confirmCreate');
+      openModal('creationSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmCreate');
+      notifyError(error.message);
+    },
+  });
+
   const formik = useFormik({
     initialValues: {
       mandateType: '',
       merchantId: '',
-      startDate: '',
-      endDate: '',
+      startDate: null,
+      endDate: null,
       supportingDocument: '',
+      merchantCode: '',
+      productId: '',
+      amount: '',
+      dayToApply: '',
+      frequency: '',
+      service: '',
+      accountName: '',
+      accountNumber: '',
+      bankCode: '',
+      narration: '',
+      payerName: '',
+      payerEmailAddress: '',
+      payerPhoneNumber: '',
+      payerAddress: '',
+      payeeName: '',
+      payeeEmailAddress: '',
+      payeePhoneNumber: '',
+      payeeAddress: '',
+      biller: '',
+      billerId: '',
+      billerAccountNumber: '',
+      billerAccountName: '',
+      billerBankCode: '',
+      billerBankName: '',
     },
-    validationSchema: addSingleMandateSchema,
-    onSubmit: (values: any) => {
+    validationSchema: createMandateSchema,
+    onSubmit: (values) => {
+      const formattedStartDate = dayjs(values.startDate).toISOString();
+      const formattedEndDate = dayjs(values.endDate).toISOString();
+      console.log(values);
+
+      const payload = {
+        mandateId: '',
+        merchantId: values.merchantId,
+        mandateCode: values.merchantCode,
+        productId: values.productId,
+        amount: parseFloat(values.amount),
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+        dayToApply: values.dayToApply,
+        mandateType: values.mandateType,
+        frequency: values.frequency,
+        service: values.service,
+        accountName: values.accountName,
+        accountNumber: values.accountNumber,
+        bankCode: values.bankCode,
+        supportingDocument: 'support_doc.pdf',
+        narration: values.narration,
+        payerName: values.payerName,
+        payeeName: values.payeeName,
+        payerEmailAddress: values.payerEmailAddress,
+        payerPhoneNumber: values.payerPhoneNumber,
+        payerAddress: values.payerAddress,
+        payeeEmailAddress: values.payeeEmailAddress,
+        payeePhoneNumber: values.payeePhoneNumber,
+        payeeAddress: values.payeePhoneNumber,
+        biller: values.biller,
+        billerID: values.billerId,
+        billerAccountNumber: values.billerAccountNumber,
+      };
+
+      setMandateRequest(payload);
       openModal('confirmCreate');
     },
   });
@@ -76,7 +153,7 @@ const SingleUpload = () => {
                         <p>Variable</p>
                       </div>
                       <div className="ml-2 flex items-center gap-1">
-                        <label htmlFor="variable">
+                        <label htmlFor="fixed">
                           <input
                             type="radio"
                             className="h-4 w-4"
@@ -88,6 +165,10 @@ const SingleUpload = () => {
                         </label>
                         <p>Fixed</p>
                       </div>
+                      {(formik.touched.mandateType as any) &&
+                        (formik.errors.mandateType as any) && (
+                          <p className="text-red-400">{formik.errors.mandateType as any}</p>
+                        )}
                     </div>
                   </div>
                 </>
@@ -110,6 +191,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -119,6 +201,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -128,6 +211,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -177,6 +261,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -186,6 +271,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -195,6 +281,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -211,6 +298,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
             </FormContentContainer>
@@ -224,6 +312,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -233,6 +322,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -242,6 +332,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-3">
@@ -251,6 +342,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
             </FormContentContainer>
@@ -264,6 +356,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -273,6 +366,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -282,6 +376,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-3">
@@ -291,6 +386,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
             </FormContentContainer>
@@ -304,6 +400,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -313,6 +410,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -322,6 +420,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -331,6 +430,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -340,6 +440,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -349,6 +450,7 @@ const SingleUpload = () => {
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
+                  formik={formik}
                 />
               </div>
             </FormContentContainer>
@@ -357,7 +459,8 @@ const SingleUpload = () => {
             <div className="flex w-full items-center justify-end gap-4">
               <div className="w-auto">
                 <ButtonComponent
-                  color="purplePrimary"
+                  color="#5C068C"
+                  borderColor="#5C068C"
                   variant="outlined"
                   type="button"
                   title="Cancel"
@@ -393,8 +496,7 @@ const SingleUpload = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmCreate');
-            openModal('creationSuccessful');
+            addMandateRequestMutation.mutate(mandateRequest);
           }}
         />
       )}
@@ -408,6 +510,7 @@ const SingleUpload = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            formik.resetForm();
             closeModal('creationSuccessful');
             navigate(`/${appRoutes.adminDashboard.mandateManagement.index}`);
           }}

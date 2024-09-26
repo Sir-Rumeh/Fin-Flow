@@ -388,17 +388,19 @@ const MandateDetails = () => {
             </div>
 
             <div className="mt-10">
-              <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
-                <DetailsCard title="ID" content={data?.responseData?.approverId} />
-                <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
-                <DetailsCard
-                  title="Date Approved"
-                  content={
-                    data?.responseData?.dateApproved &&
-                    new Date(data.responseData.dateApproved).toLocaleDateString()
-                  }
-                />
-              </ItemDetailsContainer>
+              {data?.responseData?.status === 'Approved' && (
+                <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
+                  <DetailsCard title="ID" content={data?.responseData?.approverId} />
+                  <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
+                  <DetailsCard
+                    title="Date Approved"
+                    content={
+                      data?.responseData?.dateApproved &&
+                      new Date(data.responseData.dateApproved).toLocaleDateString()
+                    }
+                  />
+                </ItemDetailsContainer>
+              )}
             </div>
           </div>
         )}
