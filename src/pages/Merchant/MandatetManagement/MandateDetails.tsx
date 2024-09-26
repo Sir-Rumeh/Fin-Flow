@@ -13,18 +13,14 @@ import ButtonComponent from 'components/FormElements/Button';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import appRoutes from 'utils/constants/routes';
-import { useTabContext } from '../../../context/TabContext';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import Tab from 'components/Tabs';
-import { DataGrid, GridColDef } from '@mui/x-data-grid';
+import { GridColDef } from '@mui/x-data-grid';
 import { transactionHistory } from 'utils/constants';
-import TableLogo from 'assets/images/table_logo.png';
-import { CircularProgress, Popover } from '@mui/material';
+import { Backdrop, CircularProgress, Popover } from '@mui/material';
 import WhiteArrowDown from 'assets/icons/WhiteArrowDown';
-import SearchIcon from 'assets/icons/SearchIcon';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   deleteMandate,
   disableMandate,
@@ -36,7 +32,11 @@ import { updateMandateSchema } from 'utils/formValidators';
 import { useFormik } from 'formik';
 import CustomInput from 'components/FormElements/CustomInput';
 import { notifyError } from 'utils/helpers';
-import { MandateRequestStatus, RequestType } from 'utils/enums';
+import CustomModal from 'hoc/ModalWrapper/CustomModal';
+import CustomTabs from 'hoc/CustomTabs';
+import TableFilter from 'components/TableFilter';
+import CustomTable from 'components/CustomTable';
+import { TabsProps } from 'utils/interfaces';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -52,8 +52,25 @@ const style = {
 };
 
 const MandateDetails = () => {
-  const { tab, setTab } = useTabContext();
+  const queryClient = useQueryClient();
   const { id: mandateId } = useParams();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
+
+  const total = 20;
+
+  const tabsList: TabsProps[] = [
+    {
+      tabIndex: 1,
+      tabName: 'Successful',
+      tabTotal: total,
+    },
+    {
+      tabIndex: 2,
+      tabName: 'Failed',
+      tabTotal: total,
+    },
+  ];
 
   const [modals, setModals] = useState({
     openTransactionHistory: false,
@@ -76,7 +93,7 @@ const MandateDetails = () => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
 
-  const TransactionsTableColumn: GridColDef[] = [
+  const transactionsTableColumn: GridColDef[] = [
     {
       field: 'accountId',
       headerName: 'Account ID',
@@ -131,13 +148,24 @@ const MandateDetails = () => {
 
   const modifyMandateValidation = useFormik({
     initialValues: {
-      amount: null,
+      amount: 0,
     },
     validationSchema: updateMandateSchema,
     onSubmit: (values) => {
-      console.log(values);
       openModal('confirmModifyMandate');
       closeModal('openModifyMandate');
+    },
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      searchMerchantName: '',
+      fromDateFilter: '',
+      toDateFilter: '',
+      statusFilter: '',
+    },
+    onSubmit: (values) => {
+      setSearchTerm('');
     },
   });
 
@@ -157,10 +185,17 @@ const MandateDetails = () => {
   };
 
   const updateMandateMutation = useMutation({
-    mutationFn: (requestId: string | undefined) => updateMandate(requestId),
+    mutationFn: ({
+      requestId,
+      payload,
+    }: {
+      requestId: string | undefined;
+      payload: { amount: number };
+    }) => updateMandate(requestId, payload),
     onSuccess: () => {
       openModal('saveModifyMandate');
       closeModal('confirmModifyMandate');
+      queryClient.invalidateQueries({ queryKey: ['mandates'] });
     },
     onError: (error) => {
       closeModal('confirmModifyMandate');
@@ -173,6 +208,7 @@ const MandateDetails = () => {
     onSuccess: () => {
       openModal('confirmEnableMandate');
       closeModal('openEnableMandate');
+      queryClient.invalidateQueries({ queryKey: ['mandates'] });
     },
     onError: (error) => {
       closeModal('openEnableMandate');
@@ -185,6 +221,7 @@ const MandateDetails = () => {
     onSuccess: () => {
       openModal('confirmDisableMandate');
       closeModal('openDisableMandate');
+      queryClient.invalidateQueries({ queryKey: ['mandates'] });
     },
     onError: (error) => {
       closeModal('openDisableMandate');
@@ -197,6 +234,7 @@ const MandateDetails = () => {
     onSuccess: () => {
       openModal('confirmDeleteProfile');
       closeModal('openDeleteProfile');
+      queryClient.invalidateQueries({ queryKey: ['mandates'] });
     },
     onError: (error) => {
       closeModal('openDeleteProfile');
@@ -376,81 +414,70 @@ const MandateDetails = () => {
           </div>
         )}
       </div>
+      <Backdrop
+        open={
+          updateMandateMutation.isPending ||
+          enableMandateMutation.isPending ||
+          disableMandateMutation.isPending ||
+          deleteMandateMutation.isPending
+        }
+        style={{ zIndex: 20, color: '#fff' }}
+      >
+        <CircularProgress color="inherit" />
+      </Backdrop>
       {modals.openTransactionHistory && (
-        <Modal
-          open={modals.openTransactionHistory}
-          onClose={() => closeModal('openTransactionHistory')}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
+        <CustomModal
+          isOpen={modals.openTransactionHistory}
+          setIsOpen={() => closeModal('openTransactionHistory')}
+          width={'900px'}
+          paddingX={0}
         >
-          <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              <div className="flex items-center justify-between">
-                <h1>Transaction History Details</h1>
-                <button onClick={() => closeModal('openTransactionHistory')}>
-                  <CloseIcon />
-                </button>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            <div className="flex items-center justify-between">
+              <h1 className="text-xl font-semibold">Transaction History Details</h1>
+              <button className="scale-[110%]" onClick={() => closeModal('openTransactionHistory')}>
+                <CloseIcon />
+              </button>
+            </div>
+            <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
+          </Typography>
+          <div className="mt-2">
+            <div className="">
+              <div className="slide-down flex items-center justify-between">
+                <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10">
+                  <CustomTabs
+                    tabs={tabsList}
+                    activeTab={activeTransactionTab}
+                    setActiveTab={setActiveTransactionTab}
+                  />
+                </div>
+                <div className="flex items-center justify-end">
+                  <TableFilter
+                    name={'searchTransactionHistory'}
+                    placeholder={'Search Transactions'}
+                    label={'Search Transactions'}
+                    value={searchTerm}
+                    setSearch={setSearchTerm}
+                    handleOptionsFilter={() => {}}
+                    formik={formik}
+                    fromDateName={'fromDateFilter'}
+                    toDateName={'toDateFilter'}
+                    selectName={'statusFilter'}
+                    showOptionsFilter={false}
+                  />
+                </div>
               </div>
               <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <div className="">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center justify-between gap-4">
-                    <Tab
-                      label="Successful"
-                      count={20}
-                      isActive={tab === 1}
-                      onClick={() => setTab(1)}
-                      inactiveColor="bg-green-500"
-                    />
-                    <Tab
-                      label="Failed"
-                      count={20}
-                      isActive={tab === 2}
-                      onClick={() => setTab(2)}
-                      inactiveColor="bg-red-500"
-                    />
-                  </div>
-                  <div className="flex h-[45px] w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2">
-                    <SearchIcon className="h-6 w-6" />
-                    <input
-                      type="text"
-                      className="w-full border-none focus:border-none focus:outline-none"
-                      placeholder="Search"
-                    />
-                  </div>
-                </div>
-                <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
-                <div className="mt-6">
-                  {transactionHistory.length > 0 ? (
-                    <DataGrid
-                      rows={transactionHistory}
-                      columns={TransactionsTableColumn}
-                      sx={{
-                        border: 0,
-                      }}
-                      rowHeight={70}
-                      columnHeaderHeight={70}
-                      disableRowSelectionOnClick
-                      disableColumnMenu
-                      pagination
-                    />
-                  ) : (
-                    <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
-                      <div>
-                        <img src={TableLogo} alt="group_logo" />
-                      </div>
-                      <div className="mt-8 text-center">
-                        <h3 className="text-2xl font-bold">Oops! No Transactions</h3>
-                      </div>
-                    </div>
-                  )}
-                </div>
+              <div className="slide-down mt-6">
+                <CustomTable
+                  tableData={transactionHistory}
+                  columns={transactionsTableColumn}
+                  rowCount={73}
+                />
               </div>
-            </Typography>
-          </Box>
-        </Modal>
+            </div>
+          </div>
+        </CustomModal>
       )}
       {modals.openModifyMandate && (
         <Modal
@@ -513,7 +540,11 @@ const MandateDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            updateMandateMutation.mutate(mandateId);
+            updateMandateMutation.mutate({
+              requestId: mandateId,
+              payload: modifyMandateValidation.values,
+            });
+            closeModal('confirmModifyMandate');
           }}
         />
       )}
@@ -538,6 +569,7 @@ const MandateDetails = () => {
           type={'confirmation'}
           proceedAction={() => {
             enableMandateMutation.mutate(mandateId);
+            closeModal('openEnableMandate');
           }}
         />
       )}
@@ -562,6 +594,7 @@ const MandateDetails = () => {
           type={'confirmation'}
           proceedAction={() => {
             disableMandateMutation.mutate(mandateId);
+            closeModal('openDisableMandate');
           }}
         />
       )}
@@ -586,6 +619,7 @@ const MandateDetails = () => {
           type={'confirmation'}
           proceedAction={() => {
             deleteMandateMutation.mutate(mandateId);
+            closeModal('openDeleteProfile');
           }}
         />
       )}

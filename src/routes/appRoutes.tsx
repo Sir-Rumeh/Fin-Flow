@@ -375,7 +375,7 @@ const merchantRoutes: RoutesType[] = [
     children: [
       {
         name: 'User Details',
-        path: 'user-details',
+        path: 'user-details/:id',
         component: <UserDetails />,
       },
     ],

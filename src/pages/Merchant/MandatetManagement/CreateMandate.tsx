@@ -18,6 +18,7 @@ import { useMutation } from '@tanstack/react-query';
 import { addMandateRequest } from 'config/actions/dashboard-actions';
 import { MandateRequest } from 'utils/interfaces';
 import { notifyError } from 'utils/helpers';
+import { Backdrop, CircularProgress } from '@mui/material';
 
 const CreateMandate = () => {
   const { tab, setTab } = useTabContext();
@@ -177,7 +178,7 @@ const CreateMandate = () => {
                           className="h-4 w-4"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
-                          checked={formik.values.mandateType === 'variable'}
+                          checked={formik.values.mandateType === 'Variable'}
                         />
                         <label htmlFor="variableType-variable">Variable</label>
                       </div>
@@ -189,7 +190,7 @@ const CreateMandate = () => {
                           className="h-4 w-4"
                           onChange={formik.handleChange}
                           onBlur={formik.handleBlur}
-                          checked={formik.values.mandateType === 'fixed'}
+                          checked={formik.values.mandateType === 'Fixed'}
                         />
                         <label htmlFor="mandateType-fixed">Fixed</label>
                       </div>
@@ -205,7 +206,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="merchantId"
                       label="Merchant ID"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
@@ -214,7 +215,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="merchantCode"
                       label="Merchant Code"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
@@ -223,7 +224,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="productId"
                       label="Product ID"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
@@ -234,7 +235,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="amount"
                       label="Amount"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px] mt-[4px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full mt-[4px]"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="number"
                       placeholder="Enter here"
@@ -252,12 +253,7 @@ const CreateMandate = () => {
                         }}
                         sx={{
                           height: '50px',
-                          width: {
-                            xs: '100%',
-                            sm: '100%',
-                            md: '100%',
-                            lg: '327px',
-                          },
+                          width: '100%',
                           '& .MuiInputBase-root': {
                             height: '50px',
                             borderRadius: '8px',
@@ -280,12 +276,7 @@ const CreateMandate = () => {
                         }}
                         sx={{
                           height: '50px',
-                          width: {
-                            xs: '100%',
-                            sm: '100%',
-                            md: '100%',
-                            lg: '327px',
-                          },
+                          width: '100%',
                           '& .MuiInputBase-root': {
                             height: '50px',
                             borderRadius: '8px',
@@ -301,7 +292,7 @@ const CreateMandate = () => {
                     <CustomSelect
                       labelFor="dayToApply"
                       label="Day to Apply"
-                      containerStyles="h-[50px] w-full lg:w-[327px]"
+                      containerStyles="h-[50px] w-full"
                       selectStyles="h-[50px] px-2"
                       options={['daily', 'monthly', 'yearly']}
                       placeholder="Select here"
@@ -311,7 +302,7 @@ const CreateMandate = () => {
                     <CustomSelect
                       labelFor="frequency"
                       label="Frequency"
-                      containerStyles="h-[50px] w-full lg:w-[327px]"
+                      containerStyles="h-[50px] w-full"
                       selectStyles="h-[50px] px-2"
                       options={['daily', 'monthly', 'yearly']}
                       placeholder="Select here"
@@ -321,7 +312,7 @@ const CreateMandate = () => {
                     <CustomSelect
                       labelFor="service"
                       label="Service"
-                      containerStyles="h-[50px] w-full lg:w-[327px]"
+                      containerStyles="h-[50px] w-full"
                       selectStyles="h-[50px] px-2"
                       options={[
                         'Micro-loans',
@@ -342,7 +333,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="accountName"
                       label="Account Name"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
@@ -351,7 +342,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="accountNumber"
                       label="Account Number"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
@@ -360,7 +351,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="bankCode"
                       label="Bank Code"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
@@ -372,7 +363,7 @@ const CreateMandate = () => {
                       <CustomInput
                         labelFor="supportingDocument"
                         label="Upload Supporting Document"
-                        containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                        containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                         inputStyles="w-full focus:outline-none focus:ring-0"
                         inputType="file"
                         formik={formik}
@@ -402,7 +393,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="payerName"
                       label="Payer Name"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
@@ -411,7 +402,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="payerEmailAddress"
                       label="Payer Email Address"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
@@ -420,7 +411,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="payerPhoneNumber"
                       label="Payer Phone Number"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
@@ -453,7 +444,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="payeeName"
                       label="Payee Name"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
@@ -462,7 +453,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="payeeEmailAddress"
                       label="Payee Email Address"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
@@ -471,7 +462,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="payeePhoneNumber"
                       label="Payee Phone Number"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
@@ -503,7 +494,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="biller"
                       label="Biller"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
@@ -512,7 +503,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="billerId"
                       label="Biller ID"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
@@ -521,7 +512,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="billerAccountNumber"
                       label="Biller Account Number"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
@@ -532,7 +523,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="billerAccountName"
                       label="Biller Account Name"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
@@ -541,7 +532,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="billerBankCode"
                       label="Biller Bank Code"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
@@ -550,7 +541,7 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="billerBankName"
                       label="Biller Bank Name"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full lg:w-[327px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
                       placeholder="Enter here"
@@ -634,6 +625,9 @@ const CreateMandate = () => {
           </div>
         )}
       </div>
+      <Backdrop open={addMandateRequestMutation.isPending} style={{ zIndex: 20, color: '#fff' }}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
       {modals.addMandate && (
         <ModalWrapper
           isOpen={modals.addMandate}
@@ -644,6 +638,7 @@ const CreateMandate = () => {
           type={'confirmation'}
           proceedAction={() => {
             addMandateRequestMutation.mutate(mandateRequest);
+            closeModal('addMandate');
           }}
         />
       )}

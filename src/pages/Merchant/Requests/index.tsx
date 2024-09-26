@@ -16,7 +16,7 @@ import CustomTable from 'components/CustomTable';
 import TableFilter from 'components/TableFilter';
 import { useFormik } from 'formik';
 import { useQuery } from '@tanstack/react-query';
-import { getMandateRequests } from 'config/actions/dashboard-actions';
+import { getMandateRequests, getMandateStatistics } from 'config/actions/dashboard-actions';
 import { QueryParams } from 'utils/interfaces';
 import { Box, CircularProgress } from '@mui/material';
 
@@ -106,8 +106,6 @@ const MandateRequests = () => {
       width: 150,
       headerClassName: 'ag-thead',
       renderCell: (params) => {
-        console.log(params.id);
-
         const route =
           params.row.requestType === RequestType.Creation
             ? appRoutes.merchantDashboard.requests.createRequestDetails
@@ -153,6 +151,11 @@ const MandateRequests = () => {
     enabled: !!queryParams.status,
   });
 
+  const { data: statistics } = useQuery({
+    queryKey: ['mandateStatistics', queryParams],
+    queryFn: () => getMandateStatistics(),
+  });
+
   const handleTabClick = (tabIndex: number) => {
     setTab(tabIndex);
     const status =
@@ -180,7 +183,7 @@ const MandateRequests = () => {
             <div className="flex items-center gap-4 md:gap-5 lg:gap-10">
               <Tab
                 label="Pending"
-                count={20}
+                count={statistics?.responseData ? statistics?.responseData?.totalPending : 0}
                 isActive={tab === 1}
                 onClick={() => {
                   setTab(1);
@@ -190,7 +193,7 @@ const MandateRequests = () => {
               />
               <Tab
                 label="Approved"
-                count={20}
+                count={statistics?.responseData ? statistics?.responseData?.totalApproved : 0}
                 isActive={tab === 2}
                 onClick={() => {
                   setTab(2);
@@ -200,7 +203,7 @@ const MandateRequests = () => {
               />
               <Tab
                 label="Rejected"
-                count={20}
+                count={statistics?.responseData ? statistics?.responseData?.totalRejected : 0}
                 isActive={tab === 3}
                 onClick={() => {
                   setTab(3);
