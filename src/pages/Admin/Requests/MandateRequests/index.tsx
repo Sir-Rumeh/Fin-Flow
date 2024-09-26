@@ -147,7 +147,9 @@ const MandateRequests = () => {
                 ? `/${appRoutes.adminDashboard.requests.mandateRequests.mandateUpdateRequest}`
                 : params?.row.requestType === RequestTypes.Disable
                   ? `/${appRoutes.adminDashboard.requests.mandateRequests.mandateDisableRequest}`
-                  : undefined;
+                  : params?.row.requestType === RequestTypes.Enable
+                    ? `/${appRoutes.adminDashboard.requests.mandateRequests.mandateEnableRequest}`
+                    : undefined;
         return (
           <div className="">
             <Link
