@@ -1,4 +1,5 @@
 import AxiosClient from 'config/Axios';
+import { appendParams } from 'utils/helpers';
 import { MandateRequest, QueryParams } from 'utils/interfaces';
 
 /* MANDATE REQUEST ACTIONS */
@@ -13,17 +14,7 @@ export const addMandateRequest = async (payload: MandateRequest | undefined) => 
 
 export const getMandateRequests = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
-
-  if (queryParams) {
-    const { mandateCode, status, pageNo, pageSize, sortBy, sortOrder } = queryParams;
-
-    if (mandateCode) params.append('MandateCode', mandateCode);
-    if (status) params.append('Status', status);
-    if (pageNo !== undefined) params.append('PageNo', pageNo.toString());
-    if (pageSize !== undefined) params.append('PageSize', pageSize.toString());
-    if (sortBy) params.append('SortBy', sortBy);
-    if (sortOrder) params.append('SortOrder', sortOrder);
-  }
+  appendParams(params, queryParams);
 
   try {
     const response = await AxiosClient.get(`/mandaterequests?${params.toString()}`);
@@ -51,9 +42,12 @@ export const approveMandateRequest = async (requestId: string | undefined) => {
   }
 };
 
-export const rejectMandateRequest = async (requestId: string | undefined) => {
+export const rejectMandateRequest = async (
+  requestId: string | undefined,
+  payload: { remark: string },
+) => {
   try {
-    const response = await AxiosClient.put(`/mandaterequests/decline/${requestId}`, {});
+    const response = await AxiosClient.put(`/mandaterequests/reject/${requestId}`, payload);
     return response.data;
   } catch (error) {
     throw error;
@@ -75,17 +69,7 @@ export const updateMandateRequest = async (
 /* MANDATE MANAGEMENT ACTIONS */
 export const getMandates = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
-
-  if (queryParams) {
-    const { mandateCode, status, pageNo, pageSize, sortBy, sortOrder } = queryParams;
-
-    if (mandateCode) params.append('MandateCode', mandateCode);
-    if (status) params.append('Status', status);
-    if (pageNo !== undefined) params.append('PageNo', pageNo.toString());
-    if (pageSize !== undefined) params.append('PageSize', pageSize.toString());
-    if (sortBy) params.append('SortBy', sortBy);
-    if (sortOrder) params.append('SortOrder', sortOrder);
-  }
+  appendParams(params, queryParams);
 
   try {
     const response = await AxiosClient.get(`/mandates?${params.toString()}`);
@@ -131,9 +115,41 @@ export const enableMandate = async (requestId: string | undefined) => {
   }
 };
 
-export const updateMandate = async (requestId: string | undefined) => {
+export const updateMandate = async (requestId: string | undefined, payload: { amount: number }) => {
   try {
-    const response = await AxiosClient.put(`/mandates/update/${requestId}`, {});
+    const response = await AxiosClient.put(`/mandates/update/${requestId}`, payload);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/* DASHBOARD STATISTICS */
+export const getMandateStatistics = async () => {
+  try {
+    const response = await AxiosClient.get(`/mandaterequests/statistics`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/* PROFILE MANAGEMENT ACTIONS */
+export const getProfiles = async (queryParams?: QueryParams) => {
+  const params = new URLSearchParams();
+  appendParams(params, queryParams);
+
+  try {
+    const response = await AxiosClient.get(`/profiles?${params.toString()}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getProfileById = async (requestId: string | undefined) => {
+  try {
+    const response = await AxiosClient.get(`/profiles/${requestId}`);
     return response.data;
   } catch (error) {
     throw error;

@@ -1,17 +1,28 @@
 import { Link } from 'react-router-dom';
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColDef, GridRenderCellParams, GridTreeNodeWithRender } from '@mui/x-data-grid';
 import { CreationRequestIcon, DeleteRequestIcon, FilterIcon, SearchIcon } from 'assets/icons';
-import { pendingMandateList, UserManagementList } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
 import TableLogo from 'assets/images/table_logo.png';
-import { RequestType } from 'utils/enums';
 import CustomTable from 'components/CustomTable';
 import TableFilter from 'components/TableFilter';
 import { useFormik } from 'formik';
 import { useState } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { QueryParams } from 'utils/interfaces';
+import { getProfiles } from 'config/actions/dashboard-actions';
+import { Box, CircularProgress } from '@mui/material';
 
 const UserManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    username: '',
+    email: '',
+    pageNo: 1,
+    pageSize: 10,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -27,21 +38,21 @@ const UserManagement = () => {
 
   const UserTableColumn: GridColDef[] = [
     {
-      field: 'accountId',
+      field: 'id',
       headerName: 'Account ID',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
     },
     {
-      field: 'username',
+      field: 'userName',
       headerName: 'User Name',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
     },
     {
-      field: 'emailAddress',
+      field: 'email',
       headerName: 'Email',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -54,25 +65,40 @@ const UserManagement = () => {
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       renderCell: (params) => {
-        const renderIcon = (IconComponent: any, colorClass: any) => (
+        const renderIcon = (IconComponent: any, colorClass: string, text: string) => (
           <div className="flex items-center gap-2">
             <IconComponent />
-            <span className={`mb-[1px] ${colorClass}`}>{params.value}</span>
+            <span className={`mb-0 ${colorClass}`}>{text}</span>
           </div>
         );
 
-        switch (params.value) {
-          case RequestType.Enabled:
-            return renderIcon(CreationRequestIcon, 'text-greenPrimary font-semibold');
-          case RequestType.Disabled:
-            return renderIcon(DeleteRequestIcon, 'text-redSecondary font-semibold');
-          default:
-            return <span>{params.value}</span>;
-        }
+        const getIconAndColor = (
+          requestType: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>,
+          isActive: boolean,
+        ) => {
+          if (isActive) {
+            return {
+              IconComponent: CreationRequestIcon,
+              colorClass: 'text-greenPrimary font-semibold',
+              text: 'Enabled',
+            };
+          } else {
+            return {
+              IconComponent: DeleteRequestIcon,
+              colorClass: 'text-redSecondary font-semibold',
+              text: 'Disabled',
+            };
+          }
+        };
+
+        const isActive = params?.row?.isActive;
+        const iconAndColor = getIconAndColor(params.value, isActive);
+
+        return renderIcon(iconAndColor.IconComponent, iconAndColor.colorClass, iconAndColor.text);
       },
     },
     {
-      field: 'dateCreated',
+      field: 'createdAt',
       headerName: 'Date Created',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -84,9 +110,9 @@ const UserManagement = () => {
       headerName: 'Action',
       width: 150,
       headerClassName: 'ag-thead',
-      renderCell: () => (
+      renderCell: (params: GridRenderCellParams) => (
         <Link
-          to={`/${appRoutes.merchantDashboard.userManagement.userDetails}`}
+          to={`/${appRoutes.merchantDashboard.userManagement.userDetails}/${params.id}`}
           className="cursor-pointer font-semibold text-lightPurple"
         >
           View Details
@@ -94,6 +120,13 @@ const UserManagement = () => {
       ),
     },
   ];
+
+  const { isLoading, data } = useQuery({
+    queryKey: ['profiles', queryParams],
+    queryFn: ({ queryKey }) => getProfiles(queryKey[1] as QueryParams),
+  });
+
+  console.log(data);
 
   return (
     <>
@@ -116,8 +149,18 @@ const UserManagement = () => {
           </div>
           <div className="mt-4 h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-6 w-full">
-            {pendingMandateList?.length > 0 ? (
-              <CustomTable tableData={UserManagementList} columns={UserTableColumn} rowCount={20} />
+            {isLoading ? (
+              <div className="flex h-[50vh] flex-col items-center justify-center">
+                <Box sx={{ display: 'flex' }}>
+                  <CircularProgress />
+                </Box>
+              </div>
+            ) : data?.responseData?.items?.length > 0 ? (
+              <CustomTable
+                tableData={data.responseData.items}
+                columns={UserTableColumn}
+                rowCount={20}
+              />
             ) : (
               <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
                 <div>

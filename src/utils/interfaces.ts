@@ -142,10 +142,12 @@ export interface MandateRequest {
 }
 
 export interface QueryParams {
-  mandateCode: string | undefined;
-  status: string | undefined;
-  pageNo: number | undefined;
-  pageSize: number | undefined;
-  sortBy: string | undefined;
-  sortOrder: string | undefined;
+  username?: string | undefined;
+  email?: string | undefined;
+  mandateCode?: string | undefined;
+  status?: string | undefined;
+  pageNo?: number | undefined;
+  pageSize?: number | undefined;
+  sortBy?: string | undefined;
+  sortOrder?: string | undefined;
 }

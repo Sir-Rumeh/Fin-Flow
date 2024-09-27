@@ -1,4 +1,4 @@
-import { DataTableState } from 'utils/interfaces';
+import { DataTableState, QueryParams } from 'utils/interfaces';
 import { AppConfig } from 'config/index';
 import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
@@ -101,3 +101,18 @@ export function capitalize(string: string) {
     .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
     .join(' ');
 }
+
+export const appendParams = (params: URLSearchParams, queryParams: QueryParams | undefined) => {
+  if (!queryParams) return;
+
+  const { username, email, mandateCode, status, pageNo, pageSize, sortBy, sortOrder } = queryParams;
+
+  if (username) params.append('UserName', username);
+  if (email) params.append('Email', email);
+  if (mandateCode) params.append('MandateCode', mandateCode);
+  if (status) params.append('Status', status);
+  if (pageNo !== undefined) params.append('PageNo', pageNo.toString());
+  if (pageSize !== undefined) params.append('PageSize', pageSize.toString());
+  if (sortBy) params.append('SortBy', sortBy);
+  if (sortOrder) params.append('SortOrder', sortOrder);
+};
