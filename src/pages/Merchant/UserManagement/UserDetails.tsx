@@ -1,7 +1,7 @@
 import { Link, useParams } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import appRoutes from 'utils/constants/routes';
-import { ArrowRightIcon, CreationRequestIcon } from 'assets/icons';
+import { ArrowRightIcon, CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
 import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { Box, CircularProgress } from '@mui/material';
 import { getProfileById } from 'config/actions/dashboard-actions';
@@ -10,8 +10,6 @@ import { notifyError } from 'utils/helpers';
 const UserDetails = () => {
   const queryClient = useQueryClient();
   const { id: requestId } = useParams();
-
-  console.log(requestId);
 
   const { isLoading, data, isError, error } = useQuery({
     queryKey: ['profiles', requestId],
@@ -47,19 +45,34 @@ const UserDetails = () => {
             </div>
             <div className="h-[2px] w-full bg-grayPrimary"></div>
             <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
-              <DetailsCard title="Merchant ID" content="12345" />
-              <DetailsCard title="Merchant Name" content="Fair Money" />
+              <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
+              <DetailsCard
+                title="Merchant Name"
+                content={`${data?.responseData?.firstName} ${data?.responseData?.lastName}`}
+              />
               <DetailsCard title="CIF Number" content="9028272009" />
-              <DetailsCard title="Account ID" content="628098" />
-              <DetailsCard title="User Name" content="John Doe" />
-              <DetailsCard title="John Doe" content="johndoe@gmail.com" />
-              <DetailsCard title="Date Requested" content="12/12/2024 - 03:00pm" />
+              <DetailsCard title="Account ID" content={data?.responseData?.accountID} />
+              <DetailsCard title="User Name" content={data?.responseData?.userName} />
+              <DetailsCard title="Email" content={data?.responseData?.email} />
+              <DetailsCard
+                title="Date Requested"
+                content={
+                  data?.responseData?.createdAt &&
+                  new Date(data.responseData.createdAt).toLocaleDateString()
+                }
+              />
               <DetailsCard
                 title="Status"
                 content={
-                  <div className="flex items-center gap-2 text-greenPrimary">
-                    <CreationRequestIcon /> Enabled
-                  </div>
+                  data?.responseData?.isActive ? (
+                    <div className="flex items-center gap-2 text-greenPrimary">
+                      <CreationRequestIcon /> Enabled
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2 text-greenPrimary">
+                      <DeleteRequestIcon /> Disabled
+                    </div>
+                  )
                 }
               />
             </div>
@@ -71,7 +84,7 @@ const UserDetails = () => {
             <div className="h-[2px] w-full bg-grayPrimary"></div>
             <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
               <DetailsCard title="ID" content="123908" />
-              <DetailsCard title="Created By" content="John doe" />
+              <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
             </div>
           </div>
           <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
@@ -85,8 +98,14 @@ const UserDetails = () => {
             <div className="h-[2px] w-full bg-grayPrimary"></div>
             <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
               <DetailsCard title="ID" content="12345678" />
-              <DetailsCard title="Approved By" content="Vekee James Ventures" />
-              <DetailsCard title="Date Approved" content="15/11/2023 - 12:12:12" />
+              <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
+              <DetailsCard
+                title="Date Approved"
+                content={
+                  data?.responseData?.createdAt &&
+                  new Date(data.responseData.createdAt).toLocaleDateString()
+                }
+              />
             </div>
           </div>
         </div>
