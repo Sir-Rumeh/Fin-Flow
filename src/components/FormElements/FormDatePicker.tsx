@@ -36,7 +36,7 @@ const FormDatePicker = (props: Props) => {
       (useTouched && formik?.touched[name] && formik?.errors[name]) ||
       (!useTouched && formik?.errors[name])
     ) {
-      return '1px solid red';
+      return '1px solid #f87171';
     } else return '';
   };
 
@@ -104,16 +104,19 @@ const FormDatePicker = (props: Props) => {
             formik.setFieldValue(name, dayjs(newValue).format('YYYY-MM-DDTHH:mm:ss'));
           }}
         />
+        {useTouched
+          ? formik?.touched[name] &&
+            formik?.errors[name] && (
+              <p className={`absolute top-14 text-xs italic text-red-400`}>
+                {formik?.errors[name]}
+              </p>
+            )
+          : formik?.errors[name] && (
+              <p className={`absolute top-14 text-xs italic text-red-400`}>
+                {formik?.errors[name]}
+              </p>
+            )}
       </div>
-
-      {useTouched
-        ? formik?.touched[name] &&
-          formik?.errors[name] && (
-            <p className={`absolute top-14 text-xs italic text-red-400`}>{formik?.errors[name]}</p>
-          )
-        : formik?.errors[name] && (
-            <p className={`absolute top-14 text-xs italic text-red-400`}>{formik?.errors[name]}</p>
-          )}
     </>
   );
 };

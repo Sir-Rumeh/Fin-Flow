@@ -14,6 +14,7 @@ export enum RequestTypes {
   Deletion = 'Deletion',
   Update = 'Update',
   Disable = 'Disable',
+  Enable = 'Enable',
 }
 export enum TabsListTabNames {
   Approved = 'Approved',
