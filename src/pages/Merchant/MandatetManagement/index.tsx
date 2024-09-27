@@ -433,64 +433,66 @@ const MandatetManagement = () => {
           aria-describedby="modal-modal-description"
         >
           <Box sx={style}>
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              <div className="flex items-center justify-between">
-                <h1 className="font-gotham">Transaction History Details</h1>
-                <button onClick={() => closeModal('openTransactionHistory')}>
-                  <CloseIcon />
-                </button>
-              </div>
-              <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
-            </Typography>
-            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
-              <div className="">
+            <div className="custom-scrollbar max-h-[70dvh] w-full overflow-y-scroll">
+              <Typography id="modal-modal-title" variant="h6" component="h2">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center justify-between gap-4 font-gotham">
-                    <Tab
-                      label="Successful"
-                      count={20}
-                      isActive={tab === 1}
-                      onClick={() => setTab(1)}
-                      inactiveColor="text-green-500"
-                    />
-                    <Tab
-                      label="Failed"
-                      count={20}
-                      isActive={tab === 2}
-                      onClick={() => setTab(2)}
-                      inactiveColor="text-red-500"
-                    />
-                  </div>
-                  <div className="flex h-[42px] w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2 font-gotham">
-                    <SearchIcon />
-                    <input
-                      type="text"
-                      className="w-full border-none focus:border-none focus:outline-none"
-                      placeholder="Search"
-                    />
-                  </div>
+                  <h1 className="font-gotham">Transaction History Details</h1>
+                  <button onClick={() => closeModal('openTransactionHistory')}>
+                    <CloseIcon />
+                  </button>
                 </div>
                 <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
-                <div className="mt-6">
-                  {transactionHistory.length > 0 ? (
-                    <CustomTable
-                      tableData={transactionHistory}
-                      columns={TransactionsTableColumn}
-                      rowCount={20}
-                    />
-                  ) : (
-                    <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
-                      <div>
-                        <img src={TableLogo} alt="group_logo" />
-                      </div>
-                      <div className="mt-8 text-center">
-                        <h3 className="text-2xl font-bold">Oops! No Transactions</h3>
-                      </div>
+              </Typography>
+              <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+                <div className="">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between gap-4 font-gotham">
+                      <Tab
+                        label="Successful"
+                        count={20}
+                        isActive={tab === 1}
+                        onClick={() => setTab(1)}
+                        inactiveColor="text-green-500"
+                      />
+                      <Tab
+                        label="Failed"
+                        count={20}
+                        isActive={tab === 2}
+                        onClick={() => setTab(2)}
+                        inactiveColor="text-red-500"
+                      />
                     </div>
-                  )}
+                    <div className="flex h-[42px] w-[309px] cursor-pointer items-center gap-2 rounded-lg border border-lightPurple px-4 py-2 font-gotham">
+                      <SearchIcon />
+                      <input
+                        type="text"
+                        className="w-full border-none focus:border-none focus:outline-none"
+                        placeholder="Search"
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
+                  <div className="mt-6">
+                    {transactionHistory.length > 0 ? (
+                      <CustomTable
+                        tableData={transactionHistory}
+                        columns={TransactionsTableColumn}
+                        rowCount={20}
+                      />
+                    ) : (
+                      <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
+                        <div>
+                          <img src={TableLogo} alt="group_logo" />
+                        </div>
+                        <div className="mt-8 text-center">
+                          <h3 className="text-2xl font-bold">Oops! No Transactions</h3>
+                        </div>
+                      </div>
+                    )}
+                  </div>
                 </div>
-              </div>
-            </Typography>
+              </Typography>
+            </div>
           </Box>
         </Modal>
       )}

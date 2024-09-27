@@ -24,7 +24,7 @@ import { Box, CircularProgress } from '@mui/material';
 import { capitalize } from 'utils/helpers';
 import RejectedIcon from 'assets/icons/RejectedIcon';
 
-const MandateUpdateRequestDetails = () => {
+const MandateEnableRequestDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const mandateId = searchParams?.get('id') || '';
@@ -87,7 +87,7 @@ const MandateUpdateRequestDetails = () => {
             Mandate Requests
           </Link>{' '}
           <ChevronRight />
-          <span className="text-lightPurple">Mandate Update Request Details</span>
+          <span className="text-lightPurple">Enable Mandate Request Details</span>
         </div>
         {isLoading || isFetching ? (
           <div className="flex h-[30vh] flex-col items-center justify-center">
@@ -131,18 +131,8 @@ const MandateUpdateRequestDetails = () => {
             </div>
             <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
               <div className="">
-                <ItemDetailsContainer title="Old Information">
-                  <DetailsCard title="Old Amount" content="N50,000" />
-                </ItemDetailsContainer>
-              </div>
-              <div className="mt-10">
-                <ItemDetailsContainer title="New Information">
-                  <DetailsCard title="Old Amount" content="N100,000" />
-                </ItemDetailsContainer>
-              </div>
-              <div className="mt-10">
                 <ItemDetailsContainer
-                  title="Mandate Details"
+                  title="Request Details"
                   titleExtension={
                     <>
                       <div className="flex items-center justify-end gap-2">
@@ -303,9 +293,9 @@ const MandateUpdateRequestDetails = () => {
         <ModalWrapper
           isOpen={modals.confirmApproveRequest}
           setIsOpen={() => closeModal('confirmApproveRequest')}
-          title={'Approve Mandate Request?'}
+          title={'Approve mandate Request?'}
           info={
-            'You are about to approve this Mandate update request, would you want to proceed with this?'
+            'You are about to approve this enable mandate request, would you want to proceed with this?'
           }
           icon={<RedAlertIcon />}
           type={'confirmation'}
@@ -320,7 +310,7 @@ const MandateUpdateRequestDetails = () => {
           isOpen={modals.approveSuccessfulModal}
           setIsOpen={() => closeModal('approveSuccessfulModal')}
           title={'Success!!'}
-          info={'You have successfully approved this Mandate update request'}
+          info={'You have successfully approved this enable mandate request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -335,9 +325,9 @@ const MandateUpdateRequestDetails = () => {
           isOpen={modals.confirmRejectRequest}
           width="700px"
           setIsOpen={() => closeModal('confirmRejectRequest')}
-          title={'Reject Mandate Request?'}
+          title={'Reject mandate Request?'}
           info={
-            'You are about to reject this Mandate update request, would you want to proceed with this?'
+            'You are about to reject this enable mandate request, would you want to proceed with this?'
           }
           feedback={
             <div className="w-full md:col-span-1">
@@ -365,7 +355,7 @@ const MandateUpdateRequestDetails = () => {
           isOpen={modals.rejectSuccessfulModal}
           setIsOpen={() => closeModal('rejectSuccessfulModal')}
           title={'Success!!'}
-          info={'You have successfully rejected this Mandate update request'}
+          info={'You have successfully rejected this enable mandate request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -378,4 +368,4 @@ const MandateUpdateRequestDetails = () => {
   );
 };
 
-export default MandateUpdateRequestDetails;
+export default MandateEnableRequestDetails;

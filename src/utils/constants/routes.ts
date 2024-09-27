@@ -24,6 +24,7 @@ export const appRoutes = {
         merchantDeletionRequest: `${BASE_ROUTES.ADMIN}/requests/merchants/deletion-request-details`,
         merchantUpdateRequest: `${BASE_ROUTES.ADMIN}/requests/merchants/update-request-details`,
         merchantDisableRequest: `${BASE_ROUTES.ADMIN}/requests/merchants/disable-request-details`,
+        merchantEnableRequest: `${BASE_ROUTES.ADMIN}/requests/merchants/enable-request-details`,
       },
       mandateRequests: {
         index: `${BASE_ROUTES.ADMIN}/requests/mandates`,
@@ -31,6 +32,7 @@ export const appRoutes = {
         mandateDeletionRequest: `${BASE_ROUTES.ADMIN}/requests/mandates/deletion-request-details`,
         mandateUpdateRequest: `${BASE_ROUTES.ADMIN}/requests/mandates/update-request-details`,
         mandateDisableRequest: `${BASE_ROUTES.ADMIN}/requests/mandates/disable-request-details`,
+        mandateEnableRequest: `${BASE_ROUTES.ADMIN}/requests/mandates/enable-request-details`,
       },
       accountRequests: {
         index: `${BASE_ROUTES.ADMIN}/requests/accounts`,
@@ -38,6 +40,7 @@ export const appRoutes = {
         accountDeletionRequest: `${BASE_ROUTES.ADMIN}/requests/accounts/deletion-request-details`,
         accountUpdateRequest: `${BASE_ROUTES.ADMIN}/requests/accounts/update-request-details`,
         accountDisableRequest: `${BASE_ROUTES.ADMIN}/requests/accounts/disable-request-details`,
+        accountEnableRequest: `${BASE_ROUTES.ADMIN}/requests/accounts/enable-request-details`,
       },
       profileRequests: {
         index: `${BASE_ROUTES.ADMIN}/requests/profiles`,
@@ -45,6 +48,7 @@ export const appRoutes = {
         profileDeletionRequest: `${BASE_ROUTES.ADMIN}/requests/profiles/deletion-request-details`,
         profileUpdateRequest: `${BASE_ROUTES.ADMIN}/requests/profiles/update-request-details`,
         profileDisableRequest: `${BASE_ROUTES.ADMIN}/requests/profiles/disable-request-details`,
+        profileEnableRequest: `${BASE_ROUTES.ADMIN}/requests/profiles/enable-request-details`,
       },
     },
     merchantManagement: {
