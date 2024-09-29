@@ -99,7 +99,7 @@ const MandatetManagement = () => {
 
   const modifyMandateFormik = useFormik({
     initialValues: {
-      amount: '',
+      amount: undefined,
     },
     validationSchema: updateMandateSchema,
     onSubmit: (values) => {
@@ -320,7 +320,8 @@ const MandatetManagement = () => {
   });
 
   const updateMandateMutation = useMutation({
-    mutationFn: (requestId: string | undefined) => updateMandate(requestId),
+    mutationFn: (requestId: string | undefined) =>
+      updateMandate(requestId, modifyMandateFormik.values),
     onSuccess: () => {
       closeModal('editMandate');
       closeModal('confirmEdit');
