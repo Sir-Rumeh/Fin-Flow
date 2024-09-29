@@ -6,7 +6,7 @@ import CustomInput from 'components/FormElements/CustomInput';
 import FormDatePicker from 'components/FormElements/FormDatePicker';
 import { useFormik } from 'formik';
 import { ModalWrapper } from 'hoc/ModalWrapper';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import ChevronDown from 'assets/icons/ChevronDown';
 import { useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
@@ -18,6 +18,9 @@ import { useMutation } from '@tanstack/react-query';
 import { addMandateRequest } from 'config/actions/dashboard-actions';
 import { notifyError } from 'utils/helpers';
 import dayjs from 'dayjs';
+import { uiStartLoading, uiStopLoading } from 'store/reducers/LoadingSlice';
+import { useAppDispatch } from 'store/index';
+import { useDispatch } from 'react-redux';
 
 const SingleUpload = () => {
   const navigate = useNavigate();
@@ -127,6 +130,7 @@ const SingleUpload = () => {
     { value: 'Day 3', label: 'Day 3' },
     { value: 'Day 4', label: 'Day 4' },
   ];
+
   return (
     <>
       <div className="slide-down mt-5 rounded-lg bg-white px-5 py-10">

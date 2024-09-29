@@ -91,205 +91,192 @@ const MandateEnableRequestDetails = () => {
           <ChevronRight />
           <span className="text-lightPurple">Enable Mandate Request Details</span>
         </div>
-        {isLoading || isFetching ? (
-          <div className="flex h-[30vh] flex-col items-center justify-center">
-            <Box sx={{ display: 'flex' }}>
-              <CircularProgress sx={{ color: '#5C068C' }} />
-            </Box>
+
+        <>
+          <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
+            <h2 className="text-lg font-semibold md:text-2xl">{`Mandate ID : ${data?.responseData?.id}`}</h2>
+            <div className="flex w-1/2 items-center justify-end gap-4">
+              <div className="w-auto">
+                <ButtonComponent
+                  color="#5C068C"
+                  borderColor="#5C068C"
+                  variant="outlined"
+                  type="button"
+                  title="Reject"
+                  customPaddingX="3rem"
+                  onClick={() => {
+                    openModal('confirmRejectRequest');
+                  }}
+                />
+              </div>
+              <div className="w-auto">
+                <ButtonComponent
+                  variant="contained"
+                  color="white"
+                  backgroundColor="#5C068C"
+                  hoverBackgroundColor="#2F0248"
+                  type="button"
+                  title="Approve"
+                  customPaddingX="3rem"
+                  onClick={() => {
+                    openModal('confirmApproveRequest');
+                  }}
+                />
+              </div>
+            </div>
           </div>
-        ) : (
-          <>
-            <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
-              <h2 className="text-lg font-semibold md:text-2xl">{`Mandate ID : ${data?.responseData?.id}`}</h2>
-              <div className="flex w-1/2 items-center justify-end gap-4">
-                <div className="w-auto">
-                  <ButtonComponent
-                    color="#5C068C"
-                    borderColor="#5C068C"
-                    variant="outlined"
-                    type="button"
-                    title="Reject"
-                    customPaddingX="3rem"
-                    onClick={() => {
-                      openModal('confirmRejectRequest');
-                    }}
-                  />
-                </div>
-                <div className="w-auto">
-                  <ButtonComponent
-                    variant="contained"
-                    color="white"
-                    backgroundColor="#5C068C"
-                    hoverBackgroundColor="#2F0248"
-                    type="button"
-                    title="Approve"
-                    customPaddingX="3rem"
-                    onClick={() => {
-                      openModal('confirmApproveRequest');
-                    }}
-                  />
-                </div>
-              </div>
-            </div>
-            <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
-              <div className="">
-                <ItemDetailsContainer
-                  title="Request Details"
-                  titleExtension={
-                    <>
-                      <div className="flex items-center justify-end gap-2">
-                        <p className="text-sm text-darkgray">Mandate Type:</p>
-                        <UpdateRequestIcon />
-                        <p className="mb-[1px] font-semibold text-lightPurple">
-                          {capitalize(data?.responseData?.mandateType)}
-                        </p>
-                      </div>
-                    </>
+          <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
+            <div className="">
+              <ItemDetailsContainer
+                title="Request Details"
+                titleExtension={
+                  <>
+                    <div className="flex items-center justify-end gap-2">
+                      <p className="text-sm text-darkgray">Mandate Type:</p>
+                      <UpdateRequestIcon />
+                      <p className="mb-[1px] font-semibold text-lightPurple">
+                        {capitalize(data?.responseData?.mandateType)}
+                      </p>
+                    </div>
+                  </>
+                }
+              >
+                <DetailsCard title="Account ID" content={data?.responseData?.accountId} />
+                <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
+                <DetailsCard title="Merchant Code" content={data?.responseData?.mandateCode} />
+                <DetailsCard
+                  title="Date Created"
+                  content={
+                    data?.responseData?.dateCreated &&
+                    new Date(data.responseData.dateCreated).toLocaleDateString()
                   }
-                >
-                  <DetailsCard title="Account ID" content={data?.responseData?.accountId} />
-                  <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
-                  <DetailsCard title="Merchant Code" content={data?.responseData?.mandateCode} />
-                  <DetailsCard
-                    title="Date Created"
-                    content={
-                      data?.responseData?.dateCreated &&
-                      new Date(data.responseData.dateCreated).toLocaleDateString()
-                    }
-                  />
-                  <DetailsCard title="Product ID" content={data?.responseData?.productId} />
-                  <DetailsCard
-                    title="Amount"
-                    content={data?.responseData?.amount}
-                    contentClassName="text-lightPurple"
-                  />
-                  <DetailsCard
-                    title="Effective Date"
-                    content={
-                      data?.responseData?.startDate &&
-                      new Date(data.responseData.startDate).toLocaleDateString()
-                    }
-                  />
-                  <DetailsCard
-                    title="End Date"
-                    content={
-                      data?.responseData?.endDate &&
-                      new Date(data.responseData.endDate).toLocaleDateString()
-                    }
-                  />
-                  <DetailsCard title="Day to apply" content={data?.responseData?.dayToApply} />
-                  <DetailsCard title="Frequency" content={data?.responseData?.frequency} />
-                  <DetailsCard title="Service" content={data?.responseData?.service} />
-                  <DetailsCard title="Narration" content={data?.responseData?.narration} />
-                  <DetailsCard title="Account Number" content={data?.responseData?.accountNumber} />
-                  <DetailsCard title="Account Name" content={data?.responseData?.accountName} />
-                  <DetailsCard title="Bank Code" content={data?.responseData?.bankCode} />
-                </ItemDetailsContainer>
-              </div>
-
-              <div className="mt-10">
-                <ItemDetailsContainer title="Payer Details">
-                  <DetailsCard title="Payer Name" content={data?.responseData?.payerName} />
-                  <DetailsCard title="Address" content={data?.responseData?.payerAddress} />
-                  <DetailsCard
-                    title="Email Address"
-                    content={data?.responseData?.payerEmailAddress}
-                  />
-                  <DetailsCard
-                    title="Phone Number"
-                    content={data?.responseData?.payerPhoneNumber}
-                  />
-                </ItemDetailsContainer>
-              </div>
-              <div className="mt-10">
-                <ItemDetailsContainer title="Payee Details">
-                  <DetailsCard title="Payee Name" content={data?.responseData?.payeeName} />
-                  <DetailsCard title="Address" content={data?.responseData?.payeeAddress} />
-                  <DetailsCard
-                    title="Email Address"
-                    content={data?.responseData?.payeeEmailAddress}
-                  />
-                  <DetailsCard
-                    title="Phone Number"
-                    content={data?.responseData?.payeePhoneNumber}
-                  />
-                </ItemDetailsContainer>
-              </div>
-              <div className="mt-10">
-                <ItemDetailsContainer
-                  title="Biller Details"
-                  titleExtension={
-                    <>
-                      <div className="flex items-center justify-end gap-2">
-                        <p className="text-sm text-darkgray">Biller Code:</p>
-                        <p className="mb-[1px] font-semibold text-lightPurple">
-                          {data?.responseData?.billerId}
-                        </p>
-                      </div>
-                    </>
+                />
+                <DetailsCard title="Product ID" content={data?.responseData?.productId} />
+                <DetailsCard
+                  title="Amount"
+                  content={data?.responseData?.amount}
+                  contentClassName="text-lightPurple"
+                />
+                <DetailsCard
+                  title="Effective Date"
+                  content={
+                    data?.responseData?.startDate &&
+                    new Date(data.responseData.startDate).toLocaleDateString()
                   }
-                >
-                  <DetailsCard
-                    title="Biller Account Number"
-                    content={data?.responseData?.billerAccountNumber}
-                  />
-                  <DetailsCard title="Bank Name" content={data?.responseData?.bankName} />
-                  <DetailsCard title="Account Name" content={data?.responseData?.accountName} />
-                  <DetailsCard title="Bank Code" content={data?.responseData?.bankCode} />
-                </ItemDetailsContainer>
-              </div>
+                />
+                <DetailsCard
+                  title="End Date"
+                  content={
+                    data?.responseData?.endDate &&
+                    new Date(data.responseData.endDate).toLocaleDateString()
+                  }
+                />
+                <DetailsCard title="Day to apply" content={data?.responseData?.dayToApply} />
+                <DetailsCard title="Frequency" content={data?.responseData?.frequency} />
+                <DetailsCard title="Service" content={data?.responseData?.service} />
+                <DetailsCard title="Narration" content={data?.responseData?.narration} />
+                <DetailsCard title="Account Number" content={data?.responseData?.accountNumber} />
+                <DetailsCard title="Account Name" content={data?.responseData?.accountName} />
+                <DetailsCard title="Bank Code" content={data?.responseData?.bankCode} />
+              </ItemDetailsContainer>
+            </div>
 
-              <div className="mt-10">
-                <ItemDetailsContainer title="Creator Details">
-                  <DetailsCard title="ID" content={data?.responseData?.creatorId} />
-                  <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
+            <div className="mt-10">
+              <ItemDetailsContainer title="Payer Details">
+                <DetailsCard title="Payer Name" content={data?.responseData?.payerName} />
+                <DetailsCard title="Address" content={data?.responseData?.payerAddress} />
+                <DetailsCard
+                  title="Email Address"
+                  content={data?.responseData?.payerEmailAddress}
+                />
+                <DetailsCard title="Phone Number" content={data?.responseData?.payerPhoneNumber} />
+              </ItemDetailsContainer>
+            </div>
+            <div className="mt-10">
+              <ItemDetailsContainer title="Payee Details">
+                <DetailsCard title="Payee Name" content={data?.responseData?.payeeName} />
+                <DetailsCard title="Address" content={data?.responseData?.payeeAddress} />
+                <DetailsCard
+                  title="Email Address"
+                  content={data?.responseData?.payeeEmailAddress}
+                />
+                <DetailsCard title="Phone Number" content={data?.responseData?.payeePhoneNumber} />
+              </ItemDetailsContainer>
+            </div>
+            <div className="mt-10">
+              <ItemDetailsContainer
+                title="Biller Details"
+                titleExtension={
+                  <>
+                    <div className="flex items-center justify-end gap-2">
+                      <p className="text-sm text-darkgray">Biller Code:</p>
+                      <p className="mb-[1px] font-semibold text-lightPurple">
+                        {data?.responseData?.billerId}
+                      </p>
+                    </div>
+                  </>
+                }
+              >
+                <DetailsCard
+                  title="Biller Account Number"
+                  content={data?.responseData?.billerAccountNumber}
+                />
+                <DetailsCard title="Bank Name" content={data?.responseData?.bankName} />
+                <DetailsCard title="Account Name" content={data?.responseData?.accountName} />
+                <DetailsCard title="Bank Code" content={data?.responseData?.bankCode} />
+              </ItemDetailsContainer>
+            </div>
+
+            <div className="mt-10">
+              <ItemDetailsContainer title="Creator Details">
+                <DetailsCard title="ID" content={data?.responseData?.creatorId} />
+                <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
+                <DetailsCard
+                  title="Date Created"
+                  content={
+                    data?.responseData?.dateCreated &&
+                    new Date(data.responseData.dateCreated).toLocaleDateString()
+                  }
+                />
+              </ItemDetailsContainer>
+            </div>
+
+            <div className="mt-10">
+              {data?.responseData?.status === 'Approved' && (
+                <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
+                  <DetailsCard title="ID" content={data?.responseData?.approverId} />
+                  <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
                   <DetailsCard
-                    title="Date Created"
+                    title="Date Approved"
                     content={
-                      data?.responseData?.dateCreated &&
-                      new Date(data.responseData.dateCreated).toLocaleDateString()
+                      data?.responseData?.dateApproved &&
+                      new Date(data.responseData.dateApproved).toLocaleDateString()
                     }
                   />
                 </ItemDetailsContainer>
-              </div>
-
-              <div className="mt-10">
-                {data?.responseData?.status === 'Approved' && (
-                  <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
-                    <DetailsCard title="ID" content={data?.responseData?.approverId} />
-                    <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
-                    <DetailsCard
-                      title="Date Approved"
-                      content={
-                        data?.responseData?.dateApproved &&
-                        new Date(data.responseData.dateApproved).toLocaleDateString()
-                      }
-                    />
-                  </ItemDetailsContainer>
-                )}
-                {data?.responseData?.status === 'Declined' && (
-                  <ItemDetailsContainer title="Rejector Details" titleExtension={<RejectedIcon />}>
-                    <DetailsCard title="ID" content={data?.responseData?.rejectorId} />
-                    <DetailsCard title="Rejected By" content={data?.responseData?.rejectedBy} />
-                    <DetailsCard
-                      title="Date Rejected"
-                      content={
-                        data?.responseData?.dateRejected &&
-                        new Date(data.responseData.dateRejected).toLocaleDateString()
-                      }
-                    />
-                  </ItemDetailsContainer>
-                )}
-              </div>
-              <div className="mt-10">
-                <ItemDetailsContainer title="Requested By">
-                  <DetailsCard title="Requested By" content={data?.responseData?.requestedBy} />
-                  <DetailsCard title="Date Requested" content={data?.responseData?.dateRequested} />
+              )}
+              {data?.responseData?.status === 'Declined' && (
+                <ItemDetailsContainer title="Rejector Details" titleExtension={<RejectedIcon />}>
+                  <DetailsCard title="ID" content={data?.responseData?.rejectorId} />
+                  <DetailsCard title="Rejected By" content={data?.responseData?.rejectedBy} />
+                  <DetailsCard
+                    title="Date Rejected"
+                    content={
+                      data?.responseData?.dateRejected &&
+                      new Date(data.responseData.dateRejected).toLocaleDateString()
+                    }
+                  />
                 </ItemDetailsContainer>
-              </div>
+              )}
             </div>
-          </>
-        )}
+            <div className="mt-10">
+              <ItemDetailsContainer title="Requested By">
+                <DetailsCard title="Requested By" content={data?.responseData?.requestedBy} />
+                <DetailsCard title="Date Requested" content={data?.responseData?.dateRequested} />
+              </ItemDetailsContainer>
+            </div>
+          </div>
+        </>
       </div>
       {modals.confirmApproveRequest && (
         <ModalWrapper

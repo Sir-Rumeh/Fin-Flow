@@ -24,6 +24,15 @@ export const getMandateRequests = async (queryParams?: QueryParams) => {
   }
 };
 
+export const getMandateRequestsStatistics = async () => {
+  try {
+    const response = await AxiosClient.get(`/mandaterequests/statistics`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getMandateRequestById = async (requestId: string | undefined) => {
   try {
     const response = await AxiosClient.get(`/mandaterequests/${requestId}`);

@@ -6,7 +6,7 @@ import appRoutes from 'utils/constants/routes';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
-import { mandateRequestsList, transactionHistory } from 'utils/constants';
+import { transactionHistory } from 'utils/constants';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
 import { ModalWrapper } from 'hoc/ModalWrapper';
@@ -14,7 +14,7 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
-import { Box, CircularProgress, Typography, useMediaQuery } from '@mui/material';
+import { Typography, useMediaQuery } from '@mui/material';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import { QueryParams, TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
@@ -395,56 +395,48 @@ const MandatetManagement = () => {
           </div>
         </div>
 
-        {isLoading || isFetching ? (
-          <div className="flex h-[30vh] flex-col items-center justify-center">
-            <Box sx={{ display: 'flex' }}>
-              <CircularProgress sx={{ color: '#5C068C' }} />
-            </Box>
-          </div>
-        ) : (
-          <div className="mt-5">
-            <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-4">
-              <div className="flex w-full flex-col gap-y-4 border-b pb-3 lg:flex-row lg:items-center">
-                <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-start">
-                  <div className="">
-                    <TableFilter
-                      name={'searchMandate'}
-                      placeholder={'Search Mandate'}
-                      label={'Search Mandate'}
-                      value={searchTerm}
-                      setSearch={setSearchTerm}
-                      handleOptionsFilter={() => refetch()}
-                      formik={formik}
-                      fromDateName={'fromDateFilter'}
-                      toDateName={'toDateFilter'}
-                      selectName={'statusFilter'}
-                    />
-                  </div>
-                </div>
-                <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
-                  <ExportBUtton
-                    data={data?.responseData?.items}
-                    printPdfRef={printPdfRef}
-                    headers={excelHeaders}
-                    fileName="mandates.csv"
+        <div className="mt-5">
+          <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-4">
+            <div className="flex w-full flex-col gap-y-4 border-b pb-3 lg:flex-row lg:items-center">
+              <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-start">
+                <div className="">
+                  <TableFilter
+                    name={'searchMandate'}
+                    placeholder={'Search Mandate'}
+                    label={'Search Mandate'}
+                    value={searchTerm}
+                    setSearch={setSearchTerm}
+                    handleOptionsFilter={() => refetch()}
+                    formik={formik}
+                    fromDateName={'fromDateFilter'}
+                    toDateName={'toDateFilter'}
+                    selectName={'statusFilter'}
                   />
                 </div>
               </div>
+              <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
+                <ExportBUtton
+                  data={data?.responseData?.items}
+                  printPdfRef={printPdfRef}
+                  headers={excelHeaders}
+                  fileName="mandates.csv"
+                />
+              </div>
+            </div>
 
-              <div className="mt-6 w-full">
-                <div ref={printPdfRef} className="w-full">
-                  <CustomTable
-                    tableData={data?.responseData?.items}
-                    columns={columns}
-                    rowCount={data?.responseData?.totalCount}
-                    paginationData={paginationData}
-                    setPaginationData={setPaginationData}
-                  />
-                </div>
+            <div className="mt-6 w-full">
+              <div ref={printPdfRef} className="w-full">
+                <CustomTable
+                  tableData={data?.responseData?.items}
+                  columns={columns}
+                  rowCount={data?.responseData?.totalCount}
+                  paginationData={paginationData}
+                  setPaginationData={setPaginationData}
+                />
               </div>
             </div>
           </div>
-        )}
+        </div>
       </section>
 
       {modals.confirmDisable && (
