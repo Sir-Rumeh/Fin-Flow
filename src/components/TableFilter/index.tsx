@@ -52,15 +52,15 @@ const TableFilter = ({
   };
   return (
     <>
-      <div className="flex w-full items-center gap-2 py-2">
+      <div className="flex w-full items-center justify-between gap-3 py-2">
         {showOptionsFilter && (
-          <div className="-ml-4 sm:-ml-0">
+          <div className="">
             <CustomPopover
               popoverId={2}
               buttonIcon={
                 <>
                   <div
-                    className={`flex items-center justify-between gap-x-1 rounded-[6px] border border-[#a772c4] px-[0.9rem] py-[8px] text-gray-400`}
+                    className={`flex w-full items-center justify-between gap-x-1 rounded-[6px] border border-[#a772c4] px-[0.9rem] py-[8px] text-gray-400`}
                   >
                     <p>Filter by</p>
                     <div

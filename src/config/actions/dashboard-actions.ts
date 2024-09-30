@@ -115,7 +115,10 @@ export const enableMandate = async (requestId: string | undefined) => {
   }
 };
 
-export const updateMandate = async (requestId: string | undefined, payload: { amount: number }) => {
+export const updateMandate = async (
+  requestId: string | undefined,
+  payload: { amount: number | undefined },
+) => {
   try {
     const response = await AxiosClient.put(`/mandates/update/${requestId}`, payload);
     return response.data;

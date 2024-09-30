@@ -47,7 +47,7 @@ const SingleUpload = () => {
       notifyError(error.message);
     },
   });
-
+  // addMandateRequestMutation.isPending
   const formik = useFormik({
     initialValues: {
       mandateType: '',
@@ -138,7 +138,7 @@ const SingleUpload = () => {
                 <>
                   <div className="flex items-center justify-end gap-2 text-lg">
                     <p className="font-semibold">Mandate Type:</p>
-                    <div className="flex items-center gap-2 rounded-lg bg-lilacPurple px-4 py-3">
+                    <div className="relative flex items-center gap-2 rounded-lg bg-lilacPurple px-4 py-4">
                       <div className="flex items-center gap-1">
                         <label htmlFor="variable">
                           <input
@@ -167,7 +167,9 @@ const SingleUpload = () => {
                       </div>
                       {(formik.touched.mandateType as any) &&
                         (formik.errors.mandateType as any) && (
-                          <p className="text-red-400">{formik.errors.mandateType as any}</p>
+                          <p className="absolute top-10 text-xs text-red-400">
+                            {formik.errors.mandateType as any}
+                          </p>
                         )}
                     </div>
                   </div>
@@ -220,6 +222,7 @@ const SingleUpload = () => {
                   formik={formik}
                   label="Start Date"
                   placeholder="Select date"
+                  useTouched
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -228,6 +231,7 @@ const SingleUpload = () => {
                   formik={formik}
                   label="End Date"
                   placeholder="Select date"
+                  useTouched
                 />
               </div>
               <div className="md:col-span-1">
@@ -236,6 +240,7 @@ const SingleUpload = () => {
                   label="Day to Apply"
                   formik={formik}
                   options={dayToApplyOptions}
+                  useTouched
                 />
               </div>
               <div className="md:col-span-1">
@@ -244,6 +249,7 @@ const SingleUpload = () => {
                   label="Frequency"
                   formik={formik}
                   options={dayToApplyOptions}
+                  useTouched
                 />
               </div>
               <div className="md:col-span-1">
@@ -252,6 +258,7 @@ const SingleUpload = () => {
                   label="Service"
                   formik={formik}
                   options={dayToApplyOptions}
+                  useTouched
                 />
               </div>
               <div className="w-full md:col-span-1">

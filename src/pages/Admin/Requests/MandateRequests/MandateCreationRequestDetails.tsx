@@ -49,7 +49,9 @@ const MandateCreationRequestDetails = () => {
       reasonForRejection: '',
     },
     validationSchema: reasonForRejectionSchema,
-    onSubmit: () => {},
+    onSubmit: () => {
+      rejectMandateRequestMutation.mutate(mandateId);
+    },
   });
 
   const { isLoading, data, isFetching } = useQuery({
@@ -68,7 +70,8 @@ const MandateCreationRequestDetails = () => {
   });
 
   const rejectMandateRequestMutation = useMutation({
-    mutationFn: (requestId: string | undefined) => rejectMandateRequest(requestId),
+    mutationFn: (requestId: string | undefined) =>
+      rejectMandateRequest(requestId, formik.values.reasonForRejection),
     onSuccess: () => {
       closeModal('confirmRejectRequest');
       openModal('rejectSuccessfulModal');
@@ -347,7 +350,7 @@ const MandateCreationRequestDetails = () => {
           proceedBackgroundColor="#F34E4E"
           hoverBackgroundColor="#8B0000"
           proceedAction={() => {
-            rejectMandateRequestMutation.mutate(mandateId);
+            formik.handleSubmit();
           }}
         />
       )}

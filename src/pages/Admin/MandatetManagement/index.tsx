@@ -1,5 +1,5 @@
 import ButtonComponent from 'components/FormElements/Button';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import TableFilter from 'components/TableFilter';
 import CustomTable from 'components/CustomTable';
 import appRoutes from 'utils/constants/routes';
@@ -115,6 +115,15 @@ const MandatetManagement = () => {
     sortBy: 'asc',
     sortOrder: 'desc',
   });
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+    }));
+  }, [formik.values.statusFilter, paginationData]);
 
   const excelHeaders = [
     { label: 'Merchant ID', key: 'merchantId' },

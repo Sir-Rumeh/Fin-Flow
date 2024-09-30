@@ -41,7 +41,7 @@ const MandateRequests = () => {
     },
     {
       tabIndex: 3,
-      tabName: TabsListTabNames.Rejected,
+      tabName: TabsListTabNames.Declined,
       tabTotal: total,
     },
   ];
@@ -68,8 +68,13 @@ const MandateRequests = () => {
   });
 
   useEffect(() => {
-    setQueryParams((prev) => ({ ...prev, status: activeTab }));
-  }, [activeTab]);
+    setQueryParams((prev) => ({
+      ...prev,
+      status: activeTab,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+    }));
+  }, [activeTab, paginationData]);
 
   const columns: GridColDef[] = [
     {
