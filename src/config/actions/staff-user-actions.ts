@@ -1,5 +1,26 @@
 import AxiosClient from 'config/Axios';
-import { QueryParams } from 'utils/interfaces';
+import { QueryParams, StaffUserRequest } from 'utils/interfaces';
+
+export const addStaffUserRequest = async (payload: StaffUserRequest | undefined) => {
+  try {
+    const response = await AxiosClient.post('/users/add', payload);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const updateStaffUserRequest = async (
+  requestId: string | undefined,
+  payload: StaffUserRequest | undefined,
+) => {
+  try {
+    const response = await AxiosClient.put(`/users/update/${requestId}`, payload);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const getStaffUsers = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
@@ -26,6 +47,23 @@ export const getStaffUsers = async (queryParams?: QueryParams) => {
   }
 };
 
+export const getStaffUserById = async (requestId: string | undefined) => {
+  try {
+    const response = await AxiosClient.get(`/users/user/${requestId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const enableStaffUser = async (requestId: string | undefined) => {
+  try {
+    const response = await AxiosClient.put(`/users/user/activate/${requestId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 export const disableStaffUser = async (requestId: string | undefined) => {
   try {
     const response = await AxiosClient.put(`/users/user/deactivate/${requestId}`);

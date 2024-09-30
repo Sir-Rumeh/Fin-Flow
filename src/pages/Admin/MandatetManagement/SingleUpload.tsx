@@ -6,21 +6,17 @@ import CustomInput from 'components/FormElements/CustomInput';
 import FormDatePicker from 'components/FormElements/FormDatePicker';
 import { useFormik } from 'formik';
 import { ModalWrapper } from 'hoc/ModalWrapper';
-import { useEffect, useState } from 'react';
-import ChevronDown from 'assets/icons/ChevronDown';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
 import CustomFileUpload from 'components/FormElements/CustomFileUpload';
-import { addSingleMandateSchema, createMandateSchema } from 'utils/formValidators';
+import { createMandateSchema } from 'utils/formValidators';
 import FormSelect from 'components/FormElements/FormSelect';
 import { MandateRequest } from 'utils/interfaces';
 import { useMutation } from '@tanstack/react-query';
 import { addMandateRequest } from 'config/actions/dashboard-actions';
 import { notifyError } from 'utils/helpers';
 import dayjs from 'dayjs';
-import { uiStartLoading, uiStopLoading } from 'store/reducers/LoadingSlice';
-import { useAppDispatch } from 'store/index';
-import { useDispatch } from 'react-redux';
 
 const SingleUpload = () => {
   const navigate = useNavigate();
@@ -50,7 +46,6 @@ const SingleUpload = () => {
       notifyError(error.message);
     },
   });
-  // addMandateRequestMutation.isPending
   const formik = useFormik({
     initialValues: {
       mandateType: '',

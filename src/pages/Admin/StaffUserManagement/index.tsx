@@ -20,6 +20,7 @@ import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   deleteStaffUser,
   disableStaffUser,
+  enableStaffUser,
   getStaffUsers,
 } from 'config/actions/staff-user-actions';
 import { capitalize, notifyError } from 'utils/helpers';
@@ -260,6 +261,17 @@ const StaffUserManagement = () => {
     queryFn: ({ queryKey }) => getStaffUsers(queryKey[1] as QueryParams),
   });
 
+  const enableStaffUserMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => enableStaffUser(requestId),
+    onSuccess: () => {
+      closeModal('confirmEnable');
+      openModal('enableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmEnable');
+      notifyError(error?.message);
+    },
+  });
   const disableStaffUserMutation = useMutation({
     mutationFn: (requestId: string | undefined) => disableStaffUser(requestId),
     onSuccess: () => {
@@ -401,8 +413,7 @@ const StaffUserManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmEnable');
-            openModal('enableSuccessful');
+            enableStaffUserMutation.mutate(selectedUserId);
           }}
         />
       )}
@@ -415,6 +426,7 @@ const StaffUserManagement = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('enableSuccessful');
           }}
         />

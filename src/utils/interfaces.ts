@@ -154,3 +154,14 @@ export interface QueryParams {
   startDate?: string | undefined;
   endDate?: string | undefined;
 }
+
+export interface StaffUserRequest {
+  userName: string | undefined;
+  firstName: string | undefined;
+  lastName: string | undefined;
+  employeeId: string | undefined;
+  email: string | undefined;
+  phoneNumber: string | undefined;
+  branch: string | undefined;
+  role: string | undefined;
+}
