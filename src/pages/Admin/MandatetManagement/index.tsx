@@ -314,7 +314,7 @@ const MandatetManagement = () => {
     },
   ];
 
-  const { isLoading, data, refetch, isFetching } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['mandates', queryParams],
     queryFn: ({ queryKey }) => getMandates(queryKey[1] as QueryParams),
   });
