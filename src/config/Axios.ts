@@ -59,13 +59,6 @@ AxiosClient.interceptors.response.use(
       notifyError('Something went wrong');
       return Promise.reject(error);
     }
-    dispatch(uiStopLoading());
-    notifyError(
-      error?.response?.data?.responseMessage
-        ? error?.response?.data?.responseMessage
-        : 'Something went wrong',
-    );
-    return Promise.reject(error);
   },
 );
 

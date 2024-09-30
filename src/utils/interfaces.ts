@@ -145,9 +145,12 @@ export interface QueryParams {
   username?: string | undefined;
   email?: string | undefined;
   mandateCode?: string | undefined;
-  status?: string | undefined;
-  pageNo?: number | undefined;
-  pageSize?: number | undefined;
-  sortBy?: string | undefined;
-  sortOrder?: string | undefined;
+  status: string | undefined;
+  pageNo: number | undefined;
+  pageSize: number | undefined;
+  sortBy: string | undefined;
+  sortOrder: string | undefined;
+  searchFilter?: string | undefined;
+  startDate?: string | undefined;
+  endDate?: string | undefined;
 }

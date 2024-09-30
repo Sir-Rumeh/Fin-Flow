@@ -48,6 +48,9 @@ const MandateRequests = () => {
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
+    searchFilter: formik.values.searchMandate,
+    startDate: formik.values.fromDateFilter,
+    endDate: formik.values.toDateFilter,
   });
 
   useEffect(() => {
@@ -56,8 +59,17 @@ const MandateRequests = () => {
       status: activeTab,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
+      searchFilter: formik.values.searchMandate,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
     }));
-  }, [activeTab, paginationData]);
+  }, [
+    activeTab,
+    formik.values.searchMandate,
+    formik.values.fromDateFilter,
+    formik.values.toDateFilter,
+    paginationData,
+  ]);
 
   const columns: GridColDef[] = [
     {

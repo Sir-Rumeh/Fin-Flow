@@ -16,9 +16,13 @@ import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 import { useMediaQuery } from '@mui/material';
 import { QueryParams } from 'utils/interfaces';
-import { useQuery } from '@tanstack/react-query';
-import { getStaffUsers } from 'config/actions/staff-user-actions';
-import { capitalize } from 'utils/helpers';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  deleteStaffUser,
+  disableStaffUser,
+  getStaffUsers,
+} from 'config/actions/staff-user-actions';
+import { capitalize, notifyError } from 'utils/helpers';
 
 const StaffUserManagement = () => {
   const printPdfRef = useRef(null);
@@ -28,7 +32,7 @@ const StaffUserManagement = () => {
     pageNumber: 1,
     pageSize: 10,
   });
-  const [selectedUser, setSelectedUser] = useState('');
+  const [selectedUserId, setSelectedUserId] = useState('');
 
   const [modals, setModals] = useState({
     confirmDisable: false,
@@ -65,6 +69,9 @@ const StaffUserManagement = () => {
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
+    searchFilter: formik.values.searchStaffUser,
+    startDate: formik.values.fromDateFilter,
+    endDate: formik.values.toDateFilter,
   });
 
   useEffect(() => {
@@ -73,13 +80,17 @@ const StaffUserManagement = () => {
       status: formik.values.statusFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
+      searchFilter: formik.values.searchStaffUser,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
     }));
-  }, [formik.values.statusFilter, paginationData]);
-
-  const { data, refetch } = useQuery({
-    queryKey: ['users', queryParams],
-    queryFn: ({ queryKey }) => getStaffUsers(queryKey[1] as QueryParams),
-  });
+  }, [
+    formik.values.statusFilter,
+    formik.values.searchStaffUser,
+    formik.values.fromDateFilter,
+    formik.values.toDateFilter,
+    paginationData,
+  ]);
 
   const columns: GridColDef[] = [
     {
@@ -195,7 +206,10 @@ const StaffUserManagement = () => {
                 {params?.row.isActive ? (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmDisable')}
+                    onClick={() => {
+                      setSelectedUserId(params?.row.id);
+                      openModal('confirmDisable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                   >
                     Disable
@@ -203,7 +217,10 @@ const StaffUserManagement = () => {
                 ) : (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmEnable')}
+                    onClick={() => {
+                      setSelectedUserId(params?.row.id);
+                      openModal('confirmEnable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
                   >
                     Enable
@@ -211,7 +228,10 @@ const StaffUserManagement = () => {
                 )}
                 <button
                   type="button"
-                  onClick={() => openModal('confirmDelete')}
+                  onClick={() => {
+                    setSelectedUserId(params?.row.id);
+                    openModal('confirmDelete');
+                  }}
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
                   Delete User
@@ -234,6 +254,35 @@ const StaffUserManagement = () => {
     { label: 'Active Status', key: 'isActive' },
     { label: 'Date Requested', key: 'createdAt' },
   ];
+
+  const { data, refetch } = useQuery({
+    queryKey: ['users', queryParams],
+    queryFn: ({ queryKey }) => getStaffUsers(queryKey[1] as QueryParams),
+  });
+
+  const disableStaffUserMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => disableStaffUser(requestId),
+    onSuccess: () => {
+      closeModal('confirmDisable');
+      openModal('disableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDisable');
+      notifyError(error?.message);
+    },
+  });
+
+  const deleteStaffUserMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => deleteStaffUser(requestId),
+    onSuccess: () => {
+      closeModal('confirmDelete');
+      openModal('deleteSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDelete');
+      notifyError(error?.message);
+    },
+  });
 
   return (
     <>
@@ -324,8 +373,7 @@ const StaffUserManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDisable');
-            openModal('disableSuccessful');
+            disableStaffUserMutation.mutate(selectedUserId);
           }}
         />
       )}
@@ -338,10 +386,12 @@ const StaffUserManagement = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('disableSuccessful');
           }}
         />
       )}
+
       {modals.confirmEnable && (
         <ModalWrapper
           isOpen={modals.confirmEnable}
@@ -378,8 +428,7 @@ const StaffUserManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDelete');
-            openModal('deleteSuccessful');
+            deleteStaffUserMutation.mutate(selectedUserId);
           }}
         />
       )}
@@ -392,6 +441,7 @@ const StaffUserManagement = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('deleteSuccessful');
           }}
         />

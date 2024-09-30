@@ -15,7 +15,6 @@ export const addMandateRequest = async (payload: MandateRequest | undefined) => 
 export const getMandateRequests = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
   appendParams(params, queryParams);
-
   try {
     const response = await AxiosClient.get(`/mandaterequests?${params.toString()}`);
     return response.data;
@@ -79,7 +78,6 @@ export const updateMandateRequest = async (
 export const getMandates = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
   appendParams(params, queryParams);
-
   try {
     const response = await AxiosClient.get(`/mandates?${params.toString()}`);
     return response.data;

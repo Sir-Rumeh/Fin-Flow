@@ -72,7 +72,7 @@ const TableFilter = ({
                 </>
               }
               closeOnClick={false}
-              translationX={translationX ? translationX : 8}
+              translationX={translationX ? translationX : 0}
               translationY={translationY ? translationY : 56}
               borderRadius="1.7rem"
               closeCard={closeFilterCard}

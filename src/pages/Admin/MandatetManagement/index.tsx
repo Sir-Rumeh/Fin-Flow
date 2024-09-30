@@ -87,7 +87,7 @@ const MandatetManagement = () => {
 
   const formik = useFormik({
     initialValues: {
-      searchMerchantName: '',
+      searchMandate: '',
       fromDateFilter: '',
       toDateFilter: '',
       statusFilter: '',
@@ -114,6 +114,9 @@ const MandatetManagement = () => {
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
+    searchFilter: formik.values.searchMandate,
+    startDate: formik.values.fromDateFilter,
+    endDate: formik.values.toDateFilter,
   });
 
   useEffect(() => {
@@ -122,8 +125,17 @@ const MandatetManagement = () => {
       status: formik.values.statusFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
+      searchFilter: formik.values.searchMandate,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
     }));
-  }, [formik.values.statusFilter, paginationData]);
+  }, [
+    formik.values.statusFilter,
+    formik.values.searchMandate,
+    formik.values.fromDateFilter,
+    formik.values.toDateFilter,
+    paginationData,
+  ]);
 
   const excelHeaders = [
     { label: 'Merchant ID', key: 'merchantId' },
@@ -245,7 +257,13 @@ const MandatetManagement = () => {
                 {params?.row.isActive ? (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmDisable')}
+                    onClick={() => {
+                      setSelectedMandate({
+                        id: params.row.id,
+                        mandateType: params.row.mandateType,
+                      });
+                      openModal('confirmDisable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                   >
                     Disable
@@ -253,7 +271,13 @@ const MandatetManagement = () => {
                 ) : (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmEnable')}
+                    onClick={() => {
+                      setSelectedMandate({
+                        id: params.row.id,
+                        mandateType: params.row.mandateType,
+                      });
+                      openModal('confirmEnable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
                   >
                     Enable
@@ -261,7 +285,13 @@ const MandatetManagement = () => {
                 )}
                 <button
                   type="button"
-                  onClick={() => openModal('confirmDelete')}
+                  onClick={() => {
+                    setSelectedMandate({
+                      id: params.row.id,
+                      mandateType: params.row.mandateType,
+                    });
+                    openModal('confirmDelete');
+                  }}
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
                   Delete
