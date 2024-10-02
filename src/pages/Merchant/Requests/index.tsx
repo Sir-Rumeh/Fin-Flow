@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { GridColDef } from '@mui/x-data-grid';
 import {
   CreationRequestIcon,
@@ -8,27 +8,35 @@ import {
   UpdateRequestIcon,
 } from 'assets/icons';
 import appRoutes from 'utils/constants/routes';
-import TableLogo from 'assets/images/table_logo.png';
-import { useTabContext } from '../../../context/TabContext';
-import { MandateRequestStatus, RequestType } from 'utils/enums';
-import Tab from 'components/Tabs';
+import { RequestType, TabsListTabNames } from 'utils/enums';
 import CustomTable from 'components/CustomTable';
 import TableFilter from 'components/TableFilter';
 import { useFormik } from 'formik';
 import { useQuery } from '@tanstack/react-query';
 import { getMandateRequests, getMandateStatistics } from 'config/actions/dashboard-actions';
-import { QueryParams } from 'utils/interfaces';
-import { Box, CircularProgress } from '@mui/material';
+import { QueryParams, TabsProps } from 'utils/interfaces';
+import { Box, CircularProgress, useMediaQuery } from '@mui/material';
+import CustomTabs from 'hoc/CustomTabs';
 
 const MandateRequests = () => {
-  const { tab, setTab } = useTabContext();
+  const location = useLocation();
+  const urlParams = new URLSearchParams(location.search);
+  const status = urlParams.get('status');
+
   const [searchTerm, setSearchTerm] = useState('');
+  const [activeTab, setActiveTab] = useState(status !== null ? status : TabsListTabNames.Pending);
+  const [paginationData, setPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
+
+  const isLargeWidth = useMediaQuery('(min-width:1320px)');
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
     mandateCode: '',
-    status: MandateRequestStatus.Pending,
-    pageNo: 1,
-    pageSize: 10,
+    status: activeTab,
+    pageNo: paginationData.pageNumber,
+    pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
   });
@@ -145,7 +153,7 @@ const MandateRequests = () => {
     },
   });
 
-  const { isLoading, data } = useQuery({
+  const { isLoading, data, refetch } = useQuery({
     queryKey: ['mandateRequests', queryParams],
     queryFn: ({ queryKey }) => getMandateRequests(queryKey[1] as QueryParams),
     enabled: !!queryParams.status,
@@ -156,107 +164,72 @@ const MandateRequests = () => {
     queryFn: () => getMandateStatistics(),
   });
 
-  const handleTabClick = (tabIndex: number) => {
-    setTab(tabIndex);
-    const status =
-      tabIndex === 1
-        ? MandateRequestStatus.Pending
-        : tabIndex === 2
-          ? MandateRequestStatus.Approved
-          : tabIndex === 3
-            ? MandateRequestStatus.Declined
-            : '';
-
-    setQueryParams((prev) => ({ ...prev, status }));
-  };
+  const tabsList: TabsProps[] = [
+    {
+      tabIndex: 1,
+      tabName: TabsListTabNames.Pending,
+      tabTotal: statistics?.responseData?.totalPending,
+    },
+    {
+      tabIndex: 2,
+      tabName: TabsListTabNames.Approved,
+      tabTotal: statistics?.responseData?.totalApproved,
+    },
+    {
+      tabIndex: 3,
+      tabName: TabsListTabNames.Rejected,
+      tabTotal: statistics?.responseData?.totalRejected,
+    },
+  ];
 
   useEffect(() => {
-    setTab(1);
-  }, []);
+    setQueryParams((prev) => ({ ...prev, status: activeTab }));
+  }, [activeTab]);
 
   return (
     <>
       <div className="px-5 py-5">
         <h2 className="text-2xl font-semibold">Requests</h2>
-        <div className="mt-5 w-full rounded-lg bg-white px-5 py-5">
-          <div className="flex flex-col items-center justify-between gap-4 lg:flex-row lg:gap-0">
-            <div className="flex items-center gap-4 md:gap-5 lg:gap-10">
-              <Tab
-                label="Pending"
-                count={statistics?.responseData ? statistics?.responseData?.totalPending : 0}
-                isActive={tab === 1}
-                onClick={() => {
-                  setTab(1);
-                  handleTabClick(1);
-                }}
-                inactiveColor="text-yellow-500"
-              />
-              <Tab
-                label="Approved"
-                count={statistics?.responseData ? statistics?.responseData?.totalApproved : 0}
-                isActive={tab === 2}
-                onClick={() => {
-                  setTab(2);
-                  handleTabClick(2);
-                }}
-                inactiveColor="text-green-500"
-              />
-              <Tab
-                label="Rejected"
-                count={statistics?.responseData ? statistics?.responseData?.totalRejected : 0}
-                isActive={tab === 3}
-                onClick={() => {
-                  setTab(3);
-                  handleTabClick(3);
-                }}
-                inactiveColor="text-red-500"
-              />
-            </div>
-            <div className="">
-              <TableFilter
-                name={'searchMerchantName'}
-                placeholder={'Search Merchant Name'}
-                label={'Search Merchant'}
-                value={searchTerm}
-                setSearch={setSearchTerm}
-                handleOptionsFilter={() => {}}
-                formik={formik}
-                fromDateName={'fromDateFilter'}
-                toDateName={'toDateFilter'}
-                selectName={'statusFilter'}
-              />
-            </div>
+        {isLoading ? (
+          <div className="flex h-[30vh] flex-col items-center justify-center">
+            <Box sx={{ display: 'flex' }}>
+              <CircularProgress sx={{ color: '#5C068C' }} />
+            </Box>
           </div>
-          <div className="mt-4 h-[2px] w-full bg-grayPrimary"></div>
-          <div className="mt-6 w-full">
-            {isLoading ? (
-              <div className="flex h-[30vh] flex-col items-center justify-center">
-                <Box sx={{ display: 'flex' }}>
-                  <CircularProgress />
-                </Box>
+        ) : (
+          <div className="mt-5 w-full rounded-lg bg-white px-5 py-5">
+            <div className="flex flex-col items-center justify-between gap-4 lg:flex-row lg:gap-0">
+              <div className="flex w-full flex-row items-center justify-center gap-6 md:gap-10 lg:w-[50%] lg:justify-start">
+                <CustomTabs tabs={tabsList} activeTab={activeTab} setActiveTab={setActiveTab} />
               </div>
-            ) : data?.responseData?.items?.length > 0 ? (
+              <div className="">
+                <TableFilter
+                  name={'searchMandate'}
+                  placeholder={'Search Mandate'}
+                  label={'Search Mandate'}
+                  value={searchTerm}
+                  setSearch={setSearchTerm}
+                  handleOptionsFilter={() => refetch()}
+                  formik={formik}
+                  fromDateName={'fromDateFilter'}
+                  toDateName={'toDateFilter'}
+                  selectName={'statusFilter'}
+                  translationX={isLargeWidth ? 350 : undefined}
+                />
+              </div>
+            </div>
+            <div className="h-[2px] w-full bg-grayPrimary"></div>
+            <div className="mt-6 w-full">
               <CustomTable
                 tableData={data?.responseData?.items}
                 columns={MandateTableColumn}
-                rowCount={20}
+                rowCount={data?.responseData?.totalCount}
+                paginationData={paginationData}
+                setPaginationData={setPaginationData}
               />
-            ) : (
-              <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
-                <div>
-                  <img src={TableLogo} alt="group_logo" />
-                </div>
-                <div className="mt-8 text-center">
-                  <h3 className="text-2xl font-bold">
-                    {tab === 1 && `Oops! No Pending Mandates`}
-                    {tab === 2 && `Oops! No Approved Mandates`}
-                    {tab === 3 && `Oops! No Rejected Mandates`}
-                  </h3>
-                </div>
-              </div>
-            )}
+            </div>
           </div>
-        </div>
+        )}
       </div>
     </>
   );

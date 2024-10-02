@@ -184,7 +184,7 @@ const Reports = () => {
         const getIconAndColor = (requestType: RequestType) => {
           switch (requestType) {
             case RequestType.Creation:
-            case RequestType.Enabled:
+            case RequestType.Enable:
               return {
                 IconComponent: CreationRequestIcon,
                 colorClass: 'text-greenPrimary font-semibold',
@@ -236,7 +236,7 @@ const Reports = () => {
       renderCell: (params: GridRenderCellParams) => {
         const requestType = params.row.requestType;
 
-        const isEnabled = requestType === RequestType.Enabled;
+        const isEnabled = requestType === RequestType.Enable;
 
         const buttonTitle = isEnabled ? 'Disable' : 'Enable';
         const buttonColorClass = isEnabled ? 'text-red-400' : 'text-greenPrimary';
@@ -298,40 +298,36 @@ const Reports = () => {
           </div>
           <div className="h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-            <ThemeProvider theme={theme}>
-              <LocalizationProvider dateAdapter={AdapterDayjs}>
-                <DatePicker
-                  label="Start Date"
-                  sx={{
-                    height: '50px',
-                    width: '100%',
-                    marginTop: '32px',
-                    '& .MuiInputBase-root': {
-                      height: '50px',
-                      borderRadius: '8px',
-                    },
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: '8px',
-                    },
-                  }}
-                />
-                <DatePicker
-                  label="End Date"
-                  sx={{
-                    height: '50px',
-                    width: '100%',
-                    marginTop: '32px',
-                    '& .MuiInputBase-root': {
-                      height: '50px',
-                      borderRadius: '8px',
-                    },
-                    '& .MuiOutlinedInput-root': {
-                      borderRadius: '8px',
-                    },
-                  }}
-                />
-              </LocalizationProvider>
-            </ThemeProvider>
+            <DatePicker
+              label="Start Date"
+              sx={{
+                height: '50px',
+                width: '100%',
+                marginTop: '32px',
+                '& .MuiInputBase-root': {
+                  height: '50px',
+                  borderRadius: '8px',
+                },
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '8px',
+                },
+              }}
+            />
+            <DatePicker
+              label="End Date"
+              sx={{
+                height: '50px',
+                width: '100%',
+                marginTop: '32px',
+                '& .MuiInputBase-root': {
+                  height: '50px',
+                  borderRadius: '8px',
+                },
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '8px',
+                },
+              }}
+            />
             <CustomSelect
               labelFor="reportType"
               label="Report Type"
@@ -340,7 +336,6 @@ const Reports = () => {
               options={['Mandate Status Report', 'Transaction Reports']}
               placeholder="Select here"
               icon={<DarkArrowDown height="20" width="20" styles="mt-1 mr-1" />}
-              onSelect={handleSelect}
             />
             <CustomSelect
               labelFor="status"
@@ -366,71 +361,71 @@ const Reports = () => {
             </div>
           </div>
         </div>
-        {selectedReportType === ReportsType.TransactionReports && (
-          <div className="mt-10 rounded-lg bg-white px-5 py-5">
-            <div className="mt-10 flex items-center justify-between">
-              <p className="text-xl font-bold">
-                Mono Tech Transaction Report Details (June 2023 to August 2023)
-              </p>
-              <ExportBUtton />
-            </div>
-            <div className="mt-5 rounded-lg border px-4 py-6">
-              <div className="">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center justify-between gap-4">
-                    <Tab
-                      label="Successful"
-                      count={20}
-                      isActive={tab === 1}
-                      onClick={() => setTab(1)}
-                      inactiveColor="text-green-500"
-                    />
-                    <Tab
-                      label="Failed"
-                      count={20}
-                      isActive={tab === 2}
-                      onClick={() => setTab(2)}
-                      inactiveColor="text-red-500"
-                    />
-                  </div>
-                  <div className="">
-                    <TableFilter
-                      name={'searchMerchantName'}
-                      placeholder={'Search '}
-                      label={'Search Merchant'}
-                      value={searchTerm}
-                      setSearch={setSearchTerm}
-                      handleOptionsFilter={() => {}}
-                      formik={formik}
-                      fromDateName={'fromDateFilter'}
-                      toDateName={'toDateFilter'}
-                      selectName={'statusFilter'}
-                    />
-                  </div>
+        {/* {selectedReportType === ReportsType.TransactionReports && ( */}
+        <div className="mt-10 rounded-lg bg-white px-5 py-5">
+          <div className="mt-10 flex items-center justify-between">
+            <p className="text-xl font-bold">
+              Mono Tech Transaction Report Details (June 2023 to August 2023)
+            </p>
+            <ExportBUtton />
+          </div>
+          <div className="mt-5 rounded-lg border px-4 py-6">
+            <div className="">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center justify-between gap-4">
+                  <Tab
+                    label="Successful"
+                    count={20}
+                    isActive={tab === 1}
+                    onClick={() => setTab(1)}
+                    inactiveColor="text-green-500"
+                  />
+                  <Tab
+                    label="Failed"
+                    count={20}
+                    isActive={tab === 2}
+                    onClick={() => setTab(2)}
+                    inactiveColor="text-red-500"
+                  />
                 </div>
-                <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
-                <div className="mt-6">
-                  {transactionReports.length > 0 ? (
-                    <CustomTable
-                      tableData={transactionReports}
-                      columns={TransactionsReportsTableColumn}
-                      rowCount={20}
-                    />
-                  ) : (
-                    <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
-                      <div>
-                        <img src={TableLogo} alt="group_logo" />
-                      </div>
-                      <div className="mt-8 text-center">
-                        <h3 className="text-2xl font-bold">Oops! No Transactions</h3>
-                      </div>
+                <div className="">
+                  <TableFilter
+                    name={'searchMerchantName'}
+                    placeholder={'Search '}
+                    label={'Search Merchant'}
+                    value={searchTerm}
+                    setSearch={setSearchTerm}
+                    handleOptionsFilter={() => {}}
+                    formik={formik}
+                    fromDateName={'fromDateFilter'}
+                    toDateName={'toDateFilter'}
+                    selectName={'statusFilter'}
+                  />
+                </div>
+              </div>
+              <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
+              <div className="mt-6">
+                {transactionReports.length > 0 ? (
+                  <CustomTable
+                    tableData={transactionReports}
+                    columns={TransactionsReportsTableColumn}
+                    rowCount={20}
+                  />
+                ) : (
+                  <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
+                    <div>
+                      <img src={TableLogo} alt="group_logo" />
                     </div>
-                  )}
-                </div>
+                    <div className="mt-8 text-center">
+                      <h3 className="text-2xl font-bold">Oops! No Transactions</h3>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>
-        )}
+        </div>
+        {/* )} */}
         {selectedReportType === ReportsType.MandateStatusReports && (
           <div className="mt-10 rounded-lg bg-white px-5 py-5">
             <div className="mt-10 rounded-lg bg-white px-5 py-5">

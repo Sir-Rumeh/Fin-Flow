@@ -3,7 +3,6 @@ import Tab from 'components/Tabs';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTabContext } from '../../../context/TabContext';
 import appRoutes from 'utils/constants/routes';
-import { DatePicker } from '@mui/x-date-pickers';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
@@ -19,6 +18,9 @@ import { addMandateRequest } from 'config/actions/dashboard-actions';
 import { MandateRequest } from 'utils/interfaces';
 import { notifyError } from 'utils/helpers';
 import { Backdrop, CircularProgress } from '@mui/material';
+import FormDatePicker from 'components/FormElements/FormDatePicker';
+import CustomFileUpload from 'components/FormElements/CustomFileUpload';
+import FormSelect from 'components/FormElements/FormSelect';
 
 const CreateMandate = () => {
   const { tab, setTab } = useTabContext();
@@ -131,6 +133,24 @@ const CreateMandate = () => {
     },
   });
 
+  const dayToApplyOptions = [
+    { value: 'daily', label: 'Daily' },
+    { value: 'weekly', label: 'Weekly' },
+    { value: 'monthly', label: 'Monthy' },
+    { value: 'yearly', label: 'Yearly' },
+  ];
+
+  const serviceOptions = [
+    { value: 'Micro-loans', label: 'Micro-loans' },
+    { value: 'Loans', label: 'Loans' },
+    { value: 'Subscription', label: 'Subscription' },
+    { value: 'Hired-purchase', label: 'Hired-purchase' },
+    { value: 'Mortgage', label: 'Mortgage' },
+    { value: 'Pension', label: 'Pension' },
+    { value: 'Insurance', label: 'Insurance' },
+    { value: 'Taxes', label: 'Taxes' },
+  ];
+
   return (
     <>
       <div className="px-5 py-5">
@@ -235,101 +255,48 @@ const CreateMandate = () => {
                     <CustomInput
                       labelFor="amount"
                       label="Amount"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full mt-[4px]"
+                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="number"
                       placeholder="Enter here"
                       formik={formik}
                     />
-                    <div className="flex flex-col gap-1">
-                      <label htmlFor="startDate" className="font-semibold text-black">
-                        Start Date
-                      </label>
-                      <DatePicker
-                        label="Start Date"
-                        value={formik.values.startDate}
-                        onChange={(newValue) => {
-                          formik.setFieldValue('startDate', newValue);
-                        }}
-                        sx={{
-                          height: '50px',
-                          width: '100%',
-                          '& .MuiInputBase-root': {
-                            height: '50px',
-                            borderRadius: '8px',
-                          },
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: '8px',
-                          },
-                        }}
-                      />
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <label htmlFor="endDate" className="font-semibold">
-                        End Date
-                      </label>
-                      <DatePicker
-                        label="End Date"
-                        value={formik.values.endDate}
-                        onChange={(newValue) => {
-                          formik.setFieldValue('endDate', newValue);
-                        }}
-                        sx={{
-                          height: '50px',
-                          width: '100%',
-                          '& .MuiInputBase-root': {
-                            height: '50px',
-                            borderRadius: '8px',
-                          },
-                          '& .MuiOutlinedInput-root': {
-                            borderRadius: '8px',
-                          },
-                        }}
-                      />
-                    </div>
+                    <FormDatePicker
+                      name={'startDate'}
+                      formik={formik}
+                      label="Start Date"
+                      placeholder="Select date"
+                      height="50px"
+                    />
+                    <FormDatePicker
+                      name={'endDate'}
+                      formik={formik}
+                      label="End Date"
+                      placeholder="Select date"
+                      height="50px"
+                    />
                   </div>
                   <div className="mt-10 grid grid-cols-1 gap-20 lg:grid-cols-3 lg:gap-10">
-                    <CustomSelect
+                    <FormSelect
                       labelFor="dayToApply"
                       label="Day to Apply"
-                      containerStyles="h-[50px] w-full"
-                      selectStyles="h-[50px] px-2"
-                      options={['daily', 'monthly', 'yearly']}
-                      placeholder="Select here"
-                      icon={<DarkArrowDown />}
                       formik={formik}
+                      options={dayToApplyOptions}
                     />
-                    <CustomSelect
+                    <FormSelect
                       labelFor="frequency"
                       label="Frequency"
-                      containerStyles="h-[50px] w-full"
-                      selectStyles="h-[50px] px-2"
-                      options={['daily', 'monthly', 'yearly']}
-                      placeholder="Select here"
-                      icon={<DarkArrowDown />}
                       formik={formik}
+                      options={dayToApplyOptions}
                     />
-                    <CustomSelect
+                    <FormSelect
                       labelFor="service"
                       label="Service"
-                      containerStyles="h-[50px] w-full"
-                      selectStyles="h-[50px] px-2"
-                      options={[
-                        'Micro-loans',
-                        'Loans',
-                        'Subscription',
-                        'Hired-purchase',
-                        'Mortgage',
-                        'Pension',
-                        'Insurance',
-                        'Taxes',
-                      ]}
-                      placeholder="Select here"
-                      icon={<DarkArrowDown />}
                       formik={formik}
+                      options={serviceOptions}
                     />
                   </div>
-                  <div className="mt-24 grid grid-cols-1 gap-10 lg:grid-cols-3">
+                  <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-3">
                     <CustomInput
                       labelFor="accountName"
                       label="Account Name"
@@ -360,12 +327,9 @@ const CreateMandate = () => {
                   </div>
                   <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-3">
                     <div className="col-span-3 lg:col-span-1">
-                      <CustomInput
+                      <CustomFileUpload
                         labelFor="supportingDocument"
                         label="Upload Supporting Document"
-                        containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
-                        inputStyles="w-full focus:outline-none focus:ring-0"
-                        inputType="file"
                         formik={formik}
                       />
                     </div>
