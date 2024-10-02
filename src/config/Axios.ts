@@ -49,16 +49,31 @@ AxiosClient.interceptors.response.use(
     return response;
   },
   async (error) => {
-    if (error?.response?.status === 401) {
+    if (error?.response?.status === 400) {
+      dispatch(uiStopLoading());
+      notifyError(error?.response?.data?.responseMessage);
+      return Promise.reject(error?.response?.data?.responseMessage);
+    } else if (error?.response?.status === 401) {
       dispatch(uiStopLoading());
       // dispatch(logout());
       notifyError('Your session timed out, sign in again to continue');
-      window.location.href = '/login';
+      window.location.href = '/';
+    } else if (error?.response?.status === 404) {
+      const url = window.location.href.split('/').slice(0, 5).join('/');
+      dispatch(uiStopLoading());
+      notifyError('Resource not found');
+      setTimeout(() => {
+        window.location.href = url;
+      }, 1000);
+      return Promise.reject(error);
     } else if (error?.response?.status === 500) {
       dispatch(uiStopLoading());
       notifyError('Something went wrong');
       return Promise.reject(error);
     }
+    dispatch(uiStopLoading());
+    notifyError('Something went wrong');
+    return Promise.reject(error);
   },
 );
 

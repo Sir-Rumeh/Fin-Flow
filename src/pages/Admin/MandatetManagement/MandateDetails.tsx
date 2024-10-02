@@ -74,7 +74,7 @@ const MandateDetails = () => {
 
   const modifyMandateFormik = useFormik({
     initialValues: {
-      amount: '',
+      amount: undefined,
     },
     validationSchema: updateMandateSchema,
     onSubmit: (values) => {
@@ -143,7 +143,8 @@ const MandateDetails = () => {
   });
 
   const updateMandateMutation = useMutation({
-    mutationFn: (requestId: string | undefined) => updateMandate(requestId),
+    mutationFn: (requestId: string | undefined) =>
+      updateMandate(requestId, modifyMandateFormik.values),
     onSuccess: () => {
       closeModal('editMandate');
       closeModal('confirmEdit');
@@ -208,7 +209,7 @@ const MandateDetails = () => {
         <>
           <div className="slide-down mt-3 flex items-center justify-between">
             <div>
-              <h2 className="text-lg font-semibold md:text-2xl">{`Mandate ID : ${data?.responseData?.id}`}</h2>
+              <h2 className="text-lg font-semibold md:text-2xl">{`Mandate ID : ${data?.responseData?.id ? data?.responseData?.id : ''}`}</h2>
             </div>
             <div className="w-auto">
               <CustomPopover

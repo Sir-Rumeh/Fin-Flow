@@ -96,7 +96,7 @@ const UserDetails = () => {
         </div>
         <div className="slide-down mt-3 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold md:text-2xl">{`User ID : ${data?.responseData?.id}`}</h2>
+            <h2 className="text-lg font-semibold md:text-2xl">{`User ID : ${data?.responseData?.id ? data?.responseData?.id : ''}`}</h2>
           </div>
           <div className="w-auto">
             <CustomPopover

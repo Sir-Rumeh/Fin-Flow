@@ -3,17 +3,18 @@ import appRoutes from 'utils/constants/routes';
 import ChevronRight from 'assets/icons/ChevronRight';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
 import FormSelect from 'components/FormElements/FormSelect';
 import { StaffUserRequest } from 'utils/interfaces';
-import { useMutation } from '@tanstack/react-query';
-import { updateStaffUserRequest } from 'config/actions/staff-user-actions';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { getStaffUserById, updateStaffUserRequest } from 'config/actions/staff-user-actions';
 import { notifyError } from 'utils/helpers';
 import { createStaffUserSchema } from 'utils/formValidators';
+import { roles } from 'utils/constants';
 
 function EditUser() {
   const navigate = useNavigate();
@@ -46,6 +47,24 @@ function EditUser() {
     },
   });
 
+  const { data, refetch } = useQuery({
+    queryKey: ['users', staffUserId],
+    queryFn: ({ queryKey }) => getStaffUserById(queryKey[1]),
+  });
+
+  useEffect(() => {
+    formik.setValues({
+      userName: data?.responseData?.userName,
+      firstName: data?.responseData?.firstName,
+      lastName: data?.responseData?.lastName,
+      employeeId: data?.responseData?.employeeId,
+      email: data?.responseData?.email,
+      phoneNumber: data?.responseData?.phoneNumber,
+      branch: data?.responseData?.branch,
+      role: data?.responseData?.role,
+    });
+  }, [data]);
+
   const formik = useFormik({
     initialValues: {
       userName: '',
@@ -73,13 +92,6 @@ function EditUser() {
       openModal('confirmEdit');
     },
   });
-
-  const roles = [
-    { value: 'Admin Role', label: 'Admin Role' },
-    { value: 'Onboarding Role', label: 'Onboarding Role' },
-    { value: 'Audit Role', label: 'Audit Role' },
-    { value: 'Reporting Role', label: 'Reporting Role' },
-  ];
 
   return (
     <>

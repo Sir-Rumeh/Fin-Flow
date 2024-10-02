@@ -85,13 +85,16 @@ const StaffUserManagement = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [
-    formik.values.statusFilter,
-    formik.values.searchStaffUser,
-    formik.values.fromDateFilter,
-    formik.values.toDateFilter,
-    paginationData,
-  ]);
+  }, [paginationData]);
+
+  const handleOptionsFilter = () => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  };
 
   const columns: GridColDef[] = [
     {
@@ -344,7 +347,7 @@ const StaffUserManagement = () => {
                     label={'Search Staff User'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
-                    handleOptionsFilter={() => refetch()}
+                    handleOptionsFilter={handleOptionsFilter}
                     formik={formik}
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}

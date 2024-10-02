@@ -63,7 +63,7 @@ const CustomInput = ({
             name={labelFor}
             id={labelFor}
             onChange={formik?.handleChange}
-            value={formik?.values.labelFor}
+            value={formik?.values[labelFor]}
             onBlur={() => formik?.handleBlur}
           />
           <div onClick={handleInputType} className="cursor-pointer pr-1">
@@ -89,7 +89,7 @@ const CustomInput = ({
             name={labelFor}
             id={labelFor}
             onChange={formik?.handleChange}
-            value={formik?.values.labelFor}
+            value={formik?.values[labelFor]}
             onBlur={() => formik?.handleBlur}
           />
           {icon}

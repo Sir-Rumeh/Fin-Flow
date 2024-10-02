@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { DarkArrowDown } from 'assets/icons';
 
 interface Option {
@@ -32,11 +32,18 @@ const FormSelect = ({
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
 
+  useEffect(() => {
+    if (formik.values[labelFor] && formik.values[labelFor] !== '') {
+      setSelectedOption(formik.values[labelFor]);
+    }
+  }, [formik.values[labelFor]]);
+
   const handleChange = (option: Option) => {
     setSelectedOption(option.value);
     setIsOpen(false);
     formik.setFieldValue(labelFor, option.value);
   };
+
   return (
     <>
       <div className="relative z-[999] mb-4 mt-6 h-auto w-full">

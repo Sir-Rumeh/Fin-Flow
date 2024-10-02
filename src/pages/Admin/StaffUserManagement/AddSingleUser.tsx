@@ -14,6 +14,7 @@ import { useMutation } from '@tanstack/react-query';
 import { addStaffUserRequest } from 'config/actions/staff-user-actions';
 import { notifyError } from 'utils/helpers';
 import { createStaffUserSchema } from 'utils/formValidators';
+import { roles } from 'utils/constants';
 
 function AddUser() {
   const navigate = useNavigate();
@@ -70,13 +71,6 @@ function AddUser() {
       openModal('confirmCreate');
     },
   });
-
-  const roles = [
-    { value: 'Admin Role', label: 'Admin Role' },
-    { value: 'Onboarding Role', label: 'Onboarding Role' },
-    { value: 'Audit Role', label: 'Audit Role' },
-    { value: 'Reporting Role', label: 'Reporting Role' },
-  ];
 
   return (
     <>

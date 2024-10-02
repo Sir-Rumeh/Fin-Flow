@@ -180,7 +180,7 @@ function CustomTable({
                       });
                     }}
                   >
-                    {paginationCount}
+                    {paginationCount.toString()}
                   </button>
                 </div>
               )}
