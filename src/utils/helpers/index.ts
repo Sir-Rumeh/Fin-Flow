@@ -105,7 +105,19 @@ export function capitalize(string: string) {
 export const appendParams = (params: URLSearchParams, queryParams: QueryParams | undefined) => {
   if (!queryParams) return;
 
-  const { username, email, mandateCode, status, pageNo, pageSize, sortBy, sortOrder } = queryParams;
+  const {
+    username,
+    email,
+    mandateCode,
+    status,
+    pageNo,
+    pageSize,
+    sortBy,
+    sortOrder,
+    searchFilter,
+    startDate,
+    endDate,
+  } = queryParams;
 
   if (username) params.append('UserName', username);
   if (email) params.append('Email', email);
@@ -115,4 +127,7 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
   if (pageSize !== undefined) params.append('PageSize', pageSize.toString());
   if (sortBy) params.append('SortBy', sortBy);
   if (sortOrder) params.append('SortOrder', sortOrder);
+  if (searchFilter) params.append('searchFilter', searchFilter);
+  if (startDate) params.append('startDate', startDate);
+  if (endDate) params.append('endDate', endDate);
 };

@@ -15,9 +15,17 @@ export const addMandateRequest = async (payload: MandateRequest | undefined) => 
 export const getMandateRequests = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
   appendParams(params, queryParams);
-
   try {
     const response = await AxiosClient.get(`/mandaterequests?${params.toString()}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getMandateRequestsStatistics = async () => {
+  try {
+    const response = await AxiosClient.get(`/mandaterequests/statistics`);
     return response.data;
   } catch (error) {
     throw error;
@@ -70,7 +78,6 @@ export const updateMandateRequest = async (
 export const getMandates = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
   appendParams(params, queryParams);
-
   try {
     const response = await AxiosClient.get(`/mandates?${params.toString()}`);
     return response.data;
@@ -115,7 +122,10 @@ export const enableMandate = async (requestId: string | undefined) => {
   }
 };
 
-export const updateMandate = async (requestId: string | undefined, payload: { amount: number }) => {
+export const updateMandate = async (
+  requestId: string | undefined,
+  payload: { amount: number | undefined },
+) => {
   try {
     const response = await AxiosClient.put(`/mandates/update/${requestId}`, payload);
     return response.data;

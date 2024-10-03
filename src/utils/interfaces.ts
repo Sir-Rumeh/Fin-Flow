@@ -145,9 +145,23 @@ export interface QueryParams {
   username?: string | undefined;
   email?: string | undefined;
   mandateCode?: string | undefined;
-  status?: string | undefined;
-  pageNo?: number | undefined;
-  pageSize?: number | undefined;
-  sortBy?: string | undefined;
-  sortOrder?: string | undefined;
+  status: string | undefined;
+  pageNo: number | undefined;
+  pageSize: number | undefined;
+  sortBy: string | undefined;
+  sortOrder: string | undefined;
+  searchFilter?: string | undefined;
+  startDate?: string | undefined;
+  endDate?: string | undefined;
+}
+
+export interface StaffUserRequest {
+  userName: string | undefined;
+  firstName: string | undefined;
+  lastName: string | undefined;
+  employeeId: string | undefined;
+  email: string | undefined;
+  phoneNumber: string | undefined;
+  branch: string | undefined;
+  role: string | undefined;
 }

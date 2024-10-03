@@ -1,5 +1,5 @@
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import TableFilter from 'components/TableFilter';
 import CustomTable from 'components/CustomTable';
 import appRoutes from 'utils/constants/routes';
@@ -15,14 +15,26 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 import { useMediaQuery } from '@mui/material';
+import { QueryParams } from 'utils/interfaces';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  deleteStaffUser,
+  disableStaffUser,
+  enableStaffUser,
+  getStaffUsers,
+} from 'config/actions/staff-user-actions';
+import { capitalize, notifyError } from 'utils/helpers';
 
 const StaffUserManagement = () => {
+  const printPdfRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
     pageSize: 10,
   });
+  const [selectedUserId, setSelectedUserId] = useState('');
+
   const [modals, setModals] = useState({
     confirmDisable: false,
     disableSuccessful: false,
@@ -52,6 +64,38 @@ const StaffUserManagement = () => {
     },
   });
 
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    status: formik.values.statusFilter,
+    pageNo: paginationData.pageNumber,
+    pageSize: paginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+    searchFilter: formik.values.searchStaffUser,
+    startDate: formik.values.fromDateFilter,
+    endDate: formik.values.toDateFilter,
+  });
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+      searchFilter: formik.values.searchStaffUser,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  }, [paginationData]);
+
+  const handleOptionsFilter = () => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  };
+
   const columns: GridColDef[] = [
     {
       field: 'employeeId',
@@ -66,6 +110,11 @@ const StaffUserManagement = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <span>{`${capitalize(params?.row?.firstName)} ${capitalize(params?.row?.lastName)}`}</span>
+        );
+      },
     },
     {
       field: 'email',
@@ -81,6 +130,7 @@ const StaffUserManagement = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      valueGetter: (params: any) => capitalize(params),
       sortable: false,
     },
     {
@@ -90,25 +140,29 @@ const StaffUserManagement = () => {
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       renderCell: (params: GridRenderCellParams) => {
-        const renderIcon = (IconComponent: React.ComponentType, colorClass: string) => (
+        const renderIcon = (
+          IconComponent: React.ComponentType,
+          colorClass: string,
+          title: string,
+        ) => (
           <div className="flex w-full items-center gap-2 font-semibold">
             <IconComponent />
-            <span className={`mb-[1px] ${colorClass}`}>{params?.row.status}</span>
+            <span className={`mb-[1px] ${colorClass}`}>{title}</span>
           </div>
         );
-        switch (params?.row.status) {
-          case 'Enabled':
-            return renderIcon(CreationRequestIcon, 'text-greenPrimary');
-          case 'Disabled':
-            return renderIcon(DeleteRequestIcon, 'text-redSecondary');
+        switch (params?.row.isActive) {
+          case true:
+            return renderIcon(CreationRequestIcon, 'text-greenPrimary', 'Enabled');
+          case false:
+            return renderIcon(DeleteRequestIcon, 'text-redSecondary', 'Disabled');
           default:
             return <span>{params?.row.status}</span>;
         }
       },
     },
     {
-      field: 'dateAdded',
-      headerName: 'Date Added',
+      field: 'createdAt',
+      headerName: 'Date Created',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
@@ -121,11 +175,11 @@ const StaffUserManagement = () => {
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
         return (
-          <div className="-ml-1 h-full border-none">
+          <div className="h-full border-none">
             <CustomPopover
               popoverId={params?.row.id}
               buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-20}
+              translationX={-10}
               translationY={45}
             >
               <div className="flex flex-col rounded-md p-1">
@@ -153,27 +207,35 @@ const StaffUserManagement = () => {
                 >
                   Edit User
                 </button>
-                {params?.row.status === 'Enabled' && (
+                {params?.row.isActive ? (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmDisable')}
+                    onClick={() => {
+                      setSelectedUserId(params?.row.id);
+                      openModal('confirmDisable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                   >
-                    Disable User
+                    Disable
                   </button>
-                )}
-                {params?.row.status === 'Disabled' && (
+                ) : (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmEnable')}
+                    onClick={() => {
+                      setSelectedUserId(params?.row.id);
+                      openModal('confirmEnable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
                   >
-                    Enable User
+                    Enable
                   </button>
                 )}
                 <button
                   type="button"
-                  onClick={() => openModal('confirmDelete')}
+                  onClick={() => {
+                    setSelectedUserId(params?.row.id);
+                    openModal('confirmDelete');
+                  }}
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
                   Delete User
@@ -187,6 +249,55 @@ const StaffUserManagement = () => {
   ];
 
   const isSmallWidth = useMediaQuery('(max-width:370px)');
+
+  const excelHeaders = [
+    { label: 'employee ID', key: 'employeeId' },
+    { label: 'Name', key: 'userName' },
+    { label: 'Email', key: 'email' },
+    { label: 'Role', key: 'role' },
+    { label: 'Active Status', key: 'isActive' },
+    { label: 'Date Requested', key: 'createdAt' },
+  ];
+
+  const { data, refetch } = useQuery({
+    queryKey: ['users', queryParams],
+    queryFn: ({ queryKey }) => getStaffUsers(queryKey[1] as QueryParams),
+  });
+
+  const enableStaffUserMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => enableStaffUser(requestId),
+    onSuccess: () => {
+      closeModal('confirmEnable');
+      openModal('enableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmEnable');
+      notifyError(error?.message);
+    },
+  });
+  const disableStaffUserMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => disableStaffUser(requestId),
+    onSuccess: () => {
+      closeModal('confirmDisable');
+      openModal('disableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDisable');
+      notifyError(error?.message);
+    },
+  });
+
+  const deleteStaffUserMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => deleteStaffUser(requestId),
+    onSuccess: () => {
+      closeModal('confirmDelete');
+      openModal('deleteSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDelete');
+      notifyError(error?.message);
+    },
+  });
 
   return (
     <>
@@ -236,7 +347,7 @@ const StaffUserManagement = () => {
                     label={'Search Staff User'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
-                    handleOptionsFilter={() => {}}
+                    handleOptionsFilter={handleOptionsFilter}
                     formik={formik}
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}
@@ -245,16 +356,21 @@ const StaffUserManagement = () => {
                 </div>
               </div>
               <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
-                <ExportBUtton />
+                <ExportBUtton
+                  data={data?.responseData?.items}
+                  printPdfRef={printPdfRef}
+                  headers={excelHeaders}
+                  fileName="staff_users.csv"
+                />
               </div>
             </div>
 
             <div className="mt-6 w-full">
               <div className="w-full">
                 <CustomTable
-                  tableData={staffUsersList}
+                  tableData={data?.responseData?.items}
                   columns={columns}
-                  rowCount={124}
+                  rowCount={data?.responseData?.totalCount}
                   paginationData={paginationData}
                   setPaginationData={setPaginationData}
                 />
@@ -272,8 +388,7 @@ const StaffUserManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDisable');
-            openModal('disableSuccessful');
+            disableStaffUserMutation.mutate(selectedUserId);
           }}
         />
       )}
@@ -286,10 +401,12 @@ const StaffUserManagement = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('disableSuccessful');
           }}
         />
       )}
+
       {modals.confirmEnable && (
         <ModalWrapper
           isOpen={modals.confirmEnable}
@@ -299,8 +416,7 @@ const StaffUserManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmEnable');
-            openModal('enableSuccessful');
+            enableStaffUserMutation.mutate(selectedUserId);
           }}
         />
       )}
@@ -313,6 +429,7 @@ const StaffUserManagement = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('enableSuccessful');
           }}
         />
@@ -326,8 +443,7 @@ const StaffUserManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDelete');
-            openModal('deleteSuccessful');
+            deleteStaffUserMutation.mutate(selectedUserId);
           }}
         />
       )}
@@ -340,6 +456,7 @@ const StaffUserManagement = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('deleteSuccessful');
           }}
         />

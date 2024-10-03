@@ -1,12 +1,12 @@
 import ButtonComponent from 'components/FormElements/Button';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import TableFilter from 'components/TableFilter';
 import CustomTable from 'components/CustomTable';
 import appRoutes from 'utils/constants/routes';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
-import { mandateRequestsList, transactionHistory } from 'utils/constants';
+import { transactionHistory } from 'utils/constants';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
 import { ModalWrapper } from 'hoc/ModalWrapper';
@@ -14,7 +14,7 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
-import { Box, CircularProgress, Typography, useMediaQuery } from '@mui/material';
+import { Typography, useMediaQuery } from '@mui/material';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import { QueryParams, TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
@@ -87,7 +87,7 @@ const MandatetManagement = () => {
 
   const formik = useFormik({
     initialValues: {
-      searchMerchantName: '',
+      searchMandate: '',
       fromDateFilter: '',
       toDateFilter: '',
       statusFilter: '',
@@ -99,7 +99,7 @@ const MandatetManagement = () => {
 
   const modifyMandateFormik = useFormik({
     initialValues: {
-      amount: '',
+      amount: undefined,
     },
     validationSchema: updateMandateSchema,
     onSubmit: (values) => {
@@ -114,7 +114,31 @@ const MandatetManagement = () => {
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
+    searchFilter: formik.values.searchMandate,
+    startDate: formik.values.fromDateFilter,
+    endDate: formik.values.toDateFilter,
   });
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+      searchFilter: formik.values.searchMandate,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  }, [paginationData]);
+
+  const handleOptionsFilter = () => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  };
 
   const excelHeaders = [
     { label: 'Merchant ID', key: 'merchantId' },
@@ -236,7 +260,13 @@ const MandatetManagement = () => {
                 {params?.row.isActive ? (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmDisable')}
+                    onClick={() => {
+                      setSelectedMandate({
+                        id: params.row.id,
+                        mandateType: params.row.mandateType,
+                      });
+                      openModal('confirmDisable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                   >
                     Disable
@@ -244,7 +274,13 @@ const MandatetManagement = () => {
                 ) : (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmEnable')}
+                    onClick={() => {
+                      setSelectedMandate({
+                        id: params.row.id,
+                        mandateType: params.row.mandateType,
+                      });
+                      openModal('confirmEnable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
                   >
                     Enable
@@ -252,7 +288,13 @@ const MandatetManagement = () => {
                 )}
                 <button
                   type="button"
-                  onClick={() => openModal('confirmDelete')}
+                  onClick={() => {
+                    setSelectedMandate({
+                      id: params.row.id,
+                      mandateType: params.row.mandateType,
+                    });
+                    openModal('confirmDelete');
+                  }}
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
                   Delete
@@ -305,13 +347,14 @@ const MandatetManagement = () => {
     },
   ];
 
-  const { isLoading, data, refetch, isFetching } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['mandates', queryParams],
     queryFn: ({ queryKey }) => getMandates(queryKey[1] as QueryParams),
   });
 
   const updateMandateMutation = useMutation({
-    mutationFn: (requestId: string | undefined) => updateMandate(requestId),
+    mutationFn: (requestId: string | undefined) =>
+      updateMandate(requestId, modifyMandateFormik.values),
     onSuccess: () => {
       closeModal('editMandate');
       closeModal('confirmEdit');
@@ -385,56 +428,48 @@ const MandatetManagement = () => {
           </div>
         </div>
 
-        {isLoading || isFetching ? (
-          <div className="flex h-[30vh] flex-col items-center justify-center">
-            <Box sx={{ display: 'flex' }}>
-              <CircularProgress sx={{ color: '#5C068C' }} />
-            </Box>
-          </div>
-        ) : (
-          <div className="mt-5">
-            <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-4">
-              <div className="flex w-full flex-col gap-y-4 border-b pb-3 lg:flex-row lg:items-center">
-                <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-start">
-                  <div className="">
-                    <TableFilter
-                      name={'searchMandate'}
-                      placeholder={'Search Mandate'}
-                      label={'Search Mandate'}
-                      value={searchTerm}
-                      setSearch={setSearchTerm}
-                      handleOptionsFilter={() => refetch()}
-                      formik={formik}
-                      fromDateName={'fromDateFilter'}
-                      toDateName={'toDateFilter'}
-                      selectName={'statusFilter'}
-                    />
-                  </div>
-                </div>
-                <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
-                  <ExportBUtton
-                    data={data?.responseData?.items}
-                    printPdfRef={printPdfRef}
-                    headers={excelHeaders}
-                    fileName="mandates.csv"
+        <div className="mt-5">
+          <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-4">
+            <div className="flex w-full flex-col gap-y-4 border-b pb-3 lg:flex-row lg:items-center">
+              <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-start">
+                <div className="">
+                  <TableFilter
+                    name={'searchMandate'}
+                    placeholder={'Search Mandate'}
+                    label={'Search Mandate'}
+                    value={searchTerm}
+                    setSearch={setSearchTerm}
+                    handleOptionsFilter={handleOptionsFilter}
+                    formik={formik}
+                    fromDateName={'fromDateFilter'}
+                    toDateName={'toDateFilter'}
+                    selectName={'statusFilter'}
                   />
                 </div>
               </div>
+              <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
+                <ExportBUtton
+                  data={data?.responseData?.items}
+                  printPdfRef={printPdfRef}
+                  headers={excelHeaders}
+                  fileName="mandates.csv"
+                />
+              </div>
+            </div>
 
-              <div className="mt-6 w-full">
-                <div ref={printPdfRef} className="w-full">
-                  <CustomTable
-                    tableData={data?.responseData?.items}
-                    columns={columns}
-                    rowCount={data?.responseData?.totalCount}
-                    paginationData={paginationData}
-                    setPaginationData={setPaginationData}
-                  />
-                </div>
+            <div className="mt-6 w-full">
+              <div ref={printPdfRef} className="w-full">
+                <CustomTable
+                  tableData={data?.responseData?.items}
+                  columns={columns}
+                  rowCount={data?.responseData?.totalCount}
+                  paginationData={paginationData}
+                  setPaginationData={setPaginationData}
+                />
               </div>
             </div>
           </div>
-        )}
+        </div>
       </section>
 
       {modals.confirmDisable && (
