@@ -1,32 +1,26 @@
 import { Link } from 'react-router-dom';
 import { GridColDef, GridRenderCellParams, GridTreeNodeWithRender } from '@mui/x-data-grid';
-import { CreationRequestIcon, DeleteRequestIcon, FilterIcon, SearchIcon } from 'assets/icons';
+import { CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
 import appRoutes from 'utils/constants/routes';
-import TableLogo from 'assets/images/table_logo.png';
 import CustomTable from 'components/CustomTable';
 import TableFilter from 'components/TableFilter';
 import { useFormik } from 'formik';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { QueryParams } from 'utils/interfaces';
 import { getProfiles } from 'config/actions/dashboard-actions';
-import { Box, CircularProgress } from '@mui/material';
 
 const UserManagement = () => {
+  const printPdfRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState('');
-
-  const [queryParams, setQueryParams] = useState<QueryParams>({
-    username: '',
-    email: '',
-    pageNo: 1,
+  const [paginationData, setPaginationData] = useState({
+    pageNumber: 1,
     pageSize: 10,
-    sortBy: 'asc',
-    sortOrder: 'desc',
   });
 
   const formik = useFormik({
     initialValues: {
-      searchMerchantName: '',
+      searchMandate: '',
       fromDateFilter: '',
       toDateFilter: '',
       statusFilter: '',
@@ -34,6 +28,18 @@ const UserManagement = () => {
     onSubmit: (values) => {
       setSearchTerm('');
     },
+  });
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    mandateCode: '',
+    status: formik.values.statusFilter,
+    pageNo: paginationData.pageNumber,
+    pageSize: paginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+    searchFilter: formik.values.searchMandate,
+    startDate: formik.values.fromDateFilter,
+    endDate: formik.values.toDateFilter,
   });
 
   const UserTableColumn: GridColDef[] = [
@@ -121,12 +127,10 @@ const UserManagement = () => {
     },
   ];
 
-  const { isLoading, data } = useQuery({
+  const { data } = useQuery({
     queryKey: ['profiles', queryParams],
     queryFn: ({ queryKey }) => getProfiles(queryKey[1] as QueryParams),
   });
-
-  console.log(data);
 
   return (
     <>
@@ -134,43 +138,32 @@ const UserManagement = () => {
         <h2 className="text-2xl font-semibold">User Management</h2>
         <div className="mt-5 rounded-lg bg-white px-5 py-5">
           <div className="flex items-center justify-between">
-            <TableFilter
-              name={'searchMerchantName'}
-              placeholder={'Search '}
-              label={'Search Merchant'}
-              value={searchTerm}
-              setSearch={setSearchTerm}
-              handleOptionsFilter={() => {}}
-              formik={formik}
-              fromDateName={'fromDateFilter'}
-              toDateName={'toDateFilter'}
-              selectName={'statusFilter'}
-            />
+            <div className="">
+              <TableFilter
+                name={'searchMerchantName'}
+                placeholder={'Search '}
+                label={'Search Merchant'}
+                value={searchTerm}
+                setSearch={setSearchTerm}
+                handleOptionsFilter={() => {}}
+                formik={formik}
+                fromDateName={'fromDateFilter'}
+                toDateName={'toDateFilter'}
+                selectName={'statusFilter'}
+              />
+            </div>
           </div>
           <div className="mt-4 h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-6 w-full">
-            {isLoading ? (
-              <div className="flex h-[50vh] flex-col items-center justify-center">
-                <Box sx={{ display: 'flex' }}>
-                  <CircularProgress />
-                </Box>
-              </div>
-            ) : data?.responseData?.items?.length > 0 ? (
+            <div ref={printPdfRef} className="w-full">
               <CustomTable
-                tableData={data.responseData.items}
+                tableData={data?.responseData?.items}
                 columns={UserTableColumn}
-                rowCount={20}
+                rowCount={data?.responseData?.totalCount}
+                paginationData={paginationData}
+                setPaginationData={setPaginationData}
               />
-            ) : (
-              <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
-                <div>
-                  <img src={TableLogo} alt="group_logo" />
-                </div>
-                <div className="mt-8 text-center">
-                  <h3 className="text-2xl font-bold">Oops! No Active Mandates</h3>
-                </div>
-              </div>
-            )}
+            </div>
           </div>
         </div>
       </div>

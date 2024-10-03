@@ -8,6 +8,7 @@ interface Props {
   name: string;
   formik: any;
   width?: string;
+  height?: string;
   label?: string;
   placeholder?: string;
   initialDate?: string;
@@ -22,6 +23,7 @@ const FormDatePicker = (props: Props) => {
     formik,
     name,
     width,
+    height,
     label,
     initialDate,
     useTouched = false,
@@ -53,8 +55,8 @@ const FormDatePicker = (props: Props) => {
                 border: 'none',
               },
               border: getPickerBorder(),
-              height: '3.1rem',
-              borderRadius: '10px',
+              height: height ? height : '3.1rem',
+              borderRadius: '8px',
               '&.Mui-focused fieldset': {
                 border: hideBorder ? 'none' : '1px solid black',
               },

@@ -1,27 +1,21 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GridColDef, GridRenderCellParams, GridTreeNodeWithRender } from '@mui/x-data-grid';
 import {
   CloseIcon,
   CreationRequestIcon,
   DeleteRequestIcon,
-  DisableRequestIcon,
   DownloadIcon,
-  SearchIcon,
   SuccessModalIcon,
-  UpdateRequestIcon,
 } from 'assets/icons';
 import { transactionHistory } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
-import TableLogo from 'assets/images/table_logo.png';
-import { RequestType } from 'utils/enums';
 import ButtonComponent from 'components/FormElements/Button';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
-import Tab from 'components/Tabs';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import TableFilter from 'components/TableFilter';
@@ -40,7 +34,6 @@ import {
 import { updateMandateSchema } from 'utils/formValidators';
 import CustomInput from 'components/FormElements/CustomInput';
 import { notifyError } from 'utils/helpers';
-import { Backdrop, CircularProgress } from '@mui/material';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import CustomTabs from 'hoc/CustomTabs';
 
@@ -61,18 +54,38 @@ const style = {
 const MandatetManagement = () => {
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const [tab, setTab] = useState(1);
+  const printPdfRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMandateId, setSelectedMandateId] = useState<string | undefined>('');
   const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
 
+  const [paginationData, setPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      searchMandate: '',
+      fromDateFilter: '',
+      toDateFilter: '',
+      statusFilter: '',
+    },
+    onSubmit: (values) => {
+      setSearchTerm('');
+    },
+  });
+
   const [queryParams, setQueryParams] = useState<QueryParams>({
     mandateCode: '',
-    status: '',
-    pageNo: 1,
-    pageSize: 10,
+    status: formik.values.statusFilter,
+    pageNo: paginationData.pageNumber,
+    pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
+    searchFilter: formik.values.searchMandate,
+    startDate: formik.values.fromDateFilter,
+    endDate: formik.values.toDateFilter,
   });
 
   const [modals, setModals] = useState({
@@ -95,18 +108,6 @@ const MandatetManagement = () => {
   const closeModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
-
-  const formik = useFormik({
-    initialValues: {
-      searchMerchantName: '',
-      fromDateFilter: '',
-      toDateFilter: '',
-      statusFilter: '',
-    },
-    onSubmit: (values) => {
-      setSearchTerm('');
-    },
-  });
 
   const modifyMandateValidation = useFormik({
     initialValues: {
@@ -328,7 +329,7 @@ const MandatetManagement = () => {
     },
   ];
 
-  const { isLoading, data } = useQuery({
+  const { data } = useQuery({
     queryKey: ['mandates', queryParams],
     queryFn: ({ queryKey }) => getMandates(queryKey[1] as QueryParams),
   });
@@ -413,58 +414,36 @@ const MandatetManagement = () => {
         </div>
         <div className="mt-5 rounded-lg bg-white px-5 py-5">
           <div className="flex items-center justify-between">
-            <TableFilter
-              name={'searchMerchantName'}
-              placeholder={'Search '}
-              label={'Search Merchant'}
-              value={searchTerm}
-              setSearch={setSearchTerm}
-              handleOptionsFilter={() => {}}
-              formik={formik}
-              fromDateName={'fromDateFilter'}
-              toDateName={'toDateFilter'}
-              selectName={'statusFilter'}
-            />
+            <div className="">
+              <TableFilter
+                name={'searchMerchantName'}
+                placeholder={'Search '}
+                label={'Search Merchant'}
+                value={searchTerm}
+                setSearch={setSearchTerm}
+                handleOptionsFilter={() => {}}
+                formik={formik}
+                fromDateName={'fromDateFilter'}
+                toDateName={'toDateFilter'}
+                selectName={'statusFilter'}
+              />
+            </div>
             <ExportBUtton />
           </div>
           <div className="mt-4 h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-6 w-full">
-            {isLoading ? (
-              <div className="flex h-[30vh] flex-col items-center justify-center">
-                <Box sx={{ display: 'flex' }}>
-                  <CircularProgress />
-                </Box>
-              </div>
-            ) : data?.responseData?.items?.length > 0 ? (
+            <div ref={printPdfRef} className="w-full">
               <CustomTable
-                tableData={data.responseData.items}
+                tableData={data?.responseData?.items}
                 columns={MandateTableColumn}
-                rowCount={20}
+                rowCount={data?.responseData?.totalCount}
+                paginationData={paginationData}
+                setPaginationData={setPaginationData}
               />
-            ) : (
-              <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
-                <div>
-                  <img src={TableLogo} alt="group_logo" />
-                </div>
-                <div className="mt-8 text-center">
-                  <h3 className="text-2xl font-bold">Oops! No Active Mandates</h3>
-                </div>
-              </div>
-            )}
+            </div>
           </div>
         </div>
       </div>
-      <Backdrop
-        open={
-          updateMandateMutation.isPending ||
-          enableMandateMutation.isPending ||
-          disableMandateMutation.isPending ||
-          deleteMandateMutation.isPending
-        }
-        style={{ zIndex: 20, color: '#fff' }}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
       {modals.openTransactionHistory && (
         <CustomModal
           isOpen={modals.openTransactionHistory}

@@ -328,17 +328,17 @@ const merchantRoutes: RoutesType[] = [
       },
       {
         name: 'Update Request Details',
-        path: 'update-request-details',
+        path: 'update-request-details/:id',
         component: <UpdateRequestDetails />,
       },
       {
         name: 'Disable Request Details',
-        path: 'disable-request-details',
+        path: 'disable-request-details/:id',
         component: <DisableRequestDetails />,
       },
       {
         name: 'Deletion Request Details',
-        path: 'deletion-request-details',
+        path: 'deletion-request-details/:id',
         component: <DeletionRequestDetails />,
       },
     ],
