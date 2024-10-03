@@ -21,7 +21,7 @@ const ExportBUtton = (props: Props) => {
   });
 
   return (
-    <div className={`relative ${props.customClass} -ml-4 sm:-ml-0`}>
+    <div className={`relative ${props.customClass} `}>
       <div className="">
         <CustomPopover
           popoverId={3}
@@ -37,7 +37,7 @@ const ExportBUtton = (props: Props) => {
               </div>
             </>
           }
-          translationX={8}
+          translationX={0}
           translationY={56}
         >
           <div className="flex w-[7.1rem] flex-col rounded-md p-1 text-sm">

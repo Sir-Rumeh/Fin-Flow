@@ -20,6 +20,7 @@ export enum TabsListTabNames {
   Approved = 'Approved',
   Pending = 'Pending',
   Rejected = 'Rejected',
+  Declined = 'Declined',
 }
 
 export enum AdminDashboardPageType {

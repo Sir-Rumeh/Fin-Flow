@@ -18,33 +18,16 @@ import CustomTable from 'components/CustomTable';
 import { useFormik } from 'formik';
 import { Box, CircularProgress, useMediaQuery } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { getMandateRequests } from 'config/actions/dashboard-actions';
+import { getMandateRequests, getMandateRequestsStatistics } from 'config/actions/dashboard-actions';
 
 const MandateRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const total = 20;
+
   const [activeTab, setActiveTab] = useState(TabsListTabNames.Pending);
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
     pageSize: 10,
   });
-  const tabsList: TabsProps[] = [
-    {
-      tabIndex: 1,
-      tabName: TabsListTabNames.Pending,
-      tabTotal: total,
-    },
-    {
-      tabIndex: 2,
-      tabName: TabsListTabNames.Approved,
-      tabTotal: total,
-    },
-    {
-      tabIndex: 3,
-      tabName: TabsListTabNames.Rejected,
-      tabTotal: total,
-    },
-  ];
 
   const formik = useFormik({
     initialValues: {
@@ -65,11 +48,28 @@ const MandateRequests = () => {
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
+    searchFilter: formik.values.searchMandate,
+    startDate: formik.values.fromDateFilter,
+    endDate: formik.values.toDateFilter,
   });
 
   useEffect(() => {
-    setQueryParams((prev) => ({ ...prev, status: activeTab }));
-  }, [activeTab]);
+    setQueryParams((prev) => ({
+      ...prev,
+      status: activeTab,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+      searchFilter: formik.values.searchMandate,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  }, [
+    activeTab,
+    formik.values.searchMandate,
+    formik.values.fromDateFilter,
+    formik.values.toDateFilter,
+    paginationData,
+  ]);
 
   const columns: GridColDef[] = [
     {
@@ -167,11 +167,34 @@ const MandateRequests = () => {
     },
   ];
 
-  const { isLoading, data, refetch, isFetching } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['mandateRequests', queryParams],
     queryFn: ({ queryKey }) => getMandateRequests(queryKey[1] as QueryParams),
     enabled: !!queryParams.status,
   });
+  const { data: statisticsData } = useQuery({
+    queryKey: ['mandateRequests'],
+    queryFn: ({ queryKey }) => getMandateRequestsStatistics(),
+    enabled: !!queryParams.status,
+  });
+
+  const tabsList: TabsProps[] = [
+    {
+      tabIndex: 1,
+      tabName: TabsListTabNames.Pending,
+      tabTotal: statisticsData ? statisticsData?.responseData?.totalPending : 0,
+    },
+    {
+      tabIndex: 2,
+      tabName: TabsListTabNames.Approved,
+      tabTotal: statisticsData ? statisticsData?.responseData?.totalApproved : 0,
+    },
+    {
+      tabIndex: 3,
+      tabName: TabsListTabNames.Declined,
+      tabTotal: statisticsData ? statisticsData?.responseData?.totalRejected : 0,
+    },
+  ];
 
   const isLargeWidth = useMediaQuery('(min-width:1320px)');
   return (
@@ -182,49 +205,42 @@ const MandateRequests = () => {
             <h1 className="text-lg font-semibold md:text-2xl">Mandate Requests</h1>
           </div>
         </div>
-        {isLoading || isFetching ? (
-          <div className="flex h-[30vh] flex-col items-center justify-center">
-            <Box sx={{ display: 'flex' }}>
-              <CircularProgress sx={{ color: '#5C068C' }} />
-            </Box>
-          </div>
-        ) : (
-          <div className="">
-            <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-4">
-              <div className="flex w-full flex-col justify-between gap-y-4 border-b pb-3 2xl:flex-row 2xl:items-center">
-                <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10 lg:w-[50%]">
-                  <CustomTabs tabs={tabsList} activeTab={activeTab} setActiveTab={setActiveTab} />
-                </div>
-                <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-end">
-                  <div className="">
-                    <TableFilter
-                      name={'searchMandate'}
-                      placeholder={'Search Mandate'}
-                      label={'Search Mandate'}
-                      value={searchTerm}
-                      setSearch={setSearchTerm}
-                      handleOptionsFilter={() => refetch()}
-                      formik={formik}
-                      fromDateName={'fromDateFilter'}
-                      toDateName={'toDateFilter'}
-                      selectName={'statusFilter'}
-                      translationX={isLargeWidth ? 350 : undefined}
-                    />
-                  </div>
-                </div>
+
+        <div className="">
+          <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-4">
+            <div className="flex w-full flex-col justify-between gap-y-4 border-b pb-3 2xl:flex-row 2xl:items-center">
+              <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10 lg:w-[50%]">
+                <CustomTabs tabs={tabsList} activeTab={activeTab} setActiveTab={setActiveTab} />
               </div>
-              <div className="mt-6 w-full">
-                <CustomTable
-                  tableData={data?.responseData?.items}
-                  columns={columns}
-                  rowCount={data?.responseData?.totalCount}
-                  paginationData={paginationData}
-                  setPaginationData={setPaginationData}
-                />
+              <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-end">
+                <div className="">
+                  <TableFilter
+                    name={'searchMandate'}
+                    placeholder={'Search Mandate'}
+                    label={'Search Mandate'}
+                    value={searchTerm}
+                    setSearch={setSearchTerm}
+                    handleOptionsFilter={() => refetch()}
+                    formik={formik}
+                    fromDateName={'fromDateFilter'}
+                    toDateName={'toDateFilter'}
+                    selectName={'statusFilter'}
+                    translationX={isLargeWidth ? 350 : undefined}
+                  />
+                </div>
               </div>
             </div>
+            <div className="mt-6 w-full">
+              <CustomTable
+                tableData={data?.responseData?.items}
+                columns={columns}
+                rowCount={data?.responseData?.totalCount}
+                paginationData={paginationData}
+                setPaginationData={setPaginationData}
+              />
+            </div>
           </div>
-        )}
+        </div>
       </section>
     </>
   );

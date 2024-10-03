@@ -9,9 +9,16 @@ import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
 import FormSelect from 'components/FormElements/FormSelect';
+import { StaffUserRequest } from 'utils/interfaces';
+import { useMutation } from '@tanstack/react-query';
+import { addStaffUserRequest } from 'config/actions/staff-user-actions';
+import { notifyError } from 'utils/helpers';
+import { createStaffUserSchema } from 'utils/formValidators';
+import { roles } from 'utils/constants';
 
 function AddUser() {
   const navigate = useNavigate();
+  const [staffUserRequest, setStaffUserRequest] = useState<StaffUserRequest>();
   const [modals, setModals] = useState({
     confirmCreate: false,
     creationSuccessful: false,
@@ -25,20 +32,45 @@ function AddUser() {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
 
-  const formik = useFormik({
-    initialValues: {},
-
-    onSubmit: (values) => {
-      openModal('confirmCreate');
+  const addStaffUserRequestMutation = useMutation({
+    mutationFn: (payload: StaffUserRequest | undefined) => addStaffUserRequest(payload),
+    onSuccess: () => {
+      closeModal('confirmCreate');
+      openModal('creationSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmCreate');
+      notifyError(error.message);
     },
   });
 
-  const roles = [
-    { value: 'Admin Role', label: 'Admin Role' },
-    { value: 'Onboarding Role', label: 'Onboarding Role' },
-    { value: 'Audit Role', label: 'Audit Role' },
-    { value: 'Reporting Role', label: 'Reporting Role' },
-  ];
+  const formik = useFormik({
+    initialValues: {
+      userName: '',
+      firstName: '',
+      lastName: '',
+      employeeId: '',
+      email: '',
+      phoneNumber: '',
+      branch: '',
+      role: '',
+    },
+    validationSchema: createStaffUserSchema,
+    onSubmit: (values) => {
+      const payload = {
+        userName: values.userName,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        employeeId: values.employeeId,
+        email: values.email,
+        phoneNumber: values.phoneNumber,
+        branch: values.branch,
+        role: values.role,
+      };
+      setStaffUserRequest(payload);
+      openModal('confirmCreate');
+    },
+  });
 
   return (
     <>
@@ -109,12 +141,21 @@ function AddUser() {
                     maxW="w-full"
                     formik={formik}
                   />
-                  <div className="sm:col-span-2">
+                  <CustomInput
+                    labelFor="branch"
+                    label="Enter Branch"
+                    inputType="text"
+                    placeholder="Enter branch"
+                    maxW="w-full"
+                    formik={formik}
+                  />
+                  <div className="">
                     <FormSelect
                       labelFor="role"
                       label="Assign Role"
                       formik={formik}
                       options={roles}
+                      useTouched
                     />
                   </div>
                 </div>
@@ -144,8 +185,7 @@ function AddUser() {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmCreate');
-            openModal('creationSuccessful');
+            addStaffUserRequestMutation.mutate(staffUserRequest);
           }}
         />
       )}
@@ -159,6 +199,7 @@ function AddUser() {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            formik.resetForm();
             closeModal('creationSuccessful');
             navigate(`/${appRoutes.adminDashboard.staffUserManagement.index}`);
           }}

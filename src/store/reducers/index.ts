@@ -1,6 +1,6 @@
 import { combineReducers } from '@reduxjs/toolkit';
-import uiReducer from './LoadingSlice';
+import LoadingSlice from './LoadingSlice';
 
 export const rootReducer = combineReducers({
-  loading: uiReducer,
+  loading: LoadingSlice,
 });

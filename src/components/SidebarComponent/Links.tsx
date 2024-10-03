@@ -3,7 +3,13 @@ import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import ArrowDownIcon from 'assets/icons/ArrowDownIcon';
 import { useEffect, useState } from 'react';
 
-const NestedLink = ({ route }: { route: RoutesType }) => {
+const NestedLink = ({
+  route,
+  closeSidebar,
+}: {
+  route: RoutesType;
+  closeSidebar: React.MouseEventHandler<HTMLAnchorElement>;
+}) => {
   const navigate = useNavigate();
   const [isChildrenOpen, setIsChildrenOpen] = useState(false);
 
@@ -87,6 +93,9 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
                 <Link
                   key={childRoute.path}
                   to={linkTo}
+                  onClick={(e) => {
+                    window.innerWidth < 1200 && closeSidebar(e);
+                  }}
                   className={`${
                     isChildRouteActive
                       ? 'slide-right blur:none bg-yellowPrimary font-semibold text-black opacity-[100%]'
@@ -104,10 +113,13 @@ const NestedLink = ({ route }: { route: RoutesType }) => {
   );
 };
 
-export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
+export const SidebarLinks = (props: {
+  routes: RoutesType[];
+  closeSidebar: React.MouseEventHandler<HTMLAnchorElement>;
+}): JSX.Element => {
   let location = useLocation();
 
-  const { routes } = props;
+  const { routes, closeSidebar } = props;
 
   const activeRoute = (routeName: string, stringPosition: number) => {
     const pathSegments = location.pathname.split('/');
@@ -135,10 +147,22 @@ export const SidebarLinks = (props: { routes: RoutesType[] }): JSX.Element => {
         const conditionToShowNestedLinks =
           route.willChildLinkShow && route.children && route.children.length > 0;
         if (conditionToShowNestedLinks) {
-          return <NestedLink route={route} key={route.layout + route.path + 'nested'} />;
+          return (
+            <NestedLink
+              route={route}
+              key={route.layout + route.path + 'nested'}
+              closeSidebar={closeSidebar}
+            />
+          );
         } else {
           return (
-            <Link key={route.layout + route.path} to={route.layout + '/' + route.path}>
+            <Link
+              key={route.layout + route.path}
+              to={route.layout + '/' + route.path}
+              onClick={(e) => {
+                window.innerWidth < 1200 && closeSidebar(e);
+              }}
+            >
               <div
                 className={`mb-3 flex px-2 py-3 ${
                   isRouteActive

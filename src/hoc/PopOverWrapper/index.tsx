@@ -53,9 +53,8 @@ const CustomPopover = ({
       <Button
         sx={{
           width: '100%',
-          fontFamily: " 'Gotham', sans-serif ",
-          paddingLeft: customPaddingX ? customPaddingX : undefined,
-          paddingRight: customPaddingX ? customPaddingX : undefined,
+          fontFamily: "'Gotham', sans-serif ",
+          paddingX: 0,
           textTransform: 'capitalize',
           '& .MuiTouchRipple-root': {
             color: '#5C068C',

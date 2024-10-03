@@ -1,9 +1,10 @@
+import { CloseIcon } from 'assets/icons';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import UploadIcon from 'assets/icons/UploadIcon';
 import ButtonComponent from 'components/FormElements/Button';
 import { ModalWrapper } from 'hoc/ModalWrapper';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { FileWithPath, useDropzone } from 'react-dropzone';
 import { useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
@@ -14,8 +15,8 @@ const BulkUpload = () => {
     try {
       acceptedFiles.forEach((file: FileWithPath) => {
         if (file) {
-          if (!isFileSizeValid(file.size, 50)) {
-            throw 'File should be lesser than or equal to 5MB';
+          if (!isFileSizeValid(file.size, 500)) {
+            throw 'File should be lesser than or equal to 50MB';
           }
         }
       });
@@ -23,13 +24,25 @@ const BulkUpload = () => {
       notifyError(error);
     }
   }, []);
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+  let { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
       'application/vnd.ms-excel': ['.xls', '.csv'],
       'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx', '.csv'],
     },
   });
+
+  const [uploadedFiles, setUploadedFiles] = useState<File[] | undefined>();
+
+  const clearFiles = () => {
+    setUploadedFiles([]);
+    acceptedFiles = [];
+  };
+
+  useEffect(() => {
+    setUploadedFiles(acceptedFiles);
+  }, [acceptedFiles]);
+
   const navigate = useNavigate();
 
   const [modals, setModals] = useState({
@@ -45,9 +58,9 @@ const BulkUpload = () => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
 
-  const files = acceptedFiles.map((file) => (
+  const files = uploadedFiles?.map((file) => (
     <li key={file.name}>
-      {file.name} - {file.size} bytes
+      {file.name} - {file.size / 1000} kb
     </li>
   ));
 
@@ -81,6 +94,14 @@ const BulkUpload = () => {
                     {files}
                   </div>
                 </div>
+                {uploadedFiles && uploadedFiles.length > 0 && (
+                  <button
+                    onClick={clearFiles}
+                    className="mt-3 flex scale-[90%] items-center justify-center rounded-full border border-lightPurple bg-gradient-to-r from-[#2F0248] via-yellow-800 to-[#5C068C] bg-clip-text p-1 text-center font-semibold text-transparent"
+                  >
+                    <CloseIcon />
+                  </button>
+                )}
               </section>
             </div>
           </div>
@@ -88,7 +109,8 @@ const BulkUpload = () => {
             <div className="flex w-full items-center justify-end gap-4">
               <div className="w-auto">
                 <ButtonComponent
-                  color="purplePrimary"
+                  color="#5C068C"
+                  borderColor="#5C068C"
                   variant="outlined"
                   type="button"
                   title="Cancel"

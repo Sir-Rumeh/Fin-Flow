@@ -8,15 +8,21 @@ import { useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
-import { CreationRequestIcon, UpdateRequestIcon } from 'assets/icons';
+import { CreationRequestIcon, DeleteRequestIcon, UpdateRequestIcon } from 'assets/icons';
 import DetailsActionButton from 'components/common/DetailsActionButton';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  deleteStaffUser,
+  disableStaffUser,
+  enableStaffUser,
+  getStaffUserById,
+} from 'config/actions/staff-user-actions';
+import { notifyError } from 'utils/helpers';
 
 const UserDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const id = searchParams?.get('id') || '';
-
-  let userStatus = 'Enabled';
+  const staffUserId = searchParams?.get('id') || '';
 
   const [modals, setModals] = useState({
     confirmDisable: false,
@@ -35,6 +41,46 @@ const UserDetails = () => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
 
+  const { data, refetch } = useQuery({
+    queryKey: ['users', staffUserId],
+    queryFn: ({ queryKey }) => getStaffUserById(queryKey[1]),
+  });
+
+  const enableStaffUserMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => enableStaffUser(requestId),
+    onSuccess: () => {
+      closeModal('confirmEnable');
+      openModal('enableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmEnable');
+      notifyError(error?.message);
+    },
+  });
+  const disableStaffUserMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => disableStaffUser(requestId),
+    onSuccess: () => {
+      closeModal('confirmDisable');
+      openModal('disableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDisable');
+      notifyError(error?.message);
+    },
+  });
+
+  const deleteStaffUserMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => deleteStaffUser(requestId),
+    onSuccess: () => {
+      closeModal('confirmDelete');
+      openModal('deleteSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDelete');
+      notifyError(error?.message);
+    },
+  });
+
   return (
     <>
       <div className="px-5 py-1">
@@ -50,13 +96,13 @@ const UserDetails = () => {
         </div>
         <div className="slide-down mt-3 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold md:text-2xl">User ID : Req123456</h2>
+            <h2 className="text-lg font-semibold md:text-2xl">{`User ID : ${data?.responseData?.id ? data?.responseData?.id : ''}`}</h2>
           </div>
           <div className="w-auto">
             <CustomPopover
               popoverId={1}
               buttonIcon={<DetailsActionButton />}
-              translationX={8}
+              translationX={0}
               translationY={54}
             >
               <div className="flex w-[7.2rem] flex-col rounded-md p-1">
@@ -64,7 +110,7 @@ const UserDetails = () => {
                   onClick={() =>
                     navigate({
                       pathname: `/${appRoutes.adminDashboard.staffUserManagement.editStaffUser}`,
-                      search: `?${createSearchParams({ id })}`,
+                      search: `?${createSearchParams({ id: staffUserId })}`,
                     })
                   }
                   type="button"
@@ -72,19 +118,23 @@ const UserDetails = () => {
                 >
                   Edit Details
                 </button>
-                {userStatus === 'Enabled' && (
+
+                {data?.responseData?.isActive ? (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmDisable')}
+                    onClick={() => {
+                      openModal('confirmDisable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                   >
                     Disable
                   </button>
-                )}
-                {userStatus === 'Disabled' && (
+                ) : (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmEnable')}
+                    onClick={() => {
+                      openModal('confirmEnable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
                   >
                     Enable
@@ -107,21 +157,37 @@ const UserDetails = () => {
               title="User Details"
               titleExtension={
                 <>
-                  <div className="flex items-center justify-end gap-2">
-                    <CreationRequestIcon />
-                    <p className="mb-[1px] font-semibold text-greenPrimary">{userStatus}</p>
-                  </div>
+                  {data?.responseData?.isActive ? (
+                    <div className="flex items-center justify-end gap-2">
+                      <CreationRequestIcon />
+                      <p className="mb-[1px] font-semibold text-greenPrimary">Enabled</p>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-end gap-2">
+                      <DeleteRequestIcon />
+                      <p className="mb-[1px] font-semibold text-redSecondary">Disabled</p>
+                    </div>
+                  )}
                 </>
               }
             >
-              <DetailsCard title="Employee ID" content="12345" />
-              <DetailsCard title="User Name" content="John Doe" />
-              <DetailsCard title="First Name" content="John" />
-              <DetailsCard title="Last Name" content="Doe" />
-              <DetailsCard title="Email Address" content="john.doe@fcmb.com" />
-              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
-              <DetailsCard title="Role" content="Maker" />
-              <DetailsCard title="Category" content="Syscon Staff" />
+              <DetailsCard title="Employee ID" content={data?.responseData?.employeeId} />
+              <DetailsCard
+                title="User Name"
+                content={`${data ? `${data?.responseData?.firstName} ${data?.responseData?.lastName}` : ''}`}
+              />
+              <DetailsCard title="First Name" content={data?.responseData?.firstName} />
+              <DetailsCard title="Last Name" content={data?.responseData?.lastName} />
+              <DetailsCard title="Email Address" content={data?.responseData?.email} />
+              <DetailsCard
+                title="Date Created"
+                content={
+                  data?.responseData?.createdAt &&
+                  new Date(data.responseData.createdAt).toLocaleDateString()
+                }
+              />
+              <DetailsCard title="Role" content={data?.responseData?.role} />
+              <DetailsCard title="Staff Level" content={data?.responseData?.staffLevel} />
             </ItemDetailsContainer>
           </div>
         </div>
@@ -135,8 +201,7 @@ const UserDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDisable');
-            openModal('disableSuccessful');
+            disableStaffUserMutation.mutate(staffUserId);
           }}
         />
       )}
@@ -149,6 +214,7 @@ const UserDetails = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('disableSuccessful');
           }}
         />
@@ -162,8 +228,7 @@ const UserDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmEnable');
-            openModal('enableSuccessful');
+            enableStaffUserMutation.mutate(staffUserId);
           }}
         />
       )}
@@ -176,6 +241,7 @@ const UserDetails = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('enableSuccessful');
           }}
         />
@@ -189,8 +255,7 @@ const UserDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDelete');
-            openModal('deleteSuccessful');
+            deleteStaffUserMutation.mutate(staffUserId);
           }}
         />
       )}
@@ -203,6 +268,7 @@ const UserDetails = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('deleteSuccessful');
           }}
         />

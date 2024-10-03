@@ -1,4 +1,4 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import store from 'store/index';
 import { AppConfig } from './index';
 import { generateHeader, notifySuccess, notifyError } from 'utils/helpers/index';
@@ -20,6 +20,7 @@ const { dispatch } = store;
 
 AxiosClient.interceptors.request.use(
   (axiosConfig) => {
+    dispatch(uiStartLoading());
     if (!navigator.onLine) {
       throw new Error('Please check your Internet Connection');
     }
@@ -29,7 +30,6 @@ AxiosClient.interceptors.request.use(
     axiosConfig.headers['x-token'] = headers['x-token'];
     axiosConfig.headers['Ocp-Apim-Subscription-Key'] = headers['Ocp-Apim-Subscription-Key'];
     axiosConfig.headers['Ocp-Apim-Trace'] = true;
-    dispatch(uiStartLoading());
     return axiosConfig;
   },
   (error) => {
@@ -40,34 +40,39 @@ AxiosClient.interceptors.request.use(
 );
 
 AxiosClient.interceptors.response.use(
-  (response) => {
-    console.log(response);
-    dispatch(uiStopLoading());
-
-    if (response.status === 200) {
-      // notifySuccess(response.data.responseMessage);
-      return response;
+  (response: AxiosResponse | any) => {
+    if (!(response.status === 200)) {
+      dispatch(uiStopLoading());
+      return;
     }
     dispatch(uiStopLoading());
     return response;
   },
   async (error) => {
-    console.log(error);
-
-    if (error?.response?.status === 401) {
+    if (error?.response?.status === 400) {
+      dispatch(uiStopLoading());
+      notifyError(error?.response?.data?.responseMessage);
+      return Promise.reject(error?.response?.data?.responseMessage);
+    } else if (error?.response?.status === 401) {
+      dispatch(uiStopLoading());
       // dispatch(logout());
-      dispatch(uiStopLoading());
       notifyError('Your session timed out, sign in again to continue');
-      window.location.href = '/login';
-    } else if (error?.status === 500) {
+      window.location.href = '/';
+    } else if (error?.response?.status === 404) {
+      const url = window.location.href.split('/').slice(0, 5).join('/');
       dispatch(uiStopLoading());
-      notifyError(error?.message);
+      notifyError('Resource not found');
+      setTimeout(() => {
+        window.location.href = url;
+      }, 1000);
+      return Promise.reject(error);
+    } else if (error?.response?.status === 500) {
+      dispatch(uiStopLoading());
+      notifyError('Something went wrong');
+      return Promise.reject(error);
     }
-
     dispatch(uiStopLoading());
-    // notifyError(
-    //   error?.response?.data?.Message ? error?.response?.data?.Message : 'Something went wrong',
-    // );
+    notifyError('Something went wrong');
     return Promise.reject(error);
   },
 );

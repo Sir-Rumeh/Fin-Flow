@@ -9,7 +9,7 @@ const Navbar = (props: { onOpenSidenav: () => void }) => {
   const { onOpenSidenav } = props;
 
   return (
-    <header className="shadow-bottom z-40 bg-white py-3 pl-8 pr-4">
+    <header className="shadow-bottom z-40 bg-white px-2 py-3 xl:px-3">
       <div className="container mx-auto flex h-full items-center justify-between text-blackPrimary">
         <span
           className="flex cursor-pointer items-center text-xl text-blackInput xl:hidden"

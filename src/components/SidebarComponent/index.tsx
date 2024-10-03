@@ -6,16 +6,31 @@ import { UserLoginRoles } from 'utils/enums';
 import { useNavigate } from 'react-router-dom';
 import { BASE_ROUTES } from 'utils/constants/routes';
 import WhiteClose from 'assets/icons/WhiteClose';
+import { useEffect, useRef } from 'react';
 
-const Sidebar = (props: {
-  open: boolean;
-  onClose: React.MouseEventHandler<HTMLSpanElement>;
-  userRole: string;
-}) => {
+const Sidebar = (props: { open: boolean; onClose: any; userRole: string }) => {
   const navigate = useNavigate();
   const { open, onClose, userRole } = props;
+
+  const sidebarRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        window.innerWidth < 1200 && onClose(event);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [sidebarRef]);
+
   return (
     <div
+      ref={sidebarRef}
       className={`sm:none font-circular-std duration-175 linear fixed !z-50 flex min-h-full flex-col bg-purplePrimary shadow-2xl shadow-white/5 transition-all md:!z-50 md:w-[20vw] lg:!z-50 xl:!z-0 ${
         open ? 'translate-x-0' : '-translate-x-96'
       }`}
@@ -34,8 +49,10 @@ const Sidebar = (props: {
       </div>
       <div className="mb-7 mt-[10px]" />
       <ul className="no-scrollbar mb-auto h-[75vh] overflow-y-scroll pt-1">
-        {userRole === UserLoginRoles.Admin && <Links routes={adminRoutes} />}
-        {userRole === UserLoginRoles.Merchant && <Links routes={merchantRoutes} />}
+        {userRole === UserLoginRoles.Admin && <Links routes={adminRoutes} closeSidebar={onClose} />}
+        {userRole === UserLoginRoles.Merchant && (
+          <Links routes={merchantRoutes} closeSidebar={onClose} />
+        )}
       </ul>
       <div className="mt-auto flex h-full flex-col">
         <ul className="mt-auto flex items-center justify-start border-t border-gray-50 pt-1">

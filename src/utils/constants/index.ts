@@ -19,6 +19,13 @@ export const statusDropdownOptions = [
   { value: 'Disabled', label: 'Disabled' },
 ];
 
+export const roles = [
+  { value: 'Admin Role', label: 'Admin Role' },
+  { value: 'Onboarding Role', label: 'Onboarding Role' },
+  { value: 'Audit Role', label: 'Audit Role' },
+  { value: 'Reporting Role', label: 'Reporting Role' },
+];
+
 export const merchantsList: MerchantDataRow[] = [
   {
     id: 1,
