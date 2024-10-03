@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { mandateRequestsList } from 'utils/constants';
 import TableFilter from 'components/TableFilter';
 import { QueryParams, TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
@@ -16,7 +15,7 @@ import {
 import { RequestTypes } from 'utils/enums';
 import CustomTable from 'components/CustomTable';
 import { useFormik } from 'formik';
-import { Box, CircularProgress, useMediaQuery } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { getMandateRequests, getMandateRequestsStatistics } from 'config/actions/dashboard-actions';
 

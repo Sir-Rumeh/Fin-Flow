@@ -1,10 +1,9 @@
 import DashboardCard from 'components/common/DashboardCards/DashboardCard';
-import MandateList from '../MandatetManagement/MandateList';
 import { useQuery } from '@tanstack/react-query';
 import { getMandateRequests, getMandateStatistics } from 'config/actions/dashboard-actions';
-import { Box, CircularProgress, Skeleton } from '@mui/material';
+import { Skeleton } from '@mui/material';
 import appRoutes from 'utils/constants/routes';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { QueryParams } from 'utils/interfaces';
 import { Link } from 'react-router-dom';
 import { MandateRequestStatus, RequestType } from 'utils/enums';
@@ -132,7 +131,7 @@ const Dashboard = () => {
     },
   ];
 
-  const { isLoading, data } = useQuery({
+  const { data } = useQuery({
     queryKey: ['mandateRequests', queryParams],
     queryFn: ({ queryKey }) => getMandateRequests(queryKey[1] as QueryParams),
   });
@@ -141,6 +140,14 @@ const Dashboard = () => {
     queryKey: ['mandateStatistics'],
     queryFn: () => getMandateStatistics(),
   });
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+    }));
+  }, [paginationData]);
 
   return (
     <>
@@ -195,23 +202,15 @@ const Dashboard = () => {
         <div className="mt-5 rounded-lg bg-white px-5 py-5">
           <p className="my-3 text-lg font-bold">Recent Mandate Requests</p>
           <div className="h-[2px] w-full bg-grayPrimary"></div>
-          {isLoading ? (
-            <div className="flex h-[30vh] flex-col items-center justify-center">
-              <Box sx={{ display: 'flex' }}>
-                <CircularProgress sx={{ color: '#5C068C' }} />
-              </Box>
-            </div>
-          ) : (
-            <div className="mt-5">
-              <CustomTable
-                tableData={data?.responseData?.items}
-                columns={MandateTableColumn}
-                rowCount={data?.responseData?.totalCount}
-                paginationData={paginationData}
-                setPaginationData={setPaginationData}
-              />
-            </div>
-          )}
+          <div className="mt-5">
+            <CustomTable
+              tableData={data?.responseData?.items}
+              columns={MandateTableColumn}
+              rowCount={data?.responseData?.totalCount}
+              paginationData={paginationData}
+              setPaginationData={setPaginationData}
+            />
+          </div>
         </div>
       </div>
     </>

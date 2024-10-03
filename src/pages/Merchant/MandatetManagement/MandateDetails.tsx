@@ -18,7 +18,7 @@ import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { GridColDef } from '@mui/x-data-grid';
 import { transactionHistory } from 'utils/constants';
-import { Backdrop, CircularProgress, Popover } from '@mui/material';
+import { Popover } from '@mui/material';
 import WhiteArrowDown from 'assets/icons/WhiteArrowDown';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
@@ -271,160 +271,135 @@ const MandateDetails = () => {
             />
           </div>
         </div>
-        {isLoading ? (
-          <div className="flex h-[50vh] flex-col items-center justify-center">
-            <Box sx={{ display: 'flex' }}>
-              <CircularProgress />
-            </Box>
-          </div>
-        ) : (
-          <div className="mt-5 rounded-lg bg-white px-5 py-10">
-            <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
-              <div className="flex items-center justify-between">
-                <p className="my-3 text-lg font-semibold">Request Details</p>
+        <div className="mt-5 rounded-lg bg-white px-5 py-10">
+          <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+            <div className="flex items-center justify-between">
+              <p className="my-3 text-lg font-semibold">Request Details</p>
+              <div className="flex items-center gap-2">
+                <p>Mandate Type</p>
                 <div className="flex items-center gap-2">
-                  <p>Mandate Type</p>
-                  <div className="flex items-center gap-2">
-                    <UpdateRequestIcon />
-                    <p className="text-lightPurple">Variable</p>
-                  </div>
+                  <UpdateRequestIcon />
+                  <p className="text-lightPurple">Variable</p>
                 </div>
               </div>
-              <div className="h-[2px] w-full bg-grayPrimary"></div>
-              <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
-                <DetailsCard title="Account ID" content={data?.responseData?.accountId} />
-                <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
-                <DetailsCard title="Merchant Code" content={data?.responseData?.mandateCode} />
-                <DetailsCard
-                  title="Date Created"
-                  content={
-                    data?.responseData?.dateCreated &&
-                    new Date(data.responseData.dateCreated).toLocaleDateString()
-                  }
-                />
-                <DetailsCard title="Product ID" content={data?.responseData?.productId} />
-                <DetailsCard
-                  title="Amount"
-                  content={data?.responseData?.amount}
-                  contentClassName="text-lightPurple"
-                />
-                <DetailsCard
-                  title="Effective Date"
-                  content={
-                    data?.responseData?.startDate &&
-                    new Date(data.responseData.startDate).toLocaleDateString()
-                  }
-                />
-                <DetailsCard
-                  title="End Date"
-                  content={
-                    data?.responseData?.endDate &&
-                    new Date(data.responseData.endDate).toLocaleDateString()
-                  }
-                />
-                <DetailsCard title="Day to apply" content={data?.responseData?.dayToApply} />
-                <DetailsCard title="Frequency" content={data?.responseData?.frequency} />
-                <DetailsCard title="Service" content={data?.responseData?.service} />
-                <DetailsCard title="Narration" content={data?.responseData?.narration} />
-                <DetailsCard title="Account Number" content={data?.responseData?.accountNumber} />
-                <DetailsCard title="Account Name" content={data?.responseData?.accountName} />
-                <DetailsCard title="Bank Code" content="787878" />
-              </div>
             </div>
-            <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
-              <div className="">
-                <p className="my-3 text-lg font-semibold">Payer Details</p>
-              </div>
-              <div className="h-[2px] w-full bg-grayPrimary"></div>
-              <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
-                <DetailsCard title="Payer Name" content={data?.responseData?.payerName} />
-                <DetailsCard title="Address" content={data?.responseData?.payerAddress} />
-                <DetailsCard
-                  title="Email Address"
-                  content={data?.responseData?.payerEmailAddress}
-                />
-                <DetailsCard title="Phone Number" content={data?.responseData?.payerPhoneNumber} />
-              </div>
-            </div>
-            <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
-              <div className="">
-                <p className="my-3 text-lg font-semibold">Payee Details</p>
-              </div>
-              <div className="h-[2px] w-full bg-grayPrimary"></div>
-              <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
-                <DetailsCard title="Payee Name" content={data?.responseData?.payeeName} />
-                <DetailsCard title="Address" content={data?.responseData?.payeeAddress} />
-                <DetailsCard
-                  title="Email Address"
-                  content={data?.responseData?.payeeEmailAddress}
-                />
-                <DetailsCard title="Phone Number" content={data?.responseData?.payeePhoneNumber} />
-              </div>
-            </div>
-            <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
-              <div className="flex items-center justify-between">
-                <p className="my-3 text-lg font-semibold">Biller Details</p>
-                <div className="flex items-center gap-2">
-                  <p>Biller Code :</p>
-                  <p>12344</p>
-                </div>
-              </div>
-              <div className="h-[2px] w-full bg-grayPrimary"></div>
-              <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
-                <DetailsCard
-                  title="Biller Account Number"
-                  content={data?.responseData?.billerAccountNumber}
-                />
-                <DetailsCard title="Bank Name" content="Access Bank" />
-                <DetailsCard title="Account Name" content="Vekee James Ventures" />
-                <DetailsCard title="Bank Code" content={data?.responseData?.bankCode} />
-              </div>
-            </div>
-            <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
-              <div className="flex items-center justify-between">
-                <p className="my-3 text-lg font-semibold">Creator Details</p>
-              </div>
-              <div className="h-[2px] w-full bg-grayPrimary"></div>
-              <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
-                <DetailsCard title="ID" content="12345678" />
-                <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
-              </div>
-            </div>
-            <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
-              <div className="flex items-center justify-between">
-                <p className="my-3 text-lg font-semibold">Account Approval Details</p>
-                <div className="flex items-center gap-2">
-                  <CreationRequestIcon />
-                  <p className="text-greenPrimary">Approved</p>
-                </div>
-              </div>
-              <div className="h-[2px] w-full bg-grayPrimary"></div>
-              <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
-                <DetailsCard title="ID" content="12345678" />
-                <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
-                <DetailsCard
-                  title="Date Approved"
-                  content={
-                    data?.responseData?.dateApproved &&
-                    new Date(data.responseData.dateApproved).toLocaleDateString()
-                  }
-                />
-              </div>
+            <div className="h-[2px] w-full bg-grayPrimary"></div>
+            <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+              <DetailsCard title="Account ID" content={data?.responseData?.accountId} />
+              <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
+              <DetailsCard title="Merchant Code" content={data?.responseData?.mandateCode} />
+              <DetailsCard
+                title="Date Created"
+                content={
+                  data?.responseData?.dateCreated &&
+                  new Date(data.responseData.dateCreated).toLocaleDateString()
+                }
+              />
+              <DetailsCard title="Product ID" content={data?.responseData?.productId} />
+              <DetailsCard
+                title="Amount"
+                content={data?.responseData?.amount}
+                contentClassName="text-lightPurple"
+              />
+              <DetailsCard
+                title="Effective Date"
+                content={
+                  data?.responseData?.startDate &&
+                  new Date(data.responseData.startDate).toLocaleDateString()
+                }
+              />
+              <DetailsCard
+                title="End Date"
+                content={
+                  data?.responseData?.endDate &&
+                  new Date(data.responseData.endDate).toLocaleDateString()
+                }
+              />
+              <DetailsCard title="Day to apply" content={data?.responseData?.dayToApply} />
+              <DetailsCard title="Frequency" content={data?.responseData?.frequency} />
+              <DetailsCard title="Service" content={data?.responseData?.service} />
+              <DetailsCard title="Narration" content={data?.responseData?.narration} />
+              <DetailsCard title="Account Number" content={data?.responseData?.accountNumber} />
+              <DetailsCard title="Account Name" content={data?.responseData?.accountName} />
+              <DetailsCard title="Bank Code" content="787878" />
             </div>
           </div>
-        )}
+          <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+            <div className="">
+              <p className="my-3 text-lg font-semibold">Payer Details</p>
+            </div>
+            <div className="h-[2px] w-full bg-grayPrimary"></div>
+            <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+              <DetailsCard title="Payer Name" content={data?.responseData?.payerName} />
+              <DetailsCard title="Address" content={data?.responseData?.payerAddress} />
+              <DetailsCard title="Email Address" content={data?.responseData?.payerEmailAddress} />
+              <DetailsCard title="Phone Number" content={data?.responseData?.payerPhoneNumber} />
+            </div>
+          </div>
+          <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+            <div className="">
+              <p className="my-3 text-lg font-semibold">Payee Details</p>
+            </div>
+            <div className="h-[2px] w-full bg-grayPrimary"></div>
+            <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+              <DetailsCard title="Payee Name" content={data?.responseData?.payeeName} />
+              <DetailsCard title="Address" content={data?.responseData?.payeeAddress} />
+              <DetailsCard title="Email Address" content={data?.responseData?.payeeEmailAddress} />
+              <DetailsCard title="Phone Number" content={data?.responseData?.payeePhoneNumber} />
+            </div>
+          </div>
+          <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+            <div className="flex items-center justify-between">
+              <p className="my-3 text-lg font-semibold">Biller Details</p>
+              <div className="flex items-center gap-2">
+                <p>Biller Code :</p>
+                <p>12344</p>
+              </div>
+            </div>
+            <div className="h-[2px] w-full bg-grayPrimary"></div>
+            <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+              <DetailsCard
+                title="Biller Account Number"
+                content={data?.responseData?.billerAccountNumber}
+              />
+              <DetailsCard title="Bank Name" content="Access Bank" />
+              <DetailsCard title="Account Name" content="Vekee James Ventures" />
+              <DetailsCard title="Bank Code" content={data?.responseData?.bankCode} />
+            </div>
+          </div>
+          <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+            <div className="flex items-center justify-between">
+              <p className="my-3 text-lg font-semibold">Creator Details</p>
+            </div>
+            <div className="h-[2px] w-full bg-grayPrimary"></div>
+            <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+              <DetailsCard title="ID" content="12345678" />
+              <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
+            </div>
+          </div>
+          <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+            <div className="flex items-center justify-between">
+              <p className="my-3 text-lg font-semibold">Account Approval Details</p>
+              <div className="flex items-center gap-2">
+                <CreationRequestIcon />
+                <p className="text-greenPrimary">Approved</p>
+              </div>
+            </div>
+            <div className="h-[2px] w-full bg-grayPrimary"></div>
+            <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+              <DetailsCard title="ID" content="12345678" />
+              <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
+              <DetailsCard
+                title="Date Approved"
+                content={
+                  data?.responseData?.dateApproved &&
+                  new Date(data.responseData.dateApproved).toLocaleDateString()
+                }
+              />
+            </div>
+          </div>
+        </div>
       </div>
-      <Backdrop
-        open={
-          updateMandateMutation.isPending ||
-          enableMandateMutation.isPending ||
-          disableMandateMutation.isPending ||
-          deleteMandateMutation.isPending
-        }
-        style={{ zIndex: 20, color: '#fff' }}
-      >
-        <CircularProgress color="inherit" />
-      </Backdrop>
       {modals.openTransactionHistory && (
         <CustomModal
           isOpen={modals.openTransactionHistory}

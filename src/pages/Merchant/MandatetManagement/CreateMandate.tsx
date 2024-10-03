@@ -7,9 +7,8 @@ import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
-import { ArrowRightIcon, DarkArrowDown, DownloadIcon, SuccessModalIcon } from 'assets/icons';
+import { ArrowRightIcon, DownloadIcon, SuccessModalIcon } from 'assets/icons';
 import { useDropzone } from 'react-dropzone';
-import CustomSelect from 'components/FormElements/CustomSelect';
 import { useFormik } from 'formik';
 import { createMandateSchema } from 'utils/formValidators';
 import dayjs from 'dayjs';
@@ -17,7 +16,6 @@ import { useMutation } from '@tanstack/react-query';
 import { addMandateRequest } from 'config/actions/dashboard-actions';
 import { MandateRequest } from 'utils/interfaces';
 import { notifyError } from 'utils/helpers';
-import { Backdrop, CircularProgress } from '@mui/material';
 import FormDatePicker from 'components/FormElements/FormDatePicker';
 import CustomFileUpload from 'components/FormElements/CustomFileUpload';
 import FormSelect from 'components/FormElements/FormSelect';
@@ -589,9 +587,6 @@ const CreateMandate = () => {
           </div>
         )}
       </div>
-      <Backdrop open={addMandateRequestMutation.isPending} style={{ zIndex: 20, color: '#fff' }}>
-        <CircularProgress color="inherit" />
-      </Backdrop>
       {modals.addMandate && (
         <ModalWrapper
           isOpen={modals.addMandate}

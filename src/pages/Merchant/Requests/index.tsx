@@ -15,7 +15,7 @@ import { useFormik } from 'formik';
 import { useQuery } from '@tanstack/react-query';
 import { getMandateRequests, getMandateStatistics } from 'config/actions/dashboard-actions';
 import { QueryParams, TabsProps } from 'utils/interfaces';
-import { Box, CircularProgress, useMediaQuery } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 import CustomTabs from 'hoc/CustomTabs';
 
 const MandateRequests = () => {
@@ -32,13 +32,28 @@ const MandateRequests = () => {
 
   const isLargeWidth = useMediaQuery('(min-width:1320px)');
 
+  const formik = useFormik({
+    initialValues: {
+      searchMandate: '',
+      fromDateFilter: '',
+      toDateFilter: '',
+      statusFilter: '',
+    },
+    onSubmit: (values) => {
+      setSearchTerm('');
+    },
+  });
+
   const [queryParams, setQueryParams] = useState<QueryParams>({
     mandateCode: '',
-    status: activeTab,
+    status: formik.values.statusFilter,
     pageNo: paginationData.pageNumber,
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
+    searchFilter: formik.values.searchMandate,
+    startDate: formik.values.fromDateFilter,
+    endDate: formik.values.toDateFilter,
   });
 
   const MandateTableColumn: GridColDef[] = [
@@ -141,19 +156,7 @@ const MandateRequests = () => {
     },
   ];
 
-  const formik = useFormik({
-    initialValues: {
-      searchMerchantName: '',
-      fromDateFilter: '',
-      toDateFilter: '',
-      statusFilter: '',
-    },
-    onSubmit: (values) => {
-      setSearchTerm('');
-    },
-  });
-
-  const { isLoading, data, refetch } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['mandateRequests', queryParams],
     queryFn: ({ queryKey }) => getMandateRequests(queryKey[1] as QueryParams),
     enabled: !!queryParams.status,
@@ -177,59 +180,66 @@ const MandateRequests = () => {
     },
     {
       tabIndex: 3,
-      tabName: TabsListTabNames.Rejected,
+      tabName: TabsListTabNames.Declined,
       tabTotal: statistics?.responseData?.totalRejected,
     },
   ];
 
   useEffect(() => {
-    setQueryParams((prev) => ({ ...prev, status: activeTab }));
-  }, [activeTab]);
+    setQueryParams((prev) => ({
+      ...prev,
+      status: activeTab,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+      searchFilter: formik.values.searchMandate,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  }, [
+    activeTab,
+    formik.values.searchMandate,
+    formik.values.fromDateFilter,
+    formik.values.toDateFilter,
+    paginationData,
+  ]);
 
   return (
     <>
       <div className="px-5 py-5">
         <h2 className="text-2xl font-semibold">Requests</h2>
-        {isLoading ? (
-          <div className="flex h-[30vh] flex-col items-center justify-center">
-            <Box sx={{ display: 'flex' }}>
-              <CircularProgress sx={{ color: '#5C068C' }} />
-            </Box>
-          </div>
-        ) : (
-          <div className="mt-5 w-full rounded-lg bg-white px-5 py-5">
-            <div className="flex flex-col items-center justify-between gap-4 lg:flex-row lg:gap-0">
-              <div className="flex w-full flex-row items-center justify-center gap-6 md:gap-10 lg:w-[50%] lg:justify-start">
-                <CustomTabs tabs={tabsList} activeTab={activeTab} setActiveTab={setActiveTab} />
-              </div>
-              <div className="">
-                <TableFilter
-                  name={'searchMandate'}
-                  placeholder={'Search Mandate'}
-                  label={'Search Mandate'}
-                  value={searchTerm}
-                  setSearch={setSearchTerm}
-                  handleOptionsFilter={() => refetch()}
-                  formik={formik}
-                  fromDateName={'fromDateFilter'}
-                  toDateName={'toDateFilter'}
-                  selectName={'statusFilter'}
-                  translationX={isLargeWidth ? 350 : undefined}
-                />
-              </div>
+
+        <div className="mt-5 w-full rounded-lg bg-white px-5 py-5">
+          <div className="flex flex-col items-center justify-between gap-4 lg:flex-row lg:gap-0">
+            <div className="flex w-full flex-row items-center justify-center gap-6 md:gap-10 lg:w-[50%] lg:justify-start">
+              <CustomTabs tabs={tabsList} activeTab={activeTab} setActiveTab={setActiveTab} />
             </div>
-            <div className="h-[2px] w-full bg-grayPrimary"></div>
-            <div className="mt-6 w-full">
-              <CustomTable
-                tableData={data?.responseData?.items}
-                columns={MandateTableColumn}
-                rowCount={data?.responseData?.totalCount}
-                paginationData={paginationData}
-                setPaginationData={setPaginationData}
+            <div className="">
+              <TableFilter
+                name={'searchMandate'}
+                placeholder={'Search Mandate'}
+                label={'Search Mandate'}
+                value={searchTerm}
+                setSearch={setSearchTerm}
+                handleOptionsFilter={() => refetch()}
+                formik={formik}
+                fromDateName={'fromDateFilter'}
+                toDateName={'toDateFilter'}
+                selectName={'statusFilter'}
+                translationX={isLargeWidth ? 350 : undefined}
               />
             </div>
           </div>
-        )}
+          <div className="h-[2px] w-full bg-grayPrimary"></div>
+          <div className="mt-6 w-full">
+            <CustomTable
+              tableData={data?.responseData?.items}
+              columns={MandateTableColumn}
+              rowCount={data?.responseData?.totalCount}
+              paginationData={paginationData}
+              setPaginationData={setPaginationData}
+            />
+          </div>
+        </div>
       </div>
     </>
   );
