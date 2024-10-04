@@ -130,7 +130,7 @@ function EditProfile() {
                     label="Merchant Name"
                     formik={formik}
                     useTouched
-                    options={formatApiDataForDropdown(data?.responseData?.items, 'merchantName')}
+                    options={formatApiDataForDropdown(data?.responseData?.items, 'name')}
                   />
                   <FormSelect
                     labelFor="accountId"

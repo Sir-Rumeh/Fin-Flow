@@ -176,3 +176,11 @@ export interface ProfileRequest {
   lastName: string | undefined;
   email: string | undefined;
 }
+export interface MerchantRequest {
+  merchantId?: string | undefined;
+  name: string | undefined;
+  accountNumber: string | undefined;
+  rcNumber: string | undefined;
+  address: string | undefined;
+  cif?: string | undefined;
+}

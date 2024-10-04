@@ -1,4 +1,5 @@
 import AxiosClient from 'config/Axios';
+import { appendParams } from 'utils/helpers';
 import { QueryParams, StaffUserRequest } from 'utils/interfaces';
 
 export const addStaffUserRequest = async (payload: StaffUserRequest | undefined) => {
@@ -24,21 +25,7 @@ export const updateStaffUserRequest = async (
 
 export const getStaffUsers = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
-
-  if (queryParams) {
-    const { status, pageNo, pageSize, sortBy, sortOrder, searchFilter, startDate, endDate } =
-      queryParams;
-
-    if (status) params.append('Status', status);
-    if (pageNo !== undefined) params.append('PageNo', pageNo.toString());
-    if (pageSize !== undefined) params.append('PageSize', pageSize.toString());
-    if (sortBy) params.append('SortBy', sortBy);
-    if (sortOrder) params.append('SortOrder', sortOrder);
-    if (searchFilter) params.append('searchFilter', searchFilter);
-    if (startDate) params.append('startDate', startDate);
-    if (endDate) params.append('endDate', endDate);
-  }
-
+  appendParams(params, queryParams);
   try {
     const response = await AxiosClient.get(`/users?${params.toString()}`);
     return response.data;

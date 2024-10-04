@@ -129,8 +129,8 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
   if (sortBy) params.append('SortBy', sortBy);
   if (sortOrder) params.append('SortOrder', sortOrder);
   if (searchFilter) params.append('searchFilter', searchFilter);
-  if (startDate) params.append('startDate', startDate);
-  if (endDate) params.append('endDate', endDate);
+  if (startDate) params.append('StartDate', startDate);
+  if (endDate) params.append('EndDate', endDate);
 };
 
 export const formatApiDataForDropdown = (dataArray: any[], dataKey: string) => {
