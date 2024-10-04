@@ -58,6 +58,7 @@ const TableFilter = ({
       const endDate = new Date(formik.values[toDateName]);
       if (startDate > endDate) {
         formik.setFieldValue(fromDateName, null);
+        formik.setFieldValue(toDateName, null);
         notifyError('Start date should be less than end date');
       }
     }

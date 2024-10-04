@@ -21,7 +21,6 @@ import {
   getMandateRequestById,
   rejectMandateRequest,
 } from 'config/actions/dashboard-actions';
-import { Box, CircularProgress } from '@mui/material';
 import RejectedIcon from 'assets/icons/RejectedIcon';
 
 const MandateCreationRequestDetails = () => {

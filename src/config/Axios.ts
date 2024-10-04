@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import store from 'store/index';
 import { AppConfig } from './index';
-import { generateHeader, notifySuccess, notifyError } from 'utils/helpers/index';
+import { generateHeader, notifyError } from 'utils/helpers/index';
 import { uiStartLoading, uiStopLoading } from 'store/reducers/LoadingSlice';
 
 const AxiosClient = axios.create({
@@ -72,7 +72,7 @@ AxiosClient.interceptors.response.use(
       return Promise.reject(error);
     }
     dispatch(uiStopLoading());
-    notifyError('Something went wrong');
+    notifyError(error.message);
     return Promise.reject(error);
   },
 );

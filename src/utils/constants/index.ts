@@ -25,6 +25,10 @@ export const roles = [
   { value: 'Audit Role', label: 'Audit Role' },
   { value: 'Reporting Role', label: 'Reporting Role' },
 ];
+export const userLevel = [
+  { value: 'Initiator', label: 'Initiator' },
+  { value: 'Approver', label: 'Approver' },
+];
 
 export const merchantsList: MerchantDataRow[] = [
   {
