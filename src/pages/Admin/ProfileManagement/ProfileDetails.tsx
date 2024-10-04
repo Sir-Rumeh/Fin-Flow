@@ -56,7 +56,7 @@ const ProfileDetails = () => {
             <CustomPopover
               popoverId={1}
               buttonIcon={<DetailsActionButton />}
-              translationX={8}
+              translationX={0}
               translationY={54}
             >
               <div className="flex w-[7.2rem] flex-col rounded-md p-1">

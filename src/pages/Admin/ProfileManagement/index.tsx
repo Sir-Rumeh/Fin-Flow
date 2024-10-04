@@ -109,11 +109,11 @@ const ProfileManagement = () => {
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
         return (
-          <div className="-ml-1 h-full border-none">
+          <div className="h-full border-none">
             <CustomPopover
               popoverId={params?.row.id}
               buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-15}
+              translationX={-10}
               translationY={45}
             >
               <div className="flex flex-col rounded-md p-1">

@@ -39,8 +39,8 @@ const CreateMandate = () => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
 
-  const files = acceptedFiles.map((file) => (
-    <li key={file.name}>
+  const files = acceptedFiles.map((file, index) => (
+    <li key={index}>
       {file.name} - {file.size} bytes
     </li>
   ));

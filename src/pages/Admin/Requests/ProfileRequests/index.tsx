@@ -97,6 +97,8 @@ const ProfileRequests = () => {
             return renderIcon(CreationRequestIcon, 'text-greenPrimary');
           case RequestTypes.Update:
             return renderIcon(UpdateRequestIcon, 'text-lightPurple');
+          case RequestTypes.Enable:
+            return renderIcon(CreationRequestIcon, 'text-greenPrimary');
           case RequestTypes.Disable:
             return renderIcon(DisableRequestIcon, 'text-yellowNeutral');
           case RequestTypes.Deletion:
@@ -127,9 +129,11 @@ const ProfileRequests = () => {
               ? `/${appRoutes.adminDashboard.requests.profileRequests.profileDeletionRequest}`
               : params?.row.requestType === RequestTypes.Update
                 ? `/${appRoutes.adminDashboard.requests.profileRequests.profileUpdateRequest}`
-                : params?.row.requestType === RequestTypes.Disable
-                  ? `/${appRoutes.adminDashboard.requests.profileRequests.profileDisableRequest}`
-                  : undefined;
+                : params?.row.requestType === RequestTypes.Enable
+                  ? `/${appRoutes.adminDashboard.requests.profileRequests.profileEnableRequest}`
+                  : params?.row.requestType === RequestTypes.Disable
+                    ? `/${appRoutes.adminDashboard.requests.profileRequests.profileDisableRequest}`
+                    : undefined;
         return (
           <div className="">
             <Link

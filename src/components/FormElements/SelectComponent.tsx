@@ -41,9 +41,9 @@ const SelectComponent = ({ formik, options, label, name, maxWidth, searchable = 
         onChange={handleChange}
         defaultValue={''}
       >
-        {options.map((option) => {
+        {options.map((option, index) => {
           return (
-            <MenuItem key={option.label} value={option.value}>
+            <MenuItem key={index} value={option.value}>
               {option.label}
             </MenuItem>
           );

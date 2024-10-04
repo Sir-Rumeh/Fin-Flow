@@ -1,6 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
-import ChevronDown from 'assets/icons/ChevronDown';
 import ChevronRight from 'assets/icons/ChevronRight';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
@@ -10,6 +9,12 @@ import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
 import FormSelect from 'components/FormElements/FormSelect';
+import { useQuery } from '@tanstack/react-query';
+import { QueryParams } from 'utils/interfaces';
+import { getMerchants } from 'config/actions/merchant-actions';
+import { formatApiDataForDropdown } from 'utils/helpers';
+import { getAccounts } from 'config/actions/account-actions';
+import { userLevel } from 'utils/constants';
 
 function CreateProfile() {
   const navigate = useNavigate();
@@ -34,12 +39,21 @@ function CreateProfile() {
     },
   });
 
-  const roles = [
-    { value: 'Role One', label: 'Role One' },
-    { value: 'Role Two', label: 'Role Two' },
-    { value: 'Role Three', label: 'Role Three' },
-    { value: 'Role Four', label: 'Role Four' },
-  ];
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
+
+  const { data } = useQuery({
+    queryKey: ['merchants', queryParams],
+    queryFn: ({ queryKey }) => getMerchants(queryKey[1] as QueryParams),
+  });
+
+  const { data: accountData } = useQuery({
+    queryKey: ['accounts', queryParams],
+    queryFn: ({ queryKey }) => getAccounts(queryKey[1] as QueryParams),
+  });
+
   return (
     <>
       <div className="px-5 py-1">
@@ -59,39 +73,36 @@ function CreateProfile() {
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-10">
           <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-8">
             <form onSubmit={formik.handleSubmit} noValidate className="relative w-full">
-              <div className="slide-down">
+              <div className="">
                 <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-                  <CustomInput
+                  <FormSelect
                     labelFor="merchantId"
                     label="Merchant ID"
-                    inputType="text"
-                    placeholder="Enter here"
-                    maxW="w-full"
                     formik={formik}
+                    useTouched
+                    options={formatApiDataForDropdown(data?.responseData?.items, 'id')}
                   />
-                  <CustomInput
+                  <FormSelect
                     labelFor="merchantName"
                     label="Merchant Name"
-                    inputType="text"
-                    placeholder="Enter here"
-                    maxW="w-full"
                     formik={formik}
+                    useTouched
+                    options={formatApiDataForDropdown(data?.responseData?.items, 'merchantName')}
                   />
-                  <CustomInput
+                  <FormSelect
                     labelFor="accountId"
                     label="Account Id"
-                    inputType="text"
-                    placeholder="Enter here"
-                    maxW="w-full"
                     formik={formik}
+                    options={formatApiDataForDropdown(accountData?.responseData?.items, 'id')}
                   />
-                  <CustomInput
+                  <FormSelect
                     labelFor="accountNumber"
                     label="Account Number"
-                    inputType="text"
-                    placeholder="Enter here"
-                    maxW="w-full"
                     formik={formik}
+                    options={formatApiDataForDropdown(
+                      accountData?.responseData?.items,
+                      'accountNumber',
+                    )}
                   />
                   <CustomInput
                     labelFor="firstName"
@@ -110,19 +121,28 @@ function CreateProfile() {
                     formik={formik}
                   />
                   <CustomInput
-                    labelFor="emailAddress"
+                    labelFor="email"
                     label="Email Address"
                     inputType="text"
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
                   />
-                  <div className="md:col-span-2">
+                  <CustomInput
+                    labelFor="password"
+                    label="Password"
+                    inputType="text"
+                    placeholder="Enter here"
+                    maxW="w-full"
+                    formik={formik}
+                  />
+                  <div className="">
                     <FormSelect
                       labelFor="role"
                       label="Assign Role"
                       formik={formik}
-                      options={roles}
+                      useTouched
+                      options={userLevel}
                     />
                   </div>
                 </div>

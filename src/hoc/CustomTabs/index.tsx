@@ -14,11 +14,11 @@ interface CustomTabProps {
 const CustomTabs = ({ tabs, activeTab, setActiveTab, width, backgroundColor }: CustomTabProps) => {
   return (
     <>
-      {tabs?.map((tab) => {
+      {tabs?.map((tab, index) => {
         return (
           <div
             className={`relative flex ${width ? width : 'w-[6rem] sm:w-[9rem]'} flex-col items-start justify-between`}
-            key={tab.tabIndex}
+            key={index}
           >
             <ButtonComponent
               onClick={() => {
