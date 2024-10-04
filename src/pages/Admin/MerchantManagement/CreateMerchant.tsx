@@ -59,8 +59,8 @@ const CreateMerchant = () => {
     const res = await validateMerchantCif(formik.values.merchantCIF);
     if (res.responseData?.accountNumber && res.responseData?.rcNumber) {
       setMerchantCifValidated(true);
-      formik.setFieldValue('accountNumber', res.responseData?.accountNumber);
-      formik.setFieldValue('rcNumber', res.responseData?.rcNumber);
+      formik.setFieldValue('accountNumber', res.responseData?.accountNumber || '');
+      formik.setFieldValue('rcNumber', res.responseData?.rcNumber || '');
     }
   };
 

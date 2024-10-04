@@ -182,5 +182,5 @@ export interface MerchantRequest {
   accountNumber: string | undefined;
   rcNumber: string | undefined;
   address: string | undefined;
-  cif: string | undefined;
+  cif?: string | undefined;
 }
