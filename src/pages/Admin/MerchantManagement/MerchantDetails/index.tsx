@@ -11,7 +11,7 @@ import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
 import appRoutes from 'utils/constants/routes';
 import DashboardCard from 'components/common/DashboardCards/DashboardCard';
-import { checkRoute } from 'utils/helpers';
+import { checkRoute, notifyError } from 'utils/helpers';
 import SubTitleIconGreen from 'assets/icons/SubTitleIconGreen';
 import SubTitleIconYellow from 'assets/icons/SubTitleIconYellow';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
@@ -21,21 +21,27 @@ import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import DetailsActionButton from 'components/common/DetailsActionButton';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  deleteMerchant,
+  disableMerchant,
+  enableMerchant,
+  getMerchantById,
+} from 'config/actions/merchant-actions';
 
 const MerchantDetails = () => {
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const isDashboardRoute = checkRoute(pathname, 'dashboard');
   const [searchParams] = useSearchParams();
-  const id = searchParams?.get('id') || '';
-  let merchantStatus = 'Enabled';
+  const merchantId = searchParams?.get('id') || '';
+  const isDashboardRoute = checkRoute(pathname, 'dashboard');
 
   const [modals, setModals] = useState({
-    confirmDisableMerchant: false,
+    confirmDisable: false,
     disableSuccessful: false,
-    confirmEnableMerchant: false,
+    confirmEnable: false,
     enableSuccessful: false,
-    confirmDeleteMerchant: false,
+    confirmDelete: false,
     deleteSuccessful: false,
   });
 
@@ -46,6 +52,47 @@ const MerchantDetails = () => {
   const closeModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
+
+  const { data, refetch } = useQuery({
+    queryKey: ['merchants', merchantId],
+    queryFn: ({ queryKey }) => getMerchantById(queryKey[1]),
+  });
+
+  const enableMerchantMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => enableMerchant(requestId),
+    onSuccess: () => {
+      closeModal('confirmEnable');
+      openModal('enableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmEnable');
+      notifyError(error?.message);
+    },
+  });
+
+  const disableMerchantMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => disableMerchant(requestId),
+    onSuccess: () => {
+      closeModal('confirmDisable');
+      openModal('disableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDisable');
+      notifyError(error?.message);
+    },
+  });
+
+  const deleteMerchantMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => deleteMerchant(requestId),
+    onSuccess: () => {
+      closeModal('confirmDelete');
+      openModal('deleteSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDelete');
+      notifyError(error?.message);
+    },
+  });
 
   return (
     <>
@@ -66,13 +113,13 @@ const MerchantDetails = () => {
         </div>
         <div className="slide-down mt-3 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold md:text-2xl">Merchant ID : Req123456</h2>
+            <h2 className="text-lg font-semibold md:text-2xl">{`Merchant ID : ${data?.responseData?.id ? data?.responseData?.id : ''}`}</h2>
           </div>
           <div className="w-auto">
             <CustomPopover
               popoverId={1}
               buttonIcon={<DetailsActionButton />}
-              translationX={8}
+              translationX={0}
               translationY={54}
             >
               <div className="flex w-[7.4rem] flex-col rounded-md p-1">
@@ -82,7 +129,7 @@ const MerchantDetails = () => {
                       pathname: isDashboardRoute
                         ? `/${appRoutes.adminDashboard.dashboard.editMerchant}`
                         : `/${appRoutes.adminDashboard.merchantManagement.editMerchant}`,
-                      search: `?${createSearchParams({ id })}`,
+                      search: `?${createSearchParams({ id: merchantId })}`,
                     })
                   }
                   type="button"
@@ -90,27 +137,34 @@ const MerchantDetails = () => {
                 >
                   Edit Details
                 </button>
-                {merchantStatus === 'Enabled' && (
+
+                {data?.responseData?.isActive ? (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmDisableMerchant')}
+                    onClick={() => {
+                      openModal('confirmDisable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                   >
                     Disable
                   </button>
-                )}
-                {merchantStatus === 'Disabled' && (
+                ) : (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmEnableMerchant')}
+                    onClick={() => {
+                      openModal('confirmEnable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
                   >
                     Enable
                   </button>
                 )}
+
                 <button
                   type="button"
-                  onClick={() => openModal('confirmDeleteMerchant')}
+                  onClick={() => {
+                    openModal('confirmDelete');
+                  }}
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
                   Delete
@@ -156,58 +210,75 @@ const MerchantDetails = () => {
             <ItemDetailsContainer
               title="Merchant Details"
               titleExtension={
-                <div className="flex items-center justify-end gap-2">
-                  <p className="text-sm font-semibold text-darkgray">Status:</p>
-                  {merchantStatus === 'Enabled' && (
-                    <>
+                <>
+                  {data?.responseData?.isActive ? (
+                    <div className="flex items-center justify-end gap-2">
                       <CreationRequestIcon />
-                      <p className="mb-[1px] font-semibold text-greenPrimary">{merchantStatus}</p>
-                    </>
-                  )}
-                  {merchantStatus === 'Disabled' && (
-                    <>
+                      <p className="mb-[1px] font-semibold text-greenPrimary">Enabled</p>
+                    </div>
+                  ) : (
+                    <div className="flex items-center justify-end gap-2">
                       <DeleteRequestIcon />
-                      <p className="mb-[1px] font-semibold text-redSecondary">{merchantStatus}</p>
-                    </>
+                      <p className="mb-[1px] font-semibold text-redSecondary">Disabled</p>
+                    </div>
                   )}
-                </div>
+                </>
               }
             >
-              <DetailsCard title="Merchant ID" content="12345" />
-              <DetailsCard title="Merchant Name" content="Fair Money" />
-              <DetailsCard title="Merchant Code" content="12345" />
-              <DetailsCard title="CIF Number" content="12345" />
-              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
+              <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
+              <DetailsCard title="Merchant Name" content={data?.responseData?.name} />
+              <DetailsCard title="Merchant Code" content={data?.responseData?.merchantCode} />
+              <DetailsCard title="CIF Number" content={data?.responseData?.cif} />
+              <DetailsCard
+                title="Date Created"
+                content={
+                  data?.responseData?.createdAt &&
+                  new Date(data.responseData.createdAt).toLocaleDateString()
+                }
+              />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Creator Details">
-              <DetailsCard title="ID" content="9344243" />
-              <DetailsCard title="Created By" content="John Doe" />
-              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
-              <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
+              <DetailsCard title="ID" content={data?.responseData?.creatorId} />
+              <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
+              <DetailsCard
+                title="Date Created"
+                content={
+                  data?.responseData?.dateCreated &&
+                  new Date(data.responseData.dateCreated).toLocaleDateString()
+                }
+              />
+              <DetailsCard title="Address" content={data?.responseData?.address} />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
-            <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
-              <DetailsCard title="ID" content="9344243" />
-              <DetailsCard title="Approved By" content="John Doe" />
-              <DetailsCard title="Date Approved" content="12/12/2024 : 03:00pm" />
-            </ItemDetailsContainer>
+            {data?.responseData?.status === 'Approved' && (
+              <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
+                <DetailsCard title="ID" content={data?.responseData?.approverId} />
+                <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
+                <DetailsCard
+                  title="Date Approved"
+                  content={
+                    data?.responseData?.dateApproved &&
+                    new Date(data.responseData.dateApproved).toLocaleDateString()
+                  }
+                />
+              </ItemDetailsContainer>
+            )}
           </div>
         </div>
       </div>
-      {modals.confirmDisableMerchant && (
+      {modals.confirmDisable && (
         <ModalWrapper
-          isOpen={modals.confirmDisableMerchant}
-          setIsOpen={() => closeModal('confirmDisableMerchant')}
+          isOpen={modals.confirmDisable}
+          setIsOpen={() => closeModal('confirmDisable')}
           title={'Disable Merchant?'}
           info={'You are about to disable this merchant, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDisableMerchant');
-            openModal('disableSuccessful');
+            disableMerchantMutation.mutate(merchantId);
           }}
         />
       )}
@@ -220,21 +291,21 @@ const MerchantDetails = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('disableSuccessful');
           }}
         />
       )}
-      {modals.confirmEnableMerchant && (
+      {modals.confirmEnable && (
         <ModalWrapper
-          isOpen={modals.confirmEnableMerchant}
-          setIsOpen={() => closeModal('confirmEnableMerchant')}
+          isOpen={modals.confirmEnable}
+          setIsOpen={() => closeModal('confirmEnable')}
           title={'Enable Merchant?'}
           info={'You are about to enable this merchant, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmEnableMerchant');
-            openModal('enableSuccessful');
+            enableMerchantMutation.mutate(merchantId);
           }}
         />
       )}
@@ -247,21 +318,21 @@ const MerchantDetails = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('enableSuccessful');
           }}
         />
       )}
-      {modals.confirmDeleteMerchant && (
+      {modals.confirmDelete && (
         <ModalWrapper
-          isOpen={modals.confirmDeleteMerchant}
-          setIsOpen={() => closeModal('confirmDeleteMerchant')}
+          isOpen={modals.confirmDelete}
+          setIsOpen={() => closeModal('confirmDelete')}
           title={'Delete Merchant?'}
           info={'You are about to delete this merchant, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDeleteMerchant');
-            openModal('deleteSuccessful');
+            deleteMerchantMutation.mutate(merchantId);
           }}
         />
       )}
@@ -274,6 +345,7 @@ const MerchantDetails = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('deleteSuccessful');
             navigate(
               `${isDashboardRoute ? `/${appRoutes.adminDashboard.dashboard.index}` : `/${appRoutes.adminDashboard.merchantManagement.index}`} `,

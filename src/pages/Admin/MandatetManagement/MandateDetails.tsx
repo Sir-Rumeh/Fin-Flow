@@ -66,6 +66,7 @@ const MandateDetails = () => {
   const formik = useFormik({
     initialValues: {
       startDate: '',
+      endDate: '',
     },
     onSubmit: (values: any) => {
       setSearchTerm('');
