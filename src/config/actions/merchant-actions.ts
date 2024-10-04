@@ -51,6 +51,15 @@ export const getMerchantRequestById = async (requestId: string | undefined) => {
   }
 };
 
+export const validateMerchantCif = async (cif: string | undefined) => {
+  try {
+    const response = await AxiosClient.get(`/merchantrequests/validate/${cif}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const addMerchantRequest = async (payload: MerchantRequest | undefined) => {
   try {
     const response = await AxiosClient.post('/merchantrequests/add', payload);

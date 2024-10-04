@@ -3,16 +3,20 @@ import appRoutes from 'utils/constants/routes';
 import ChevronRight from 'assets/icons/ChevronRight';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
 import { onboardMerchantSchema } from 'utils/formValidators';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { addMerchantRequest, validateMerchantCif } from 'config/actions/merchant-actions';
+import { MerchantRequest } from 'utils/interfaces';
+import { notifyError } from 'utils/helpers';
 
 const CreateMerchant = () => {
+  const [merchantRequest, setMerchantRequest] = useState<MerchantRequest | undefined>();
   const navigate = useNavigate();
-  const [merchantCifValidated, setMerchantCifValidated] = useState(false);
   const [modals, setModals] = useState({
     confirmOnboardMerchant: false,
     onboardingSuccessful: false,
@@ -25,6 +29,7 @@ const CreateMerchant = () => {
   const closeModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
+  const [merchantCifValidated, setMerchantCifValidated] = useState(false);
 
   const formik = useFormik({
     initialValues: {
@@ -37,7 +42,37 @@ const CreateMerchant = () => {
     },
     validationSchema: onboardMerchantSchema,
     onSubmit: (values) => {
+      const payload = {
+        merchantId: '',
+        name: values.merchantName,
+        accountNumber: values.accountNumber,
+        rcNumber: values.rcNumber,
+        address: values.address,
+        cif: values.merchantCIF,
+      };
+      setMerchantRequest(payload);
       openModal('confirmOnboardMerchant');
+    },
+  });
+
+  const validateCifStatus = async () => {
+    const res = await validateMerchantCif(formik.values.merchantCIF);
+    if (res.responseData?.accountNumber && res.responseData?.rcNumber) {
+      setMerchantCifValidated(true);
+      formik.setFieldValue('accountNumber', res.responseData?.accountNumber);
+      formik.setFieldValue('rcNumber', res.responseData?.rcNumber);
+    }
+  };
+
+  const addMerchantRequestMutation = useMutation({
+    mutationFn: (payload: MerchantRequest | undefined) => addMerchantRequest(payload),
+    onSuccess: () => {
+      closeModal('confirmOnboardMerchant');
+      openModal('onboardingSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmOnboardMerchant');
+      notifyError(error.message);
     },
   });
 
@@ -84,7 +119,7 @@ const CreateMerchant = () => {
                   onClick={() => {
                     if (!formik.values.merchantCIF)
                       return formik.setFieldError('merchantCIF', 'Merchant CIF is required');
-                    setMerchantCifValidated(true);
+                    validateCifStatus();
                   }}
                   disabled={merchantCifValidated}
                 />
@@ -152,8 +187,7 @@ const CreateMerchant = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmOnboardMerchant');
-            openModal('onboardingSuccessful');
+            addMerchantRequestMutation.mutate(merchantRequest);
           }}
         />
       )}
@@ -167,6 +201,7 @@ const CreateMerchant = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            formik.resetForm();
             closeModal('onboardingSuccessful');
             navigate(`/${appRoutes.adminDashboard.merchantManagement.index}`);
           }}
