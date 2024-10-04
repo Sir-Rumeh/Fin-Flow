@@ -98,7 +98,7 @@ const StaffUserManagement = () => {
 
   const columns: GridColDef[] = [
     {
-      field: 'employeeId',
+      field: 'staffId',
       headerName: 'Employee ID',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,

@@ -171,7 +171,7 @@ const UserDetails = () => {
                 </>
               }
             >
-              <DetailsCard title="Employee ID" content={data?.responseData?.employeeId} />
+              <DetailsCard title="Employee ID" content={data?.responseData?.staffId} />
               <DetailsCard
                 title="User Name"
                 content={`${data ? `${data?.responseData?.firstName} ${data?.responseData?.lastName}` : ''}`}

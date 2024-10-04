@@ -165,3 +165,14 @@ export interface StaffUserRequest {
   branch: string | undefined;
   role: string | undefined;
 }
+export interface ProfileRequest {
+  profileID?: string | undefined;
+  merchantID: string | undefined;
+  accountID: string | undefined;
+  userName: string | undefined;
+  password: string | undefined;
+  role: string | undefined;
+  firstName: string | undefined;
+  lastName: string | undefined;
+  email: string | undefined;
+}

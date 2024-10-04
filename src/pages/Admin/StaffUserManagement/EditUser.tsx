@@ -47,25 +47,6 @@ function EditUser() {
     },
   });
 
-  const { data, refetch } = useQuery({
-    queryKey: ['users', staffUserId],
-    queryFn: ({ queryKey }) => getStaffUserById(queryKey[1]),
-  });
-
-  useEffect(() => {
-    formik.setValues({
-      userName: data?.responseData?.userName,
-      firstName: data?.responseData?.firstName,
-      lastName: data?.responseData?.lastName,
-      employeeId: data?.responseData?.employeeId,
-      email: data?.responseData?.email,
-      phoneNumber: data?.responseData?.phoneNumber,
-      branch: data?.responseData?.branch,
-      role: data?.responseData?.role,
-      staffLevel: data?.responseData?.staffLevel,
-    });
-  }, [data]);
-
   const formik = useFormik({
     initialValues: {
       userName: '',
@@ -95,6 +76,25 @@ function EditUser() {
       openModal('confirmEdit');
     },
   });
+
+  const { data, refetch } = useQuery({
+    queryKey: ['users', staffUserId],
+    queryFn: ({ queryKey }) => getStaffUserById(queryKey[1]),
+  });
+
+  useEffect(() => {
+    formik.setValues({
+      userName: data?.responseData?.userName || '',
+      firstName: data?.responseData?.firstName || '',
+      lastName: data?.responseData?.lastName || '',
+      employeeId: data?.responseData?.staffId || '',
+      email: data?.responseData?.email || '',
+      phoneNumber: data?.responseData?.phoneNumber || '',
+      branch: data?.responseData?.branch || '',
+      role: data?.responseData?.role || '',
+      staffLevel: data?.responseData?.staffLevel || '',
+    });
+  }, [data]);
 
   return (
     <>

@@ -8,7 +8,7 @@ import { useFormik } from 'formik';
 import { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { QueryParams } from 'utils/interfaces';
-import { getProfiles } from 'config/actions/dashboard-actions';
+import { getProfiles } from 'config/actions/profile-actions';
 
 const UserManagement = () => {
   const printPdfRef = useRef(null);

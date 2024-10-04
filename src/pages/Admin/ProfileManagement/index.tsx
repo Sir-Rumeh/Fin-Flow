@@ -1,5 +1,5 @@
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import TableFilter from 'components/TableFilter';
 import CustomTable from 'components/CustomTable';
 import appRoutes from 'utils/constants/routes';
@@ -15,10 +15,20 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 import { useMediaQuery } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { QueryParams } from 'utils/interfaces';
+import { getProfiles } from 'config/actions/profile-actions';
 
 const ProfileManagement = () => {
+  const printPdfRef = useRef(null);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedProfileId, setSelectedProfileId] = useState('');
+  const [paginationData, setPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
+
   const [modals, setModals] = useState({
     confirmDisable: false,
     disableSuccessful: false,
@@ -47,6 +57,38 @@ const ProfileManagement = () => {
       setSearchTerm('');
     },
   });
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    mandateCode: '',
+    status: formik.values.statusFilter,
+    pageNo: paginationData.pageNumber,
+    pageSize: paginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+    searchFilter: formik.values.searchProfile,
+    startDate: formik.values.fromDateFilter,
+    endDate: formik.values.toDateFilter,
+  });
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+      searchFilter: formik.values.searchProfile,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  }, [paginationData]);
+
+  const excelHeaders = [
+    { label: 'Account ID', key: 'accountId' },
+    { label: 'User Name', key: 'userName' },
+    { label: 'Email', key: 'email' },
+    { label: 'Active Status', key: 'isActive' },
+    { label: 'Date Requested', key: 'dateRequested' },
+  ];
 
   const columns: GridColDef[] = [
     {
@@ -141,19 +183,24 @@ const ProfileManagement = () => {
                 >
                   Edit Details
                 </button>
-                {params?.row.status === 'Enabled' && (
+                {params?.row.isActive ? (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmDisable')}
+                    onClick={() => {
+                      setSelectedProfileId(params.row.id);
+                      openModal('confirmDisable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                   >
                     Disable
                   </button>
-                )}
-                {params?.row.status === 'Disabled' && (
+                ) : (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmEnable')}
+                    onClick={() => {
+                      setSelectedProfileId(params.row.id);
+                      openModal('confirmEnable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
                   >
                     Enable
@@ -161,7 +208,10 @@ const ProfileManagement = () => {
                 )}
                 <button
                   type="button"
-                  onClick={() => openModal('confirmDelete')}
+                  onClick={() => {
+                    setSelectedProfileId(params.row.id);
+                    openModal('confirmDelete');
+                  }}
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
                   Delete
@@ -174,6 +224,10 @@ const ProfileManagement = () => {
     },
   ];
 
+  const { data, refetch } = useQuery({
+    queryKey: ['profile', queryParams],
+    queryFn: ({ queryKey }) => getProfiles(queryKey[1] as QueryParams),
+  });
   const isSmallWidth = useMediaQuery('(max-width:370px)');
 
   return (
@@ -221,13 +275,24 @@ const ProfileManagement = () => {
                 </div>
               </div>
               <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
-                <ExportBUtton />
+                <ExportBUtton
+                  data={data?.responseData?.items}
+                  printPdfRef={printPdfRef}
+                  headers={excelHeaders}
+                  fileName="profiles.csv"
+                />
               </div>
             </div>
 
             <div className="mt-6 w-full">
-              <div className="w-full">
-                <CustomTable tableData={profileManagementList} columns={columns} rowCount={73} />
+              <div ref={printPdfRef} className="w-full">
+                <CustomTable
+                  tableData={data?.responseData?.items}
+                  columns={columns}
+                  rowCount={data?.responseData?.totalCount}
+                  paginationData={paginationData}
+                  setPaginationData={setPaginationData}
+                />
               </div>
             </div>
           </div>

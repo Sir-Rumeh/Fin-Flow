@@ -1,10 +1,10 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
 import ChevronDown from 'assets/icons/ChevronDown';
 import ChevronRight from 'assets/icons/ChevronRight';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
@@ -12,13 +12,18 @@ import { useFormik } from 'formik';
 import FormSelect from 'components/FormElements/FormSelect';
 import { useQuery } from '@tanstack/react-query';
 import { getMerchants } from 'config/actions/merchant-actions';
-import { QueryParams } from 'utils/interfaces';
+import { ProfileRequest, QueryParams } from 'utils/interfaces';
 import { getAccounts } from 'config/actions/account-actions';
 import { formatApiDataForDropdown } from 'utils/helpers';
 import { userLevel } from 'utils/constants';
+import { getProfileById } from 'config/actions/profile-actions';
+import { createProfileSchema } from 'utils/formValidators';
 
 function EditProfile() {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const profileId = searchParams?.get('id') || '';
+  const [profileRequest, setProfileRequest] = useState<ProfileRequest>();
   const [modals, setModals] = useState({
     confirmEdit: false,
     editSuccessful: false,
@@ -33,12 +38,49 @@ function EditProfile() {
   };
 
   const formik = useFormik({
-    initialValues: {},
-
+    initialValues: {
+      merchantID: '',
+      accountID: '',
+      userName: '',
+      password: '',
+      role: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+    },
+    validationSchema: createProfileSchema,
     onSubmit: (values) => {
+      const payload = {
+        merchantID: values.merchantID,
+        accountID: values.accountID,
+        userName: values.userName,
+        password: values.password,
+        role: values.role,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+      };
+      setProfileRequest(payload);
       openModal('confirmEdit');
     },
   });
+  const { data: profileData } = useQuery({
+    queryKey: ['profiles', profileId],
+    queryFn: ({ queryKey }) => getProfileById(queryKey[1]),
+  });
+
+  useEffect(() => {
+    formik.setValues({
+      merchantID: profileData?.responseData?.merchantID || '',
+      accountID: profileData?.responseData?.accountID || '',
+      password: profileData?.responseData?.password || '',
+      userName: profileData?.responseData?.userName || '',
+      firstName: profileData?.responseData?.firstName || '',
+      lastName: profileData?.responseData?.lastName || '',
+      email: profileData?.responseData?.email || '',
+      role: profileData?.responseData?.role || '',
+    });
+  }, [profileData]);
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
     sortBy: 'asc',

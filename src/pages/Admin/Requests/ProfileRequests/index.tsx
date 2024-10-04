@@ -1,6 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TableFilter from 'components/TableFilter';
-import { TabsProps } from 'utils/interfaces';
+import { QueryParams, TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
 import { TabsListTabNames } from 'utils/enums';
 import ProfileRequestsListTable from './ProfileRequestsListTable';
@@ -19,28 +19,17 @@ import { RequestTypes } from 'utils/enums';
 import CustomTable from 'components/CustomTable';
 import { useFormik } from 'formik';
 import { useMediaQuery } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { getProfileRequests } from 'config/actions/profile-actions';
 
 const ProfileRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const total = 20;
   const [activeTab, setActiveTab] = useState(TabsListTabNames.Pending);
-  const tabsList: TabsProps[] = [
-    {
-      tabIndex: 1,
-      tabName: TabsListTabNames.Pending,
-      tabTotal: total,
-    },
-    {
-      tabIndex: 2,
-      tabName: TabsListTabNames.Approved,
-      tabTotal: total,
-    },
-    {
-      tabIndex: 3,
-      tabName: TabsListTabNames.Rejected,
-      tabTotal: total,
-    },
-  ];
+  const [paginationData, setPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
 
   const formik = useFormik({
     initialValues: {
@@ -53,6 +42,38 @@ const ProfileRequests = () => {
       setSearchTerm('');
     },
   });
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    status: activeTab,
+    pageNo: paginationData.pageNumber,
+    pageSize: paginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+    searchFilter: formik.values.searchProfile,
+    startDate: formik.values.fromDateFilter,
+    endDate: formik.values.toDateFilter,
+  });
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: activeTab,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+      searchFilter: formik.values.searchProfile,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  }, [activeTab, paginationData]);
+
+  const handleOptionsFilter = () => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  };
 
   const columns: GridColDef[] = [
     {
@@ -150,6 +171,30 @@ const ProfileRequests = () => {
       },
     },
   ];
+
+  const { data } = useQuery({
+    queryKey: ['profileRequests', queryParams],
+    queryFn: ({ queryKey }) => getProfileRequests(queryKey[1] as QueryParams),
+    enabled: !!queryParams.status,
+  });
+
+  const tabsList: TabsProps[] = [
+    {
+      tabIndex: 1,
+      tabName: TabsListTabNames.Pending,
+      tabTotal: total,
+    },
+    {
+      tabIndex: 2,
+      tabName: TabsListTabNames.Approved,
+      tabTotal: total,
+    },
+    {
+      tabIndex: 3,
+      tabName: TabsListTabNames.Rejected,
+      tabTotal: total,
+    },
+  ];
   const isLargeWidth = useMediaQuery('(min-width:1320px)');
   return (
     <>
@@ -173,7 +218,7 @@ const ProfileRequests = () => {
                     label={'Search Profile'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
-                    handleOptionsFilter={() => {}}
+                    handleOptionsFilter={handleOptionsFilter}
                     formik={formik}
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}
@@ -184,7 +229,13 @@ const ProfileRequests = () => {
               </div>
             </div>
             <div className="mt-6 w-full">
-              <CustomTable tableData={profileRequestsList} columns={columns} rowCount={73} />
+              <CustomTable
+                tableData={data?.responseData?.items}
+                columns={columns}
+                rowCount={data?.responseData?.totalCount}
+                paginationData={paginationData}
+                setPaginationData={setPaginationData}
+              />
             </div>
           </div>
         </div>

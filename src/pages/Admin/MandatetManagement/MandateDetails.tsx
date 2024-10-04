@@ -137,7 +137,7 @@ const MandateDetails = () => {
     },
   ];
 
-  const { isLoading, data, refetch, isFetching } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['mandates', mandateId],
     queryFn: ({ queryKey }) => getMandateById(queryKey[1]),
   });

@@ -32,7 +32,7 @@ const ProfileCreationRequestDetails = () => {
   };
   const formik = useFormik({
     initialValues: {
-      reasonForRejection: '',
+      remark: '',
     },
     validationSchema: reasonForRejectionSchema,
     onSubmit: () => {},
@@ -56,7 +56,8 @@ const ProfileCreationRequestDetails = () => {
           <div className="flex w-1/2 items-center justify-end gap-4">
             <div className="w-auto">
               <ButtonComponent
-                color="purplePrimary"
+                color="#5C068C"
+                borderColor="#5C068C"
                 variant="outlined"
                 type="button"
                 title="Reject"
@@ -165,7 +166,7 @@ const ProfileCreationRequestDetails = () => {
           feedback={
             <div className="w-full md:col-span-1">
               <CustomInput
-                labelFor="reasonForRejection"
+                labelFor="remark"
                 label="Reason For Rejection"
                 inputType="text"
                 placeholder="Type here"

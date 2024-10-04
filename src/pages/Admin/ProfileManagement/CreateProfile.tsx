@@ -10,14 +10,16 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
 import FormSelect from 'components/FormElements/FormSelect';
 import { useQuery } from '@tanstack/react-query';
-import { QueryParams } from 'utils/interfaces';
+import { ProfileRequest, QueryParams } from 'utils/interfaces';
 import { getMerchants } from 'config/actions/merchant-actions';
 import { formatApiDataForDropdown } from 'utils/helpers';
 import { getAccounts } from 'config/actions/account-actions';
 import { userLevel } from 'utils/constants';
+import { createProfileSchema } from 'utils/formValidators';
 
 function CreateProfile() {
   const navigate = useNavigate();
+  const [profileRequest, setProfileRequest] = useState<ProfileRequest>();
   const [modals, setModals] = useState({
     confirmCreate: false,
     creationSuccessful: false,
@@ -32,9 +34,30 @@ function CreateProfile() {
   };
 
   const formik = useFormik({
-    initialValues: {},
-
+    initialValues: {
+      merchantID: '',
+      accountID: '',
+      userName: '',
+      password: '',
+      role: '',
+      firstName: '',
+      lastName: '',
+      email: '',
+    },
+    validationSchema: createProfileSchema,
     onSubmit: (values) => {
+      const payload = {
+        profileID: '',
+        merchantID: values.merchantID,
+        accountID: values.accountID,
+        userName: values.userName,
+        password: values.password,
+        role: values.role,
+        firstName: values.firstName,
+        lastName: values.lastName,
+        email: values.email,
+      };
+      setProfileRequest(payload);
       openModal('confirmCreate');
     },
   });
