@@ -21,7 +21,6 @@ import { getMandateRequests, getMandateRequestsStatistics } from 'config/actions
 
 const MandateRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
-
   const [activeTab, setActiveTab] = useState(TabsListTabNames.Pending);
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
@@ -171,12 +170,10 @@ const MandateRequests = () => {
   const { data, refetch } = useQuery({
     queryKey: ['mandateRequests', queryParams],
     queryFn: ({ queryKey }) => getMandateRequests(queryKey[1] as QueryParams),
-    enabled: !!queryParams.status,
   });
   const { data: statisticsData } = useQuery({
     queryKey: ['mandateRequests'],
     queryFn: ({ queryKey }) => getMandateRequestsStatistics(),
-    enabled: !!queryParams.status,
   });
 
   const tabsList: TabsProps[] = [

@@ -175,7 +175,6 @@ const ProfileRequests = () => {
   const { data } = useQuery({
     queryKey: ['profileRequests', queryParams],
     queryFn: ({ queryKey }) => getProfileRequests(queryKey[1] as QueryParams),
-    enabled: !!queryParams.status,
   });
 
   const tabsList: TabsProps[] = [

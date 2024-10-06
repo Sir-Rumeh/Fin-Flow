@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
@@ -15,9 +15,18 @@ import DashboardCard from 'components/common/DashboardCards/DashboardCard';
 import SubTitleIconGreen from 'assets/icons/SubTitleIconGreen';
 import SubTitleIconYellow from 'assets/icons/SubTitleIconYellow';
 import CustomInput from 'components/FormElements/CustomInput';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  approveMerchantRequest,
+  getMerchantRequestById,
+  rejectMerchantRequest,
+} from 'config/actions/merchant-actions';
 
 const MerchantEnableRequestDetails = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const merchantId = searchParams?.get('id') || '';
+  const queryClient = useQueryClient();
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
     confirmRejectRequest: false,
@@ -37,8 +46,36 @@ const MerchantEnableRequestDetails = () => {
       remark: '',
     },
     validationSchema: reasonForRejectionSchema,
-    onSubmit: () => {},
+    onSubmit: () => {
+      rejectMerchantRequestMutation.mutate(merchantId);
+    },
   });
+
+  const { data } = useQuery({
+    queryKey: ['merchantRequests', merchantId],
+    queryFn: ({ queryKey }) => getMerchantRequestById(queryKey[1]),
+  });
+
+  const approveMerchantRequestMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => approveMerchantRequest(requestId),
+    onSuccess: () => {
+      closeModal('confirmApproveRequest');
+      openModal('approveSuccessfulModal');
+      queryClient.invalidateQueries({ queryKey: ['merchantRequests'] });
+    },
+    onError: (error) => console.log(error.message),
+  });
+
+  const rejectMerchantRequestMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => rejectMerchantRequest(requestId, formik.values),
+    onSuccess: () => {
+      closeModal('confirmRejectRequest');
+      openModal('rejectSuccessfulModal');
+      queryClient.invalidateQueries({ queryKey: ['merchantRequests'] });
+    },
+    onError: (error) => console.log(error.message),
+  });
+
   return (
     <>
       <div className="px-5 py-1">

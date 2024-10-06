@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
@@ -8,14 +8,22 @@ import { useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
-import FormInput from 'components/FormElements/FormInput';
 import { useFormik } from 'formik';
 import { reasonForRejectionSchema } from 'utils/formValidators';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
 import CustomInput from 'components/FormElements/CustomInput';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  approveMerchantRequest,
+  getMerchantRequestById,
+  rejectMerchantRequest,
+} from 'config/actions/merchant-actions';
 
 const MerchantUpdateRequestDetails = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const merchantId = searchParams?.get('id') || '';
+  const queryClient = useQueryClient();
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
     confirmRejectRequest: false,
@@ -32,10 +40,37 @@ const MerchantUpdateRequestDetails = () => {
   };
   const formik = useFormik({
     initialValues: {
-      reasonForRejection: '',
+      remark: '',
     },
     validationSchema: reasonForRejectionSchema,
-    onSubmit: () => {},
+    onSubmit: () => {
+      rejectMerchantRequestMutation.mutate(merchantId);
+    },
+  });
+
+  const { data } = useQuery({
+    queryKey: ['merchantRequests', merchantId],
+    queryFn: ({ queryKey }) => getMerchantRequestById(queryKey[1]),
+  });
+
+  const approveMerchantRequestMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => approveMerchantRequest(requestId),
+    onSuccess: () => {
+      closeModal('confirmApproveRequest');
+      openModal('approveSuccessfulModal');
+      queryClient.invalidateQueries({ queryKey: ['merchantRequests'] });
+    },
+    onError: (error) => console.log(error.message),
+  });
+
+  const rejectMerchantRequestMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => rejectMerchantRequest(requestId, formik.values),
+    onSuccess: () => {
+      closeModal('confirmRejectRequest');
+      openModal('rejectSuccessfulModal');
+      queryClient.invalidateQueries({ queryKey: ['merchantRequests'] });
+    },
+    onError: (error) => console.log(error.message),
   });
 
   return (
@@ -172,7 +207,7 @@ const MerchantUpdateRequestDetails = () => {
           feedback={
             <div className="w-full md:col-span-1">
               <CustomInput
-                labelFor="reasonForRejection"
+                labelFor="remark"
                 label="Reason For Rejection"
                 inputType="text"
                 placeholder="Type here"
