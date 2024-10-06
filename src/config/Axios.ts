@@ -66,7 +66,7 @@ AxiosClient.interceptors.response.use(
       notifyError('Resource not found');
       setTimeout(() => {
         window.location.href = url;
-      }, 1000);
+      }, 1500);
       return Promise.reject(error);
     } else if (error?.response?.status === 500) {
       dispatch(uiStopLoading());

@@ -224,6 +224,7 @@ const ProfileRequests = () => {
                     toDateName={'toDateFilter'}
                     selectName={'statusFilter'}
                     translationX={isLargeWidth ? 350 : undefined}
+                    isRequestsFilter
                   />
                 </div>
               </div>

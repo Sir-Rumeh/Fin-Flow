@@ -85,7 +85,7 @@ const FormSelect = ({
 
         {isOpen && (
           <div
-            className={`${scrollableOptions ? `custom-scrollbar overflow-y-scroll ${scrollableHeight}` : ''} slide-downward absolute z-[999] mt-1 flex w-full flex-col rounded-sm bg-white text-sm shadow`}
+            className={`${scrollableOptions ? `custom-scrollbar overflow-y-scroll ${scrollableHeight}` : ''} slide-downward absolute z-[999] mt-1 flex w-full flex-col rounded-sm bg-white pb-12 text-sm shadow`}
           >
             {options.map((option, index) => {
               return (

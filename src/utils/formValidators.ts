@@ -10,7 +10,7 @@ export const userLoginValidationSchema = Yup.object().shape({
 });
 
 export const reasonForRejectionSchema = Yup.object().shape({
-  reasonForRejection: Yup.string().required('Please enter reason for rejecting'),
+  remark: Yup.string().required('Please enter reason for rejecting'),
 });
 
 export const onboardMerchantSchema = Yup.object().shape({

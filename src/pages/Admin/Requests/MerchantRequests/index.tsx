@@ -94,6 +94,8 @@ const MerchantRequests = () => {
             return renderIcon(CreationRequestIcon, 'text-greenPrimary');
           case RequestTypes.Update:
             return renderIcon(UpdateRequestIcon, 'text-lightPurple');
+          case RequestTypes.Enable:
+            return renderIcon(CreationRequestIcon, 'text-greenPrimary');
           case RequestTypes.Disable:
             return renderIcon(DisableRequestIcon, 'text-yellowNeutral');
           case RequestTypes.Deletion:
@@ -126,7 +128,9 @@ const MerchantRequests = () => {
                 ? `/${appRoutes.adminDashboard.requests.merchantRequests.merchantUpdateRequest}`
                 : params?.row.requestType === RequestTypes.Disable
                   ? `/${appRoutes.adminDashboard.requests.merchantRequests.merchantDisableRequest}`
-                  : undefined;
+                  : params?.row.requestType === RequestTypes.Enable
+                    ? `/${appRoutes.adminDashboard.requests.merchantRequests.merchantEnableRequest}`
+                    : undefined;
         return (
           <div className="">
             <Link
@@ -173,6 +177,7 @@ const MerchantRequests = () => {
                     toDateName={'toDateFilter'}
                     selectName={'statusFilter'}
                     translationX={isLargeWidth ? 350 : undefined}
+                    isRequestsFilter
                   />
                 </div>
               </div>
