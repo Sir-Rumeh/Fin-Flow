@@ -18,11 +18,13 @@ const AxiosClient = axios.create({
 
 const { dispatch } = store;
 
+const networkErrorMessage = 'Please check your Internet Connection';
+
 AxiosClient.interceptors.request.use(
   (axiosConfig) => {
     dispatch(uiStartLoading());
     if (!navigator.onLine) {
-      throw new Error('Please check your Internet Connection');
+      throw new Error(networkErrorMessage);
     }
     const headers = generateHeader();
     axiosConfig.headers.UTCTimestamp = headers.UTCTimestamp;
@@ -70,9 +72,12 @@ AxiosClient.interceptors.response.use(
       dispatch(uiStopLoading());
       notifyError('Something went wrong');
       return Promise.reject(error);
+    } else if (error.message === networkErrorMessage) {
+      dispatch(uiStopLoading());
+      notifyError(error.message);
+      return Promise.reject(error);
     }
     dispatch(uiStopLoading());
-    notifyError(error.message);
     return Promise.reject(error);
   },
 );

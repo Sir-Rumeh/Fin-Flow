@@ -53,7 +53,6 @@ const CreateMandate = () => {
     },
     onError: (error) => {
       closeModal('addMandate');
-      notifyError(error.message);
     },
   });
 

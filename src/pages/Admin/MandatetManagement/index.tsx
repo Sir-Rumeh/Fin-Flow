@@ -361,7 +361,6 @@ const MandatetManagement = () => {
     },
     onError: (error) => {
       closeModal('confirmEdit');
-      notifyError(error?.message);
     },
   });
 
@@ -373,7 +372,6 @@ const MandatetManagement = () => {
     },
     onError: (error) => {
       closeModal('confirmEnable');
-      notifyError(error?.message);
     },
   });
 
@@ -385,7 +383,6 @@ const MandatetManagement = () => {
     },
     onError: (error) => {
       closeModal('confirmDisable');
-      notifyError(error?.message);
     },
   });
 
@@ -397,7 +394,6 @@ const MandatetManagement = () => {
     },
     onError: (error) => {
       closeModal('confirmDelete');
-      notifyError(error?.message);
     },
   });
 

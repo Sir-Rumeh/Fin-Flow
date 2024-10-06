@@ -14,8 +14,6 @@ const UserDetails = () => {
     queryFn: ({ queryKey }) => getProfileById(queryKey[1]),
   });
 
-  isError && notifyError(error.message);
-
   return (
     <div className="px-5 py-5">
       <div className="flex items-center gap-4 font-semibold">

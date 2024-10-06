@@ -153,7 +153,6 @@ const MandateDetails = () => {
     },
     onError: (error) => {
       closeModal('confirmEdit');
-      notifyError(error?.message);
     },
   });
 
@@ -165,7 +164,6 @@ const MandateDetails = () => {
     },
     onError: (error) => {
       closeModal('confirmEnable');
-      notifyError(error?.message);
     },
   });
 
@@ -177,7 +175,6 @@ const MandateDetails = () => {
     },
     onError: (error) => {
       closeModal('confirmDisable');
-      notifyError(error?.message);
     },
   });
 
@@ -189,7 +186,6 @@ const MandateDetails = () => {
     },
     onError: (error) => {
       closeModal('confirmDelete');
-      notifyError(error?.message);
     },
   });
 

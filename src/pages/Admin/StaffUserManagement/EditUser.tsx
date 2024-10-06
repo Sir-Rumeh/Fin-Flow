@@ -43,7 +43,6 @@ function EditUser() {
     },
     onError: (error) => {
       closeModal('confirmEdit');
-      notifyError(error.message);
     },
   });
 

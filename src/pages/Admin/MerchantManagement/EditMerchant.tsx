@@ -44,7 +44,6 @@ const EditMerchant = () => {
     },
     onError: (error) => {
       closeModal('confirmEdit');
-      notifyError(error.message);
     },
   });
 

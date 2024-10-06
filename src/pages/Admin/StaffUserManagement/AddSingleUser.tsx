@@ -40,7 +40,6 @@ function AddUser() {
     },
     onError: (error) => {
       closeModal('confirmCreate');
-      notifyError(error.message);
     },
   });
 

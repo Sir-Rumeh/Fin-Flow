@@ -30,6 +30,7 @@ const CreateMerchant = () => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
   const [merchantCifValidated, setMerchantCifValidated] = useState(false);
+  const [validatedMerchantCif, setValidatedMerchantCif] = useState('');
 
   const formik = useFormik({
     initialValues: {
@@ -48,7 +49,7 @@ const CreateMerchant = () => {
         accountNumber: values.accountNumber,
         rcNumber: values.rcNumber,
         address: values.address,
-        cif: values.merchantCIF,
+        cif: validatedMerchantCif,
       };
       setMerchantRequest(payload);
       openModal('confirmOnboardMerchant');
@@ -59,6 +60,7 @@ const CreateMerchant = () => {
     const res = await validateMerchantCif(formik.values.merchantCIF);
     if (res.responseData?.accountNumber && res.responseData?.rcNumber) {
       setMerchantCifValidated(true);
+      setValidatedMerchantCif(formik.values.merchantCIF);
       formik.setFieldValue('accountNumber', res.responseData?.accountNumber || '');
       formik.setFieldValue('rcNumber', res.responseData?.rcNumber || '');
     }
@@ -72,7 +74,6 @@ const CreateMerchant = () => {
     },
     onError: (error) => {
       closeModal('confirmOnboardMerchant');
-      notifyError(error.message);
     },
   });
 

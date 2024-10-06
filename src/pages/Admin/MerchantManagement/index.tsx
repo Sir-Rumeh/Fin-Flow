@@ -261,7 +261,6 @@ const MerchantManagement = () => {
     },
     onError: (error) => {
       closeModal('confirmEnable');
-      notifyError(error?.message);
     },
   });
 
@@ -273,7 +272,6 @@ const MerchantManagement = () => {
     },
     onError: (error) => {
       closeModal('confirmDisable');
-      notifyError(error?.message);
     },
   });
 
@@ -285,7 +283,6 @@ const MerchantManagement = () => {
     },
     onError: (error) => {
       closeModal('confirmDelete');
-      notifyError(error?.message);
     },
   });
 

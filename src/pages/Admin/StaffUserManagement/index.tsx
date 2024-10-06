@@ -272,7 +272,6 @@ const StaffUserManagement = () => {
     },
     onError: (error) => {
       closeModal('confirmEnable');
-      notifyError(error?.message);
     },
   });
   const disableStaffUserMutation = useMutation({
@@ -283,7 +282,6 @@ const StaffUserManagement = () => {
     },
     onError: (error) => {
       closeModal('confirmDisable');
-      notifyError(error?.message);
     },
   });
 
@@ -295,7 +293,6 @@ const StaffUserManagement = () => {
     },
     onError: (error) => {
       closeModal('confirmDelete');
-      notifyError(error?.message);
     },
   });
 
