@@ -89,7 +89,7 @@ const MerchantCreationRequestDetails = () => {
           <span className="text-lightPurple">Merchant Creation Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
-          <h2 className="text-lg font-semibold md:text-2xl">{`Mandate ID : ${data?.responseData?.id}`}</h2>
+          <h2 className="text-lg font-semibold md:text-2xl">{`Merchant ID : ${data?.responseData?.id}`}</h2>
           <div className="flex w-1/2 items-center justify-end gap-4">
             <div className="w-auto">
               <ButtonComponent
