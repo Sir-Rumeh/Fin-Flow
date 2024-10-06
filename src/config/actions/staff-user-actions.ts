@@ -4,7 +4,7 @@ import { QueryParams, StaffUserRequest } from 'utils/interfaces';
 
 export const addStaffUserRequest = async (payload: StaffUserRequest | undefined) => {
   try {
-    const response = await AxiosClient.post('/users/add', payload);
+    const response = await AxiosClient.post('/userrequests/add', payload);
     return response.data;
   } catch (error) {
     throw error;
@@ -36,7 +36,36 @@ export const getStaffUsers = async (queryParams?: QueryParams) => {
 
 export const getStaffUserById = async (requestId: string | undefined) => {
   try {
-    const response = await AxiosClient.get(`/users/user/${requestId}`);
+    const response = await AxiosClient.get(`/users/${requestId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getStaffUsersRequests = async (queryParams?: QueryParams) => {
+  const params = new URLSearchParams();
+  appendParams(params, queryParams);
+  try {
+    const response = await AxiosClient.get(`/userrequests?${params.toString()}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getStaffUserRequestById = async (requestId: string | undefined) => {
+  try {
+    const response = await AxiosClient.get(`/userrequests/${requestId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getStaffUsersRequestsStatistics = async () => {
+  try {
+    const response = await AxiosClient.get(`/userrequests/statistics`);
     return response.data;
   } catch (error) {
     throw error;
@@ -45,7 +74,7 @@ export const getStaffUserById = async (requestId: string | undefined) => {
 
 export const enableStaffUser = async (requestId: string | undefined) => {
   try {
-    const response = await AxiosClient.put(`/users/user/activate/${requestId}`);
+    const response = await AxiosClient.put(`/users/enable/${requestId}`);
     return response.data;
   } catch (error) {
     throw error;
@@ -53,7 +82,7 @@ export const enableStaffUser = async (requestId: string | undefined) => {
 };
 export const disableStaffUser = async (requestId: string | undefined) => {
   try {
-    const response = await AxiosClient.put(`/users/user/deactivate/${requestId}`);
+    const response = await AxiosClient.put(`/users/disable/${requestId}`);
     return response.data;
   } catch (error) {
     throw error;
@@ -61,7 +90,28 @@ export const disableStaffUser = async (requestId: string | undefined) => {
 };
 export const deleteStaffUser = async (requestId: string | undefined) => {
   try {
-    const response = await AxiosClient.delete(`/users/user/delete/${requestId}`);
+    const response = await AxiosClient.delete(`/users/${requestId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const approveStaffUserRequest = async (requestId: string | undefined) => {
+  try {
+    const response = await AxiosClient.put(`/userrequests/approve/${requestId}`, {});
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const rejectStaffUserRequest = async (
+  requestId: string | undefined,
+  payload: { remark: string },
+) => {
+  try {
+    const response = await AxiosClient.put(`/userrequests/reject/${requestId}`, payload);
     return response.data;
   } catch (error) {
     throw error;

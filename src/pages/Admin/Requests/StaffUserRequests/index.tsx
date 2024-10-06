@@ -1,9 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TableFilter from 'components/TableFilter';
-import { TabsProps } from 'utils/interfaces';
+import { QueryParams, TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
 import { TabsListTabNames } from 'utils/enums';
-import { accountRequestsList, staffUsersList } from 'utils/constants';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { createSearchParams, Link } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
@@ -17,32 +16,19 @@ import { RequestTypes } from 'utils/enums';
 import CustomTable from 'components/CustomTable';
 import { useFormik } from 'formik';
 import { useMediaQuery } from '@mui/material';
+import {
+  getStaffUsersRequests,
+  getStaffUsersRequestsStatistics,
+} from 'config/actions/staff-user-actions';
+import { useQuery } from '@tanstack/react-query';
 
 const StaffUserRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const total = 20;
   const [activeTab, setActiveTab] = useState(TabsListTabNames.Pending);
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
     pageSize: 10,
   });
-  const tabsList: TabsProps[] = [
-    {
-      tabIndex: 1,
-      tabName: TabsListTabNames.Pending,
-      tabTotal: total,
-    },
-    {
-      tabIndex: 2,
-      tabName: TabsListTabNames.Approved,
-      tabTotal: total,
-    },
-    {
-      tabIndex: 3,
-      tabName: TabsListTabNames.Rejected,
-      tabTotal: total,
-    },
-  ];
 
   const formik = useFormik({
     initialValues: {
@@ -55,6 +41,38 @@ const StaffUserRequests = () => {
       setSearchTerm('');
     },
   });
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    status: activeTab,
+    pageNo: paginationData.pageNumber,
+    pageSize: paginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+    searchFilter: formik.values.searchAccount,
+    startDate: formik.values.fromDateFilter,
+    endDate: formik.values.toDateFilter,
+  });
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: activeTab,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+      searchFilter: formik.values.searchAccount,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  }, [activeTab, paginationData]);
+
+  const handleOptionsFilter = () => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  };
 
   const columns: GridColDef[] = [
     {
@@ -97,6 +115,8 @@ const StaffUserRequests = () => {
             return renderIcon(CreationRequestIcon, 'text-greenPrimary');
           case RequestTypes.Update:
             return renderIcon(UpdateRequestIcon, 'text-lightPurple');
+          case RequestTypes.Enable:
+            return renderIcon(CreationRequestIcon, 'text-greenPrimary');
           case RequestTypes.Disable:
             return renderIcon(DisableRequestIcon, 'text-yellowNeutral');
           case RequestTypes.Deletion:
@@ -127,9 +147,11 @@ const StaffUserRequests = () => {
               ? `/${appRoutes.adminDashboard.staffUserRequests.staffUserDeletionRequest}`
               : params?.row.requestType === RequestTypes.Update
                 ? `/${appRoutes.adminDashboard.staffUserRequests.staffUserUpdateRequest}`
-                : params?.row.requestType === RequestTypes.Disable
-                  ? `/${appRoutes.adminDashboard.staffUserRequests.staffUserDisableRequest}`
-                  : undefined;
+                : params?.row.requestType === RequestTypes.Enable
+                  ? `/${appRoutes.adminDashboard.staffUserRequests.staffUserEnableRequest}`
+                  : params?.row.requestType === RequestTypes.Disable
+                    ? `/${appRoutes.adminDashboard.staffUserRequests.staffUserDisableRequest}`
+                    : undefined;
         return (
           <div className="">
             <Link
@@ -144,6 +166,34 @@ const StaffUserRequests = () => {
           </div>
         );
       },
+    },
+  ];
+
+  const { data, refetch } = useQuery({
+    queryKey: ['staffuserRequests', queryParams],
+    queryFn: ({ queryKey }) => getStaffUsersRequests(queryKey[1] as QueryParams),
+  });
+
+  const { data: statisticsData } = useQuery({
+    queryKey: ['v'],
+    queryFn: ({ queryKey }) => getStaffUsersRequestsStatistics(),
+  });
+
+  const tabsList: TabsProps[] = [
+    {
+      tabIndex: 1,
+      tabName: TabsListTabNames.Pending,
+      tabTotal: statisticsData ? statisticsData?.responseData?.totalPending : 0,
+    },
+    {
+      tabIndex: 2,
+      tabName: TabsListTabNames.Approved,
+      tabTotal: statisticsData ? statisticsData?.responseData?.totalApproved : 0,
+    },
+    {
+      tabIndex: 3,
+      tabName: TabsListTabNames.Rejected,
+      tabTotal: statisticsData ? statisticsData?.responseData?.totalRejected : 0,
     },
   ];
   const isLargeWidth = useMediaQuery('(min-width:1320px)');
@@ -169,7 +219,7 @@ const StaffUserRequests = () => {
                     label={'Search Staff User'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
-                    handleOptionsFilter={() => {}}
+                    handleOptionsFilter={handleOptionsFilter}
                     formik={formik}
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}
@@ -182,9 +232,9 @@ const StaffUserRequests = () => {
             </div>
             <div className="mt-6 w-full">
               <CustomTable
-                tableData={staffUsersList}
+                tableData={data?.responseData?.items}
                 columns={columns}
-                rowCount={143}
+                rowCount={data?.responseData?.totalCount}
                 paginationData={paginationData}
                 setPaginationData={setPaginationData}
               />

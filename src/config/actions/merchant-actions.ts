@@ -74,7 +74,7 @@ export const updateMerchantRequest = async (
   payload: MerchantRequest | undefined,
 ) => {
   try {
-    const response = await AxiosClient.put(`/merchantrequests/update/${requestId}`, payload);
+    const response = await AxiosClient.put(`/merchants/update/${requestId}`, payload);
     return response.data;
   } catch (error) {
     throw error;

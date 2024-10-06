@@ -93,6 +93,7 @@ export const appRoutes = {
       staffUserDeletionRequest: `${BASE_ROUTES.ADMIN}/staff-user-requests/deletion-request-details`,
       staffUserUpdateRequest: `${BASE_ROUTES.ADMIN}/staff-user-requests/update-request-details`,
       staffUserDisableRequest: `${BASE_ROUTES.ADMIN}/staff-user-requests/disable-request-details`,
+      staffUserEnableRequest: `${BASE_ROUTES.ADMIN}/staff-user-requests/enable-request-details`,
     },
   },
   merchantDashboard: {

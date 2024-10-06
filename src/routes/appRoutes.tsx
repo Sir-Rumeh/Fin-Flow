@@ -59,6 +59,7 @@ import StaffUserDeletionRequestDetails from 'pages/Admin/Requests/StaffUserReque
 import StaffUserUpdateRequestDetails from 'pages/Admin/Requests/StaffUserRequests/StaffUserUpdateRequestDetails';
 import StaffUserDisableRequestDetails from 'pages/Admin/Requests/StaffUserRequests/StaffUserDisableRequestDetails';
 import UserRequestsIcon from 'assets/icons/UserRequestsIcon';
+import StaffUserEnableRequestDetails from 'pages/Admin/Requests/StaffUserRequests/StaffUserEnableRequestDetails';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -285,6 +286,11 @@ const adminRoutes: RoutesType[] = [
         name: 'Update Request Details',
         path: 'update-request-details',
         component: <StaffUserUpdateRequestDetails />,
+      },
+      {
+        name: 'Enable Request Details',
+        path: 'enable-request-details',
+        component: <StaffUserEnableRequestDetails />,
       },
       {
         name: 'Disable Request Details',
