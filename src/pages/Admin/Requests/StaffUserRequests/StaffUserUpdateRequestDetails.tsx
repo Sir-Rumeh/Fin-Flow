@@ -1,4 +1,4 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
@@ -12,9 +12,19 @@ import { useFormik } from 'formik';
 import { reasonForRejectionSchema } from 'utils/formValidators';
 import CustomInput from 'components/FormElements/CustomInput';
 import RejectedIcon from 'assets/icons/RejectedIcon';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  approveStaffUserRequest,
+  getStaffUserRequestById,
+  rejectStaffUserRequest,
+} from 'config/actions/staff-user-actions';
+import ApprovedIcon from 'assets/icons/ApprovedIcon';
 
 const StaffUserUpdateRequestDetails = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const staffUserId = searchParams?.get('id') || '';
+  const queryClient = useQueryClient();
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
     confirmRejectRequest: false,
@@ -31,10 +41,37 @@ const StaffUserUpdateRequestDetails = () => {
   };
   const formik = useFormik({
     initialValues: {
-      reasonForRejection: '',
+      remark: '',
     },
     validationSchema: reasonForRejectionSchema,
-    onSubmit: () => {},
+    onSubmit: () => {
+      rejectStaffUserRequestMutation.mutate(staffUserId);
+    },
+  });
+
+  const { data } = useQuery({
+    queryKey: ['staffuserRequests', staffUserId],
+    queryFn: ({ queryKey }) => getStaffUserRequestById(queryKey[1]),
+  });
+
+  const approveStaffUserRequestMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => approveStaffUserRequest(requestId),
+    onSuccess: () => {
+      closeModal('confirmApproveRequest');
+      openModal('approveSuccessfulModal');
+      queryClient.invalidateQueries({ queryKey: ['staffuserRequests'] });
+    },
+    onError: (error) => console.log(error.message),
+  });
+
+  const rejectStaffUserRequestMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => rejectStaffUserRequest(requestId, formik.values),
+    onSuccess: () => {
+      closeModal('confirmRejectRequest');
+      openModal('rejectSuccessfulModal');
+      queryClient.invalidateQueries({ queryKey: ['staffuserRequests'] });
+    },
+    onError: (error) => console.log(error.message),
   });
 
   return (
@@ -51,7 +88,7 @@ const StaffUserUpdateRequestDetails = () => {
           <span className="text-lightPurple">User Update Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
-          <h2 className="text-lg font-semibold md:text-2xl">Request ID : Req123456</h2>
+          <h2 className="text-lg font-semibold md:text-2xl">{`Merchant ID : ${data?.responseData?.id}`}</h2>
           <div className="flex w-1/2 items-center justify-end gap-4">
             <div className="w-auto">
               <ButtonComponent
@@ -96,36 +133,70 @@ const StaffUserUpdateRequestDetails = () => {
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="User Details">
-              <DetailsCard title="Request Type" content="Add New User" />
-              <DetailsCard title="Request ID" content="Req123456" />
-              <DetailsCard title="Full Name" content="John Doe" />
-              <DetailsCard title="User Name" content="John.Doe" />
-              <DetailsCard title="Email Address" content="john.doe@fcmb.com" />
-              <DetailsCard title="Phone Number" content="8907812345" />
-              <DetailsCard title="Role" content="Maker" />
-              <DetailsCard title="Category" content="Syscon Staff" />
+              <DetailsCard title="Request ID" content={data?.responseData?.id} />
+              <DetailsCard
+                title="Full Name"
+                content={`${data?.responseData?.firstName} ${data?.responseData?.lastName}`}
+              />
+              <DetailsCard title="User Name" content={data?.responseData?.username} />
+              <DetailsCard title="Email Address" content={data?.responseData?.email} />
+              <DetailsCard title="Phone Number" content={data?.responseData?.phoneNumber} />
+              <DetailsCard title="Role" content={data?.responseData?.role} />
+              <DetailsCard title="Category" content={data?.responseData?.userLevel} />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Creator Details">
-              <DetailsCard title="ID" content="9344243" />
-              <DetailsCard title="Created By" content="John Doe" />
-              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
-              <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
+              <DetailsCard title="ID" content={data?.responseData?.creatorId} />
+              <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
+              <DetailsCard
+                title="Date Created"
+                content={
+                  data?.responseData?.createdAt &&
+                  new Date(data.responseData.createdAt).toLocaleDateString()
+                }
+              />
+              <DetailsCard title="Address" content={data?.responseData?.address} />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
-            <ItemDetailsContainer title="Rejecter Details" titleExtension={<RejectedIcon />}>
-              <DetailsCard title="ID" content="9344243" />
-              <DetailsCard title="Rejected By" content="John Doe" />
-              <DetailsCard title="Date Rejected" content="12/12/2024 : 03:00pm" />
-            </ItemDetailsContainer>
+            {data?.responseData?.status === 'Approved' && (
+              <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
+                <DetailsCard title="ID" content={data?.responseData?.approverId} />
+                <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
+                <DetailsCard
+                  title="Date Approved"
+                  content={
+                    data?.responseData?.dateApproved &&
+                    new Date(data.responseData.dateApproved).toLocaleDateString()
+                  }
+                />
+              </ItemDetailsContainer>
+            )}
+            {data?.responseData?.status === 'Declined' && (
+              <ItemDetailsContainer title="Rejector Details" titleExtension={<RejectedIcon />}>
+                <DetailsCard title="ID" content={data?.responseData?.rejectorId} />
+                <DetailsCard title="Rejected By" content={data?.responseData?.rejectedBy} />
+                <DetailsCard
+                  title="Date Rejected"
+                  content={
+                    data?.responseData?.dateRejected &&
+                    new Date(data.responseData.dateRejected).toLocaleDateString()
+                  }
+                />
+              </ItemDetailsContainer>
+            )}
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Requested By">
-              <DetailsCard title="ID" content="9344243" />
-              <DetailsCard title="Requested By" content="John Doe" />
-              <DetailsCard title="Date Requested" content="12/12/2024 : 03:00pm" />
+              <DetailsCard title="Requested By" content={data?.responseData?.requestedBy} />
+              <DetailsCard
+                title="Date Requested"
+                content={
+                  data?.responseData?.dateRequested &&
+                  new Date(data.responseData.dateRequested).toLocaleDateString()
+                }
+              />
             </ItemDetailsContainer>
           </div>
         </div>
@@ -141,8 +212,7 @@ const StaffUserUpdateRequestDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmApproveRequest');
-            openModal('approveSuccessfulModal');
+            approveStaffUserRequestMutation.mutate(staffUserId);
           }}
         />
       )}
@@ -174,7 +244,7 @@ const StaffUserUpdateRequestDetails = () => {
           feedback={
             <div className="w-full md:col-span-1">
               <CustomInput
-                labelFor="reasonForRejection"
+                labelFor="remark"
                 label="Reason For Rejection"
                 inputType="text"
                 placeholder="Type here"
@@ -188,8 +258,7 @@ const StaffUserUpdateRequestDetails = () => {
           proceedBackgroundColor="#F34E4E"
           hoverBackgroundColor="#8B0000"
           proceedAction={() => {
-            closeModal('confirmRejectRequest');
-            openModal('rejectSuccessfulModal');
+            formik.handleSubmit();
           }}
         />
       )}

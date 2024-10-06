@@ -175,7 +175,7 @@ const StaffUserRequests = () => {
   });
 
   const { data: statisticsData } = useQuery({
-    queryKey: ['v'],
+    queryKey: ['staffuserRequests'],
     queryFn: ({ queryKey }) => getStaffUsersRequestsStatistics(),
   });
 

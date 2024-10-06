@@ -176,7 +176,7 @@ const MerchantRequests = () => {
   });
 
   // const { data: statisticsData } = useQuery({
-  //   queryKey: ['v'],
+  //   queryKey: ['merchantRequests'],
   //   queryFn: ({ queryKey }) => getMerchantsRequestsStatistics(),
   // });
   const statisticsData: any = {};
