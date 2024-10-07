@@ -41,7 +41,7 @@ const ProfileDetails = () => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
 
-  const { data, refetch } = useQuery({
+  const { data } = useQuery({
     queryKey: ['profiles', profileId],
     queryFn: ({ queryKey }) => getProfileById(queryKey[1]),
   });

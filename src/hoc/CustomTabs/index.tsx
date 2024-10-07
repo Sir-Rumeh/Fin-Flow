@@ -35,7 +35,7 @@ const CustomTabs = ({ tabs, activeTab, setActiveTab, width, backgroundColor }: C
                   {tab.tabName === TabsListTabNames.Declined ? 'Rejected' : tab.tabName}
                 </span>
                 <span className="rounded-2xl border border-purpleSecondary bg-purple-100 px-2">
-                  {tab.tabTotal && tab.tabTotal}
+                  {tab.tabTotal ? tab.tabTotal : 0}
                 </span>
               </span>
             </ButtonComponent>
