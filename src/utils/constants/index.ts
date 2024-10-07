@@ -18,12 +18,24 @@ export const statusDropdownOptions = [
   { value: 'Enabled', label: 'Enabled' },
   { value: 'Disabled', label: 'Disabled' },
 ];
+export const requestTypeDropdownOptions = [
+  { value: 'All', label: 'All' },
+  { value: 'Creation', label: 'Creation' },
+  { value: 'Update', label: 'Update' },
+  { value: 'Enable', label: 'Enable' },
+  { value: 'Disable', label: 'Disable' },
+  { value: 'Deletion', label: 'Deletion' },
+];
 
 export const roles = [
   { value: 'Admin Role', label: 'Admin Role' },
   { value: 'Onboarding Role', label: 'Onboarding Role' },
   { value: 'Audit Role', label: 'Audit Role' },
   { value: 'Reporting Role', label: 'Reporting Role' },
+];
+export const userLevel = [
+  { value: 'Initiator', label: 'Initiator' },
+  { value: 'Approver', label: 'Approver' },
 ];
 
 export const merchantsList: MerchantDataRow[] = [

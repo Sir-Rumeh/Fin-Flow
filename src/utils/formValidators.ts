@@ -10,7 +10,7 @@ export const userLoginValidationSchema = Yup.object().shape({
 });
 
 export const reasonForRejectionSchema = Yup.object().shape({
-  reasonForRejection: Yup.string().required('Please enter reason for rejecting'),
+  remark: Yup.string().required('Please enter reason for rejecting'),
 });
 
 export const onboardMerchantSchema = Yup.object().shape({
@@ -66,7 +66,9 @@ export const createMandateSchema = Yup.object().shape({
   supportingDocument: Yup.string().required('File is required'),
   narration: Yup.string().required('Narration is required'),
   payerName: Yup.string().required('Payer name is required'),
-  payerEmailAddress: Yup.string().required('Payer email address is required'),
+  payerEmailAddress: Yup.string()
+    .email('Please enter a valid email address')
+    .required('Payer email address is required'),
   payerPhoneNumber: Yup.string().required('Payer phone number is required'),
   payerAddress: Yup.string().required('Payer address is required'),
   payeeName: Yup.string().required('Payee name is required'),
@@ -93,8 +95,23 @@ export const createStaffUserSchema = Yup.object().shape({
   firstName: Yup.string().required('Firstname is required'),
   lastName: Yup.string().required('Lastname is required'),
   employeeId: Yup.string().required('Employee ID is required'),
-  email: Yup.string().required('Employee email is required'),
+  email: Yup.string()
+    .email('Please enter a valid email address')
+    .required('Employee email is required'),
   phoneNumber: Yup.string().required('Employee phone number is required'),
   branch: Yup.string().required('Branch is required'),
+  role: Yup.string().required('User role is required'),
+});
+
+export const createProfileSchema = Yup.object().shape({
+  merchantID: Yup.string().required('Username is required'),
+  accountID: Yup.string().required('Firstname is required'),
+  userName: Yup.string().required('Lastname is required'),
+  password: Yup.string().required('Employee ID is required'),
+  email: Yup.string()
+    .email('Please enter a valid email address')
+    .required('Employee email is required'),
+  firstName: Yup.string().required('Employee phone number is required'),
+  lastName: Yup.string().required('Branch is required'),
   role: Yup.string().required('User role is required'),
 });

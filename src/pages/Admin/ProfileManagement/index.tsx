@@ -1,5 +1,5 @@
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import TableFilter from 'components/TableFilter';
 import CustomTable from 'components/CustomTable';
 import appRoutes from 'utils/constants/routes';
@@ -15,10 +15,20 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 import { useMediaQuery } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { QueryParams } from 'utils/interfaces';
+import { getProfiles } from 'config/actions/profile-actions';
 
 const ProfileManagement = () => {
+  const printPdfRef = useRef(null);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const [selectedProfileId, setSelectedProfileId] = useState('');
+  const [paginationData, setPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
+
   const [modals, setModals] = useState({
     confirmDisable: false,
     disableSuccessful: false,
@@ -48,6 +58,38 @@ const ProfileManagement = () => {
     },
   });
 
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    mandateCode: '',
+    status: formik.values.statusFilter,
+    pageNo: paginationData.pageNumber,
+    pageSize: paginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+    searchFilter: formik.values.searchProfile,
+    startDate: formik.values.fromDateFilter,
+    endDate: formik.values.toDateFilter,
+  });
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+      searchFilter: formik.values.searchProfile,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  }, [paginationData]);
+
+  const excelHeaders = [
+    { label: 'Account ID', key: 'accountId' },
+    { label: 'User Name', key: 'userName' },
+    { label: 'Email', key: 'email' },
+    { label: 'Active Status', key: 'isActive' },
+    { label: 'Date Requested', key: 'dateRequested' },
+  ];
+
   const columns: GridColDef[] = [
     {
       field: 'accountId',
@@ -72,25 +114,29 @@ const ProfileManagement = () => {
       sortable: false,
     },
     {
-      field: 'status',
+      field: 'isActive',
       headerName: 'Status',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       renderCell: (params: GridRenderCellParams) => {
-        const renderIcon = (IconComponent: React.ComponentType, colorClass: string) => (
+        const renderIcon = (
+          IconComponent: React.ComponentType,
+          colorClass: string,
+          title: string,
+        ) => (
           <div className="flex w-full items-center gap-2 font-semibold">
             <IconComponent />
-            <span className={`mb-[1px] ${colorClass}`}>{params?.row.status}</span>
+            <span className={`mb-[1px] ${colorClass}`}>{title}</span>
           </div>
         );
-        switch (params?.row.status) {
-          case 'Enabled':
-            return renderIcon(CreationRequestIcon, 'text-greenPrimary');
-          case 'Disabled':
-            return renderIcon(DeleteRequestIcon, 'text-redSecondary');
+        switch (params?.row.isActive) {
+          case true:
+            return renderIcon(CreationRequestIcon, 'text-greenPrimary', 'Enabled');
+          case false:
+            return renderIcon(DeleteRequestIcon, 'text-redSecondary', 'Disabled');
           default:
-            return <span>{params?.row.status}</span>;
+            return <span>{params?.row.isActive ? 'Enabled' : 'Disabled'}</span>;
         }
       },
     },
@@ -109,11 +155,11 @@ const ProfileManagement = () => {
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
         return (
-          <div className="-ml-1 h-full border-none">
+          <div className="h-full border-none">
             <CustomPopover
               popoverId={params?.row.id}
               buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-15}
+              translationX={-10}
               translationY={45}
             >
               <div className="flex flex-col rounded-md p-1">
@@ -141,19 +187,24 @@ const ProfileManagement = () => {
                 >
                   Edit Details
                 </button>
-                {params?.row.status === 'Enabled' && (
+                {params?.row.isActive ? (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmDisable')}
+                    onClick={() => {
+                      setSelectedProfileId(params.row.id);
+                      openModal('confirmDisable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                   >
                     Disable
                   </button>
-                )}
-                {params?.row.status === 'Disabled' && (
+                ) : (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmEnable')}
+                    onClick={() => {
+                      setSelectedProfileId(params.row.id);
+                      openModal('confirmEnable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
                   >
                     Enable
@@ -161,7 +212,10 @@ const ProfileManagement = () => {
                 )}
                 <button
                   type="button"
-                  onClick={() => openModal('confirmDelete')}
+                  onClick={() => {
+                    setSelectedProfileId(params.row.id);
+                    openModal('confirmDelete');
+                  }}
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
                   Delete
@@ -174,6 +228,10 @@ const ProfileManagement = () => {
     },
   ];
 
+  const { data, refetch } = useQuery({
+    queryKey: ['profile', queryParams],
+    queryFn: ({ queryKey }) => getProfiles(queryKey[1] as QueryParams),
+  });
   const isSmallWidth = useMediaQuery('(max-width:370px)');
 
   return (
@@ -221,13 +279,24 @@ const ProfileManagement = () => {
                 </div>
               </div>
               <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
-                <ExportBUtton />
+                <ExportBUtton
+                  data={data?.responseData?.items}
+                  printPdfRef={printPdfRef}
+                  headers={excelHeaders}
+                  fileName="profiles.csv"
+                />
               </div>
             </div>
 
             <div className="mt-6 w-full">
-              <div className="w-full">
-                <CustomTable tableData={profileManagementList} columns={columns} rowCount={73} />
+              <div ref={printPdfRef} className="w-full">
+                <CustomTable
+                  tableData={data?.responseData?.items}
+                  columns={columns}
+                  rowCount={data?.responseData?.totalCount}
+                  paginationData={paginationData}
+                  setPaginationData={setPaginationData}
+                />
               </div>
             </div>
           </div>

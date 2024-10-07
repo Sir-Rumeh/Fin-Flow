@@ -69,7 +69,7 @@ const CreationRequestDetails = () => {
       openModal('approveSuccess');
       queryClient.invalidateQueries({ queryKey: ['mandateRequests'] });
     },
-    onError: (error) => notifyError(error?.message),
+    onError: (error) => {},
   });
 
   const rejectMandateRequestMutation = useMutation({
@@ -85,9 +85,7 @@ const CreationRequestDetails = () => {
       openModal('rejectSuccess');
       queryClient.invalidateQueries({ queryKey: ['mandateRequests'] });
     },
-    onError: (error) => {
-      notifyError(error?.message);
-    },
+    onError: (error) => {},
   });
 
   const handleProceed = () => {

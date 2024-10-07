@@ -58,8 +58,8 @@ const BulkUpload = () => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
 
-  const files = uploadedFiles?.map((file) => (
-    <li key={file.name}>
+  const files = uploadedFiles?.map((file, index) => (
+    <li key={index}>
       {file.name} - {file.size / 1000} kb
     </li>
   ));

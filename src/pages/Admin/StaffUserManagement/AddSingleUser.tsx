@@ -14,7 +14,7 @@ import { useMutation } from '@tanstack/react-query';
 import { addStaffUserRequest } from 'config/actions/staff-user-actions';
 import { notifyError } from 'utils/helpers';
 import { createStaffUserSchema } from 'utils/formValidators';
-import { roles } from 'utils/constants';
+import { roles, userLevel } from 'utils/constants';
 
 function AddUser() {
   const navigate = useNavigate();
@@ -40,7 +40,6 @@ function AddUser() {
     },
     onError: (error) => {
       closeModal('confirmCreate');
-      notifyError(error.message);
     },
   });
 
@@ -54,6 +53,7 @@ function AddUser() {
       phoneNumber: '',
       branch: '',
       role: '',
+      userLevel: '',
     },
     validationSchema: createStaffUserSchema,
     onSubmit: (values) => {
@@ -66,6 +66,7 @@ function AddUser() {
         phoneNumber: values.phoneNumber,
         branch: values.branch,
         role: values.role,
+        // userLevel: values.userLevel,
       };
       setStaffUserRequest(payload);
       openModal('confirmCreate');
@@ -93,14 +94,17 @@ function AddUser() {
             <form onSubmit={formik.handleSubmit} noValidate className="relativew-full">
               <div className="slide-down">
                 <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
-                  <CustomInput
-                    labelFor="userName"
-                    label="Enter User Name"
-                    inputType="text"
-                    placeholder="Enter user name"
-                    maxW="w-full"
-                    formik={formik}
-                  />
+                  <div className="w-full sm:col-span-2">
+                    <CustomInput
+                      labelFor="userName"
+                      label="Enter User Name"
+                      inputType="text"
+                      placeholder="Enter user name"
+                      maxW="w-full"
+                      formik={formik}
+                    />
+                  </div>
+
                   <CustomInput
                     labelFor="firstName"
                     label="Enter First Name"
@@ -155,6 +159,15 @@ function AddUser() {
                       label="Assign Role"
                       formik={formik}
                       options={roles}
+                      useTouched
+                    />
+                  </div>
+                  <div className="">
+                    <FormSelect
+                      labelFor="userLevel"
+                      label="Assign User Approval Level"
+                      formik={formik}
+                      options={userLevel}
                       useTouched
                     />
                   </div>

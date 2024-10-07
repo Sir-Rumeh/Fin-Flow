@@ -145,11 +145,11 @@ export interface QueryParams {
   username?: string | undefined;
   email?: string | undefined;
   mandateCode?: string | undefined;
-  status: string | undefined;
-  pageNo: number | undefined;
-  pageSize: number | undefined;
-  sortBy: string | undefined;
-  sortOrder: string | undefined;
+  status?: string | undefined;
+  pageNo?: number | undefined;
+  pageSize?: number | undefined;
+  sortBy?: string | undefined;
+  sortOrder?: string | undefined;
   searchFilter?: string | undefined;
   startDate?: string | undefined;
   endDate?: string | undefined;
@@ -164,4 +164,23 @@ export interface StaffUserRequest {
   phoneNumber: string | undefined;
   branch: string | undefined;
   role: string | undefined;
+}
+export interface ProfileRequest {
+  profileID?: string | undefined;
+  merchantID: string | undefined;
+  accountID: string | undefined;
+  userName: string | undefined;
+  password: string | undefined;
+  role: string | undefined;
+  firstName: string | undefined;
+  lastName: string | undefined;
+  email: string | undefined;
+}
+export interface MerchantRequest {
+  merchantId?: string | undefined;
+  name: string | undefined;
+  accountNumber: string | undefined;
+  rcNumber: string | undefined;
+  address: string | undefined;
+  cif?: string | undefined;
 }

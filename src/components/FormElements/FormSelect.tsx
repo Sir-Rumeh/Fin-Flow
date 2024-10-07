@@ -1,7 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { DarkArrowDown } from 'assets/icons';
 
-interface Option {
+export interface DropdownOption {
   value: string;
   label: string;
 }
@@ -12,7 +12,7 @@ type CustomInputProps = {
   formik: any;
   useTouched?: boolean;
   height?: string;
-  options: Option[];
+  options: DropdownOption[];
   scrollableOptions?: boolean;
   scrollableHeight?: string;
   labelFontWeight?: string;
@@ -38,7 +38,23 @@ const FormSelect = ({
     }
   }, [formik.values[labelFor]]);
 
-  const handleChange = (option: Option) => {
+  const formSelectRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (formSelectRef.current && !formSelectRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [formSelectRef]);
+
+  const handleChange = (option: DropdownOption) => {
     setSelectedOption(option.value);
     setIsOpen(false);
     formik.setFieldValue(labelFor, option.value);
@@ -46,7 +62,7 @@ const FormSelect = ({
 
   return (
     <>
-      <div className="relative z-[999] mb-4 mt-6 h-auto w-full">
+      <div ref={formSelectRef} className="relative z-[999] mb-4 mt-6 h-auto w-full">
         <label
           htmlFor={labelFor}
           className={`${labelFontWeight ? labelFontWeight : 'font-semibold'} absolute bottom-16`}
@@ -85,15 +101,15 @@ const FormSelect = ({
 
         {isOpen && (
           <div
-            className={`${scrollableOptions ? `custom-scrollbar overflow-y-scroll ${scrollableHeight}` : ''} slide-downward absolute z-[999] mt-1 flex w-full flex-col rounded-sm bg-white text-sm shadow`}
+            className={`${scrollableOptions ? `custom-scrollbar overflow-y-scroll pb-10 ${scrollableHeight}` : ''} slide-downward absolute z-[999] mt-1 flex w-full flex-col rounded-sm bg-white text-sm shadow`}
           >
-            {options.map((option) => {
+            {options.map((option, index) => {
               return (
                 <button
-                  key={option.label}
+                  key={index}
                   onClick={() => handleChange(option)}
                   type="button"
-                  className="w-full border-b px-3 py-3 text-start text-[16px] hover:bg-lilacPurple"
+                  className={`${option.label ? 'py-3' : 'h-10'} w-full border-b px-3 text-start text-[16px] hover:bg-lilacPurple`}
                 >
                   {option.label}
                 </button>

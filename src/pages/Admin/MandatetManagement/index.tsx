@@ -35,17 +35,16 @@ import { updateMandateSchema } from 'utils/formValidators';
 const MandatetManagement = () => {
   const printPdfRef = useRef(null);
   const navigate = useNavigate();
-  const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedMandate, setSelectedMandate] = useState({
-    id: '',
-    mandateType: '',
-  });
-
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
     pageSize: 10,
   });
+  const [selectedMandate, setSelectedMandate] = useState({
+    id: '',
+    mandateType: '',
+  });
+  const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
 
   const total = 20;
 
@@ -172,7 +171,7 @@ const MandatetManagement = () => {
       valueGetter: (params: any) => capitalize(params),
     },
     {
-      field: 'status',
+      field: 'isActive',
       headerName: 'Status',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -194,7 +193,7 @@ const MandatetManagement = () => {
           case false:
             return renderIcon(DeleteRequestIcon, 'text-redSecondary', 'Disabled');
           default:
-            return <span>{params?.row.status}</span>;
+            return <span>{params?.row.isActive ? 'Enabled' : 'Disabled'}</span>;
         }
       },
     },
@@ -362,7 +361,6 @@ const MandatetManagement = () => {
     },
     onError: (error) => {
       closeModal('confirmEdit');
-      notifyError(error?.message);
     },
   });
 
@@ -374,7 +372,6 @@ const MandatetManagement = () => {
     },
     onError: (error) => {
       closeModal('confirmEnable');
-      notifyError(error?.message);
     },
   });
 
@@ -386,7 +383,6 @@ const MandatetManagement = () => {
     },
     onError: (error) => {
       closeModal('confirmDisable');
-      notifyError(error?.message);
     },
   });
 
@@ -398,7 +394,6 @@ const MandatetManagement = () => {
     },
     onError: (error) => {
       closeModal('confirmDelete');
-      notifyError(error?.message);
     },
   });
 
@@ -485,6 +480,7 @@ const MandatetManagement = () => {
           }}
         />
       )}
+
       {modals.disableSuccessful && (
         <ModalWrapper
           isOpen={modals.disableSuccessful}

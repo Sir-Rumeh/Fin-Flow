@@ -14,11 +14,11 @@ interface CustomTabProps {
 const CustomTabs = ({ tabs, activeTab, setActiveTab, width, backgroundColor }: CustomTabProps) => {
   return (
     <>
-      {tabs?.map((tab) => {
+      {tabs?.map((tab, index) => {
         return (
           <div
             className={`relative flex ${width ? width : 'w-[6rem] sm:w-[9rem]'} flex-col items-start justify-between`}
-            key={tab.tabIndex}
+            key={index}
           >
             <ButtonComponent
               onClick={() => {
@@ -34,11 +34,9 @@ const CustomTabs = ({ tabs, activeTab, setActiveTab, width, backgroundColor }: C
                 <span className={`flex items-center font-semibold`}>
                   {tab.tabName === TabsListTabNames.Declined ? 'Rejected' : tab.tabName}
                 </span>
-                {tab.tabTotal && (
-                  <span className="rounded-2xl border border-purpleSecondary bg-purple-100 px-2">
-                    {tab.tabTotal}
-                  </span>
-                )}
+                <span className="rounded-2xl border border-purpleSecondary bg-purple-100 px-2">
+                  {tab.tabTotal && tab.tabTotal}
+                </span>
               </span>
             </ButtonComponent>
             <div

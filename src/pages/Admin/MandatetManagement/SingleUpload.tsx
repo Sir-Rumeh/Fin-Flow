@@ -43,7 +43,6 @@ const SingleUpload = () => {
     },
     onError: (error) => {
       closeModal('confirmCreate');
-      notifyError(error.message);
     },
   });
   const formik = useFormik({

@@ -59,6 +59,7 @@ import StaffUserDeletionRequestDetails from 'pages/Admin/Requests/StaffUserReque
 import StaffUserUpdateRequestDetails from 'pages/Admin/Requests/StaffUserRequests/StaffUserUpdateRequestDetails';
 import StaffUserDisableRequestDetails from 'pages/Admin/Requests/StaffUserRequests/StaffUserDisableRequestDetails';
 import UserRequestsIcon from 'assets/icons/UserRequestsIcon';
+import StaffUserEnableRequestDetails from 'pages/Admin/Requests/StaffUserRequests/StaffUserEnableRequestDetails';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -287,6 +288,11 @@ const adminRoutes: RoutesType[] = [
         component: <StaffUserUpdateRequestDetails />,
       },
       {
+        name: 'Enable Request Details',
+        path: 'enable-request-details',
+        component: <StaffUserEnableRequestDetails />,
+      },
+      {
         name: 'Disable Request Details',
         path: 'disable-request-details',
         component: <StaffUserDisableRequestDetails />,
@@ -315,7 +321,7 @@ const merchantRoutes: RoutesType[] = [
   {
     name: 'Requests',
     layout: `/${BASE_ROUTES.MERCHANT}`,
-    path: 'requests/mandates',
+    path: 'requests',
     icon: <RequestIcon />,
     component: <MerchantRequests />,
     rolesWithAccess: [UserLoginRoles.Merchant],
@@ -323,22 +329,22 @@ const merchantRoutes: RoutesType[] = [
     children: [
       {
         name: 'Create Request Details',
-        path: 'creation-request-details/:id',
+        path: 'mandates/creation-request-details/:id',
         component: <CreationRequestDetails />,
       },
       {
         name: 'Update Request Details',
-        path: 'update-request-details/:id',
+        path: 'mandates/update-request-details/:id',
         component: <UpdateRequestDetails />,
       },
       {
         name: 'Disable Request Details',
-        path: 'disable-request-details/:id',
+        path: 'mandates/disable-request-details/:id',
         component: <DisableRequestDetails />,
       },
       {
         name: 'Deletion Request Details',
-        path: 'deletion-request-details/:id',
+        path: 'mandates/deletion-request-details/:id',
         component: <DeletionRequestDetails />,
       },
     ],

@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import store from 'store/index';
 import { AppConfig } from './index';
-import { generateHeader, notifySuccess, notifyError } from 'utils/helpers/index';
+import { generateHeader, notifyError } from 'utils/helpers/index';
 import { uiStartLoading, uiStopLoading } from 'store/reducers/LoadingSlice';
 
 const AxiosClient = axios.create({
@@ -18,11 +18,13 @@ const AxiosClient = axios.create({
 
 const { dispatch } = store;
 
+const networkErrorMessage = 'Please check your Internet Connection';
+
 AxiosClient.interceptors.request.use(
   (axiosConfig) => {
     dispatch(uiStartLoading());
     if (!navigator.onLine) {
-      throw new Error('Please check your Internet Connection');
+      throw new Error(networkErrorMessage);
     }
     const headers = generateHeader();
     axiosConfig.headers.UTCTimestamp = headers.UTCTimestamp;
@@ -64,15 +66,18 @@ AxiosClient.interceptors.response.use(
       notifyError('Resource not found');
       setTimeout(() => {
         window.location.href = url;
-      }, 1000);
+      }, 1500);
       return Promise.reject(error);
     } else if (error?.response?.status === 500) {
       dispatch(uiStopLoading());
       notifyError('Something went wrong');
       return Promise.reject(error);
+    } else if (error.message === networkErrorMessage) {
+      dispatch(uiStopLoading());
+      notifyError(error.message);
+      return Promise.reject(error);
     }
     dispatch(uiStopLoading());
-    notifyError('Something went wrong');
     return Promise.reject(error);
   },
 );

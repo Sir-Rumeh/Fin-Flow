@@ -2,6 +2,7 @@ import { DataTableState, QueryParams } from 'utils/interfaces';
 import { AppConfig } from 'config/index';
 import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
+import { DropdownOption } from 'components/FormElements/FormSelect';
 
 export const checkRoute = (pathname: string, pathToCheck: string) => {
   if (pathname.includes(pathToCheck)) {
@@ -128,6 +129,19 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
   if (sortBy) params.append('SortBy', sortBy);
   if (sortOrder) params.append('SortOrder', sortOrder);
   if (searchFilter) params.append('searchFilter', searchFilter);
-  if (startDate) params.append('startDate', startDate);
-  if (endDate) params.append('endDate', endDate);
+  if (startDate) params.append('StartDate', startDate);
+  if (endDate) params.append('EndDate', endDate);
+};
+
+export const formatApiDataForDropdown = (dataArray: any[], dataKey: string) => {
+  let formattedArrayOptions: DropdownOption[] = [];
+  dataArray?.map((dataOption: any) => {
+    const newOption = {
+      value: dataOption[dataKey] as string,
+      label: capitalize(dataOption[dataKey] as string),
+    };
+    formattedArrayOptions.push(newOption);
+  });
+
+  return formattedArrayOptions;
 };

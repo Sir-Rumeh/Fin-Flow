@@ -6,6 +6,7 @@ import MerchantCreationRequestDetails from './MerchantCreationRequestDetails';
 import MerchantDeletionRequestDetails from './MerchantDeletionRequestDetails';
 import MerchantUpdateRequestDetails from './MerchantUpdateRequestDetails';
 import MerchantDisableRequestDetails from './MerchantDisableRequestDetails';
+import MerchantEnableRequestDetails from './MerchantEnableRequestDetails';
 
 const MerchantRequestsRoutes = () => {
   return (
@@ -14,6 +15,7 @@ const MerchantRequestsRoutes = () => {
       <Route path="creation-request-details" element={<MerchantCreationRequestDetails />} />
       <Route path="deletion-request-details" element={<MerchantDeletionRequestDetails />} />
       <Route path="update-request-details" element={<MerchantUpdateRequestDetails />} />
+      <Route path="enable-request-details" element={<MerchantEnableRequestDetails />} />
       <Route path="disable-request-details" element={<MerchantDisableRequestDetails />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

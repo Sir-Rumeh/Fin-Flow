@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
@@ -8,14 +8,23 @@ import { useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
-import FormInput from 'components/FormElements/FormInput';
 import { useFormik } from 'formik';
 import { reasonForRejectionSchema } from 'utils/formValidators';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
 import CustomInput from 'components/FormElements/CustomInput';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  approveMerchantRequest,
+  getMerchantRequestById,
+  rejectMerchantRequest,
+} from 'config/actions/merchant-actions';
+import RejectedIcon from 'assets/icons/RejectedIcon';
 
 const MerchantUpdateRequestDetails = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const merchantId = searchParams?.get('id') || '';
+  const queryClient = useQueryClient();
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
     confirmRejectRequest: false,
@@ -32,10 +41,37 @@ const MerchantUpdateRequestDetails = () => {
   };
   const formik = useFormik({
     initialValues: {
-      reasonForRejection: '',
+      remark: '',
     },
     validationSchema: reasonForRejectionSchema,
-    onSubmit: () => {},
+    onSubmit: () => {
+      rejectMerchantRequestMutation.mutate(merchantId);
+    },
+  });
+
+  const { data } = useQuery({
+    queryKey: ['merchantRequests', merchantId],
+    queryFn: ({ queryKey }) => getMerchantRequestById(queryKey[1]),
+  });
+
+  const approveMerchantRequestMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => approveMerchantRequest(requestId),
+    onSuccess: () => {
+      closeModal('confirmApproveRequest');
+      openModal('approveSuccessfulModal');
+      queryClient.invalidateQueries({ queryKey: ['merchantRequests'] });
+    },
+    onError: (error) => console.log(error.message),
+  });
+
+  const rejectMerchantRequestMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => rejectMerchantRequest(requestId, formik.values),
+    onSuccess: () => {
+      closeModal('confirmRejectRequest');
+      openModal('rejectSuccessfulModal');
+      queryClient.invalidateQueries({ queryKey: ['merchantRequests'] });
+    },
+    onError: (error) => console.log(error.message),
   });
 
   return (
@@ -52,7 +88,7 @@ const MerchantUpdateRequestDetails = () => {
           <span className="text-lightPurple">Merchant Update Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
-          <h2 className="text-lg font-semibold md:text-2xl">Request ID : Req123456</h2>
+          <h2 className="text-lg font-semibold md:text-2xl">{`Merchant ID : ${data?.responseData?.id}`}</h2>
           <div className="flex w-1/2 items-center justify-end gap-4">
             <div className="w-auto">
               <ButtonComponent
@@ -97,33 +133,71 @@ const MerchantUpdateRequestDetails = () => {
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Merchant Details">
-              <DetailsCard title="Merchant ID" content="12345" />
-              <DetailsCard title="Merchant Name" content="Fair Money" />
-              <DetailsCard title="Merchant Code" content="12345" />
-              <DetailsCard title="CIF Number" content="12345" />
-              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
+              <DetailsCard title="Merchant ID" content={data?.responseData?.id} />
+              <DetailsCard title="Merchant Name" content={data?.responseData?.name} />
+              <DetailsCard title="Merchant Code" content={data?.responseData?.merchantCode} />
+              <DetailsCard title="CIF Number" content={data?.responseData?.cif} />
+              <DetailsCard
+                title="Date Created"
+                content={
+                  data?.responseData?.createdAt &&
+                  new Date(data.responseData.createdAt).toLocaleDateString()
+                }
+              />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Creator Details">
-              <DetailsCard title="ID" content="9344243" />
-              <DetailsCard title="Created By" content="John Doe" />
-              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
-              <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
+              <DetailsCard title="ID" content={data?.responseData?.creatorId} />
+              <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
+              <DetailsCard
+                title="Date Created"
+                content={
+                  data?.responseData?.createdAt &&
+                  new Date(data.responseData.createdAt).toLocaleDateString()
+                }
+              />
+              <DetailsCard title="Address" content={data?.responseData?.address} />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
-            <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
-              <DetailsCard title="ID" content="9344243" />
-              <DetailsCard title="Approved By" content="John Doe" />
-              <DetailsCard title="Date Approved" content="12/12/2024 : 03:00pm" />
-            </ItemDetailsContainer>
+            {data?.responseData?.status === 'Approved' && (
+              <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
+                <DetailsCard title="ID" content={data?.responseData?.approverId} />
+                <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
+                <DetailsCard
+                  title="Date Approved"
+                  content={
+                    data?.responseData?.dateApproved &&
+                    new Date(data.responseData.dateApproved).toLocaleDateString()
+                  }
+                />
+              </ItemDetailsContainer>
+            )}
+            {data?.responseData?.status === 'Declined' && (
+              <ItemDetailsContainer title="Rejector Details" titleExtension={<RejectedIcon />}>
+                <DetailsCard title="ID" content={data?.responseData?.rejectorId} />
+                <DetailsCard title="Rejected By" content={data?.responseData?.rejectedBy} />
+                <DetailsCard
+                  title="Date Rejected"
+                  content={
+                    data?.responseData?.dateRejected &&
+                    new Date(data.responseData.dateRejected).toLocaleDateString()
+                  }
+                />
+              </ItemDetailsContainer>
+            )}
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Requested By">
-              <DetailsCard title="ID" content="9344243" />
-              <DetailsCard title="Requested By" content="John Doe" />
-              <DetailsCard title="Date Requested" content="12/12/2024 : 03:00pm" />
+              <DetailsCard title="Requested By" content={data?.responseData?.requestedBy} />
+              <DetailsCard
+                title="Date Requested"
+                content={
+                  data?.responseData?.dateRequested &&
+                  new Date(data.responseData.dateRequested).toLocaleDateString()
+                }
+              />
             </ItemDetailsContainer>
           </div>
         </div>
@@ -139,8 +213,7 @@ const MerchantUpdateRequestDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmApproveRequest');
-            openModal('approveSuccessfulModal');
+            approveMerchantRequestMutation.mutate(merchantId);
           }}
         />
       )}
@@ -172,7 +245,7 @@ const MerchantUpdateRequestDetails = () => {
           feedback={
             <div className="w-full md:col-span-1">
               <CustomInput
-                labelFor="reasonForRejection"
+                labelFor="remark"
                 label="Reason For Rejection"
                 inputType="text"
                 placeholder="Type here"
@@ -186,8 +259,7 @@ const MerchantUpdateRequestDetails = () => {
           proceedBackgroundColor="#F34E4E"
           hoverBackgroundColor="#8B0000"
           proceedAction={() => {
-            closeModal('confirmRejectRequest');
-            openModal('rejectSuccessfulModal');
+            formik.handleSubmit();
           }}
         />
       )}

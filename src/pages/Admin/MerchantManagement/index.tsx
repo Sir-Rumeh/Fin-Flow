@@ -1,12 +1,11 @@
 import ButtonComponent from 'components/FormElements/Button';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import TableFilter from 'components/TableFilter';
 import CustomTable from 'components/CustomTable';
 import appRoutes from 'utils/constants/routes';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
-import { muiDashboardMerchantsList } from 'utils/constants';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
 import { ModalWrapper } from 'hoc/ModalWrapper';
@@ -15,6 +14,15 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 import { useMediaQuery } from '@mui/material';
+import { QueryParams } from 'utils/interfaces';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  deleteMerchant,
+  disableMerchant,
+  enableMerchant,
+  getMerchants,
+} from 'config/actions/merchant-actions';
+import { notifyError } from 'utils/helpers';
 
 const MerchantManagement = () => {
   const printPdfRef = useRef(null);
@@ -26,12 +34,14 @@ const MerchantManagement = () => {
     pageSize: 10,
   });
 
+  const [selectedMerchantId, setSelectedMerchantId] = useState('');
+
   const [modals, setModals] = useState({
-    confirmDisableMerchant: false,
+    confirmDisable: false,
     disableSuccessful: false,
-    confirmEnableMerchant: false,
+    confirmEnable: false,
     enableSuccessful: false,
-    confirmDeleteMerchant: false,
+    confirmDelete: false,
     deleteSuccessful: false,
   });
 
@@ -55,12 +65,44 @@ const MerchantManagement = () => {
     },
   });
 
-  const headers = [
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    status: formik.values.statusFilter,
+    pageNo: paginationData.pageNumber,
+    pageSize: paginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+    searchFilter: formik.values.searchMerchantName,
+    startDate: formik.values.fromDateFilter,
+    endDate: formik.values.toDateFilter,
+  });
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+      searchFilter: formik.values.searchMerchantName,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  }, [paginationData]);
+
+  const handleOptionsFilter = () => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  };
+
+  const excelHeaders = [
     { label: 'Merchant ID', key: 'id' },
-    { label: 'Merchant Name', key: 'merchantName' },
+    { label: 'Merchant Name', key: 'name' },
     { label: 'CIF Number', key: 'cif' },
-    { label: 'Status', key: 'status' },
-    { label: 'Date Requested', key: 'dateRequested' },
+    { label: 'Active Status', key: 'isActive' },
+    { label: 'Date Requested', key: 'createdAt' },
   ];
 
   const columns: GridColDef[] = [
@@ -72,7 +114,7 @@ const MerchantManagement = () => {
       headerClassName: 'ag-thead',
     },
     {
-      field: 'merchantName',
+      field: 'name',
       headerName: 'Merchant Name',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -93,24 +135,28 @@ const MerchantManagement = () => {
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       renderCell: (params: GridRenderCellParams) => {
-        const renderIcon = (IconComponent: React.ComponentType, colorClass: string) => (
+        const renderIcon = (
+          IconComponent: React.ComponentType,
+          colorClass: string,
+          title: string,
+        ) => (
           <div className="flex w-full items-center gap-2 font-semibold">
             <IconComponent />
-            <span className={`mb-[1px] ${colorClass}`}>{params?.row.status}</span>
+            <span className={`mb-[1px] ${colorClass}`}>{title}</span>
           </div>
         );
-        switch (params?.row.status) {
-          case 'Enabled':
-            return renderIcon(CreationRequestIcon, 'text-greenPrimary');
-          case 'Disabled':
-            return renderIcon(DeleteRequestIcon, 'text-redSecondary');
+        switch (params?.row.isActive) {
+          case true:
+            return renderIcon(CreationRequestIcon, 'text-greenPrimary', 'Enabled');
+          case false:
+            return renderIcon(DeleteRequestIcon, 'text-redSecondary', 'Disabled');
           default:
-            return <span>{params?.row.status}</span>;
+            return <span>{params?.row.isActive ? 'Enabled' : 'Disabled'}</span>;
         }
       },
     },
     {
-      field: 'dateRequested',
+      field: 'createdAt',
       headerName: 'Date Requested',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -125,11 +171,11 @@ const MerchantManagement = () => {
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
         return (
-          <div className="-ml-1 h-full border-none">
+          <div className="h-full border-none">
             <CustomPopover
               popoverId={params?.row.id}
               buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-15}
+              translationX={-6}
               translationY={45}
             >
               <div className="flex flex-col rounded-md p-1">
@@ -157,27 +203,37 @@ const MerchantManagement = () => {
                 >
                   Edit Details
                 </button>
-                {params?.row.status === 'Enabled' && (
+
+                {params?.row.isActive ? (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmDisableMerchant')}
+                    onClick={() => {
+                      setSelectedMerchantId(params?.row.id);
+                      openModal('confirmDisable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                   >
                     Disable
                   </button>
-                )}
-                {params?.row.status === 'Disabled' && (
+                ) : (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmEnableMerchant')}
+                    onClick={() => {
+                      setSelectedMerchantId(params?.row.id);
+                      openModal('confirmEnable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
                   >
                     Enable
                   </button>
                 )}
+
                 <button
                   type="button"
-                  onClick={() => openModal('confirmDeleteMerchant')}
+                  onClick={() => {
+                    setSelectedMerchantId(params?.row.id);
+                    openModal('confirmDelete');
+                  }}
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
                   Delete
@@ -191,6 +247,44 @@ const MerchantManagement = () => {
   ];
 
   const isSmallWidth = useMediaQuery('(max-width:370px)');
+
+  const { data, refetch } = useQuery({
+    queryKey: ['merchants', queryParams],
+    queryFn: ({ queryKey }) => getMerchants(queryKey[1] as QueryParams),
+  });
+
+  const enableMerchantMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => enableMerchant(requestId),
+    onSuccess: () => {
+      closeModal('confirmEnable');
+      openModal('enableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmEnable');
+    },
+  });
+
+  const disableMerchantMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => disableMerchant(requestId),
+    onSuccess: () => {
+      closeModal('confirmDisable');
+      openModal('disableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDisable');
+    },
+  });
+
+  const deleteMerchantMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => deleteMerchant(requestId),
+    onSuccess: () => {
+      closeModal('confirmDelete');
+      openModal('deleteSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDelete');
+    },
+  });
 
   return (
     <>
@@ -228,7 +322,7 @@ const MerchantManagement = () => {
                     label={'Search Merchant'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
-                    handleOptionsFilter={() => {}}
+                    handleOptionsFilter={handleOptionsFilter}
                     formik={formik}
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}
@@ -237,16 +331,21 @@ const MerchantManagement = () => {
                 </div>
               </div>
               <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
-                <ExportBUtton />
+                <ExportBUtton
+                  data={data?.responseData?.items}
+                  printPdfRef={printPdfRef}
+                  headers={excelHeaders}
+                  fileName="merchants.csv"
+                />
               </div>
             </div>
 
             <div className="mt-6 w-full">
               <div ref={printPdfRef} className="w-full">
                 <CustomTable
-                  tableData={muiDashboardMerchantsList}
+                  tableData={data?.responseData?.items}
                   columns={columns}
-                  rowCount={124}
+                  rowCount={data?.responseData?.totalCount}
                   paginationData={paginationData}
                   setPaginationData={setPaginationData}
                 />
@@ -255,17 +354,16 @@ const MerchantManagement = () => {
           </div>
         </div>
       </section>
-      {modals.confirmDisableMerchant && (
+      {modals.confirmDisable && (
         <ModalWrapper
-          isOpen={modals.confirmDisableMerchant}
-          setIsOpen={() => closeModal('confirmDisableMerchant')}
+          isOpen={modals.confirmDisable}
+          setIsOpen={() => closeModal('confirmDisable')}
           title={'Disable Merchant?'}
           info={'You are about to disable this merchant, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDisableMerchant');
-            openModal('disableSuccessful');
+            disableMerchantMutation.mutate(selectedMerchantId);
           }}
         />
       )}
@@ -278,21 +376,21 @@ const MerchantManagement = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('disableSuccessful');
           }}
         />
       )}
-      {modals.confirmEnableMerchant && (
+      {modals.confirmEnable && (
         <ModalWrapper
-          isOpen={modals.confirmEnableMerchant}
-          setIsOpen={() => closeModal('confirmEnableMerchant')}
+          isOpen={modals.confirmEnable}
+          setIsOpen={() => closeModal('confirmEnable')}
           title={'Enable Merchant?'}
           info={'You are about to enable this merchant, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmEnableMerchant');
-            openModal('enableSuccessful');
+            enableMerchantMutation.mutate(selectedMerchantId);
           }}
         />
       )}
@@ -305,21 +403,21 @@ const MerchantManagement = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('enableSuccessful');
           }}
         />
       )}
-      {modals.confirmDeleteMerchant && (
+      {modals.confirmDelete && (
         <ModalWrapper
-          isOpen={modals.confirmDeleteMerchant}
-          setIsOpen={() => closeModal('confirmDeleteMerchant')}
+          isOpen={modals.confirmDelete}
+          setIsOpen={() => closeModal('confirmDelete')}
           title={'Delete Merchant?'}
           info={'You are about to delete this merchant, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDeleteMerchant');
-            openModal('deleteSuccessful');
+            deleteMerchantMutation.mutate(selectedMerchantId);
           }}
         />
       )}
@@ -332,6 +430,7 @@ const MerchantManagement = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('deleteSuccessful');
           }}
         />

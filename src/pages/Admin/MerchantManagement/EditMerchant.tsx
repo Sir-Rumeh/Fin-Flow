@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
 import ChevronRight from 'assets/icons/ChevronRight';
 import CustomInput from 'components/FormElements/CustomInput';
@@ -7,17 +7,23 @@ import { useEffect, useState } from 'react';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
-import { checkRoute } from 'utils/helpers';
+import { checkRoute, notifyError } from 'utils/helpers';
 import { useFormik } from 'formik';
 import { editMerchantSchema } from 'utils/formValidators';
+import { MerchantRequest } from 'utils/interfaces';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { getMerchantById, updateMerchantRequest } from 'config/actions/merchant-actions';
 
 const EditMerchant = () => {
   const { pathname } = useLocation();
+  const [searchParams] = useSearchParams();
+  const merchantId = searchParams?.get('id') || '';
   const isDashboardRoute = checkRoute(pathname, 'dashboard');
+  const [merchantRequest, setMerchantRequest] = useState<MerchantRequest | undefined>();
 
   const navigate = useNavigate();
   const [modals, setModals] = useState({
-    confirmEditMerchant: false,
+    confirmEdit: false,
     editSuccessful: false,
   });
 
@@ -29,18 +35,51 @@ const EditMerchant = () => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
 
+  const updateMerchantRequestMutation = useMutation({
+    mutationFn: (requestId: string | undefined) =>
+      updateMerchantRequest(requestId, merchantRequest),
+    onSuccess: () => {
+      closeModal('confirmEdit');
+      openModal('editSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmEdit');
+    },
+  });
+
   const formik = useFormik({
     initialValues: {
-      merchantId: '',
       merchantName: '',
-      merchantCode: '',
-      merchantCIF: '',
+      accountNumber: '',
+      rcNumber: '',
+      address: '',
     },
     validationSchema: editMerchantSchema,
     onSubmit: (values) => {
-      openModal('confirmEditMerchant');
+      const payload = {
+        name: values.merchantName,
+        accountNumber: values.accountNumber,
+        rcNumber: values.rcNumber,
+        address: values.address,
+      };
+      setMerchantRequest(payload);
+      openModal('confirmEdit');
     },
   });
+
+  const { data: merchantData } = useQuery({
+    queryKey: ['merchants', merchantId],
+    queryFn: ({ queryKey }) => getMerchantById(queryKey[1]),
+  });
+
+  useEffect(() => {
+    formik.setValues({
+      merchantName: merchantData?.responseData?.name || '',
+      accountNumber: merchantData?.responseData?.accountNumber || '',
+      rcNumber: merchantData?.responseData?.rcNumber || '',
+      address: merchantData?.responseData?.address || '',
+    });
+  }, [merchantData]);
 
   return (
     <>
@@ -68,14 +107,6 @@ const EditMerchant = () => {
               <div className="slide-down">
                 <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-2">
                   <CustomInput
-                    labelFor="merchantId"
-                    label="Merchant ID"
-                    inputType="text"
-                    placeholder="Enter here"
-                    maxW="w-full"
-                    formik={formik}
-                  />
-                  <CustomInput
                     labelFor="merchantName"
                     label="Merchant Name"
                     inputType="text"
@@ -84,16 +115,24 @@ const EditMerchant = () => {
                     formik={formik}
                   />
                   <CustomInput
-                    labelFor="merchantCode"
-                    label="Merchant Code"
+                    labelFor="accountNumber"
+                    label="Account Number"
                     inputType="text"
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
                   />
                   <CustomInput
-                    labelFor="merchantCIF"
-                    label="Merchant CIF"
+                    labelFor="rcNumber"
+                    label="RC Number"
+                    inputType="text"
+                    placeholder="Enter here"
+                    maxW="w-full"
+                    formik={formik}
+                  />
+                  <CustomInput
+                    labelFor="address"
+                    label="Address"
                     inputType="text"
                     placeholder="Enter here"
                     maxW="w-full"
@@ -117,10 +156,10 @@ const EditMerchant = () => {
           </div>
         </div>
       </div>
-      {modals.confirmEditMerchant && (
+      {modals.confirmEdit && (
         <ModalWrapper
-          isOpen={modals.confirmEditMerchant}
-          setIsOpen={() => closeModal('confirmEditMerchant')}
+          isOpen={modals.confirmEdit}
+          setIsOpen={() => closeModal('confirmEdit')}
           title={'Save Changes?'}
           info={
             'You are about to save changes made to this merchant, would you want to proceed with this?'
@@ -128,8 +167,7 @@ const EditMerchant = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmEditMerchant');
-            openModal('editSuccessful');
+            updateMerchantRequestMutation.mutate(merchantId);
           }}
         />
       )}
@@ -143,6 +181,7 @@ const EditMerchant = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            formik.resetForm();
             closeModal('editSuccessful');
             navigate(
               isDashboardRoute

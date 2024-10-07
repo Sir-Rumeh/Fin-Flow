@@ -2,7 +2,7 @@ import ButtonComponent from 'components/FormElements/Button';
 import { Dispatch, SetStateAction, useEffect, useState } from 'react';
 import CustomPopover from 'hoc/PopOverWrapper';
 import MuiDatePicker from 'components/FormElements/DatePicker';
-import { statusDropdownOptions } from 'utils/constants';
+import { requestTypeDropdownOptions, statusDropdownOptions } from 'utils/constants';
 import { FilterIcon } from 'assets/icons';
 import SearchIcon from 'assets/icons/SearchIcon';
 import { useMediaQuery } from '@mui/material';
@@ -21,6 +21,7 @@ interface TableFilterProps {
   toDateName: string;
   selectName: string;
   showOptionsFilter?: boolean;
+  isRequestsFilter?: boolean;
   translationX?: number;
   translationY?: number;
 }
@@ -37,6 +38,7 @@ const TableFilter = ({
   toDateName,
   selectName,
   showOptionsFilter = true,
+  isRequestsFilter = false,
   translationX,
   translationY,
 }: TableFilterProps) => {
@@ -49,7 +51,7 @@ const TableFilter = ({
   const clearFilter = () => {
     formik.setFieldValue(fromDateName, null);
     formik.setFieldValue(toDateName, null);
-    formik.setFieldValue(selectName, 'All');
+    formik.setFieldValue(selectName, null);
   };
 
   useEffect(() => {
@@ -58,6 +60,7 @@ const TableFilter = ({
       const endDate = new Date(formik.values[toDateName]);
       if (startDate > endDate) {
         formik.setFieldValue(fromDateName, null);
+        formik.setFieldValue(toDateName, null);
         notifyError('Start date should be less than end date');
       }
     }
@@ -124,9 +127,9 @@ const TableFilter = ({
                 <div className="mt-12">
                   <FormSelect
                     labelFor={selectName}
-                    label="Status"
+                    label={isRequestsFilter ? 'Request Type' : 'Status'}
                     formik={formik}
-                    options={statusDropdownOptions}
+                    options={isRequestsFilter ? requestTypeDropdownOptions : statusDropdownOptions}
                     scrollableOptions
                     labelFontWeight="font-bold"
                   />

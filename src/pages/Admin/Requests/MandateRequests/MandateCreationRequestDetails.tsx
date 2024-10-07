@@ -21,7 +21,6 @@ import {
   getMandateRequestById,
   rejectMandateRequest,
 } from 'config/actions/dashboard-actions';
-import { Box, CircularProgress } from '@mui/material';
 import RejectedIcon from 'assets/icons/RejectedIcon';
 
 const MandateCreationRequestDetails = () => {
@@ -54,7 +53,7 @@ const MandateCreationRequestDetails = () => {
     },
   });
 
-  const { isLoading, data, isFetching } = useQuery({
+  const { data } = useQuery({
     queryKey: ['mandateRequests', mandateId],
     queryFn: ({ queryKey }) => getMandateRequestById(queryKey[1]),
   });
@@ -273,7 +272,13 @@ const MandateCreationRequestDetails = () => {
             <div className="mt-10">
               <ItemDetailsContainer title="Requested By">
                 <DetailsCard title="Requested By" content={data?.responseData?.requestedBy} />
-                <DetailsCard title="Date Requested" content={data?.responseData?.dateRequested} />
+                <DetailsCard
+                  title="Date Requested"
+                  content={
+                    data?.responseData?.dateRequested &&
+                    new Date(data.responseData.dateRequested).toLocaleDateString()
+                  }
+                />
               </ItemDetailsContainer>
             </div>
           </div>

@@ -10,13 +10,15 @@ import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import DetailsActionButton from 'components/common/DetailsActionButton';
+import { useQuery } from '@tanstack/react-query';
+import { getProfileById } from 'config/actions/profile-actions';
 
 const ProfileDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const id = searchParams?.get('id') || '';
+  const profileId = searchParams?.get('id') || '';
 
-  let profileStatus = 'Disabled';
+  // let profileStatus = 'Disabled';
 
   const [modals, setModals] = useState({
     confirmDisable: false,
@@ -34,6 +36,11 @@ const ProfileDetails = () => {
   const closeModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
+
+  const { data, refetch } = useQuery({
+    queryKey: ['profiles', profileId],
+    queryFn: ({ queryKey }) => getProfileById(queryKey[1]),
+  });
 
   return (
     <>
@@ -56,7 +63,7 @@ const ProfileDetails = () => {
             <CustomPopover
               popoverId={1}
               buttonIcon={<DetailsActionButton />}
-              translationX={8}
+              translationX={0}
               translationY={54}
             >
               <div className="flex w-[7.2rem] flex-col rounded-md p-1">
@@ -64,7 +71,7 @@ const ProfileDetails = () => {
                   onClick={() =>
                     navigate({
                       pathname: `/${appRoutes.adminDashboard.profileManagement.editProfile}`,
-                      search: `?${createSearchParams({ id })}`,
+                      search: `?${createSearchParams({ id: profileId })}`,
                     })
                   }
                   type="button"
@@ -72,7 +79,7 @@ const ProfileDetails = () => {
                 >
                   Edit Details
                 </button>
-                {profileStatus === 'Enabled' && (
+                {data?.responseData?.isActive ? (
                   <button
                     type="button"
                     onClick={() => openModal('confirmDisable')}
@@ -80,8 +87,7 @@ const ProfileDetails = () => {
                   >
                     Disable
                   </button>
-                )}
-                {profileStatus === 'Disabled' && (
+                ) : (
                   <button
                     type="button"
                     onClick={() => openModal('confirmEnable')}

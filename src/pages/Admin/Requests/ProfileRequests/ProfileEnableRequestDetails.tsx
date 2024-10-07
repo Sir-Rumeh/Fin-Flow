@@ -12,10 +12,9 @@ import FormInput from 'components/FormElements/FormInput';
 import { useFormik } from 'formik';
 import { reasonForRejectionSchema } from 'utils/formValidators';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
-import { UpdateRequestIcon } from 'assets/icons';
 import CustomInput from 'components/FormElements/CustomInput';
 
-const ProfileDeletionRequestDetails = () => {
+const ProfileEnableRequestDetails = () => {
   const navigate = useNavigate();
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
@@ -31,7 +30,6 @@ const ProfileDeletionRequestDetails = () => {
   const closeModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
-
   const formik = useFormik({
     initialValues: {
       remark: '',
@@ -51,7 +49,7 @@ const ProfileDeletionRequestDetails = () => {
             Profile Requests
           </Link>{' '}
           <ChevronRight />
-          <span className="text-lightPurple">Profile Deletion Request Details</span>
+          <span className="text-lightPurple">Enable Profile Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
           <h2 className="text-lg font-semibold md:text-2xl">Request ID : Req123456</h2>
@@ -107,7 +105,6 @@ const ProfileDeletionRequestDetails = () => {
               <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
             </ItemDetailsContainer>
           </div>
-
           <div className="mt-10">
             <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
               <DetailsCard title="ID" content="9344243" />
@@ -130,7 +127,7 @@ const ProfileDeletionRequestDetails = () => {
           setIsOpen={() => closeModal('confirmApproveRequest')}
           title={'Approve profile Request?'}
           info={
-            'You are about to approve this new profile deletion request, would you want to proceed with this?'
+            'You are about to approve this enable profile request, would you want to proceed with this?'
           }
           icon={<RedAlertIcon />}
           type={'confirmation'}
@@ -146,7 +143,7 @@ const ProfileDeletionRequestDetails = () => {
           isOpen={modals.approveSuccessfulModal}
           setIsOpen={() => closeModal('approveSuccessfulModal')}
           title={'Success!!'}
-          info={'You have successfully approved this new profile request'}
+          info={'You have successfully approved this enable profile request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -163,7 +160,7 @@ const ProfileDeletionRequestDetails = () => {
           setIsOpen={() => closeModal('confirmRejectRequest')}
           title={'Reject profile Request?'}
           info={
-            'You are about to reject this profile deletion request, would you want to proceed with this?'
+            'You are about to reject this enable profile request, would you want to proceed with this?'
           }
           feedback={
             <div className="w-full md:col-span-1">
@@ -192,7 +189,7 @@ const ProfileDeletionRequestDetails = () => {
           isOpen={modals.rejectSuccessfulModal}
           setIsOpen={() => closeModal('rejectSuccessfulModal')}
           title={'Success!!'}
-          info={'You have successfully rejected this profile deletion request'}
+          info={'You have successfully rejected this enable profile request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -205,4 +202,4 @@ const ProfileDeletionRequestDetails = () => {
   );
 };
 
-export default ProfileDeletionRequestDetails;
+export default ProfileEnableRequestDetails;

@@ -5,6 +5,7 @@ import ProfileCreationRequestDetails from './ProfileCreationRequestDetails';
 import ProfileDeletionRequestDetails from './ProfileDeletionRequestDetails';
 import ProfileUpdateRequestDetails from './ProfileUpdateRequestDetails';
 import ProfileDisableRequestDetails from './ProfileDisableRequestDetails';
+import ProfileEnableRequestDetails from './ProfileEnableRequestDetails';
 
 const ProfileRequestsRoutes = () => {
   return (
@@ -13,6 +14,7 @@ const ProfileRequestsRoutes = () => {
       <Route path="creation-request-details" element={<ProfileCreationRequestDetails />} />
       <Route path="deletion-request-details" element={<ProfileDeletionRequestDetails />} />
       <Route path="update-request-details" element={<ProfileUpdateRequestDetails />} />
+      <Route path="enable-request-details" element={<ProfileEnableRequestDetails />} />
       <Route path="disable-request-details" element={<ProfileDisableRequestDetails />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>

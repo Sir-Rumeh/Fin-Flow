@@ -66,6 +66,7 @@ const MandateDetails = () => {
   const formik = useFormik({
     initialValues: {
       startDate: '',
+      endDate: '',
     },
     onSubmit: (values: any) => {
       setSearchTerm('');
@@ -137,7 +138,7 @@ const MandateDetails = () => {
     },
   ];
 
-  const { isLoading, data, refetch, isFetching } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['mandates', mandateId],
     queryFn: ({ queryKey }) => getMandateById(queryKey[1]),
   });
@@ -152,7 +153,6 @@ const MandateDetails = () => {
     },
     onError: (error) => {
       closeModal('confirmEdit');
-      notifyError(error?.message);
     },
   });
 
@@ -164,7 +164,6 @@ const MandateDetails = () => {
     },
     onError: (error) => {
       closeModal('confirmEnable');
-      notifyError(error?.message);
     },
   });
 
@@ -176,7 +175,6 @@ const MandateDetails = () => {
     },
     onError: (error) => {
       closeModal('confirmDisable');
-      notifyError(error?.message);
     },
   });
 
@@ -188,7 +186,6 @@ const MandateDetails = () => {
     },
     onError: (error) => {
       closeModal('confirmDelete');
-      notifyError(error?.message);
     },
   });
 

@@ -54,7 +54,6 @@ const UserDetails = () => {
     },
     onError: (error) => {
       closeModal('confirmEnable');
-      notifyError(error?.message);
     },
   });
   const disableStaffUserMutation = useMutation({
@@ -65,7 +64,6 @@ const UserDetails = () => {
     },
     onError: (error) => {
       closeModal('confirmDisable');
-      notifyError(error?.message);
     },
   });
 
@@ -77,7 +75,6 @@ const UserDetails = () => {
     },
     onError: (error) => {
       closeModal('confirmDelete');
-      notifyError(error?.message);
     },
   });
 
@@ -171,7 +168,7 @@ const UserDetails = () => {
                 </>
               }
             >
-              <DetailsCard title="Employee ID" content={data?.responseData?.employeeId} />
+              <DetailsCard title="Employee ID" content={data?.responseData?.staffId} />
               <DetailsCard
                 title="User Name"
                 content={`${data ? `${data?.responseData?.firstName} ${data?.responseData?.lastName}` : ''}`}

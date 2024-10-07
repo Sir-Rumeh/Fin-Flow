@@ -98,7 +98,7 @@ const StaffUserManagement = () => {
 
   const columns: GridColDef[] = [
     {
-      field: 'employeeId',
+      field: 'staffId',
       headerName: 'Employee ID',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -156,7 +156,7 @@ const StaffUserManagement = () => {
           case false:
             return renderIcon(DeleteRequestIcon, 'text-redSecondary', 'Disabled');
           default:
-            return <span>{params?.row.status}</span>;
+            return <span>{params?.row.isActive ? 'Enabled' : 'Disabled'}</span>;
         }
       },
     },
@@ -272,7 +272,6 @@ const StaffUserManagement = () => {
     },
     onError: (error) => {
       closeModal('confirmEnable');
-      notifyError(error?.message);
     },
   });
   const disableStaffUserMutation = useMutation({
@@ -283,7 +282,6 @@ const StaffUserManagement = () => {
     },
     onError: (error) => {
       closeModal('confirmDisable');
-      notifyError(error?.message);
     },
   });
 
@@ -295,7 +293,6 @@ const StaffUserManagement = () => {
     },
     onError: (error) => {
       closeModal('confirmDelete');
-      notifyError(error?.message);
     },
   });
 

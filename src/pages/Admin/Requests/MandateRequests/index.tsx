@@ -21,7 +21,6 @@ import { getMandateRequests, getMandateRequestsStatistics } from 'config/actions
 
 const MandateRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
-
   const [activeTab, setActiveTab] = useState(TabsListTabNames.Pending);
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
@@ -41,7 +40,6 @@ const MandateRequests = () => {
   });
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
-    mandateCode: '',
     status: activeTab,
     pageNo: paginationData.pageNumber,
     pageSize: paginationData.pageSize,
@@ -62,13 +60,16 @@ const MandateRequests = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [
-    activeTab,
-    formik.values.searchMandate,
-    formik.values.fromDateFilter,
-    formik.values.toDateFilter,
-    paginationData,
-  ]);
+  }, [activeTab, paginationData]);
+
+  const handleOptionsFilter = () => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  };
 
   const columns: GridColDef[] = [
     {
@@ -169,12 +170,10 @@ const MandateRequests = () => {
   const { data, refetch } = useQuery({
     queryKey: ['mandateRequests', queryParams],
     queryFn: ({ queryKey }) => getMandateRequests(queryKey[1] as QueryParams),
-    enabled: !!queryParams.status,
   });
   const { data: statisticsData } = useQuery({
     queryKey: ['mandateRequests'],
     queryFn: ({ queryKey }) => getMandateRequestsStatistics(),
-    enabled: !!queryParams.status,
   });
 
   const tabsList: TabsProps[] = [
@@ -196,6 +195,7 @@ const MandateRequests = () => {
   ];
 
   const isLargeWidth = useMediaQuery('(min-width:1320px)');
+
   return (
     <>
       <section className="p-2 md:p-4">
@@ -219,12 +219,13 @@ const MandateRequests = () => {
                     label={'Search Mandate'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
-                    handleOptionsFilter={() => refetch()}
+                    handleOptionsFilter={handleOptionsFilter}
                     formik={formik}
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}
                     selectName={'statusFilter'}
                     translationX={isLargeWidth ? 350 : undefined}
+                    isRequestsFilter
                   />
                 </div>
               </div>

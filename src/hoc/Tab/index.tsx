@@ -68,7 +68,7 @@ export default function BasicTabs({ tabList, tabPanel, initialIndex }: BasicTabs
               <Tab
                 label={item}
                 {...a11yProps(index)}
-                key={item}
+                key={index}
                 sx={{
                   borderRadius: '0.5rem',
                 }}

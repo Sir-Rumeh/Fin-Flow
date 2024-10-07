@@ -159,7 +159,6 @@ const MandateRequests = () => {
   const { data, refetch } = useQuery({
     queryKey: ['mandateRequests', queryParams],
     queryFn: ({ queryKey }) => getMandateRequests(queryKey[1] as QueryParams),
-    enabled: !!queryParams.status,
   });
 
   const { data: statistics } = useQuery({
@@ -226,6 +225,7 @@ const MandateRequests = () => {
                 toDateName={'toDateFilter'}
                 selectName={'statusFilter'}
                 translationX={isLargeWidth ? 350 : undefined}
+                isRequestsFilter
               />
             </div>
           </div>

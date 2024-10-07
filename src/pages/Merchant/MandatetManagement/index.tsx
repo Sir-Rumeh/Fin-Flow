@@ -349,7 +349,6 @@ const MandatetManagement = () => {
     },
     onError: (error) => {
       closeModal('confirmModifyMandate');
-      notifyError(error?.message);
     },
   });
 
@@ -362,7 +361,6 @@ const MandatetManagement = () => {
     },
     onError: (error) => {
       closeModal('openEnableMandate');
-      notifyError(error?.message);
     },
   });
 
@@ -375,7 +373,6 @@ const MandatetManagement = () => {
     },
     onError: (error) => {
       closeModal('openDisableMandate');
-      notifyError(error?.message);
     },
   });
 
@@ -388,7 +385,6 @@ const MandatetManagement = () => {
     },
     onError: (error) => {
       closeModal('openDeleteProfile');
-      notifyError(error?.message);
     },
   });
 
