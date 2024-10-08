@@ -49,7 +49,6 @@ function AddUser() {
       userName: '',
       firstName: '',
       lastName: '',
-      employeeId: '',
       email: '',
       phoneNumber: '',
       branch: '',
@@ -63,7 +62,6 @@ function AddUser() {
         userName: values.userName,
         firstName: values.firstName,
         lastName: values.lastName,
-        employeeId: values.employeeId,
         email: values.email,
         phoneNumber: values.phoneNumber,
         branch: values.branch,
@@ -124,7 +122,7 @@ function AddUser() {
                     formik={formik}
                   />
                   <CustomInput
-                    labelFor="employeeId"
+                    labelFor="staffId"
                     label="Enter Employee ID"
                     inputType="text"
                     placeholder="Enter employee ID"

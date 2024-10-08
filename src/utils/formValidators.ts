@@ -94,7 +94,7 @@ export const createStaffUserSchema = Yup.object().shape({
   userName: Yup.string().required('Username is required'),
   firstName: Yup.string().required('Firstname is required'),
   lastName: Yup.string().required('Lastname is required'),
-  employeeId: Yup.string().required('Employee ID is required'),
+  staffId: Yup.string().required('Employee ID is required'),
   email: Yup.string()
     .email('Please enter a valid email address')
     .required('Employee email is required'),

@@ -192,7 +192,7 @@ const StaffUserRequests = () => {
     },
     {
       tabIndex: 3,
-      tabName: TabsListTabNames.Rejected,
+      tabName: TabsListTabNames.Declined,
       tabTotal: statisticsData ? statisticsData?.responseData?.totalRejected : 0,
     },
   ];

@@ -89,7 +89,7 @@ const StaffUserEnableRequestDetails = () => {
           <span className="text-lightPurple">Enable Staff User Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
-          <h2 className="text-lg font-semibold md:text-2xl">{`Merchant ID : ${data?.responseData?.id}`}</h2>
+          <h2 className="text-lg font-semibold md:text-2xl">{`Request ID : ${data?.responseData?.id}`}</h2>
           <div className="flex w-1/2 items-center justify-end gap-4">
             <div className="w-auto">
               <ButtonComponent
@@ -123,7 +123,7 @@ const StaffUserEnableRequestDetails = () => {
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
           <div className="">
             <ItemDetailsContainer title="Request Details">
-              <DetailsCard title="Request ID" content={data?.responseData?.id} />
+              <DetailsCard title="Employee ID" content={data?.responseData?.staffId} />
               <DetailsCard
                 title="Full Name"
                 content={`${data?.responseData?.firstName} ${data?.responseData?.lastName}`}
