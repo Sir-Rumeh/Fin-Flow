@@ -185,6 +185,7 @@ const StaffUserUpdateRequestDetails = () => {
                     new Date(data.responseData.dateRejected).toLocaleDateString()
                   }
                 />
+                <DetailsCard title="Reason for Rejection" content={data?.responseData?.remark} />
               </ItemDetailsContainer>
             )}
           </div>
