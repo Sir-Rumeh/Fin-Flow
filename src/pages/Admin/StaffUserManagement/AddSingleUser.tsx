@@ -45,6 +45,7 @@ function AddUser() {
 
   const formik = useFormik({
     initialValues: {
+      staffId: '',
       userName: '',
       firstName: '',
       lastName: '',
@@ -58,6 +59,7 @@ function AddUser() {
     validationSchema: createStaffUserSchema,
     onSubmit: (values) => {
       const payload = {
+        staffId: values.staffId,
         userName: values.userName,
         firstName: values.firstName,
         lastName: values.lastName,

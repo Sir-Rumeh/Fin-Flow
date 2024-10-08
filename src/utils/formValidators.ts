@@ -35,10 +35,10 @@ export const onboardMerchantSchema = Yup.object().shape({
 });
 
 export const editMerchantSchema = Yup.object().shape({
-  merchantId: Yup.string().required('Merchant ID is required'),
   merchantName: Yup.string().required('Merchant Name is required'),
-  merchantCode: Yup.string().required('Merchant Code is required'),
-  merchantCIF: Yup.string().required('Merchant CIF is required'),
+  accountNumber: Yup.string().required('Account Number is required'),
+  rcNumber: Yup.string().required('RC Number is required'),
+  address: Yup.string().required('Address is required'),
 });
 
 export const addSingleMandateSchema = Yup.object().shape({
