@@ -6,7 +6,6 @@ import appRoutes from 'utils/constants/routes';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
-import { muiDashboardMerchantsList, profileManagementList } from 'utils/constants';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
 import { ModalWrapper } from 'hoc/ModalWrapper';
@@ -15,11 +14,18 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 import { useMediaQuery } from '@mui/material';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { QueryParams } from 'utils/interfaces';
-import { getProfiles } from 'config/actions/profile-actions';
+import {
+  deleteProfile,
+  disableProfile,
+  enableProfile,
+  getProfiles,
+} from 'config/actions/profile-actions';
 
 const ProfileManagement = () => {
+  const queryClient = useQueryClient();
+  const isSmallWidth = useMediaQuery('(max-width:370px)');
   const printPdfRef = useRef(null);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
@@ -92,21 +98,21 @@ const ProfileManagement = () => {
 
   const columns: GridColDef[] = [
     {
-      field: 'accountId',
+      field: 'accountID',
       headerName: 'Account ID',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
     },
     {
-      field: 'username',
+      field: 'userName',
       headerName: 'User Name',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
     },
     {
-      field: 'emailAddress',
+      field: 'email',
       headerName: 'Email',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -229,10 +235,42 @@ const ProfileManagement = () => {
   ];
 
   const { data, refetch } = useQuery({
-    queryKey: ['profile', queryParams],
+    queryKey: ['profiles', queryParams],
     queryFn: ({ queryKey }) => getProfiles(queryKey[1] as QueryParams),
   });
-  const isSmallWidth = useMediaQuery('(max-width:370px)');
+
+  const enableProfileMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => enableProfile(requestId),
+    onSuccess: () => {
+      openModal('enableSuccessful');
+      queryClient.invalidateQueries({ queryKey: ['profiles'] });
+    },
+    onError: (error) => {
+      closeModal('enableSuccessful');
+    },
+  });
+
+  const disableProfileMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => disableProfile(requestId),
+    onSuccess: () => {
+      openModal('enableSuccessful');
+      queryClient.invalidateQueries({ queryKey: ['profiles'] });
+    },
+    onError: (error) => {
+      closeModal('enableSuccessful');
+    },
+  });
+
+  const deleteProfileMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => deleteProfile(requestId),
+    onSuccess: () => {
+      openModal('deleteSuccessful');
+      queryClient.invalidateQueries({ queryKey: ['mandates'] });
+    },
+    onError: (error) => {
+      closeModal('deleteSuccessful');
+    },
+  });
 
   return (
     <>
@@ -311,8 +349,8 @@ const ProfileManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
+            disableProfileMutation.mutate(selectedProfileId);
             closeModal('confirmDisable');
-            openModal('disableSuccessful');
           }}
         />
       )}
@@ -338,8 +376,8 @@ const ProfileManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
+            enableProfileMutation.mutate(selectedProfileId);
             closeModal('confirmEnable');
-            openModal('enableSuccessful');
           }}
         />
       )}
@@ -365,8 +403,8 @@ const ProfileManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
+            deleteProfileMutation.mutate(selectedProfileId);
             closeModal('confirmDelete');
-            openModal('deleteSuccessful');
           }}
         />
       )}

@@ -104,14 +104,13 @@ export const createStaffUserSchema = Yup.object().shape({
 });
 
 export const createProfileSchema = Yup.object().shape({
-  merchantID: Yup.string().required('Username is required'),
-  accountID: Yup.string().required('Firstname is required'),
-  userName: Yup.string().required('Lastname is required'),
+  merchantID: Yup.string().required('Merchant ID is required'),
+  merchantName: Yup.string().required('Merchant name is required'),
+  accountID: Yup.string().required('Account ID is required'),
+  accountNumber: Yup.string().required('Account number is required'),
+  firstName: Yup.string().required('First name is required'),
+  lastName: Yup.string().required('Last name is required'),
+  email: Yup.string().email('Please enter a valid email address').required('Email is required'),
   password: Yup.string().required('Employee ID is required'),
-  email: Yup.string()
-    .email('Please enter a valid email address')
-    .required('Employee email is required'),
-  firstName: Yup.string().required('Employee phone number is required'),
-  lastName: Yup.string().required('Branch is required'),
   role: Yup.string().required('User role is required'),
 });

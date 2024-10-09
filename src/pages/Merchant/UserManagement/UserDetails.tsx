@@ -3,13 +3,12 @@ import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import appRoutes from 'utils/constants/routes';
 import { ArrowRightIcon, CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
 import { useQuery } from '@tanstack/react-query';
-import { notifyError } from 'utils/helpers';
 import { getProfileById } from 'config/actions/profile-actions';
 
 const UserDetails = () => {
   const { id: requestId } = useParams();
 
-  const { data, isError, error } = useQuery({
+  const { data } = useQuery({
     queryKey: ['profiles', requestId],
     queryFn: ({ queryKey }) => getProfileById(queryKey[1]),
   });

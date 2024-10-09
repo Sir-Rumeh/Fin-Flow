@@ -3,8 +3,6 @@ import TableFilter from 'components/TableFilter';
 import { QueryParams, TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
 import { TabsListTabNames } from 'utils/enums';
-import ProfileRequestsListTable from './ProfileRequestsListTable';
-import { profileRequestsList } from 'utils/constants';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
@@ -14,22 +12,22 @@ import {
   DisableRequestIcon,
   UpdateRequestIcon,
 } from 'assets/icons';
-import { ProfileDataRow } from 'utils/interfaces';
 import { RequestTypes } from 'utils/enums';
 import CustomTable from 'components/CustomTable';
 import { useFormik } from 'formik';
 import { useMediaQuery } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
-import { getProfileRequests } from 'config/actions/profile-actions';
+import { getProfileRequests, getProfileStatistics } from 'config/actions/profile-actions';
 
 const ProfileRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const total = 20;
   const [activeTab, setActiveTab] = useState(TabsListTabNames.Pending);
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
     pageSize: 10,
   });
+
+  const isLargeWidth = useMediaQuery('(min-width:1320px)');
 
   const formik = useFormik({
     initialValues: {
@@ -44,7 +42,8 @@ const ProfileRequests = () => {
   });
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
-    status: activeTab,
+    mandateCode: '',
+    status: formik.values.statusFilter,
     pageNo: paginationData.pageNumber,
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
@@ -53,18 +52,6 @@ const ProfileRequests = () => {
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });
-
-  useEffect(() => {
-    setQueryParams((prev) => ({
-      ...prev,
-      status: activeTab,
-      pageNo: paginationData.pageNumber,
-      pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchProfile,
-      startDate: formik.values.fromDateFilter,
-      endDate: formik.values.toDateFilter,
-    }));
-  }, [activeTab, paginationData]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
@@ -76,14 +63,14 @@ const ProfileRequests = () => {
   };
 
   const columns: GridColDef[] = [
-    {
-      field: 'accountId',
-      headerName: 'Account ID',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-      sortable: false,
-    },
+    // {
+    //   field: 'accountId',
+    //   headerName: 'Account ID',
+    //   width: screen.width < 1000 ? 200 : undefined,
+    //   flex: screen.width >= 1000 ? 1 : undefined,
+    //   headerClassName: 'ag-thead',
+    //   sortable: false,
+    // },
     {
       field: 'userName',
       headerName: 'User Name',
@@ -130,7 +117,7 @@ const ProfileRequests = () => {
       },
     },
     {
-      field: 'dateRequested',
+      field: 'createdAt',
       headerName: 'Date Requested',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -159,8 +146,12 @@ const ProfileRequests = () => {
           <div className="">
             <Link
               className="w-full text-start font-semibold text-lightPurple"
+              // to={{
+              //   pathname: route,
+              //   search: `?${createSearchParams({ id: params?.row.id })}`,
+              // }}
               to={{
-                pathname: route,
+                pathname: `/${appRoutes.adminDashboard.requests.profileRequests.profileCreationRequest}`,
                 search: `?${createSearchParams({ id: params?.row.id })}`,
               }}
             >
@@ -177,24 +168,47 @@ const ProfileRequests = () => {
     queryFn: ({ queryKey }) => getProfileRequests(queryKey[1] as QueryParams),
   });
 
+  const { data: statistics } = useQuery({
+    queryKey: ['profileStatistics', queryParams],
+    queryFn: () => getProfileStatistics(),
+  });
+
   const tabsList: TabsProps[] = [
     {
       tabIndex: 1,
       tabName: TabsListTabNames.Pending,
-      tabTotal: total,
+      tabTotal: statistics?.responseData?.totalPending,
     },
     {
       tabIndex: 2,
       tabName: TabsListTabNames.Approved,
-      tabTotal: total,
+      tabTotal: statistics?.responseData?.totalApproved,
     },
     {
       tabIndex: 3,
       tabName: TabsListTabNames.Rejected,
-      tabTotal: total,
+      tabTotal: statistics?.responseData?.totalRejected,
     },
   ];
-  const isLargeWidth = useMediaQuery('(min-width:1320px)');
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: activeTab,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+      searchFilter: formik.values.searchProfile,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  }, [
+    activeTab,
+    formik.values.searchProfile,
+    formik.values.fromDateFilter,
+    formik.values.toDateFilter,
+    paginationData,
+  ]);
+
   return (
     <>
       <section className="p-2 md:p-4">
