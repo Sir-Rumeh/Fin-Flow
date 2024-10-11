@@ -1,10 +1,15 @@
 import { Link } from 'react-router-dom';
 import { DashboardCardArrowIcon } from 'assets/icons';
 
+type RouteType = {
+  pathname: string;
+  search?: string;
+};
+
 type DashboardCardProps = {
   title: string;
   numberOfRequest: string | number;
-  route: string;
+  route: RouteType | string;
   backgroundColor?: string;
   textColor?: string;
   maxW?: string;

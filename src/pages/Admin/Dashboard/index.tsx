@@ -7,14 +7,76 @@ import DashboardCard from 'components/common/DashboardCards/DashboardCard';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import { muiDashboardMerchantsList } from 'utils/constants';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import CustomTable from 'components/CustomTable';
 import { chartsGridClasses } from '@mui/x-charts/ChartsGrid';
+import { QueryParams } from 'utils/interfaces';
+import { useMediaQuery } from '@mui/material';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  deleteMerchant,
+  disableMerchant,
+  enableMerchant,
+  getMerchants,
+} from 'config/actions/merchant-actions';
+import { useFormik } from 'formik';
 
 const Dashboard = () => {
+  const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [paginationData, setPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
+
+  const [selectedMerchantId, setSelectedMerchantId] = useState('');
+
+  const [modals, setModals] = useState({
+    confirmDisable: false,
+    disableSuccessful: false,
+    confirmEnable: false,
+    enableSuccessful: false,
+    confirmDelete: false,
+    deleteSuccessful: false,
+  });
+
+  const openModal = (modalName: keyof typeof modals) => {
+    setModals((prev) => ({ ...prev, [modalName]: true }));
+  };
+
+  const closeModal = (modalName: keyof typeof modals) => {
+    setModals((prev) => ({ ...prev, [modalName]: false }));
+  };
+
+  const formik = useFormik({
+    initialValues: {
+      status: '',
+    },
+    onSubmit: (values) => {
+      setSearchTerm('');
+    },
+  });
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    status: formik.values.status,
+    pageNo: paginationData.pageNumber,
+    pageSize: paginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.status,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+    }));
+  }, [formik.values.status, paginationData]);
+
   const barAxisX = [
     'JAN',
     'FEB',
@@ -55,26 +117,9 @@ const Dashboard = () => {
     },
   };
 
-  const merchantFilterId = 1;
-
-  const [modals, setModals] = useState({
-    confirmDisableMerchant: false,
-    disableSuccessful: false,
-  });
-
-  const openModal = (modalName: keyof typeof modals) => {
-    setModals((prev) => ({ ...prev, [modalName]: true }));
-  };
-
-  const closeModal = (modalName: keyof typeof modals) => {
-    setModals((prev) => ({ ...prev, [modalName]: false }));
-  };
-
-  const navigate = useNavigate();
-
   const columns: GridColDef[] = [
     {
-      field: 'merchantName',
+      field: 'name',
       headerName: 'Merchant Name',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -89,8 +134,8 @@ const Dashboard = () => {
       sortable: false,
     },
     {
-      field: 'phoneNumber',
-      headerName: 'Phone Number',
+      field: 'cif',
+      headerName: 'CIF Number',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
@@ -98,7 +143,7 @@ const Dashboard = () => {
     },
 
     {
-      field: 'dateRequested',
+      field: 'dateCreated',
       headerName: 'Date Requested',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -117,7 +162,7 @@ const Dashboard = () => {
             <CustomPopover
               popoverId={params?.row.id}
               buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-20}
+              translationX={-6}
               translationY={45}
             >
               <div className="flex flex-col rounded-md p-1">
@@ -145,12 +190,38 @@ const Dashboard = () => {
                 >
                   Edit Details
                 </button>
+                {params?.row.isActive ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedMerchantId(params?.row.id);
+                      openModal('confirmDisable');
+                    }}
+                    className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
+                  >
+                    Disable
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSelectedMerchantId(params?.row.id);
+                      openModal('confirmEnable');
+                    }}
+                    className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
+                  >
+                    Enable
+                  </button>
+                )}
                 <button
-                  onClick={() => openModal('confirmDisableMerchant')}
                   type="button"
+                  onClick={() => {
+                    setSelectedMerchantId(params?.row.id);
+                    openModal('confirmDelete');
+                  }}
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
-                  Disable
+                  Delete
                 </button>
               </div>
             </CustomPopover>
@@ -159,6 +230,46 @@ const Dashboard = () => {
       },
     },
   ];
+
+  const isSmallWidth = useMediaQuery('(max-width:370px)');
+
+  const { data, refetch } = useQuery({
+    queryKey: ['merchants', queryParams],
+    queryFn: ({ queryKey }) => getMerchants(queryKey[1] as QueryParams),
+  });
+
+  const enableMerchantMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => enableMerchant(requestId),
+    onSuccess: () => {
+      closeModal('confirmEnable');
+      openModal('enableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmEnable');
+    },
+  });
+
+  const disableMerchantMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => disableMerchant(requestId),
+    onSuccess: () => {
+      closeModal('confirmDisable');
+      openModal('disableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDisable');
+    },
+  });
+
+  const deleteMerchantMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => deleteMerchant(requestId),
+    onSuccess: () => {
+      closeModal('confirmDelete');
+      openModal('deleteSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDelete');
+    },
+  });
 
   return (
     <>
@@ -177,14 +288,38 @@ const Dashboard = () => {
               <p className="text-md font-semibold md:text-lg">Filter:</p>
               <div className="text-md font-semibold md:text-lg">
                 <CustomPopover
-                  popoverId={merchantFilterId}
-                  buttonIcon={<PopoverTitle title="All" />}
-                  translationX={10}
-                  translationY={50}
+                  popoverId={1}
+                  buttonIcon={
+                    <PopoverTitle title={formik.values.status ? formik.values.status : 'All'} />
+                  }
+                  translationX={0}
+                  translationY={45}
                 >
-                  <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
-                    <div>Merchant</div>
-                    <div>Merchant</div>
+                  <div className="slide-downward flex w-[7rem] flex-col rounded-md bg-white py-1 text-sm">
+                    <span
+                      onClick={() => {
+                        formik.setFieldValue('status', 'All');
+                      }}
+                      className="cursor-pointer border-b px-3 py-1 text-start hover:bg-lilacPurple"
+                    >
+                      All
+                    </span>
+                    <span
+                      onClick={() => {
+                        formik.setFieldValue('status', 'Enabled');
+                      }}
+                      className="cursor-pointer border-b px-3 py-1 text-start hover:bg-lilacPurple"
+                    >
+                      Enabled
+                    </span>
+                    <span
+                      onClick={() => {
+                        formik.setFieldValue('status', 'Disabled');
+                      }}
+                      className="cursor-pointer px-3 py-1 text-start hover:bg-lilacPurple"
+                    >
+                      Disabled
+                    </span>
                   </div>
                 </CustomPopover>
               </div>
@@ -226,20 +361,26 @@ const Dashboard = () => {
         </div>
         <div className="relative mt-5 flex items-center justify-center rounded-md bg-white p-2 md:p-4">
           <div className="w-full">
-            <CustomTable tableData={muiDashboardMerchantsList} columns={columns} rowCount={73} />
+            <CustomTable
+              tableData={data?.responseData?.items}
+              columns={columns}
+              rowCount={data?.responseData?.totalCount}
+              paginationData={paginationData}
+              setPaginationData={setPaginationData}
+            />
           </div>
         </div>
       </section>
-      {modals.confirmDisableMerchant && (
+      {modals.confirmDisable && (
         <ModalWrapper
-          isOpen={modals.confirmDisableMerchant}
-          setIsOpen={() => closeModal('confirmDisableMerchant')}
+          isOpen={modals.confirmDisable}
+          setIsOpen={() => closeModal('confirmDisable')}
           title={'Disable Merchant?'}
           info={'You are about to disable this merchant, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDisableMerchant');
+            closeModal('confirmDisable');
             openModal('disableSuccessful');
           }}
         />

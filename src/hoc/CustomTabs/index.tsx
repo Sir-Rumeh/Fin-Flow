@@ -34,13 +34,15 @@ const CustomTabs = ({ tabs, activeTab, setActiveTab, width, backgroundColor }: C
                 <span className={`flex items-center font-semibold`}>
                   {tab.tabName === TabsListTabNames.Declined ? 'Rejected' : tab.tabName}
                 </span>
-                <span className="rounded-2xl border border-purpleSecondary bg-purple-100 px-2">
-                  {tab.tabTotal ? tab.tabTotal : 0}
-                </span>
+                {tab.tabTotal && (
+                  <span className="rounded-2xl border border-purpleSecondary bg-purple-100 px-2">
+                    {tab.tabTotal ? tab.tabTotal : 0}
+                  </span>
+                )}
               </span>
             </ButtonComponent>
             <div
-              className={`mt-[0px] w-full ${activeTab === tab.tabName ? 'border-b-2 border-purplePrimary' : ''}`}
+              className={`mt-[0px] w-[90%] ${activeTab === tab.tabName ? 'border-b-2 border-purplePrimary' : ''}`}
             ></div>
           </div>
         );

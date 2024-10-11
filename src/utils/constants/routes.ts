@@ -54,6 +54,9 @@ export const appRoutes = {
     merchantManagement: {
       index: `${BASE_ROUTES.ADMIN}/merchant-management`,
       merchantDetails: `${BASE_ROUTES.ADMIN}/merchant-management/merchant-details`,
+      merchantAccounts: `${BASE_ROUTES.ADMIN}/merchant-management/merchant-details/merchant-accounts`,
+      merchantProfiles: `${BASE_ROUTES.ADMIN}/merchant-management/merchant-details/merchant-profiles`,
+      merchantMandates: `${BASE_ROUTES.ADMIN}/merchant-management/merchant-details/merchant-mandates`,
       createMerchant: `${BASE_ROUTES.ADMIN}/merchant-management/onboard-merchant`,
       editMerchant: `${BASE_ROUTES.ADMIN}/merchant-management/edit-merchant`,
     },
