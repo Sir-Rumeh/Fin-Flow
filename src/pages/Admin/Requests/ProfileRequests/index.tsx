@@ -63,14 +63,14 @@ const ProfileRequests = () => {
   };
 
   const columns: GridColDef[] = [
-    // {
-    //   field: 'accountId',
-    //   headerName: 'Account ID',
-    //   width: screen.width < 1000 ? 200 : undefined,
-    //   flex: screen.width >= 1000 ? 1 : undefined,
-    //   headerClassName: 'ag-thead',
-    //   sortable: false,
-    // },
+    {
+      field: 'accountId',
+      headerName: 'Account ID',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+      sortable: false,
+    },
     {
       field: 'userName',
       headerName: 'User Name',
@@ -186,7 +186,7 @@ const ProfileRequests = () => {
     },
     {
       tabIndex: 3,
-      tabName: TabsListTabNames.Rejected,
+      tabName: TabsListTabNames.Declined,
       tabTotal: statistics?.responseData?.totalRejected,
     },
   ];

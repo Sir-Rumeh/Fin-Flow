@@ -151,7 +151,7 @@ const ProfileDetails = () => {
               <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
               <DetailsCard
                 title="Full Name"
-                content={`${data?.responseData?.firstName} ${data?.responseData?.lastName}`}
+                content={`${data?.responseData?.firstName} ${data?.responseData?.lastName}` || ''}
               />
               <DetailsCard title="Merchant Name" content={data?.responseData?.userName} />
               <DetailsCard title="Account Id" content={data?.responseData?.accountID} />
