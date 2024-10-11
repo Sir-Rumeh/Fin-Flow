@@ -22,10 +22,10 @@ const networkErrorMessage = 'Please check your Internet Connection';
 
 AxiosClient.interceptors.request.use(
   (axiosConfig) => {
-    dispatch(uiStartLoading());
     if (!navigator.onLine) {
       throw new Error(networkErrorMessage);
     }
+    dispatch(uiStartLoading());
     const headers = generateHeader();
     axiosConfig.headers.UTCTimestamp = headers.UTCTimestamp;
     axiosConfig.headers.Client_ID = headers.Client_ID;

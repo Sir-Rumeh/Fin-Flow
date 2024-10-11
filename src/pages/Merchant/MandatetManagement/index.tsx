@@ -33,7 +33,6 @@ import {
 } from 'config/actions/dashboard-actions';
 import { updateMandateSchema } from 'utils/formValidators';
 import CustomInput from 'components/FormElements/CustomInput';
-import { notifyError } from 'utils/helpers';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import CustomTabs from 'hoc/CustomTabs';
 

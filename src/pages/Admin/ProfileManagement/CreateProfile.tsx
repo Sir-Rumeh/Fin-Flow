@@ -9,13 +9,14 @@ import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
 import FormSelect from 'components/FormElements/FormSelect';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { ProfileRequest, QueryParams } from 'utils/interfaces';
 import { getMerchants } from 'config/actions/merchant-actions';
 import { formatApiDataForDropdown } from 'utils/helpers';
 import { getAccounts } from 'config/actions/account-actions';
 import { userLevel } from 'utils/constants';
 import { createProfileSchema } from 'utils/formValidators';
+import { addProfileRequest } from 'config/actions/profile-actions';
 
 function CreateProfile() {
   const navigate = useNavigate();
@@ -36,22 +37,23 @@ function CreateProfile() {
   const formik = useFormik({
     initialValues: {
       merchantID: '',
+      merchantName: '',
       accountID: '',
-      userName: '',
-      password: '',
-      role: '',
+      accountNumber: '',
       firstName: '',
       lastName: '',
       email: '',
+      password: '',
+      role: '',
     },
     validationSchema: createProfileSchema,
     onSubmit: (values) => {
       const payload = {
-        profileID: '',
         merchantID: values.merchantID,
+        profileID: '',
         accountID: values.accountID,
-        userName: values.userName,
         password: values.password,
+        userName: `${values.firstName} ${values.lastName}`,
         role: values.role,
         firstName: values.firstName,
         lastName: values.lastName,
@@ -77,6 +79,16 @@ function CreateProfile() {
     queryFn: ({ queryKey }) => getAccounts(queryKey[1] as QueryParams),
   });
 
+  const addProfileRequestMutation = useMutation({
+    mutationFn: (payload: ProfileRequest | undefined) => addProfileRequest(payload),
+    onSuccess: () => {
+      openModal('creationSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmCreate');
+    },
+  });
+
   return (
     <>
       <div className="px-5 py-1">
@@ -99,7 +111,7 @@ function CreateProfile() {
               <div className="">
                 <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
                   <FormSelect
-                    labelFor="merchantId"
+                    labelFor="merchantID"
                     label="Merchant ID"
                     formik={formik}
                     useTouched
@@ -113,7 +125,7 @@ function CreateProfile() {
                     options={formatApiDataForDropdown(data?.responseData?.items, 'name')}
                   />
                   <FormSelect
-                    labelFor="accountId"
+                    labelFor="accountID"
                     label="Account Id"
                     formik={formik}
                     options={formatApiDataForDropdown(accountData?.responseData?.items, 'id')}
@@ -154,7 +166,7 @@ function CreateProfile() {
                   <CustomInput
                     labelFor="password"
                     label="Password"
-                    inputType="text"
+                    inputType="password"
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
@@ -195,7 +207,7 @@ function CreateProfile() {
           type={'confirmation'}
           proceedAction={() => {
             closeModal('confirmCreate');
-            openModal('creationSuccessful');
+            addProfileRequestMutation.mutate(profileRequest);
           }}
         />
       )}

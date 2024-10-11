@@ -10,19 +10,20 @@ import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
 import FormSelect from 'components/FormElements/FormSelect';
-import { useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getMerchants } from 'config/actions/merchant-actions';
 import { ProfileRequest, QueryParams } from 'utils/interfaces';
 import { getAccounts } from 'config/actions/account-actions';
 import { formatApiDataForDropdown } from 'utils/helpers';
 import { userLevel } from 'utils/constants';
-import { getProfileById } from 'config/actions/profile-actions';
+import { getProfileById, updateProfile } from 'config/actions/profile-actions';
 import { createProfileSchema } from 'utils/formValidators';
 
 function EditProfile() {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const profileId = searchParams?.get('id') || '';
+  const profileId = searchParams?.get('id') || undefined;
   const [profileRequest, setProfileRequest] = useState<ProfileRequest>();
   const [modals, setModals] = useState({
     confirmEdit: false,
@@ -40,30 +41,35 @@ function EditProfile() {
   const formik = useFormik({
     initialValues: {
       merchantID: '',
+      merchantName: '',
       accountID: '',
-      userName: '',
-      password: '',
-      role: '',
+      accountNumber: '',
       firstName: '',
       lastName: '',
       email: '',
+      password: '',
+      role: '',
     },
     validationSchema: createProfileSchema,
     onSubmit: (values) => {
       const payload = {
         merchantID: values.merchantID,
+        profileID: '',
         accountID: values.accountID,
-        userName: values.userName,
         password: values.password,
+        userName: `${values.firstName} ${values.lastName}`,
         role: values.role,
         firstName: values.firstName,
         lastName: values.lastName,
         email: values.email,
       };
+      console.log(payload);
+
       setProfileRequest(payload);
       openModal('confirmEdit');
     },
   });
+
   const { data: profileData } = useQuery({
     queryKey: ['profiles', profileId],
     queryFn: ({ queryKey }) => getProfileById(queryKey[1]),
@@ -72,9 +78,10 @@ function EditProfile() {
   useEffect(() => {
     formik.setValues({
       merchantID: profileData?.responseData?.merchantID || '',
+      merchantName: profileData?.responseData?.merchantName || '',
       accountID: profileData?.responseData?.accountID || '',
-      password: profileData?.responseData?.password || '',
-      userName: profileData?.responseData?.userName || '',
+      accountNumber: profileData?.responseData?.accountNumber || '',
+      password: '',
       firstName: profileData?.responseData?.firstName || '',
       lastName: profileData?.responseData?.lastName || '',
       email: profileData?.responseData?.email || '',
@@ -95,6 +102,23 @@ function EditProfile() {
   const { data: accountData } = useQuery({
     queryKey: ['accounts', queryParams],
     queryFn: ({ queryKey }) => getAccounts(queryKey[1] as QueryParams),
+  });
+
+  const updateProfileMutation = useMutation({
+    mutationFn: ({
+      requestId,
+      payload,
+    }: {
+      requestId: string | undefined;
+      payload: ProfileRequest | undefined;
+    }) => updateProfile(requestId, payload),
+    onSuccess: () => {
+      openModal('editSuccessful');
+      queryClient.invalidateQueries({ queryKey: ['profiles'] });
+    },
+    onError: (error) => {
+      closeModal('editSuccessful');
+    },
   });
 
   return (
@@ -119,7 +143,7 @@ function EditProfile() {
               <div className="">
                 <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
                   <FormSelect
-                    labelFor="merchantId"
+                    labelFor="merchantID"
                     label="Merchant ID"
                     formik={formik}
                     useTouched
@@ -133,7 +157,7 @@ function EditProfile() {
                     options={formatApiDataForDropdown(data?.responseData?.items, 'name')}
                   />
                   <FormSelect
-                    labelFor="accountId"
+                    labelFor="accountID"
                     label="Account Id"
                     formik={formik}
                     options={formatApiDataForDropdown(accountData?.responseData?.items, 'id')}
@@ -174,7 +198,7 @@ function EditProfile() {
                   <CustomInput
                     labelFor="password"
                     label="Password"
-                    inputType="text"
+                    inputType="password"
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
@@ -217,7 +241,7 @@ function EditProfile() {
           type={'confirmation'}
           proceedAction={() => {
             closeModal('confirmEdit');
-            openModal('editSuccessful');
+            updateProfileMutation.mutate({ requestId: profileId, payload: profileRequest });
           }}
         />
       )}

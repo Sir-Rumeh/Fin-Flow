@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
@@ -8,13 +8,22 @@ import { useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
-import FormInput from 'components/FormElements/FormInput';
 import { useFormik } from 'formik';
 import { reasonForRejectionSchema } from 'utils/formValidators';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
 import CustomInput from 'components/FormElements/CustomInput';
+import * as Yup from 'yup';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  approveProfileRequest,
+  getProfileRequestById,
+  rejectProfileRequest,
+} from 'config/actions/profile-actions';
 
 const ProfileEnableRequestDetails = () => {
+  const queryClient = useQueryClient();
+  const [searchParams] = useSearchParams();
+  const requestId = searchParams?.get('id') || '';
   const navigate = useNavigate();
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
@@ -30,13 +39,58 @@ const ProfileEnableRequestDetails = () => {
   const closeModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
+
   const formik = useFormik({
     initialValues: {
       remark: '',
     },
-    validationSchema: reasonForRejectionSchema,
-    onSubmit: () => {},
+    validationSchema: Yup.object({
+      remark: Yup.string()
+        .required('Reason for rejection is required')
+        .min(5, 'Reason must be at least 5 characters long'),
+    }),
+    onSubmit: (values) => {
+      console.log(values);
+    },
   });
+
+  const { data } = useQuery({
+    queryKey: ['profileRequests', requestId],
+    queryFn: ({ queryKey }) => getProfileRequestById(queryKey[1]),
+  });
+
+  const approveProfileRequestMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => approveProfileRequest(requestId),
+    onSuccess: () => {
+      openModal('approveSuccessfulModal');
+      queryClient.invalidateQueries({ queryKey: ['profileRequests'] });
+    },
+  });
+
+  const rejectProfileRequestMutation = useMutation({
+    mutationFn: ({
+      requestId,
+      payload,
+    }: {
+      requestId: string | undefined;
+      payload: { remark: string };
+    }) => rejectProfileRequest(requestId, payload),
+    onSuccess: () => {
+      openModal('rejectSuccessfulModal');
+      queryClient.invalidateQueries({ queryKey: ['profileRequests'] });
+    },
+  });
+
+  const handleProceed = () => {
+    if (formik.isValid && formik.dirty) {
+      rejectProfileRequestMutation.mutate({ requestId, payload: formik.values });
+      closeModal('confirmRejectRequest');
+    } else {
+      formik.setTouched({
+        remark: true,
+      });
+    }
+  };
 
   return (
     <>
@@ -133,7 +187,7 @@ const ProfileEnableRequestDetails = () => {
           type={'confirmation'}
           proceedAction={() => {
             closeModal('confirmApproveRequest');
-            openModal('approveSuccessfulModal');
+            approveProfileRequestMutation.mutate(requestId);
           }}
         />
       )}
@@ -179,8 +233,7 @@ const ProfileEnableRequestDetails = () => {
           proceedBackgroundColor="#F34E4E"
           hoverBackgroundColor="#8B0000"
           proceedAction={() => {
-            closeModal('confirmRejectRequest');
-            openModal('rejectSuccessfulModal');
+            handleProceed();
           }}
         />
       )}

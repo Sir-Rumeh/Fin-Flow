@@ -22,7 +22,6 @@ import { MandateRequestStatus } from 'utils/enums';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import CustomInput from 'components/FormElements/CustomInput';
-import { notifyError } from 'utils/helpers';
 
 const CreationRequestDetails = () => {
   const { id } = useParams();

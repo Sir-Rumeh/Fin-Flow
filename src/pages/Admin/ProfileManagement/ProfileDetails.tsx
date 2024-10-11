@@ -10,15 +10,19 @@ import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import DetailsActionButton from 'components/common/DetailsActionButton';
-import { useQuery } from '@tanstack/react-query';
-import { getProfileById } from 'config/actions/profile-actions';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  deleteProfile,
+  disableProfile,
+  enableProfile,
+  getProfileById,
+} from 'config/actions/profile-actions';
 
 const ProfileDetails = () => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const profileId = searchParams?.get('id') || '';
-
-  // let profileStatus = 'Disabled';
 
   const [modals, setModals] = useState({
     confirmDisable: false,
@@ -40,6 +44,39 @@ const ProfileDetails = () => {
   const { data, refetch } = useQuery({
     queryKey: ['profiles', profileId],
     queryFn: ({ queryKey }) => getProfileById(queryKey[1]),
+  });
+
+  const enableProfileMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => enableProfile(requestId),
+    onSuccess: () => {
+      openModal('enableSuccessful');
+      queryClient.invalidateQueries({ queryKey: ['profiles'] });
+    },
+    onError: (error) => {
+      closeModal('enableSuccessful');
+    },
+  });
+
+  const disableProfileMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => disableProfile(requestId),
+    onSuccess: () => {
+      openModal('enableSuccessful');
+      queryClient.invalidateQueries({ queryKey: ['profiles'] });
+    },
+    onError: (error) => {
+      closeModal('enableSuccessful');
+    },
+  });
+
+  const deleteProfileMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => deleteProfile(requestId),
+    onSuccess: () => {
+      openModal('deleteSuccessful');
+      queryClient.invalidateQueries({ queryKey: ['mandates'] });
+    },
+    onError: (error) => {
+      closeModal('deleteSuccessful');
+    },
   });
 
   return (
@@ -111,19 +148,28 @@ const ProfileDetails = () => {
           <div className="">
             <ItemDetailsContainer title="Profile Details">
               <DetailsCard title="Account Name" content="Fair Money" />
-              <DetailsCard title="Merchant ID" content="12345" />
-              <DetailsCard title="Full Name" content="John Doe" />
-              <DetailsCard title="Merchant Name" content="Fair Money" />
-              <DetailsCard title="Account Id" content="8907812345" />
-              <DetailsCard title="Email" content="johndoe@gmail.com" />
+              <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
+              <DetailsCard
+                title="Full Name"
+                content={`${data?.responseData?.firstName} ${data?.responseData?.lastName}` || ''}
+              />
+              <DetailsCard title="Merchant Name" content={data?.responseData?.userName} />
+              <DetailsCard title="Account Id" content={data?.responseData?.accountID} />
+              <DetailsCard title="Email" content={data?.responseData?.email} />
               <DetailsCard title="CIF Number" content="12345" />
-              <DetailsCard title="Role" content="Maker" />
-              <DetailsCard title="Date Requested" content="12/12/2024 : 03:00pm" />
+              <DetailsCard title="Role" content={data?.responseData?.role} />
+              <DetailsCard
+                title="Date Requested"
+                content={
+                  data?.responseData?.createdAt &&
+                  new Date(data.responseData.createdAt).toLocaleDateString()
+                }
+              />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Creator Details">
-              <DetailsCard title="Created By" content="John Doe" />
+              <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
               <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
               <DetailsCard title="ID" content="9344243" />
               <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
@@ -132,8 +178,14 @@ const ProfileDetails = () => {
           <div className="mt-10">
             <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
               <DetailsCard title="ID" content="9344243" />
-              <DetailsCard title="Approved By" content="John Doe" />
-              <DetailsCard title="Date Approved" content="12/12/2024 : 03:00pm" />
+              <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
+              <DetailsCard
+                title="Date Approved"
+                content={
+                  data?.responseData?.createdAt &&
+                  new Date(data.responseData.createdAt).toLocaleDateString()
+                }
+              />
             </ItemDetailsContainer>
           </div>
         </div>
@@ -147,8 +199,8 @@ const ProfileDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
+            disableProfileMutation.mutate(profileId);
             closeModal('confirmDisable');
-            openModal('disableSuccessful');
           }}
         />
       )}
@@ -174,8 +226,8 @@ const ProfileDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
+            enableProfileMutation.mutate(profileId);
             closeModal('confirmEnable');
-            openModal('enableSuccessful');
           }}
         />
       )}
@@ -201,8 +253,8 @@ const ProfileDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
+            deleteProfileMutation.mutate(profileId);
             closeModal('confirmDelete');
-            openModal('deleteSuccessful');
           }}
         />
       )}
@@ -216,7 +268,6 @@ const ProfileDetails = () => {
           type={'completed'}
           proceedAction={() => {
             closeModal('deleteSuccessful');
-            navigate(`/${appRoutes.adminDashboard.profileManagement.index}`);
           }}
         />
       )}
