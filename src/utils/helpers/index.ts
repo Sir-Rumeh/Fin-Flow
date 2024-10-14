@@ -103,34 +103,34 @@ export function capitalize(string: string) {
     .join(' ');
 }
 
+export function removeFalsyValuesFromObj(obj: Record<string, any>): Record<string, any> {
+  return Object.entries(obj).reduce((acc: any, [key, value]) => {
+    if (value !== undefined && value !== null && value) {
+      acc[key] = value;
+    }
+    return acc;
+  }, {});
+}
+
 export const appendParams = (params: URLSearchParams, queryParams: QueryParams | undefined) => {
   if (!queryParams) return;
+  const formattedQueryParams: QueryParams = removeFalsyValuesFromObj(queryParams);
 
-  const {
-    username,
-    email,
-    mandateCode,
-    status,
-    pageNo,
-    pageSize,
-    sortBy,
-    sortOrder,
-    searchFilter,
-    startDate,
-    endDate,
-  } = queryParams;
-
-  if (username) params.append('UserName', username);
-  if (email) params.append('Email', email);
-  if (mandateCode) params.append('MandateCode', mandateCode);
-  if (status) params.append('Status', status);
-  if (pageNo !== undefined) params.append('PageNo', pageNo.toString());
-  if (pageSize !== undefined) params.append('PageSize', pageSize.toString());
-  if (sortBy) params.append('SortBy', sortBy);
-  if (sortOrder) params.append('SortOrder', sortOrder);
-  if (searchFilter) params.append('searchFilter', searchFilter);
-  if (startDate) params.append('StartDate', startDate);
-  if (endDate) params.append('EndDate', endDate);
+  if (formattedQueryParams.username) params.append('UserName', formattedQueryParams.username);
+  if (formattedQueryParams.email) params.append('Email', formattedQueryParams.email);
+  if (formattedQueryParams.mandateCode)
+    params.append('MandateCode', formattedQueryParams.mandateCode);
+  if (formattedQueryParams.status) params.append('Status', formattedQueryParams.status);
+  if (formattedQueryParams.pageNo !== undefined)
+    params.append('PageNo', formattedQueryParams.pageNo.toString());
+  if (formattedQueryParams.pageSize !== undefined)
+    params.append('PageSize', formattedQueryParams.pageSize.toString());
+  if (formattedQueryParams.sortBy) params.append('SortBy', formattedQueryParams.sortBy);
+  if (formattedQueryParams.sortOrder) params.append('SortOrder', formattedQueryParams.sortOrder);
+  if (formattedQueryParams.searchFilter)
+    params.append('searchFilter', formattedQueryParams.searchFilter);
+  if (formattedQueryParams.startDate) params.append('StartDate', formattedQueryParams.startDate);
+  if (formattedQueryParams.endDate) params.append('EndDate', formattedQueryParams.endDate);
 };
 
 export const formatApiDataForDropdown = (dataArray: any[], dataKey: string) => {

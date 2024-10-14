@@ -7,7 +7,7 @@ export const getProfiles = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
   appendParams(params, queryParams);
   try {
-    const response = await AxiosClient.get(`/profiles?${params.toString()}`);
+    const response = await AxiosClient.get(`/profiles`, { params });
     return response.data;
   } catch (error) {
     throw error;
@@ -67,7 +67,7 @@ export const getProfileRequests = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
   appendParams(params, queryParams);
   try {
-    const response = await AxiosClient.get(`/profilerequests?${params.toString()}`);
+    const response = await AxiosClient.get(`/profilerequests`, { params });
     return response.data;
   } catch (error) {
     throw error;
