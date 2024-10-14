@@ -71,7 +71,7 @@ const Dashboard = () => {
   useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
-      status: formik.values.status,
+      status: formik.values.status !== 'All' ? formik.values.status : undefined,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
     }));
