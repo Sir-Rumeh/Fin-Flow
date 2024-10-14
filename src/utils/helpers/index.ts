@@ -1,8 +1,9 @@
-import { DataTableState, QueryParams } from 'utils/interfaces';
+import { DataTableState, QueryParams, UpdateRequestDisplay } from 'utils/interfaces';
 import { AppConfig } from 'config/index';
 import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
 import { DropdownOption } from 'components/FormElements/FormSelect';
+import { canBeUpdated } from 'utils/constants';
 
 export const checkRoute = (pathname: string, pathToCheck: string) => {
   if (pathname.includes(pathToCheck)) {
@@ -144,4 +145,36 @@ export const formatApiDataForDropdown = (dataArray: any[], dataKey: string) => {
   });
 
   return formattedArrayOptions;
+};
+export const displayUpdateRequestData = (
+  oldData: Object,
+  newData: Object,
+): UpdateRequestDisplay[] | undefined => {
+  if (oldData && newData) {
+    let updateList: UpdateRequestDisplay[] = [];
+    Object.entries(oldData).forEach(([oldDataKey, oldDataValue]) => {
+      Object.entries(newData).forEach(([newDataKey, newDataValue]) => {
+        if (oldDataKey === newDataKey) {
+          if (canBeUpdated[oldDataKey] && oldDataValue !== newDataValue) {
+            const updateData = {
+              name: capitalize(oldDataKey),
+              oldValue: oldDataValue,
+              newValue: newDataValue,
+            };
+            updateList.push(updateData);
+          }
+        }
+      });
+    });
+    return updateList;
+  }
+};
+
+export const formatNumberDisplay = (number: number) => {
+  if (number || number == 0) {
+    let numberString = number?.toFixed(2);
+    let parts = numberString?.split('.');
+    parts[0] = parseInt(parts?.[0], 10)?.toLocaleString();
+    return parts.join('.');
+  }
 };

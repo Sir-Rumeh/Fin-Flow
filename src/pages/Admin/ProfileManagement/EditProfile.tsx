@@ -160,12 +160,14 @@ function EditProfile() {
                     labelFor="accountID"
                     label="Account Id"
                     formik={formik}
+                    useTouched
                     options={formatApiDataForDropdown(accountData?.responseData?.items, 'id')}
                   />
                   <FormSelect
                     labelFor="accountNumber"
                     label="Account Number"
                     formik={formik}
+                    useTouched
                     options={formatApiDataForDropdown(
                       accountData?.responseData?.items,
                       'accountNumber',

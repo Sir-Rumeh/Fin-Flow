@@ -200,3 +200,8 @@ export interface MerchantRequest {
   address: string | undefined;
   cif?: string | undefined;
 }
+export interface UpdateRequestDisplay {
+  name: string | undefined;
+  oldValue: string | number | undefined;
+  newValue: string | number | undefined;
+}

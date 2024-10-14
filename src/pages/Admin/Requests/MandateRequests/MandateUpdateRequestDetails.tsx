@@ -4,7 +4,7 @@ import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
 import appRoutes from 'utils/constants/routes';
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
@@ -21,14 +21,17 @@ import {
   rejectMandateRequest,
 } from 'config/actions/dashboard-actions';
 import { Box, CircularProgress } from '@mui/material';
-import { capitalize } from 'utils/helpers';
+import { capitalize, displayUpdateRequestData, formatNumberDisplay } from 'utils/helpers';
 import RejectedIcon from 'assets/icons/RejectedIcon';
+import { UpdateRequestDisplay } from 'utils/interfaces';
 
 const MandateUpdateRequestDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const mandateId = searchParams?.get('id') || '';
   const queryClient = useQueryClient();
+  const [updateDataList, setUpdateDataList] = useState<UpdateRequestDisplay[]>();
+
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
     confirmRejectRequest: false,
@@ -57,6 +60,16 @@ const MandateUpdateRequestDetails = () => {
     queryKey: ['mandateRequests', mandateId],
     queryFn: ({ queryKey }) => getMandateRequestById(queryKey[1]),
   });
+
+  useEffect(() => {
+    const updatedDataList = displayUpdateRequestData(
+      data?.responseData?.oldData,
+      data?.responseData,
+    );
+    if (updatedDataList) {
+      setUpdateDataList(updatedDataList);
+    }
+  }, [data]);
 
   const approveMandateRequestMutation = useMutation({
     mutationFn: (requestId: string | undefined) => approveMandateRequest(requestId),
@@ -128,12 +141,44 @@ const MandateUpdateRequestDetails = () => {
           <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
             <div className="">
               <ItemDetailsContainer title="Old Information">
-                <DetailsCard title="Old Amount" content="N50,000" />
+                {updateDataList?.map((updatedData, index) => {
+                  return (
+                    <DetailsCard
+                      key={index}
+                      title={`Old ${updatedData.name}`}
+                      content={
+                        updatedData.name === 'amount' && updatedData.oldValue
+                          ? formatNumberDisplay(
+                              typeof updatedData.oldValue === 'number'
+                                ? updatedData.oldValue
+                                : Number(updatedData?.oldValue),
+                            )
+                          : updatedData.oldValue
+                      }
+                    />
+                  );
+                })}
               </ItemDetailsContainer>
             </div>
             <div className="mt-10">
               <ItemDetailsContainer title="New Information">
-                <DetailsCard title="Old Amount" content="N100,000" />
+                {updateDataList?.map((updatedData, index) => {
+                  return (
+                    <DetailsCard
+                      key={index}
+                      title={`New ${updatedData.name}`}
+                      content={
+                        updatedData.name === 'amount' && updatedData.newValue
+                          ? formatNumberDisplay(
+                              typeof updatedData.newValue === 'number'
+                                ? updatedData.newValue
+                                : Number(updatedData?.newValue),
+                            )
+                          : updatedData.newValue
+                      }
+                    />
+                  );
+                })}
               </ItemDetailsContainer>
             </div>
             <div className="mt-10">
