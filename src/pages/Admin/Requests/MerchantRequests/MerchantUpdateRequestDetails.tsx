@@ -19,7 +19,7 @@ import {
   rejectMerchantRequest,
 } from 'config/actions/merchant-actions';
 import RejectedIcon from 'assets/icons/RejectedIcon';
-import { displayUpdateRequestData } from 'utils/helpers';
+import { displayUpdateRequestData, formatNumberDisplay } from 'utils/helpers';
 import { UpdateRequestDisplay } from 'utils/interfaces';
 
 const MerchantUpdateRequestDetails = () => {
@@ -140,7 +140,13 @@ const MerchantUpdateRequestDetails = () => {
                   <DetailsCard
                     key={index}
                     title={`Old ${updatedData.name}`}
-                    content={updatedData.oldValue}
+                    content={
+                      typeof updatedData.oldValue === 'number'
+                        ? formatNumberDisplay(updatedData.oldValue)
+                        : typeof updatedData.oldValue === 'string'
+                          ? formatNumberDisplay(parseInt(updatedData.oldValue))
+                          : updatedData.oldValue
+                    }
                   />
                 );
               })}
@@ -153,7 +159,13 @@ const MerchantUpdateRequestDetails = () => {
                   <DetailsCard
                     key={index}
                     title={`New ${updatedData.name}`}
-                    content={updatedData.newValue}
+                    content={
+                      typeof updatedData.newValue === 'number'
+                        ? formatNumberDisplay(updatedData.newValue)
+                        : typeof updatedData.newValue === 'string'
+                          ? formatNumberDisplay(parseInt(updatedData.newValue))
+                          : updatedData.newValue
+                    }
                   />
                 );
               })}

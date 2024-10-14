@@ -170,9 +170,10 @@ export const displayUpdateRequestData = (
   }
 };
 
-export const formatNumberDisplay = (number: number) => {
+export const formatNumberDisplay = (number: number | string) => {
   if (number || number == 0) {
-    let numberString = number?.toFixed(2);
+    let numberString =
+      typeof number === 'number' ? number?.toFixed(2) : parseInt(number).toFixed(2);
     let parts = numberString?.split('.');
     parts[0] = parseInt(parts?.[0], 10)?.toLocaleString();
     return parts.join('.');

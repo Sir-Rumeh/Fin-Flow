@@ -11,7 +11,7 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import FormInput from 'components/FormElements/FormInput';
 import { useFormik } from 'formik';
 import { reasonForRejectionSchema } from 'utils/formValidators';
-import { capitalize, checkRoute } from 'utils/helpers';
+import { capitalize, checkRoute, formatNumberDisplay } from 'utils/helpers';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
 import { UpdateRequestIcon } from 'assets/icons';
 import CustomInput from 'components/FormElements/CustomInput';
@@ -154,7 +154,7 @@ const MandateCreationRequestDetails = () => {
                 <DetailsCard title="Product ID" content={data?.responseData?.productId} />
                 <DetailsCard
                   title="Amount"
-                  content={data?.responseData?.amount}
+                  content={formatNumberDisplay(data?.responseData?.amount)}
                   contentClassName="text-lightPurple"
                 />
                 <DetailsCard

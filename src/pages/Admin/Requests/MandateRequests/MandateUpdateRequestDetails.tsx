@@ -147,13 +147,11 @@ const MandateUpdateRequestDetails = () => {
                       key={index}
                       title={`Old ${updatedData.name}`}
                       content={
-                        updatedData.name === 'amount' && updatedData.oldValue
-                          ? formatNumberDisplay(
-                              typeof updatedData.oldValue === 'number'
-                                ? updatedData.oldValue
-                                : Number(updatedData?.oldValue),
-                            )
-                          : updatedData.oldValue
+                        typeof updatedData.oldValue === 'number'
+                          ? formatNumberDisplay(updatedData.oldValue)
+                          : typeof updatedData.oldValue === 'string'
+                            ? formatNumberDisplay(parseInt(updatedData.oldValue))
+                            : updatedData.oldValue
                       }
                     />
                   );
@@ -168,13 +166,11 @@ const MandateUpdateRequestDetails = () => {
                       key={index}
                       title={`New ${updatedData.name}`}
                       content={
-                        updatedData.name === 'amount' && updatedData.newValue
-                          ? formatNumberDisplay(
-                              typeof updatedData.newValue === 'number'
-                                ? updatedData.newValue
-                                : Number(updatedData?.newValue),
-                            )
-                          : updatedData.newValue
+                        typeof updatedData.newValue === 'number'
+                          ? formatNumberDisplay(updatedData.newValue)
+                          : typeof updatedData.newValue === 'string'
+                            ? formatNumberDisplay(parseInt(updatedData.newValue))
+                            : updatedData.newValue
                       }
                     />
                   );
@@ -209,7 +205,7 @@ const MandateUpdateRequestDetails = () => {
                 <DetailsCard title="Product ID" content={data?.responseData?.productId} />
                 <DetailsCard
                   title="Amount"
-                  content={data?.responseData?.amount}
+                  content={formatNumberDisplay(data?.responseData?.amount)}
                   contentClassName="text-lightPurple"
                 />
                 <DetailsCard
