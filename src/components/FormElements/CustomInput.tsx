@@ -18,6 +18,7 @@ type CustomInputProps = {
   passwordInput?: boolean;
   iconState?: boolean;
   handleInputType?: (e: any) => void;
+  disabled?: boolean;
 };
 
 const CustomInput = ({
@@ -37,6 +38,7 @@ const CustomInput = ({
   passwordInput = false,
   iconState,
   handleInputType = () => {},
+  disabled,
 }: CustomInputProps) => {
   return (
     <div className={`relative ${verticalMargin && 'mb-4 mt-6'} flex h-auto flex-col gap-2`}>
@@ -91,6 +93,7 @@ const CustomInput = ({
             onChange={formik?.handleChange}
             value={formik?.values[labelFor]}
             onBlur={() => formik?.handleBlur}
+            disabled={disabled}
           />
           {icon}
         </div>
