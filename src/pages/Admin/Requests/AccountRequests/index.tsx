@@ -35,7 +35,7 @@ const AccountRequests = () => {
     },
     {
       tabIndex: 3,
-      tabName: TabsListTabNames.Rejected,
+      tabName: TabsListTabNames.Declined,
       tabTotal: total,
     },
   ];

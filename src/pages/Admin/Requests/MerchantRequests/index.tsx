@@ -84,7 +84,7 @@ const MerchantRequests = () => {
       headerClassName: 'ag-thead',
     },
     {
-      field: 'merchantName',
+      field: 'name',
       headerName: 'Merchant Name',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -175,11 +175,10 @@ const MerchantRequests = () => {
     queryFn: ({ queryKey }) => getMerchantsRequests(queryKey[1] as QueryParams),
   });
 
-  // const { data: statisticsData } = useQuery({
-  //   queryKey: ['merchantRequests'],
-  //   queryFn: ({ queryKey }) => getMerchantsRequestsStatistics(),
-  // });
-  const statisticsData: any = {};
+  const { data: statisticsData } = useQuery({
+    queryKey: ['merchantRequests'],
+    queryFn: ({ queryKey }) => getMerchantsRequestsStatistics(),
+  });
 
   const tabsList: TabsProps[] = [
     {
@@ -194,7 +193,7 @@ const MerchantRequests = () => {
     },
     {
       tabIndex: 3,
-      tabName: TabsListTabNames.Rejected,
+      tabName: TabsListTabNames.Declined,
       tabTotal: statisticsData ? statisticsData?.responseData?.totalRejected : 0,
     },
   ];

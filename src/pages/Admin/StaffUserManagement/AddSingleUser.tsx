@@ -45,10 +45,10 @@ function AddUser() {
 
   const formik = useFormik({
     initialValues: {
+      staffId: '',
       userName: '',
       firstName: '',
       lastName: '',
-      employeeId: '',
       email: '',
       phoneNumber: '',
       branch: '',
@@ -58,10 +58,10 @@ function AddUser() {
     validationSchema: createStaffUserSchema,
     onSubmit: (values) => {
       const payload = {
+        staffId: values.staffId,
         userName: values.userName,
         firstName: values.firstName,
         lastName: values.lastName,
-        employeeId: values.employeeId,
         email: values.email,
         phoneNumber: values.phoneNumber,
         branch: values.branch,
@@ -122,7 +122,7 @@ function AddUser() {
                     formik={formik}
                   />
                   <CustomInput
-                    labelFor="employeeId"
+                    labelFor="staffId"
                     label="Enter Employee ID"
                     inputType="text"
                     placeholder="Enter employee ID"

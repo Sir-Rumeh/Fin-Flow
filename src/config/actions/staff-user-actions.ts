@@ -27,7 +27,7 @@ export const getStaffUsers = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
   appendParams(params, queryParams);
   try {
-    const response = await AxiosClient.get(`/users?${params.toString()}`);
+    const response = await AxiosClient.get(`/users`, { params });
     return response.data;
   } catch (error) {
     throw error;
@@ -47,7 +47,7 @@ export const getStaffUsersRequests = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
   appendParams(params, queryParams);
   try {
-    const response = await AxiosClient.get(`/userrequests?${params.toString()}`);
+    const response = await AxiosClient.get(`/userrequests`, { params });
     return response.data;
   } catch (error) {
     throw error;

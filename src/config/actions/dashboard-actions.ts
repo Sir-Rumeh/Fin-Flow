@@ -16,7 +16,7 @@ export const getMandateRequests = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
   appendParams(params, queryParams);
   try {
-    const response = await AxiosClient.get(`/mandaterequests?${params.toString()}`);
+    const response = await AxiosClient.get(`/mandaterequests`, { params });
     return response.data;
   } catch (error) {
     throw error;
@@ -79,7 +79,7 @@ export const getMandates = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
   appendParams(params, queryParams);
   try {
-    const response = await AxiosClient.get(`/mandates?${params.toString()}`);
+    const response = await AxiosClient.get(`/mandates`, { params });
     return response.data;
   } catch (error) {
     throw error;

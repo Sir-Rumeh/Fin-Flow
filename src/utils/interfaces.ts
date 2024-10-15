@@ -156,10 +156,10 @@ export interface QueryParams {
 }
 
 export interface StaffUserRequest {
+  staffId?: string | undefined;
   userName: string | undefined;
   firstName: string | undefined;
   lastName: string | undefined;
-  employeeId: string | undefined;
   email: string | undefined;
   phoneNumber: string | undefined;
   branch: string | undefined;

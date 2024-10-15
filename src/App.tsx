@@ -1,4 +1,4 @@
-import { lazy, Suspense } from 'react';
+import { lazy, Suspense, useEffect } from 'react';
 import LoadingIndicator from 'components/common/LoadingIndicator';
 import { ThemeProvider } from '@mui/system';
 import { LocalizationProvider } from '@mui/x-date-pickers';

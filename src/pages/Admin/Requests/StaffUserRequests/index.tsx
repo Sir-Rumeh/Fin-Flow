@@ -76,14 +76,14 @@ const StaffUserRequests = () => {
 
   const columns: GridColDef[] = [
     {
-      field: 'employeeId',
+      field: 'staffId',
       headerName: 'Staff ID',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
     },
     {
-      field: 'name',
+      field: 'userName',
       headerName: 'Staff Name',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -192,7 +192,7 @@ const StaffUserRequests = () => {
     },
     {
       tabIndex: 3,
-      tabName: TabsListTabNames.Rejected,
+      tabName: TabsListTabNames.Declined,
       tabTotal: statisticsData ? statisticsData?.responseData?.totalRejected : 0,
     },
   ];
