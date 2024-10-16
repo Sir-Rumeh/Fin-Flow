@@ -125,7 +125,7 @@ const adminRoutes: RoutesType[] = [
     children: [
       {
         name: 'Merchant Details',
-        path: 'merchant-details',
+        path: 'merchant-details/*',
         component: <MerchantDetails />,
       },
       {

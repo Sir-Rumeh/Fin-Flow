@@ -57,6 +57,7 @@ const CreateMandate = () => {
             tabs={tabsList}
             activeTab={activeTab}
             setActiveTab={setActiveTab}
+            showTabTotal={false}
           />
         </div>
         <div className="mt-1">{pageDisplay()}</div>

@@ -62,7 +62,7 @@ const FormSelect = ({
 
   return (
     <>
-      <div ref={formSelectRef} className="relative z-[999] mb-4 mt-6 h-auto w-full">
+      <div ref={formSelectRef} className="relative mb-4 mt-6 h-auto w-full">
         <label
           htmlFor={labelFor}
           className={`${labelFontWeight ? labelFontWeight : 'font-semibold'} absolute bottom-16`}

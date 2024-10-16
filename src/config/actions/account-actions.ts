@@ -6,7 +6,7 @@ export const getAccounts = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
   appendParams(params, queryParams);
   try {
-    const response = await AxiosClient.get(`/accounts?${params.toString()}`);
+    const response = await AxiosClient.get(`/accounts`, { params });
     return response.data;
   } catch (error) {
     throw error;

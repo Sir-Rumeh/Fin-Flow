@@ -6,7 +6,7 @@ export const getMerchants = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
   appendParams(params, queryParams);
   try {
-    const response = await AxiosClient.get(`/merchants?${params.toString()}`);
+    const response = await AxiosClient.get(`/merchants`, { params });
     return response.data;
   } catch (error) {
     throw error;
@@ -17,7 +17,7 @@ export const getMerchantsRequests = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
   appendParams(params, queryParams);
   try {
-    const response = await AxiosClient.get(`/merchantrequests?${params.toString()}`);
+    const response = await AxiosClient.get(`/merchantrequests`, { params });
     return response.data;
   } catch (error) {
     throw error;

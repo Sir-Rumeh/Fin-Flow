@@ -93,7 +93,8 @@ const MerchantCreationRequestDetails = () => {
           <div className="flex w-1/2 items-center justify-end gap-4">
             <div className="w-auto">
               <ButtonComponent
-                color="purplePrimary"
+                color="#5C068C"
+                borderColor="#5C068C"
                 variant="outlined"
                 type="button"
                 title="Reject"
@@ -175,6 +176,7 @@ const MerchantCreationRequestDetails = () => {
                     new Date(data.responseData.dateRejected).toLocaleDateString()
                   }
                 />
+                <DetailsCard title="Reason for Rejection" content={data?.responseData?.remark} />
               </ItemDetailsContainer>
             )}
           </div>

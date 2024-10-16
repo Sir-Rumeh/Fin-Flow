@@ -166,7 +166,7 @@ const MerchantManagement = () => {
     {
       field: 'actions',
       headerName: 'Action',
-      width: 110,
+      // width: 110,
       headerClassName: 'ag-thead ',
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
@@ -227,7 +227,6 @@ const MerchantManagement = () => {
                     Enable
                   </button>
                 )}
-
                 <button
                   type="button"
                   onClick={() => {

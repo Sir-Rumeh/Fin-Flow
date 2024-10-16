@@ -89,11 +89,12 @@ const StaffUserDisableRequestDetails = () => {
           <span className="text-lightPurple">Disable Staff User Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
-          <h2 className="text-lg font-semibold md:text-2xl">{`Merchant ID : ${data?.responseData?.id}`}</h2>
+          <h2 className="text-lg font-semibold md:text-2xl">{`Request ID : ${data?.responseData?.id}`}</h2>
           <div className="flex w-1/2 items-center justify-end gap-4">
             <div className="w-auto">
               <ButtonComponent
-                color="purplePrimary"
+                color="#5C068C"
+                borderColor="#5C068C"
                 variant="outlined"
                 type="button"
                 title="Reject"
@@ -122,7 +123,7 @@ const StaffUserDisableRequestDetails = () => {
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
           <div className="">
             <ItemDetailsContainer title="Request Details">
-              <DetailsCard title="Request ID" content={data?.responseData?.id} />
+              <DetailsCard title="Employee ID" content={data?.responseData?.staffId} />
               <DetailsCard
                 title="Full Name"
                 content={`${data?.responseData?.firstName} ${data?.responseData?.lastName}`}
@@ -173,6 +174,7 @@ const StaffUserDisableRequestDetails = () => {
                     new Date(data.responseData.dateRejected).toLocaleDateString()
                   }
                 />
+                <DetailsCard title="Reason for Rejection" content={data?.responseData?.remark} />
               </ItemDetailsContainer>
             )}
           </div>
