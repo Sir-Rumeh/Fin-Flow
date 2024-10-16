@@ -88,12 +88,21 @@ const ProfileManagement = () => {
     }));
   }, [paginationData]);
 
+  const handleOptionsFilter = () => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  };
+
   const excelHeaders = [
     { label: 'Account ID', key: 'accountId' },
     { label: 'User Name', key: 'userName' },
     { label: 'Email', key: 'email' },
     { label: 'Active Status', key: 'isActive' },
-    { label: 'Date Requested', key: 'dateRequested' },
+    { label: 'Date Requested', key: 'createdAt' },
   ];
 
   const columns: GridColDef[] = [
@@ -308,7 +317,7 @@ const ProfileManagement = () => {
                     label={'Search Profile'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
-                    handleOptionsFilter={() => {}}
+                    handleOptionsFilter={handleOptionsFilter}
                     formik={formik}
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}

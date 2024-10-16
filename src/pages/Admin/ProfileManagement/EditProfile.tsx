@@ -148,6 +148,8 @@ function EditProfile() {
                     formik={formik}
                     useTouched
                     options={formatApiDataForDropdown(data?.responseData?.items, 'id', 'id')}
+                    scrollableOptions
+                    scrollableHeight="max-h-[15rem]"
                   />
                   <FormSelect
                     labelFor="merchantName"
@@ -155,6 +157,8 @@ function EditProfile() {
                     formik={formik}
                     useTouched
                     options={formatApiDataForDropdown(data?.responseData?.items, 'name', 'name')}
+                    scrollableOptions
+                    scrollableHeight="max-h-[15rem]"
                   />
                   <FormSelect
                     labelFor="accountID"
@@ -162,6 +166,8 @@ function EditProfile() {
                     formik={formik}
                     useTouched
                     options={formatApiDataForDropdown(accountData?.responseData?.items, 'id', 'id')}
+                    scrollableOptions
+                    scrollableHeight="max-h-[15rem]"
                   />
                   <FormSelect
                     labelFor="accountNumber"
@@ -173,6 +179,8 @@ function EditProfile() {
                       'accountNumber',
                       'accountNumber',
                     )}
+                    scrollableOptions
+                    scrollableHeight="max-h-[15rem]"
                   />
                   <CustomInput
                     labelFor="firstName"
