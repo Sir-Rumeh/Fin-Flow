@@ -87,11 +87,7 @@ const FormSelect = ({
             <p
               className={`text-base ${selectedOption ? 'font-[400]' : scrollableOptions ? 'text-blackInput' : 'text-gray-400'} `}
             >
-              {selectedOption
-                ? selectedOption
-                : scrollableOptions
-                  ? options[0].value
-                  : 'Select here'}
+              {selectedOption ? selectedOption : 'Select here'}
             </p>
             <i className="scale-125">
               <DarkArrowDown />

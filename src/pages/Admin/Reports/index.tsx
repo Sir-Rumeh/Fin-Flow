@@ -32,18 +32,20 @@ import {
   getMandates,
   updateMandate,
 } from 'config/actions/dashboard-actions';
-import { getDateRange } from 'utils/helpers';
+import { formatApiDataForDropdown, getDateRange } from 'utils/helpers';
+import { getMerchants } from 'config/actions/merchant-actions';
 
 const Reports = () => {
   const printPdfRef = useRef(null);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const [isFirstRender, setIsFirstRender] = useState(true);
   const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
+  const [mandateRecords, setMandateRecords] = useState<any>();
   const [selectedMandate, setSelectedMandate] = useState({
     id: '',
     mandateType: '',
   });
-  let mandateType = 'Fixed';
   const [modals, setModals] = useState({
     confirmDisable: false,
     disableSuccessful: false,
@@ -91,13 +93,6 @@ const Reports = () => {
     { value: 'Transaction Reports', label: 'Transaction Reports' },
   ];
 
-  const merchants = [
-    { value: 'All', label: 'All' },
-    { value: 'Merchant One', label: 'Merchant One' },
-    { value: 'Merchant Two', label: 'Merchant Two' },
-    { value: 'Merchant Three', label: 'Merchant Three' },
-    { value: 'Merchant Four', label: 'Merchant Four' },
-  ];
   const itemStatus = [
     { value: 'Enabled', label: 'Enabled' },
     { value: 'Disabled', label: 'Disabled' },
@@ -142,27 +137,6 @@ const Reports = () => {
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });
-
-  useEffect(() => {
-    setQueryParams((prev) => ({
-      ...prev,
-      status: formik.values.statusFilter,
-      pageNo: paginationData.pageNumber,
-      pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchMandate,
-      startDate: formik.values.fromDateFilter,
-      endDate: formik.values.toDateFilter,
-    }));
-  }, [paginationData]);
-
-  const handleOptionsFilter = () => {
-    setQueryParams((prev) => ({
-      ...prev,
-      status: formik.values.statusFilter,
-      startDate: formik.values.fromDateFilter,
-      endDate: formik.values.toDateFilter,
-    }));
-  };
 
   const mandateExcelHeaders = [
     { label: 'Account ID', key: 'accountId' },
@@ -425,10 +399,52 @@ const Reports = () => {
     },
   ];
 
-  const { data, refetch } = useQuery({
-    queryKey: ['mandates', queryParams],
-    queryFn: ({ queryKey }) => getMandates(queryKey[1] as QueryParams),
+  const [merchantQueryParams, setMerchantQueryParams] = useState<QueryParams>({
+    sortBy: 'asc',
+    sortOrder: 'desc',
   });
+
+  const { data } = useQuery({
+    queryKey: ['merchants', merchantQueryParams],
+    queryFn: ({ queryKey }) => getMerchants(queryKey[1] as QueryParams),
+  });
+
+  const getMandateReports = async () => {
+    const res = await getMandates(queryParams as QueryParams);
+    if (res) {
+      setMandateRecords(res);
+      setShowFilteredReport(true);
+    }
+  };
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+      searchFilter: formik.values.searchMandate,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+
+    setIsFirstRender(false);
+  }, [paginationData.pageNumber]);
+
+  const handleOptionsFilter = () => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  };
+
+  useEffect(() => {
+    if (queryParams.pageNo && !isFirstRender) {
+      getMandateReports();
+    }
+  }, [queryParams.pageNo]);
 
   const updateMandateMutation = useMutation({
     mutationFn: (requestId: string | undefined) =>
@@ -535,7 +551,7 @@ const Reports = () => {
                   labelFor="merchant"
                   label="Merchant"
                   formik={formik}
-                  options={merchants}
+                  options={formatApiDataForDropdown(data?.responseData?.items, 'name', 'name')}
                   scrollableOptions
                   scrollableHeight="max-h-[10rem]"
                 />
@@ -556,7 +572,7 @@ const Reports = () => {
                 onClick={() => {
                   if (!formik.values.reportType)
                     return formik.setFieldError('reportType', 'Report Type is required');
-                  setShowFilteredReport(true);
+                  getMandateReports();
                 }}
               />
             </div>
@@ -565,11 +581,11 @@ const Reports = () => {
             <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
               <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
                 <h2 className="text-xl font-bold">
-                  {` Mandate Status Report: ${getDateRange(data?.responseData.items)}`}
+                  {` Mandate Status Report: ${getDateRange(mandateRecords?.responseData.items)}`}
                 </h2>
                 <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
                   <ExportBUtton
-                    data={data?.responseData.items}
+                    data={mandateRecords?.responseData.items}
                     printPdfRef={printPdfRef}
                     headers={mandateExcelHeaders}
                     fileName="mandate-reports.csv"
@@ -602,9 +618,9 @@ const Reports = () => {
                 <div className="w-full">
                   <div ref={printPdfRef} className="w-full">
                     <CustomTable
-                      tableData={data?.responseData.items}
+                      tableData={mandateRecords?.responseData.items}
                       columns={mandateColumns}
-                      rowCount={data?.responseData.totalCount}
+                      rowCount={mandateRecords?.responseData.totalCount}
                       defaultAnimation={false}
                       paginationData={paginationData}
                       setPaginationData={setPaginationData}
@@ -690,7 +706,7 @@ const Reports = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
-            refetch();
+            getMandateReports();
             closeModal('disableSuccessful');
           }}
         />
@@ -717,7 +733,7 @@ const Reports = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
-            refetch();
+            getMandateReports();
             closeModal('enableSuccessful');
           }}
         />
@@ -744,7 +760,7 @@ const Reports = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
-            refetch();
+            getMandateReports();
             closeModal('deleteSuccessful');
           }}
         />
@@ -831,7 +847,7 @@ const Reports = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
-            refetch();
+            getMandateReports();
             closeModal('editSuccessful');
           }}
         />

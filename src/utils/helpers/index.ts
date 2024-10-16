@@ -135,11 +135,11 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
   if (formattedQueryParams.actor) params.append('Actor', formattedQueryParams.actor);
 };
 
-export const formatApiDataForDropdown = (dataArray: any[], dataKey: string) => {
+export const formatApiDataForDropdown = (dataArray: any[], dataKey: string, dataValue: string) => {
   let formattedArrayOptions: DropdownOption[] = [];
   dataArray?.map((dataOption: any) => {
     const newOption = {
-      value: dataOption[dataKey] as string,
+      value: dataOption[dataValue] as string,
       label: capitalize(dataOption[dataKey] as string),
     };
     formattedArrayOptions.push(newOption);

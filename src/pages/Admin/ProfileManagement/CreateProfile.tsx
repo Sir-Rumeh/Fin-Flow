@@ -115,21 +115,21 @@ function CreateProfile() {
                     label="Merchant ID"
                     formik={formik}
                     useTouched
-                    options={formatApiDataForDropdown(data?.responseData?.items, 'id')}
+                    options={formatApiDataForDropdown(data?.responseData?.items, 'id', 'id')}
                   />
                   <FormSelect
                     labelFor="merchantName"
                     label="Merchant Name"
                     formik={formik}
                     useTouched
-                    options={formatApiDataForDropdown(data?.responseData?.items, 'name')}
+                    options={formatApiDataForDropdown(data?.responseData?.items, 'name', 'name')}
                   />
                   <FormSelect
                     labelFor="accountID"
                     label="Account Id"
                     formik={formik}
                     useTouched
-                    options={formatApiDataForDropdown(accountData?.responseData?.items, 'id')}
+                    options={formatApiDataForDropdown(accountData?.responseData?.items, 'id', 'id')}
                   />
                   <FormSelect
                     labelFor="accountNumber"
@@ -138,6 +138,7 @@ function CreateProfile() {
                     useTouched
                     options={formatApiDataForDropdown(
                       accountData?.responseData?.items,
+                      'accountNumber',
                       'accountNumber',
                     )}
                   />

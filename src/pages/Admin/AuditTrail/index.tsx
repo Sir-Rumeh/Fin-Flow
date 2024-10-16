@@ -30,7 +30,6 @@ const AuditTrail = () => {
     pageNumber: 1,
     pageSize: 10,
   });
-  // const [currentPage, setCurrentPage] = useState<number | string>(1);
 
   const openModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: true }));
