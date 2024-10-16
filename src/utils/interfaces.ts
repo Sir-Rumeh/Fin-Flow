@@ -153,6 +153,7 @@ export interface QueryParams {
   searchFilter?: string | undefined;
   startDate?: string | undefined;
   endDate?: string | undefined;
+  actor?: string | undefined;
 }
 
 export interface StaffUserRequest {

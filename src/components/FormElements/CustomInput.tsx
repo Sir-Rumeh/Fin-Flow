@@ -74,7 +74,7 @@ const CustomInput = ({
         </div>
       ) : (
         <div
-          className={`${!formik?.errors[labelFor] && 'hover:border-black'} ${containerStyles} ${!containerStyles && `${defaultContainerStyles} ${maxW} `} ${
+          className={`relative ${!formik?.errors[labelFor] && 'hover:border-black'} ${containerStyles} ${!containerStyles && `${defaultContainerStyles} ${maxW} `} ${
             useTouched && formik?.touched[labelFor] && formik?.errors[labelFor]
               ? 'border-red-400'
               : ''
@@ -96,6 +96,9 @@ const CustomInput = ({
             disabled={disabled}
           />
           {icon}
+          {disabled && (
+            <span className={`absolute inset-0 h-full w-full rounded-lg bg-gray-400 opacity-30`} />
+          )}
         </div>
       )}
 
