@@ -3,14 +3,13 @@ import { useState } from 'react';
 import CustomTable from 'components/CustomTable';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { CloseIcon, CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
-import { auditTrailList, mandateRequestsList, transactionHistory } from 'utils/constants';
+import { mandateRequestsList, transactionHistory } from 'utils/constants';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 import { Typography, useMediaQuery } from '@mui/material';
 import CustomInput from 'components/FormElements/CustomInput';
 import FormDatePicker from 'components/FormElements/FormDatePicker';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
-import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
 import { createSearchParams, useNavigate } from 'react-router-dom';
@@ -273,6 +272,7 @@ const Reports = () => {
       },
     },
   ];
+
   const transactionsReportColumn: GridColDef[] = [
     {
       field: 'accountId',

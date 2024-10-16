@@ -1,20 +1,23 @@
 import { useState } from 'react';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
-import { mandateList, transactionReports } from 'utils/constants';
+import {
+  mandateList,
+  mandateRequestsList,
+  transactionHistory,
+  transactionReports,
+} from 'utils/constants';
 import TableLogo from 'assets/images/table_logo.png';
 import CustomTable from 'components/CustomTable';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import ButtonComponent from 'components/FormElements/Button';
-import { Box, createTheme, Modal, ThemeProvider, Typography } from '@mui/material';
+import { Box, createTheme, Modal, Typography, useMediaQuery } from '@mui/material';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import Tab from 'components/Tabs';
 import { ReportsType, RequestType } from 'utils/enums';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
 import appRoutes from 'utils/constants/routes';
-import { Link } from 'react-router-dom';
+import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import {
   CloseIcon,
   CreationRequestIcon,
@@ -29,6 +32,15 @@ import { useTabContext } from '../../../context/TabContext';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import TableFilter from 'components/TableFilter';
 import { useFormik } from 'formik';
+import { TabsProps } from 'utils/interfaces';
+import { ModalWrapper } from 'hoc/ModalWrapper';
+import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
+import RedAlertIcon from 'assets/icons/RedAlertIcon';
+import CustomInput from 'components/FormElements/CustomInput';
+import CustomModal from 'hoc/ModalWrapper/CustomModal';
+import CustomTabs from 'hoc/CustomTabs';
+import FormSelect from 'components/FormElements/FormSelect';
+import FormDatePicker from 'components/FormElements/FormDatePicker';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -44,57 +56,253 @@ const style = {
 };
 
 const Reports = () => {
-  const { tab, setTab } = useTabContext();
+  const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
-
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
-
-  const [isLogDetailsModalOpen, setIsLogDetailsModalOpen] = useState(false);
-
-  const openModal = () => setIsLogDetailsModalOpen(true);
-
-  const closeModal = () => setIsLogDetailsModalOpen(false);
-
-  const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
-
-  const [selectedReportType, setSelectedReportType] = useState<string>('');
-
-  const handleSelect = (value: string) => {
-    setSelectedReportType(value);
-    console.log(selectedReportType);
-  };
-
-  const theme = createTheme({
-    typography: {
-      fontFamily: '"Gotham", sans-serif',
-    },
+  const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
+  let mandateType = 'Fixed';
+  const [modals, setModals] = useState({
+    confirmDisable: false,
+    disableSuccessful: false,
+    confirmEnable: false,
+    enableSuccessful: false,
+    confirmDelete: false,
+    deleteSuccessful: false,
+    openTransactionHistory: false,
+    editMandate: false,
+    confirmEdit: false,
+    editSuccessful: false,
   });
+
+  const [showFilteredReport, setShowFilteredReport] = useState(false);
+
+  const [paginationData, setPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
+
+  const openModal = (modalName: keyof typeof modals) => {
+    setModals((prev) => ({ ...prev, [modalName]: true }));
+  };
+
+  const closeModal = (modalName: keyof typeof modals) => {
+    setModals((prev) => ({ ...prev, [modalName]: false }));
+  };
 
   const formik = useFormik({
     initialValues: {
-      searchMerchantName: '',
-      fromDateFilter: '',
-      toDateFilter: '',
       statusFilter: '',
+      reportType: '',
     },
-    onSubmit: (values) => {
-      setSearchTerm('');
-    },
+    onSubmit: (values) => {},
   });
 
-  const TransactionsReportsTableColumn: GridColDef[] = [
+  const reportTypes = [
+    { value: 'Mandate Status Reports', label: 'Mandate Status Reports' },
+    { value: 'Transaction Reports', label: 'Transaction Reports' },
+  ];
+
+  const itemStatus = [
+    { value: 'Enabled', label: 'Enabled' },
+    { value: 'Disabled', label: 'Disabled' },
+  ];
+
+  const total = 20;
+
+  const tabsList: TabsProps[] = [
     {
-      field: 'id',
-      headerName: 'ID',
+      tabIndex: 1,
+      tabName: 'Successful',
+      tabTotal: total,
+    },
+    {
+      tabIndex: 2,
+      tabName: 'Failed',
+      tabTotal: total,
+    },
+  ];
+
+  const mandateColumns: GridColDef[] = [
+    {
+      field: 'accountId',
+      headerName: 'Account ID',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
+    {
+      field: 'merchantId',
+      headerName: 'Merchant ID',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
+    {
+      field: 'mandateCode',
+      headerName: 'Mandate Code',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
+    {
+      field: 'mandateType',
+      headerName: 'Mandate Type',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
+    {
+      field: 'status',
+      headerName: 'Status',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+      renderCell: (params: GridRenderCellParams) => {
+        const renderIcon = (IconComponent: React.ComponentType, colorClass: string) => (
+          <div className="flex w-full items-center gap-2 font-semibold">
+            <IconComponent />
+            <span className={`mb-[1px] ${colorClass}`}>{params?.row.status}</span>
+          </div>
+        );
+        switch (params?.row.status) {
+          case 'Enabled':
+            return renderIcon(CreationRequestIcon, 'text-greenPrimary');
+          case 'Disabled':
+            return renderIcon(DeleteRequestIcon, 'text-redSecondary');
+          default:
+            return <span>{params?.row.status}</span>;
+        }
+      },
+    },
+    {
+      field: 'dateRequested',
+      headerName: 'Date Requested',
+      width: screen.width < 1000 ? 50 : 50,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+      valueGetter: (params: any) => new Date(params).toLocaleDateString(),
+    },
+    {
+      field: 'actions',
+      headerName: 'Action',
+      headerClassName: 'ag-thead ',
+      sortable: false,
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <div className="-ml-1 h-full border-none">
+            <CustomPopover
+              popoverId={params?.row.id}
+              buttonIcon={<PopoverTitle title="Actions" />}
+              translationX={-45}
+              translationY={45}
+            >
+              <div className="flex flex-col rounded-md p-1">
+                <button
+                  onClick={() =>
+                    navigate({
+                      pathname: `/${appRoutes.adminDashboard.mandateManagement.mandateDetails}`,
+                      search: `?${createSearchParams({ id: params?.row.id })}`,
+                    })
+                  }
+                  type="button"
+                  className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
+                >
+                  View Details
+                </button>
+                <button
+                  onClick={() => openModal('openTransactionHistory')}
+                  type="button"
+                  className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
+                >
+                  View Transactions
+                </button>
+
+                {params?.row.mandateType === 'Variable' && (
+                  <button
+                    onClick={() => openModal('editMandate')}
+                    type="button"
+                    className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
+                  >
+                    Update Amount
+                  </button>
+                )}
+
+                {params?.row.status === 'Enabled' && (
+                  <button
+                    type="button"
+                    onClick={() => openModal('confirmDisable')}
+                    className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
+                  >
+                    Disable
+                  </button>
+                )}
+                {params?.row.status === 'Disabled' && (
+                  <button
+                    type="button"
+                    onClick={() => openModal('confirmEnable')}
+                    className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
+                  >
+                    Enable
+                  </button>
+                )}
+                <button
+                  type="button"
+                  onClick={() => openModal('confirmDelete')}
+                  className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
+                >
+                  Delete
+                </button>
+              </div>
+            </CustomPopover>
+          </div>
+        );
+      },
+    },
+  ];
+
+  const transactionsTableColumn: GridColDef[] = [
+    {
+      field: 'accountId',
+      headerName: 'Account ID',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
+    {
+      field: 'amount',
+      headerName: 'Amount',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
+    {
+      field: 'date',
+      headerName: 'Date',
+      width: screen.width < 1000 ? 50 : 50,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+      valueGetter: (params: any) => new Date(params).toLocaleDateString(),
+    },
+    {
+      field: 'actions',
+      headerName: 'Action',
+      headerClassName: 'ag-thead ',
+      sortable: false,
+      width: 180,
+      renderCell: (params) => {
+        return (
+          <button className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple">
+            <DownloadIcon />
+            Download Receipt
+          </button>
+        );
+      },
+    },
+  ];
+
+  const transactionsReportColumn: GridColDef[] = [
+    {
+      field: 'accountId',
+      headerName: 'Account ID',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
@@ -129,7 +337,7 @@ const Reports = () => {
       width: 180,
       renderCell: (params) => {
         return (
-          <button className="flex cursor-pointer items-center gap-3 font-semibold text-lightPurple">
+          <button className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple">
             <DownloadIcon />
             Download Receipt
           </button>
@@ -138,312 +346,102 @@ const Reports = () => {
     },
   ];
 
-  const MandateTableColumn: GridColDef[] = [
-    {
-      field: 'accountId',
-      headerName: 'Account ID',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-    },
-    {
-      field: 'merchantId',
-      headerName: 'Merchant ID',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-    },
-    {
-      field: 'mandateCode',
-      headerName: 'Mandate Code',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-    },
-    {
-      field: 'mandateType',
-      headerName: 'Mandate Type',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-    },
-    {
-      field: 'requestType',
-      headerName: 'Request Type',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-      renderCell: (params) => {
-        const renderIcon = (IconComponent: any, colorClass: any) => (
-          <div className="flex items-center gap-2">
-            <IconComponent />
-            <span className={`mb-0 ${colorClass}`}>{params.value}</span>
-          </div>
-        );
-
-        const getIconAndColor = (requestType: RequestType) => {
-          switch (requestType) {
-            case RequestType.Creation:
-            case RequestType.Enable:
-              return {
-                IconComponent: CreationRequestIcon,
-                colorClass: 'text-greenPrimary font-semibold',
-              };
-            case RequestType.Update:
-              return {
-                IconComponent: UpdateRequestIcon,
-                colorClass: 'text-lightPurple font-semibold',
-              };
-            case RequestType.Disable:
-              return {
-                IconComponent: DisableRequestIcon,
-                colorClass: 'text-yellowNeutral font-semibold',
-              };
-            case RequestType.Deletion:
-            case RequestType.Disabled:
-              return {
-                IconComponent: DeleteRequestIcon,
-                colorClass: 'text-redSecondary font-semibold',
-              };
-            default:
-              return null;
-          }
-        };
-
-        const iconAndColor = getIconAndColor(params.value);
-
-        if (iconAndColor) {
-          return renderIcon(iconAndColor.IconComponent, iconAndColor.colorClass);
-        }
-
-        return <span>{params.value}</span>;
-      },
-    },
-    {
-      field: 'dateRequested',
-      headerName: 'Date Requested',
-      width: screen.width < 1000 ? 50 : 50,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-      valueGetter: (params: any) => new Date(params).toLocaleDateString(),
-    },
-    {
-      field: 'actions',
-      headerName: 'Action',
-      width: 120,
-      headerClassName: 'ag-thead ',
-      sortable: false,
-      renderCell: (params: GridRenderCellParams) => {
-        const requestType = params.row.requestType;
-
-        const isEnabled = requestType === RequestType.Enable;
-
-        const buttonTitle = isEnabled ? 'Disable' : 'Enable';
-        const buttonColorClass = isEnabled ? 'text-red-400' : 'text-greenPrimary';
-
-        return (
-          <div className="-ml-1 h-full border-none">
-            <CustomPopover
-              popoverId={params?.row.id}
-              buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-15}
-              translationY={45}
-            >
-              <div className="flex w-[8rem] flex-col rounded-md p-1 text-sm">
-                <Link
-                  to={`/${appRoutes.merchantDashboard.mandateManagement.mandateDetails}`}
-                  className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
-                >
-                  View Details
-                </Link>
-                <div
-                  onClick={() => {}}
-                  className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
-                >
-                  View Transactions
-                </div>
-                <div
-                  onClick={() => {}}
-                  className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
-                >
-                  Update Amount
-                </div>
-                <div
-                  onClick={() => {}}
-                  className={`w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary ${buttonColorClass}`}
-                >
-                  Enable
-                </div>
-                <div
-                  className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
-                  onClick={() => {}}
-                >
-                  Delete
-                </div>
-              </div>
-            </CustomPopover>
-          </div>
-        );
-      },
-    },
-  ];
+  const isSmallWidth = useMediaQuery('(max-width:370px)');
+  const isLargeWidth = useMediaQuery('(min-width:1320px)');
 
   return (
     <>
-      <div className="px-5 py-5">
-        <h2 className="text-2xl font-semibold">Reporting</h2>
-        <div className="mt-5 rounded-lg bg-white px-5 py-8">
-          <div className="flex items-center justify-between">
-            <p className="my-3 text-xl font-semibold">Generate Report</p>
+      <section className="p-2 md:p-4">
+        <div className="fade-in-down my-2 flex items-center justify-between">
+          <div>
+            <h1 className="text-lg font-semibold md:text-2xl">Reporting</h1>
           </div>
-          <div className="h-[2px] w-full bg-grayPrimary"></div>
-          <div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 md:gap-8 lg:grid-cols-4">
-            <DatePicker
-              label="Start Date"
-              sx={{
-                height: '50px',
-                width: '100%',
-                marginTop: '32px',
-                '& .MuiInputBase-root': {
-                  height: '50px',
-                  borderRadius: '8px',
-                },
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '8px',
-                },
-              }}
-            />
-            <DatePicker
-              label="End Date"
-              sx={{
-                height: '50px',
-                width: '100%',
-                marginTop: '32px',
-                '& .MuiInputBase-root': {
-                  height: '50px',
-                  borderRadius: '8px',
-                },
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '8px',
-                },
-              }}
-            />
-            <CustomSelect
-              labelFor="reportType"
-              label="Report Type"
-              containerStyles="h-[50px] w-full mb-10"
-              selectStyles="h-[50px] px-2"
-              options={['Mandate Status Report', 'Transaction Reports']}
-              placeholder="Select here"
-              icon={<DarkArrowDown height="20" width="20" styles="mt-1 mr-1" />}
-            />
-            <CustomSelect
-              labelFor="status"
-              label="Status"
-              containerStyles="w-full h-[50px]"
-              selectStyles="h-[50px] px-2"
-              options={['Mandate Status Report', 'Transaction Reports']}
-              placeholder="Select here"
-              icon={<DarkArrowDown height="20" width="20" styles="mt-1 mr-1" />}
-            />
-          </div>
-          <div className="mt-10 flex justify-end">
-            <div className="">
+        </div>
+        <div className="mt-5">
+          <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 pb-6 md:p-4 md:pb-8">
+            <div className="flex w-full items-center justify-start border-b pb-2">
+              <h2 className="text-xl font-semibold tracking-wide">Generate Report</h2>
+            </div>
+            <div className="mt-8 grid w-full grid-cols-3 gap-4 py-1 md:grid-cols-3">
+              <div className="relative flex w-full items-center">
+                <span className="absolute bottom-20 font-semibold">Date Range</span>
+                <div className="relative mt-2 flex w-full items-center justify-between rounded-lg border border-gray-300">
+                  <div className="w-full">
+                    <FormDatePicker
+                      name={'startDate'}
+                      formik={formik}
+                      label="Start Date"
+                      placeholder="DD/MM/YY"
+                      showLabel={false}
+                      customPicker
+                      width="100%"
+                      hideBorder
+                    />
+                  </div>
+                  <div className="h-[2px] w-[8px] bg-gray-300"></div>
+                  <div className="w-full">
+                    <FormDatePicker
+                      name={'endDate'}
+                      formik={formik}
+                      label="End Date"
+                      placeholder="DD/MM/YY"
+                      showLabel={false}
+                      customPicker
+                      hideBorder
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="w-full">
+                <FormSelect
+                  labelFor="reportType"
+                  label="Report Type"
+                  formik={formik}
+                  options={reportTypes}
+                />
+              </div>
+              <div className="w-full">
+                <FormSelect labelFor="status" label="Status" formik={formik} options={itemStatus} />
+              </div>
+            </div>
+            <div className="flex w-full items-center justify-end py-1">
               <ButtonComponent
-                onClick={() => {}}
-                title="Generate Report"
+                variant="contained"
+                color="white"
                 backgroundColor="#5C068C"
                 hoverBackgroundColor="#2F0248"
-                color="white"
-                width="180px"
-                height="45px"
+                type="button"
+                title="Generate Report"
+                customPaddingX="1.4rem"
+                onClick={() => {
+                  if (!formik.values.reportType)
+                    return formik.setFieldError('reportType', 'Report Type is required');
+                  setShowFilteredReport(true);
+                }}
               />
             </div>
           </div>
-        </div>
-        {/* {selectedReportType === ReportsType.TransactionReports && ( */}
-        <div className="mt-10 rounded-lg bg-white px-5 py-5">
-          <div className="mt-10 flex items-center justify-between">
-            <p className="text-xl font-bold">
-              Mono Tech Transaction Report Details (June 2023 to August 2023)
-            </p>
-            <ExportBUtton />
-          </div>
-          <div className="mt-5 rounded-lg border px-4 py-6">
-            <div className="">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center justify-between gap-4">
-                  <Tab
-                    label="Successful"
-                    count={20}
-                    isActive={tab === 1}
-                    onClick={() => setTab(1)}
-                    inactiveColor="text-green-500"
-                  />
-                  <Tab
-                    label="Failed"
-                    count={20}
-                    isActive={tab === 2}
-                    onClick={() => setTab(2)}
-                    inactiveColor="text-red-500"
-                  />
-                </div>
-                <div className="">
-                  <TableFilter
-                    name={'searchMerchantName'}
-                    placeholder={'Search '}
-                    label={'Search Merchant'}
-                    value={searchTerm}
-                    setSearch={setSearchTerm}
-                    handleOptionsFilter={() => {}}
-                    formik={formik}
-                    fromDateName={'fromDateFilter'}
-                    toDateName={'toDateFilter'}
-                    selectName={'statusFilter'}
-                  />
+          {showFilteredReport && formik.values.reportType === 'Mandate Status Reports' && (
+            <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
+              <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
+                <h2 className="text-xl font-bold">
+                  Mandate Status Report ( June 2023 to August 2023 ){' '}
+                </h2>
+                <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
+                  <ExportBUtton />
                 </div>
               </div>
-              <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
-              <div className="mt-6">
-                {transactionReports.length > 0 ? (
-                  <CustomTable
-                    tableData={transactionReports}
-                    columns={TransactionsReportsTableColumn}
-                    rowCount={20}
-                  />
-                ) : (
-                  <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
+              <div className="mt-1 w-full rounded-md border px-3 pt-2">
+                <div className="flex w-full flex-col justify-between gap-y-4 border-b 2xl:flex-row 2xl:items-center">
+                  <h3 className="w-full text-xl font-semibold tracking-wide lg:w-[50%]">
+                    All Mandates Reports
+                  </h3>
+                  <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
                     <div>
-                      <img src={TableLogo} alt="group_logo" />
-                    </div>
-                    <div className="mt-8 text-center">
-                      <h3 className="text-2xl font-bold">Oops! No Transactions</h3>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* )} */}
-        {selectedReportType === ReportsType.MandateStatusReports && (
-          <div className="mt-10 rounded-lg bg-white px-5 py-5">
-            <div className="mt-10 rounded-lg bg-white px-5 py-5">
-              <div className="flex items-center justify-between">
-                <p className="text-lg font-bold md:text-xl">
-                  Mandate Status Report (June 2023 to August 2023)
-                </p>
-                <ExportBUtton />
-              </div>
-              <div className="mt-5 rounded-lg border px-4 py-6">
-                <div className="">
-                  <div className="flex flex-col items-center justify-between md:flex-row">
-                    <p className="text-lg font-semibold md:text-xl">All Mandates Reports</p>
-                    <div className="">
                       <TableFilter
-                        name={'searchMerchantName'}
-                        placeholder={'Search '}
-                        label={'Search Merchant'}
+                        name={'searchMandateReport'}
+                        placeholder={'Search'}
+                        label={'Search'}
                         value={searchTerm}
                         setSearch={setSearchTerm}
                         handleOptionsFilter={() => {}}
@@ -451,71 +449,303 @@ const Reports = () => {
                         fromDateName={'fromDateFilter'}
                         toDateName={'toDateFilter'}
                         selectName={'statusFilter'}
+                        translationX={isLargeWidth ? 300 : undefined}
                       />
                     </div>
                   </div>
-                  <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
-                  <div className="mt-6">
-                    {transactionReports.length > 0 ? (
-                      <CustomTable
-                        tableData={mandateList}
-                        columns={MandateTableColumn}
-                        rowCount={20}
-                      />
-                    ) : (
-                      <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
-                        <div>
-                          <img src={TableLogo} alt="group_logo" />
-                        </div>
-                        <div className="mt-8 text-center">
-                          <h3 className="text-2xl font-bold">Oops! No Transactions</h3>
-                        </div>
-                      </div>
-                    )}
-                  </div>
+                </div>
+                <div className="w-full">
+                  <CustomTable
+                    tableData={mandateRequestsList}
+                    columns={mandateColumns}
+                    rowCount={257}
+                    defaultAnimation={false}
+                    paginationData={paginationData}
+                    setPaginationData={setPaginationData}
+                  />
                 </div>
               </div>
             </div>
-          </div>
-        )}
-        {isLogDetailsModalOpen && (
-          <Modal
-            open={isLogDetailsModalOpen}
-            onClose={closeModal}
-            aria-labelledby="modal-modal-title"
-            aria-describedby="modal-modal-description"
-          >
-            <Box sx={style}>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                <div className="flex items-center justify-between font-semibold">
-                  <h1>Log Details</h1>
-                  <button onClick={closeModal}>
-                    <CloseIcon />
-                  </button>
+          )}
+          {showFilteredReport && formik.values.reportType === 'Transaction Reports' && (
+            <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
+              <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
+                <h2 className="text-xl font-bold">
+                  Mono Tech Transaction Report Details (June 2023 to August 2023)
+                </h2>
+                <div className="flex w-full items-center lg:w-[20%] lg:justify-end">
+                  <ExportBUtton />
                 </div>
-                <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
-              </Typography>
-              <Typography id="modal-modal-description">
-                <div className="rounded-xl bg-white py-10">
-                  <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
-                    <div className="flex items-center justify-between">
-                      <p className="my-3 text-lg font-semibold">Log Details</p>
-                    </div>
-                    <div className="h-[2px] w-full bg-grayPrimary"></div>
-                    <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[30px]">
-                      <DetailsCard title="Reference" content="12345" />
-                      <DetailsCard title="Account Name" content="John Wick" />
-                      <DetailsCard title="Affected Module" content="Account Management" />
-                      <DetailsCard title="Performed Action" content="Disable Account" />
-                      <DetailsCard title="Date Performed" content="12/12/2024 - 03:00pm" />
+              </div>
+              <div className="mt-1 w-full rounded-md border px-3 pt-2">
+                <div className="slide-down flex w-full flex-col justify-between border-b pb-1 lg:flex-row lg:items-center">
+                  <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10">
+                    <CustomTabs
+                      tabs={tabsList}
+                      activeTab={activeTransactionTab}
+                      setActiveTab={setActiveTransactionTab}
+                    />
+                  </div>
+                  <div className="flex w-full items-center lg:justify-end">
+                    <div className="">
+                      <TableFilter
+                        name={'searchTransactionHistory'}
+                        placeholder={'Search'}
+                        label={'Search Transactions'}
+                        value={searchTerm}
+                        setSearch={setSearchTerm}
+                        handleOptionsFilter={() => {}}
+                        formik={formik}
+                        fromDateName={'fromDateFilter'}
+                        toDateName={'toDateFilter'}
+                        selectName={'statusFilter'}
+                        translationX={isLargeWidth ? 300 : undefined}
+                      />
                     </div>
                   </div>
                 </div>
-              </Typography>
-            </Box>
-          </Modal>
-        )}
-      </div>
+
+                <div className="mt-4 w-full">
+                  <CustomTable
+                    tableData={transactionHistory}
+                    columns={transactionsReportColumn}
+                    rowCount={73}
+                    defaultAnimation={false}
+                    paginationData={paginationData}
+                    setPaginationData={setPaginationData}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </section>
+      {modals.confirmDisable && (
+        <ModalWrapper
+          isOpen={modals.confirmDisable}
+          setIsOpen={() => closeModal('confirmDisable')}
+          title={'Disable Mandate?'}
+          info={'You are about to disable this mandate, would you want to proceed with this?'}
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
+          proceedAction={() => {
+            closeModal('confirmDisable');
+            openModal('disableSuccessful');
+          }}
+        />
+      )}
+      {modals.disableSuccessful && (
+        <ModalWrapper
+          isOpen={modals.disableSuccessful}
+          setIsOpen={() => closeModal('disableSuccessful')}
+          title={'Success!!'}
+          info={'You have successfully disabled this mandate'}
+          icon={<ActionSuccessIcon />}
+          type={'completed'}
+          proceedAction={() => {
+            closeModal('disableSuccessful');
+          }}
+        />
+      )}
+      {modals.confirmEnable && (
+        <ModalWrapper
+          isOpen={modals.confirmEnable}
+          setIsOpen={() => closeModal('confirmEnable')}
+          title={'Enable Mandate?'}
+          info={'You are about to enable this mandate, would you want to proceed with this?'}
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
+          proceedAction={() => {
+            closeModal('confirmEnable');
+            openModal('enableSuccessful');
+          }}
+        />
+      )}
+      {modals.enableSuccessful && (
+        <ModalWrapper
+          isOpen={modals.enableSuccessful}
+          setIsOpen={() => closeModal('enableSuccessful')}
+          title={'Success!!'}
+          info={'You have successfully enabled this mandate'}
+          icon={<ActionSuccessIcon />}
+          type={'completed'}
+          proceedAction={() => {
+            closeModal('enableSuccessful');
+          }}
+        />
+      )}
+      {modals.confirmDelete && (
+        <ModalWrapper
+          isOpen={modals.confirmDelete}
+          setIsOpen={() => closeModal('confirmDelete')}
+          title={'Delete Mandate?'}
+          info={'You are about to delete this mandate, would you want to proceed with this?'}
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
+          proceedAction={() => {
+            closeModal('confirmDelete');
+            openModal('deleteSuccessful');
+          }}
+        />
+      )}
+      {modals.deleteSuccessful && (
+        <ModalWrapper
+          isOpen={modals.deleteSuccessful}
+          setIsOpen={() => closeModal('deleteSuccessful')}
+          title={'Success!!'}
+          info={'You have successfully deleted this mandate'}
+          icon={<ActionSuccessIcon />}
+          type={'completed'}
+          proceedAction={() => {
+            closeModal('deleteSuccessful');
+          }}
+        />
+      )}
+      {modals.openTransactionHistory && (
+        <CustomModal
+          isOpen={modals.openTransactionHistory}
+          setIsOpen={() => closeModal('openTransactionHistory')}
+          width={'900px'}
+          paddingX={0}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            <div className="flex items-center justify-between">
+              <h1 className="text-xl font-semibold">Transaction History Details</h1>
+              <button className="scale-[110%]" onClick={() => closeModal('openTransactionHistory')}>
+                <CloseIcon />
+              </button>
+            </div>
+            <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
+          </Typography>
+          <div className="mt-2">
+            <div className="">
+              <div className="slide-down flex items-center justify-between">
+                <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10">
+                  <CustomTabs
+                    tabs={tabsList}
+                    activeTab={activeTransactionTab}
+                    setActiveTab={setActiveTransactionTab}
+                  />
+                </div>
+                <div className="flexitems-center justify-end">
+                  <TableFilter
+                    name={'searchTransactionHistory'}
+                    placeholder={'Search Transactions'}
+                    label={'Search Transactions'}
+                    value={searchTerm}
+                    setSearch={setSearchTerm}
+                    handleOptionsFilter={() => {}}
+                    formik={formik}
+                    fromDateName={'fromDateFilter'}
+                    toDateName={'toDateFilter'}
+                    selectName={'statusFilter'}
+                    showOptionsFilter={false}
+                  />
+                </div>
+              </div>
+              <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
+              <div className="slide-down mt-6">
+                <CustomTable
+                  tableData={transactionHistory}
+                  columns={transactionsTableColumn}
+                  rowCount={73}
+                />
+              </div>
+            </div>
+          </div>
+        </CustomModal>
+      )}
+      {modals.editMandate && (
+        <CustomModal
+          isOpen={modals.editMandate}
+          setIsOpen={() => closeModal('editMandate')}
+          width={'800px'}
+          paddingX={0}
+        >
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            <div className="slide-down flex items-center justify-between">
+              <h1 className="text-xl font-semibold">Modify Mandate Details</h1>
+              <button className="scale-[110%]" onClick={() => closeModal('editMandate')}>
+                <CloseIcon />
+              </button>
+            </div>
+            <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
+          </Typography>
+          <div id="modal-modal-description" className="mt-2">
+            {mandateType === 'Variable' ? (
+              <form
+                onSubmit={(e) => {
+                  e.preventDefault();
+                }}
+                noValidate
+                className="slide-down mt-8 w-full"
+              >
+                <div className="mt-14 flex flex-col items-end gap-x-8 gap-y-4 md:flex-row md:items-center md:justify-between">
+                  <div className="w-full">
+                    <CustomInput
+                      labelFor="modifiedAmount"
+                      label="Modify Amount"
+                      inputType="text"
+                      placeholder="Enter here"
+                      maxW="w-full"
+                      verticalMargin={false}
+                    />
+                  </div>
+                  <ButtonComponent
+                    variant="contained"
+                    color="white"
+                    backgroundColor="#5C068C"
+                    hoverBackgroundColor="#2F0248"
+                    type="submit"
+                    title="Save"
+                    height="3rem"
+                    width="9rem"
+                    customPaddingX="1.4rem"
+                    onClick={() => {
+                      closeModal('editMandate');
+                      openModal('confirmEdit');
+                    }}
+                  />
+                </div>
+              </form>
+            ) : (
+              <span className="slide-down flex items-center justify-start gap-1">
+                <h3 className="text-red-300">Error:</h3>
+                <h3 className="">You cannot modify a fixed mandate</h3>
+              </span>
+            )}
+          </div>
+        </CustomModal>
+      )}
+      {modals.confirmEdit && (
+        <ModalWrapper
+          isOpen={modals.confirmEdit}
+          setIsOpen={() => closeModal('confirmEdit')}
+          title={'Save Changes?'}
+          info={
+            'You are about to save changes made to this mandate, would you want to proceed with this?'
+          }
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
+          proceedAction={() => {
+            closeModal('confirmEdit');
+            openModal('editSuccessful');
+          }}
+        />
+      )}
+      {modals.editSuccessful && (
+        <ModalWrapper
+          isOpen={modals.editSuccessful}
+          setIsOpen={() => closeModal('editSuccessful')}
+          title={'Success!!'}
+          info={'You have successfully saved new changes'}
+          icon={<ActionSuccessIcon />}
+          type={'completed'}
+          proceedAction={() => {
+            closeModal('editSuccessful');
+          }}
+        />
+      )}
     </>
   );
 };

@@ -1,32 +1,37 @@
 import { useState } from 'react';
 import { GridColDef } from '@mui/x-data-grid';
 import { auditTrailList } from 'utils/constants';
-import TableLogo from 'assets/images/table_logo.png';
 import CustomTable from 'components/CustomTable';
 import CustomInput from 'components/FormElements/CustomInput';
-import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
-import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import ButtonComponent from 'components/FormElements/Button';
-import { Box, createTheme, Modal, ThemeProvider, Typography } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
-import { CloseIcon, DarkArrowDown } from 'assets/icons';
+import { CloseIcon } from 'assets/icons';
 import ExportBUtton from 'components/FormElements/ExportButton';
-
-const style = {
-  position: 'absolute' as 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 700,
-  bgcolor: 'background.paper',
-  border: 'none',
-  borderRadius: '10px',
-  boxShadow: 10,
-  p: 4,
-};
+import { useFormik } from 'formik';
+import FormDatePicker from 'components/FormElements/FormDatePicker';
+import CustomModal from 'hoc/ModalWrapper/CustomModal';
 
 const AuditTrail = () => {
+  const isSmallWidth = useMediaQuery('(max-width:370px)');
+  const [showFilteredAudit, setShowFilteredAudit] = useState(false);
+  const [paginationData, setPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
+
+  const [modals, setModals] = useState({
+    viewDetails: false,
+  });
+
+  const openModal = (modalName: keyof typeof modals) => {
+    setModals((prev) => ({ ...prev, [modalName]: true }));
+  };
+
+  const closeModal = (modalName: keyof typeof modals) => {
+    setModals((prev) => ({ ...prev, [modalName]: false }));
+  };
+
   const AuditTableColumn: GridColDef[] = [
     {
       field: 'referenceNumber',
@@ -73,7 +78,7 @@ const AuditTrail = () => {
         <>
           <button
             type="button"
-            onClick={openModal}
+            onClick={() => openModal('viewDetails')}
             className="cursor-pointer font-semibold text-lightPurple"
           >
             View Details
@@ -83,134 +88,127 @@ const AuditTrail = () => {
     },
   ];
 
-  const theme = createTheme({
-    typography: {
-      fontFamily: '"Gotham", sans-serif',
+  const formik = useFormik({
+    initialValues: {
+      statusFilter: '',
     },
+    onSubmit: (values) => {},
   });
-
-  const [isLogDetailsModalOpen, setIsLogDetailsModalOpen] = useState(false);
-
-  const openModal = () => setIsLogDetailsModalOpen(true);
-
-  const closeModal = () => setIsLogDetailsModalOpen(false);
 
   return (
     <>
       <div className="px-5 py-5">
         <h2 className="text-2xl font-semibold">Audit Trail</h2>
-        <div className="mt-5 rounded-lg bg-white px-5 py-8">
-          <div className="grid grid-cols-1 content-center items-center justify-center gap-10 md:grid-cols-2 lg:grid-cols-4">
-            <CustomInput
-              labelFor="merchantId"
-              label="Username/Staff ID"
-              containerStyles="w-full flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full mb-[8px]"
-              inputStyles="h-[40px] w-full lg:w-[300px] px-2 focus:outline-none focus:ring-0"
-              inputType="text"
-              placeholder="Enter here"
-            />
-            <DatePicker
-              label="Start Date"
-              sx={{
-                height: '50px',
-                width: '100%',
-                '& .MuiInputBase-root': {
-                  height: '50px',
-                  borderRadius: '8px',
-                },
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '8px',
-                },
-              }}
-            />
-            <DatePicker
-              label="End Date"
-              sx={{
-                height: '50px',
-                width: '100%',
-                '& .MuiInputBase-root': {
-                  height: '50px',
-                  borderRadius: '8px',
-                },
-                '& .MuiOutlinedInput-root': {
-                  borderRadius: '8px',
-                },
-              }}
-            />
-            <ButtonComponent
-              onClick={() => {}}
-              title="Continue"
-              backgroundColor="#5C068C"
-              hoverBackgroundColor="#2F0248"
-              color="white"
-              width="150px"
-              height="50px"
-              fontWeight={600}
-            />
+        <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-4">
+          <div className="mt-6 flex w-full flex-col gap-4 py-1 md:flex-row md:items-center">
+            <div className="w-full">
+              <CustomInput
+                labelFor="searchFilter"
+                label="Username/Staff ID"
+                inputType="text"
+                placeholder="Enter here"
+                maxW="w-full"
+                formik={formik}
+              />
+            </div>
+            <div className="relative flex w-full items-center gap-2">
+              <span className="absolute bottom-20 font-semibold">Date Range</span>
+              <div className="w-full">
+                <FormDatePicker
+                  name={'startDate'}
+                  formik={formik}
+                  label="Start Date"
+                  placeholder="DD/MM/YY"
+                  showLabel={false}
+                  width="100%"
+                />
+              </div>
+              <div className="w-full">
+                <FormDatePicker
+                  name={'endDate'}
+                  formik={formik}
+                  label="End Date"
+                  placeholder="DD/MM/YY"
+                  showLabel={false}
+                />
+              </div>
+            </div>
+            <div className="mt-[6px] flex md:justify-end">
+              <ButtonComponent
+                variant="contained"
+                color="white"
+                backgroundColor="#5C068C"
+                hoverBackgroundColor="#2F0248"
+                type="button"
+                title="Continue"
+                customPaddingX="2rem"
+                width={isSmallWidth ? '10rem' : undefined}
+                height="3rem"
+                onClick={() => {
+                  setShowFilteredAudit(true);
+                }}
+              />
+            </div>
           </div>
         </div>
-        <div className="mt-10 rounded-lg bg-white px-5 py-5">
-          <div className="flex items-center justify-between">
-            <p className="text-xl font-bold text-lightPurple">Staff Name: Abimbola Adeyemi</p>
-            <ExportBUtton />
+        {showFilteredAudit && (
+          <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
+            <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
+              <h2 className="text-xl font-bold text-lightPurple">Staff Name: Abimbola Adeyemi</h2>
+              <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
+                <ExportBUtton />
+              </div>
+            </div>
+            <h3 className="mt-2 w-full rounded-tl-xl rounded-tr-xl border px-3 py-4 text-lg font-semibold">
+              Activities between June to July, 2024
+            </h3>
+            <div className="w-full">
+              <CustomTable
+                tableData={auditTrailList}
+                columns={AuditTableColumn}
+                rowCount={257}
+                defaultAnimation={false}
+                paginationData={paginationData}
+                setPaginationData={setPaginationData}
+              />
+            </div>
           </div>
-          <div className="mt-5 rounded-tl-xl rounded-tr-xl border px-2 py-4 text-lg font-semibold">
-            Activities between June to July, 2024
+        )}
+      </div>
+      {modals.viewDetails && (
+        <CustomModal
+          isOpen={modals.viewDetails}
+          setIsOpen={() => closeModal('viewDetails')}
+          width={'800px'}
+          paddingX={0}
+        >
+          <div id="modal-modal-title">
+            <div className="flex items-center justify-between">
+              <h1 className="text-xl font-semibold">Log Details</h1>
+              <button className="scale-[110%]" onClick={() => closeModal('viewDetails')}>
+                <CloseIcon />
+              </button>
+            </div>
+            <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
           </div>
-          <div className="w-full">
-            {auditTrailList?.length > 0 ? (
-              <CustomTable tableData={auditTrailList} columns={AuditTableColumn} rowCount={20} />
-            ) : (
-              <div className="mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
-                <div>
-                  <img src={TableLogo} alt="group_logo" />
+          <div id="modal-modal-description">
+            <div className="slide-down mt-5 bg-white">
+              <div className="rounded-[12px] border-[3px] border-grayPrimary px-6 py-4">
+                <div className="flex items-center justify-between">
+                  <p className="my-3 text-lg font-semibold">Log Details</p>
                 </div>
-                <div className="mt-8 text-center">
-                  <h3 className="text-2xl font-bold">Oops! No Active Mandates</h3>
+                <div className="h-[2px] w-full bg-grayPrimary"></div>
+                <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-y-[20px]">
+                  <DetailsCard title="Reference" content="12345" />
+                  <DetailsCard title="Account Name" content="John Wick" />
+                  <DetailsCard title="Affected Module" content="Account Management" />
+                  <DetailsCard title="Performed Action" content="Disable Account" />
+                  <DetailsCard title="Date Performed" content="12/12/2024 : 12:12:12" />
                 </div>
               </div>
-            )}
+            </div>
           </div>
-        </div>
-      </div>
-      {isLogDetailsModalOpen && (
-        <Modal
-          open={isLogDetailsModalOpen}
-          onClose={closeModal}
-          aria-labelledby="modal-modal-title"
-          aria-describedby="modal-modal-description"
-        >
-          <Box sx={style}>
-            <ThemeProvider theme={theme}>
-              <Typography id="modal-modal-title" variant="h6" component="h2">
-                <div className="flex items-center justify-between font-semibold">
-                  <h1>Log Details</h1>
-                  <button onClick={closeModal}>
-                    <CloseIcon />
-                  </button>
-                </div>
-                <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
-              </Typography>
-              <Typography id="modal-modal-description">
-                <div className="rounded-xl bg-white py-10">
-                  <div className="rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
-                    <div className="flex items-center justify-between">
-                      <p className="my-3 text-lg font-semibold">Log Details</p>
-                    </div>
-                    <div className="h-[2px] w-full bg-grayPrimary"></div>
-                    <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-[30px]">
-                      <DetailsCard title="Reference" content="12345" />
-                      <DetailsCard title="Account Name" content="John Wick" />
-                      <DetailsCard title="Affected Module" content="Account Management" />
-                      <DetailsCard title="Performed Action" content="Disable Account" />
-                      <DetailsCard title="Date Performed" content="12/12/2024 - 03:00pm" />
-                    </div>
-                  </div>
-                </div>
-              </Typography>
-            </ThemeProvider>
-          </Box>
-        </Modal>
+        </CustomModal>
       )}
     </>
   );
