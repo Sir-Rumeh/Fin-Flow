@@ -147,7 +147,7 @@ const ProfileManagement = () => {
       },
     },
     {
-      field: 'dateRequested',
+      field: 'createdAt',
       headerName: 'Date Requested',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,

@@ -180,3 +180,27 @@ export const formatNumberDisplay = (number: number | string) => {
     return parts.join('.');
   }
 };
+
+export const getDateRange = (dataArray: any[]) => {
+  if (dataArray.length === 0) return 'No data available';
+
+  const sortedData = [...dataArray].sort(
+    (a, b) => new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime(),
+  );
+
+  const firstDate = new Date(sortedData[0].dateCreated);
+  const lastDate = new Date(sortedData[sortedData.length - 1].dateCreated);
+
+  const firstMonth = firstDate.toLocaleString('default', { month: 'long' });
+  const firstYear = firstDate.getFullYear();
+  const lastMonth = lastDate.toLocaleString('default', { month: 'long' });
+  const lastYear = lastDate.getFullYear();
+
+  if (firstYear === lastYear && firstMonth === lastMonth) {
+    return `${firstMonth}, ${firstYear}`;
+  } else if (firstYear === lastYear) {
+    return `${firstMonth} to ${lastMonth}, ${firstYear}`;
+  } else {
+    return `${firstMonth}, ${firstYear} to ${lastMonth}, ${lastYear}`;
+  }
+};

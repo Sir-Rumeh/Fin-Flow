@@ -14,6 +14,7 @@ import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import { useQuery } from '@tanstack/react-query';
 import { QueryParams } from 'utils/interfaces';
 import { getAuditTrail } from 'config/actions/dashboard-actions';
+import { getDateRange } from 'utils/helpers';
 
 const AuditTrail = () => {
   const printPdfRef = useRef(null);
@@ -29,6 +30,7 @@ const AuditTrail = () => {
     pageNumber: 1,
     pageSize: 10,
   });
+  // const [currentPage, setCurrentPage] = useState<number | string>(1);
 
   const openModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: true }));
@@ -144,32 +146,13 @@ const AuditTrail = () => {
       startDate: formik.values.startDate,
       endDate: formik.values.endDate,
     }));
-    getAuditTrailRecords();
-  }, [paginationData]);
+  }, [paginationData.pageNumber]);
 
-  const getDateRange = (dataArray: any[]) => {
-    if (dataArray.length === 0) return 'No data available';
-
-    const sortedData = [...dataArray].sort(
-      (a, b) => new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime(),
-    );
-
-    const firstDate = new Date(sortedData[0].dateCreated);
-    const lastDate = new Date(sortedData[sortedData.length - 1].dateCreated);
-
-    const firstMonth = firstDate.toLocaleString('default', { month: 'long' });
-    const firstYear = firstDate.getFullYear();
-    const lastMonth = lastDate.toLocaleString('default', { month: 'long' });
-    const lastYear = lastDate.getFullYear();
-
-    if (firstYear === lastYear && firstMonth === lastMonth) {
-      return `${firstMonth}, ${firstYear}`;
-    } else if (firstYear === lastYear) {
-      return `${firstMonth} to ${lastMonth}, ${firstYear}`;
-    } else {
-      return `${firstMonth}, ${firstYear} to ${lastMonth}, ${lastYear}`;
+  useEffect(() => {
+    if (queryParams.pageNo) {
+      getAuditTrailRecords();
     }
-  };
+  }, [queryParams.pageNo]);
 
   return (
     <>
