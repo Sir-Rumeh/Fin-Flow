@@ -6,7 +6,7 @@ import { CloseIcon } from 'assets/icons';
 import { auditTrailList } from 'utils/constants';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
-import { Typography, useMediaQuery } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 import CustomInput from 'components/FormElements/CustomInput';
 import FormDatePicker from 'components/FormElements/FormDatePicker';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
