@@ -134,19 +134,23 @@ const AccountManagement = () => {
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       renderCell: (params: GridRenderCellParams) => {
-        const renderIcon = (IconComponent: React.ComponentType, colorClass: string) => (
+        const renderIcon = (
+          IconComponent: React.ComponentType,
+          colorClass: string,
+          title: string,
+        ) => (
           <div className="flex w-full items-center gap-2 font-semibold">
             <IconComponent />
-            <span className={`mb-[1px] ${colorClass}`}>{params?.row.status}</span>
+            <span className={`mb-[1px] ${colorClass}`}>{title}</span>
           </div>
         );
-        switch (params?.row.status) {
-          case 'Enabled':
-            return renderIcon(CreationRequestIcon, 'text-greenPrimary');
-          case 'Disabled':
-            return renderIcon(DeleteRequestIcon, 'text-redSecondary');
+        switch (params?.row.isActive) {
+          case true:
+            return renderIcon(CreationRequestIcon, 'text-greenPrimary', 'Enabled');
+          case false:
+            return renderIcon(DeleteRequestIcon, 'text-redSecondary', 'Disabled');
           default:
-            return <span>{params?.row.status}</span>;
+            return <span>{params?.row.isActive ? 'Enabled' : 'Disabled'}</span>;
         }
       },
     },
