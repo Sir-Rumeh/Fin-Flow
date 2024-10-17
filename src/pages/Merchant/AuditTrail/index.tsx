@@ -1,6 +1,5 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { GridColDef } from '@mui/x-data-grid';
-import { auditTrailList } from 'utils/constants';
 import CustomTable from 'components/CustomTable';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
@@ -11,10 +10,28 @@ import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 import FormDatePicker from 'components/FormElements/FormDatePicker';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
+import { useQuery } from '@tanstack/react-query';
+import { QueryParams } from 'utils/interfaces';
+import { getAuditTrails } from 'config/actions/audit-trail-actions';
+import dayjs from 'dayjs';
+import * as Yup from 'yup';
+
+interface AuditTrailEntry {
+  id: string;
+  module: string;
+  action: string;
+  actor: string;
+  actorType: string;
+  actorId: string;
+  target: string;
+  targetId: string;
+  dateCreated: string;
+}
 
 const AuditTrail = () => {
   const isSmallWidth = useMediaQuery('(max-width:370px)');
   const [showFilteredAudit, setShowFilteredAudit] = useState(false);
+  const [selectedRowData, setSelectedRowData] = useState<AuditTrailEntry>();
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
     pageSize: 10,
@@ -34,14 +51,14 @@ const AuditTrail = () => {
 
   const AuditTableColumn: GridColDef[] = [
     {
-      field: 'referenceNumber',
+      field: 'actorId',
       headerName: 'Ref No',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
     },
     {
-      field: 'accountName',
+      field: 'actor',
       headerName: 'Account Name',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -55,45 +72,107 @@ const AuditTrail = () => {
       headerClassName: 'ag-thead',
     },
     {
-      field: 'performedAction',
+      field: 'action',
       headerName: 'Performed Action',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
     },
     {
-      field: 'date',
+      field: 'dateCreated',
       headerName: 'Date',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       valueGetter: (params: any) => new Date(params).toLocaleDateString(),
     },
+    // {
+    //   field: '',
+    //   headerName: 'Action',
+    //   width: 150,
+    //   headerClassName: 'ag-thead',
+    //   renderCell: () => (
+    //     <>
+    //       <button
+    //         type="button"
+    //         onClick={() => openModal('viewDetails')}
+    //         className="cursor-pointer font-semibold text-lightPurple"
+    //       >
+    //         View Details
+    //       </button>
+    //     </>
+    //   ),
+    // },
     {
-      field: 'action',
+      field: '',
       headerName: 'Action',
       width: 150,
       headerClassName: 'ag-thead',
-      renderCell: () => (
-        <>
-          <button
-            type="button"
-            onClick={() => openModal('viewDetails')}
-            className="cursor-pointer font-semibold text-lightPurple"
-          >
-            View Details
-          </button>
-        </>
+      renderCell: (params) => (
+        <button
+          type="button"
+          onClick={() => {
+            setSelectedRowData(params.row);
+            openModal('viewDetails');
+          }}
+          className="cursor-pointer font-semibold text-lightPurple"
+        >
+          View Details
+        </button>
       ),
     },
   ];
 
+  const validationSchema = Yup.object().shape({
+    actor: Yup.string().required('Username/Staff ID is required.'),
+    startDate: Yup.string().required('Start date is required.'),
+    endDate: Yup.string().required('End date is required.'),
+  });
+
   const formik = useFormik({
     initialValues: {
-      statusFilter: '',
+      actor: '',
+      startDate: '',
+      endDate: '',
     },
-    onSubmit: (values) => {},
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      const { startDate, endDate } = values;
+      const formattedStartDate = startDate ? dayjs(startDate).format('YYYY-MM-DD') : '';
+      const formattedEndDate = endDate ? dayjs(endDate).format('YYYY-MM-DD') : '';
+
+      setQueryParams((prev) => ({
+        ...prev,
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+        pageNo: paginationData.pageNumber,
+        pageSize: paginationData.pageSize,
+      }));
+      setShowFilteredAudit(true);
+    },
   });
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    pageNo: paginationData.pageNumber,
+    pageSize: paginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+    startDate: formik.values.startDate,
+    endDate: formik.values.endDate,
+  });
+
+  const { data } = useQuery({
+    queryKey: ['mandates', queryParams],
+    queryFn: ({ queryKey }) => getAuditTrails(queryKey[1] as QueryParams),
+  });
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+    }));
+  }, [paginationData]);
 
   return (
     <>
@@ -103,7 +182,7 @@ const AuditTrail = () => {
           <div className="mt-6 flex w-full flex-col gap-4 py-1 md:flex-row md:items-center">
             <div className="w-full">
               <CustomInput
-                labelFor="searchFilter"
+                labelFor="actor"
                 label="Username/Staff ID"
                 inputType="text"
                 placeholder="Enter here"
@@ -144,9 +223,7 @@ const AuditTrail = () => {
                 customPaddingX="2rem"
                 width={isSmallWidth ? '10rem' : undefined}
                 height="3rem"
-                onClick={() => {
-                  setShowFilteredAudit(true);
-                }}
+                onClick={formik.handleSubmit}
               />
             </div>
           </div>
@@ -154,20 +231,28 @@ const AuditTrail = () => {
         {showFilteredAudit && (
           <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
             <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
-              <h2 className="text-xl font-bold text-lightPurple">Staff Name: Abimbola Adeyemi</h2>
+              <h2 className="text-xl font-bold text-lightPurple">
+                Staff Name: {formik.values.actor}
+              </h2>
               <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
                 <ExportBUtton />
               </div>
             </div>
             <h3 className="mt-2 w-full rounded-tl-xl rounded-tr-xl border px-3 py-4 text-lg font-semibold">
-              Activities between June to July, 2024
+              Activities between{' '}
+              {formik.values.startDate
+                ? dayjs(formik.values.startDate).format('D MMMM')
+                : 'Start Date'}{' '}
+              to{' '}
+              {formik.values.endDate
+                ? dayjs(formik.values.endDate).format('D MMMM, YYYY')
+                : 'End Date'}
             </h3>
             <div className="w-full">
               <CustomTable
-                tableData={auditTrailList}
+                tableData={data?.responseData?.items}
                 columns={AuditTableColumn}
-                rowCount={257}
-                defaultAnimation={false}
+                rowCount={data?.responseData?.totalCount}
                 paginationData={paginationData}
                 setPaginationData={setPaginationData}
               />
@@ -175,7 +260,7 @@ const AuditTrail = () => {
           </div>
         )}
       </div>
-      {modals.viewDetails && (
+      {modals.viewDetails && selectedRowData && (
         <CustomModal
           isOpen={modals.viewDetails}
           setIsOpen={() => closeModal('viewDetails')}
@@ -199,11 +284,14 @@ const AuditTrail = () => {
                 </div>
                 <div className="h-[2px] w-full bg-grayPrimary"></div>
                 <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-y-[20px]">
-                  <DetailsCard title="Reference" content="12345" />
-                  <DetailsCard title="Account Name" content="John Wick" />
-                  <DetailsCard title="Affected Module" content="Account Management" />
-                  <DetailsCard title="Performed Action" content="Disable Account" />
-                  <DetailsCard title="Date Performed" content="12/12/2024 : 12:12:12" />
+                  <DetailsCard title="Reference" content={selectedRowData?.actorId} />
+                  <DetailsCard title="Account Name" content={selectedRowData?.actor} />
+                  <DetailsCard title="Affected Module" content={selectedRowData?.module} />
+                  <DetailsCard title="Performed Action" content={selectedRowData?.action} />
+                  <DetailsCard
+                    title="Date Performed"
+                    content={new Date(selectedRowData?.dateCreated).toLocaleString()}
+                  />
                 </div>
               </div>
             </div>
