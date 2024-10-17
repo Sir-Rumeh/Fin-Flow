@@ -20,11 +20,12 @@ import { getProfileById, updateProfile } from 'config/actions/profile-actions';
 import { createProfileSchema } from 'utils/formValidators';
 
 function EditProfile() {
-  const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
   const profileId = searchParams?.get('id') || undefined;
   const [profileRequest, setProfileRequest] = useState<ProfileRequest>();
+
   const [modals, setModals] = useState({
     confirmEdit: false,
     editSuccessful: false,
@@ -54,7 +55,7 @@ function EditProfile() {
     onSubmit: (values) => {
       const payload = {
         merchantID: values.merchantID,
-        profileID: '',
+        profileID: profileId,
         accountID: values.accountID,
         password: values.password,
         userName: `${values.firstName} ${values.lastName}`,
@@ -63,8 +64,6 @@ function EditProfile() {
         lastName: values.lastName,
         email: values.email,
       };
-      console.log(payload);
-
       setProfileRequest(payload);
       openModal('confirmEdit');
     },
@@ -251,7 +250,6 @@ function EditProfile() {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmEdit');
             updateProfileMutation.mutate({ requestId: profileId, payload: profileRequest });
           }}
         />

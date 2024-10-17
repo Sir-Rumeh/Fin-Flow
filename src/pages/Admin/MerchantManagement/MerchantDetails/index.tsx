@@ -11,7 +11,7 @@ import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
 import appRoutes from 'utils/constants/routes';
 import DashboardCard from 'components/common/DashboardCards/DashboardCard';
-import { checkRoute, notifyError } from 'utils/helpers';
+import { checkRoute } from 'utils/helpers';
 import SubTitleIconGreen from 'assets/icons/SubTitleIconGreen';
 import SubTitleIconYellow from 'assets/icons/SubTitleIconYellow';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
@@ -235,8 +235,8 @@ const MerchantDetails = () => {
               <DetailsCard
                 title="Date Created"
                 content={
-                  data?.responseData?.createdAt &&
-                  new Date(data.responseData.createdAt).toLocaleDateString()
+                  data?.responseData?.dateCreated &&
+                  new Date(data.responseData.dateCreated).toLocaleDateString()
                 }
               />
             </ItemDetailsContainer>
