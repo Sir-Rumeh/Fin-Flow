@@ -1,5 +1,5 @@
 import ButtonComponent from 'components/FormElements/Button';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import TableFilter from 'components/TableFilter';
 import CustomTable from 'components/CustomTable';
 import appRoutes from 'utils/constants/routes';
@@ -16,8 +16,16 @@ import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 import { useMediaQuery } from '@mui/material';
 import { QueryParams } from 'utils/interfaces';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  deleteAccount,
+  disableAccount,
+  enableAccount,
+  getAccounts,
+} from 'config/actions/account-actions';
 
 const AccountManagement = () => {
+  const printPdfRef = useRef(null);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [paginationData, setPaginationData] = useState({
@@ -234,6 +242,44 @@ const AccountManagement = () => {
 
   const isSmallWidth = useMediaQuery('(max-width:370px)');
 
+  const { data, refetch } = useQuery({
+    queryKey: ['accounts', queryParams],
+    queryFn: ({ queryKey }) => getAccounts(queryKey[1] as QueryParams),
+  });
+
+  const enableAccountMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => enableAccount(requestId),
+    onSuccess: () => {
+      closeModal('confirmEnable');
+      openModal('enableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmEnable');
+    },
+  });
+
+  const disableAccountMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => disableAccount(requestId),
+    onSuccess: () => {
+      closeModal('confirmDisable');
+      openModal('disableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDisable');
+    },
+  });
+
+  const deleteAccountMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => deleteAccount(requestId),
+    onSuccess: () => {
+      closeModal('confirmDelete');
+      openModal('deleteSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDelete');
+    },
+  });
+
   return (
     <>
       <section className="p-2 md:p-4">
@@ -270,7 +316,7 @@ const AccountManagement = () => {
                     label={'Search Account'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
-                    handleOptionsFilter={() => {}}
+                    handleOptionsFilter={handleOptionsFilter}
                     formik={formik}
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}
@@ -279,13 +325,24 @@ const AccountManagement = () => {
                 </div>
               </div>
               <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
-                <ExportBUtton />
+                <ExportBUtton
+                  data={data?.responseData?.items}
+                  printPdfRef={printPdfRef}
+                  headers={excelHeaders}
+                  fileName="Accounts.csv"
+                />
               </div>
             </div>
 
             <div className="mt-6 w-full">
-              <div className="w-full">
-                <CustomTable tableData={accountRequestsList} columns={columns} rowCount={73} />
+              <div ref={printPdfRef} className="w-full">
+                <CustomTable
+                  tableData={data?.responseData?.items}
+                  columns={columns}
+                  rowCount={data?.responseData?.totalCount}
+                  paginationData={paginationData}
+                  setPaginationData={setPaginationData}
+                />
               </div>
             </div>
           </div>
@@ -300,8 +357,7 @@ const AccountManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDisable');
-            openModal('disableSuccessful');
+            disableAccountMutation.mutate(selectedAccountId);
           }}
         />
       )}
@@ -314,6 +370,7 @@ const AccountManagement = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('disableSuccessful');
           }}
         />
@@ -327,8 +384,7 @@ const AccountManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmEnable');
-            openModal('enableSuccessful');
+            enableAccountMutation.mutate(selectedAccountId);
           }}
         />
       )}
@@ -341,6 +397,7 @@ const AccountManagement = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('enableSuccessful');
           }}
         />
@@ -354,8 +411,7 @@ const AccountManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDelete');
-            openModal('deleteSuccessful');
+            deleteAccountMutation.mutate(selectedAccountId);
           }}
         />
       )}
@@ -368,6 +424,7 @@ const AccountManagement = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('deleteSuccessful');
           }}
         />

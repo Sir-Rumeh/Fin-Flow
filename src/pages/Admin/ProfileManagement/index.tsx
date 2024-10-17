@@ -330,7 +330,7 @@ const ProfileManagement = () => {
                   data={data?.responseData?.items}
                   printPdfRef={printPdfRef}
                   headers={excelHeaders}
-                  fileName="profiles.csv"
+                  fileName="Profiles.csv"
                 />
               </div>
             </div>

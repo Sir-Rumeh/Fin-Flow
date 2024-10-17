@@ -447,7 +447,7 @@ const MandatetManagement = () => {
                   data={data?.responseData?.items}
                   printPdfRef={printPdfRef}
                   headers={excelHeaders}
-                  fileName="mandates.csv"
+                  fileName="Mandates.csv"
                 />
               </div>
             </div>

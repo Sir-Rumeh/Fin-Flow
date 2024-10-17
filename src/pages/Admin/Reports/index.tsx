@@ -591,7 +591,7 @@ const Reports = () => {
                     data={mandateRecords?.responseData.items}
                     printPdfRef={printPdfRef}
                     headers={mandateExcelHeaders}
-                    fileName="mandate-reports.csv"
+                    fileName="Mandate-Reports.csv"
                   />
                 </div>
               </div>

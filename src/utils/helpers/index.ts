@@ -128,8 +128,10 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
     params.append('PageSize', formattedQueryParams.pageSize.toString());
   if (formattedQueryParams.sortBy) params.append('SortBy', formattedQueryParams.sortBy);
   if (formattedQueryParams.sortOrder) params.append('SortOrder', formattedQueryParams.sortOrder);
-  if (formattedQueryParams.searchFilter)
+  if (formattedQueryParams.searchFilter) {
     params.append('searchFilter', formattedQueryParams.searchFilter);
+    params.append('AccountNumber', formattedQueryParams.searchFilter);
+  }
   if (formattedQueryParams.startDate) params.append('StartDate', formattedQueryParams.startDate);
   if (formattedQueryParams.endDate) params.append('EndDate', formattedQueryParams.endDate);
   if (formattedQueryParams.actor) params.append('Actor', formattedQueryParams.actor);

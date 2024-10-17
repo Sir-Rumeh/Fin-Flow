@@ -332,7 +332,7 @@ const MerchantManagement = () => {
                   data={data?.responseData?.items}
                   printPdfRef={printPdfRef}
                   headers={excelHeaders}
-                  fileName="merchants.csv"
+                  fileName="Merchants.csv"
                 />
               </div>
             </div>

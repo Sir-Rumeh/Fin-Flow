@@ -228,7 +228,7 @@ const AuditTrail = () => {
                     data={auditRecords.items}
                     printPdfRef={printPdfRef}
                     headers={excelHeaders}
-                    fileName="audits.csv"
+                    fileName="Audits.csv"
                   />
                 </div>
               </div>
