@@ -22,7 +22,6 @@ import {
   enableMerchant,
   getMerchants,
 } from 'config/actions/merchant-actions';
-import { notifyError } from 'utils/helpers';
 
 const MerchantManagement = () => {
   const printPdfRef = useRef(null);

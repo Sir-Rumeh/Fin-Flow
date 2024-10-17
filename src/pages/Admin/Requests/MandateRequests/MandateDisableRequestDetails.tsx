@@ -21,7 +21,7 @@ import {
   rejectMandateRequest,
 } from 'config/actions/dashboard-actions';
 import { Box, CircularProgress } from '@mui/material';
-import { capitalize } from 'utils/helpers';
+import { capitalize, formatNumberDisplay } from 'utils/helpers';
 import RejectedIcon from 'assets/icons/RejectedIcon';
 
 const MandateDisableRequestDetails = () => {
@@ -154,7 +154,7 @@ const MandateDisableRequestDetails = () => {
                 <DetailsCard title="Product ID" content={data?.responseData?.productId} />
                 <DetailsCard
                   title="Amount"
-                  content={data?.responseData?.amount}
+                  content={formatNumberDisplay(data?.responseData?.amount)}
                   contentClassName="text-lightPurple"
                 />
                 <DetailsCard

@@ -4,7 +4,7 @@ import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
 import appRoutes from 'utils/constants/routes';
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
@@ -19,12 +19,15 @@ import {
   rejectMerchantRequest,
 } from 'config/actions/merchant-actions';
 import RejectedIcon from 'assets/icons/RejectedIcon';
+import { displayUpdateRequestData, formatNumberDisplay } from 'utils/helpers';
+import { UpdateRequestDisplay } from 'utils/interfaces';
 
 const MerchantUpdateRequestDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const merchantId = searchParams?.get('id') || '';
   const queryClient = useQueryClient();
+  const [updateDataList, setUpdateDataList] = useState<UpdateRequestDisplay[]>();
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
     confirmRejectRequest: false,
@@ -53,6 +56,16 @@ const MerchantUpdateRequestDetails = () => {
     queryKey: ['merchantRequests', merchantId],
     queryFn: ({ queryKey }) => getMerchantRequestById(queryKey[1]),
   });
+
+  useEffect(() => {
+    const updatedDataList = displayUpdateRequestData(
+      data?.responseData?.oldData,
+      data?.responseData,
+    );
+    if (updatedDataList) {
+      setUpdateDataList(updatedDataList);
+    }
+  }, [data]);
 
   const approveMerchantRequestMutation = useMutation({
     mutationFn: (requestId: string | undefined) => approveMerchantRequest(requestId),
@@ -122,14 +135,40 @@ const MerchantUpdateRequestDetails = () => {
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
           <div className="">
             <ItemDetailsContainer title="Old Information">
-              <DetailsCard title="Merchant Name" content="Fair Money" />
-              <DetailsCard title="CIF Number" content="12345" />
+              {updateDataList?.map((updatedData, index) => {
+                return (
+                  <DetailsCard
+                    key={index}
+                    title={`Old ${updatedData.name}`}
+                    content={
+                      typeof updatedData.oldValue === 'number'
+                        ? formatNumberDisplay(updatedData.oldValue)
+                        : typeof updatedData.oldValue === 'string'
+                          ? formatNumberDisplay(parseInt(updatedData.oldValue))
+                          : updatedData.oldValue
+                    }
+                  />
+                );
+              })}
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="New Information">
-              <DetailsCard title="Merchant Name" content="Fair Money" />
-              <DetailsCard title="CIF Number" content="12345" />
+              {updateDataList?.map((updatedData, index) => {
+                return (
+                  <DetailsCard
+                    key={index}
+                    title={`New ${updatedData.name}`}
+                    content={
+                      typeof updatedData.newValue === 'number'
+                        ? formatNumberDisplay(updatedData.newValue)
+                        : typeof updatedData.newValue === 'string'
+                          ? formatNumberDisplay(parseInt(updatedData.newValue))
+                          : updatedData.newValue
+                    }
+                  />
+                );
+              })}
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">

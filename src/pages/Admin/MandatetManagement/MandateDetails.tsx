@@ -32,7 +32,7 @@ import {
   getMandateById,
   updateMandate,
 } from 'config/actions/dashboard-actions';
-import { capitalize, notifyError } from 'utils/helpers';
+import { capitalize, formatNumberDisplay, notifyError } from 'utils/helpers';
 import { updateMandateSchema } from 'utils/formValidators';
 
 const MandateDetails = () => {
@@ -280,7 +280,7 @@ const MandateDetails = () => {
                   </>
                 }
               >
-                {/* <DetailsCard title="Account ID" content={data?.responseData?.accountId} /> */}
+                <DetailsCard title="Account ID" content={data?.responseData?.accountId} />
                 <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
                 <DetailsCard title="Merchant Code" content={data?.responseData?.mandateCode} />
                 <DetailsCard
@@ -293,7 +293,7 @@ const MandateDetails = () => {
                 <DetailsCard title="Product ID" content={data?.responseData?.productId} />
                 <DetailsCard
                   title="Amount"
-                  content={data?.responseData?.amount}
+                  content={formatNumberDisplay(data?.responseData?.amount)}
                   contentClassName="text-lightPurple"
                 />
                 <DetailsCard

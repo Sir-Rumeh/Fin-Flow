@@ -37,6 +37,28 @@ export const userLevel = [
   { value: 'Initiator', label: 'Initiator' },
   { value: 'Approver', label: 'Approver' },
 ];
+export const canBeUpdated: any = {
+  name: true,
+  accountNumber: true,
+  rcNumber: true,
+  address: true,
+  amount: true,
+  merchantName: true,
+  merchantID: true,
+  accountID: true,
+  accountName: true,
+  firstName: true,
+  lastName: true,
+  userName: true,
+  staffId: true,
+  phoneNumber: true,
+  branch: true,
+  email: true,
+  userLevel: true,
+  password: true,
+  role: true,
+  cif: true,
+};
 
 export const merchantsList: MerchantDataRow[] = [
   {

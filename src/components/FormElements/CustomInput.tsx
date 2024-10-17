@@ -18,6 +18,7 @@ type CustomInputProps = {
   passwordInput?: boolean;
   iconState?: boolean;
   handleInputType?: (e: any) => void;
+  disabled?: boolean;
 };
 
 const CustomInput = ({
@@ -37,6 +38,7 @@ const CustomInput = ({
   passwordInput = false,
   iconState,
   handleInputType = () => {},
+  disabled,
 }: CustomInputProps) => {
   return (
     <div className={`relative ${verticalMargin && 'mb-4 mt-6'} flex h-auto flex-col gap-2`}>
@@ -72,7 +74,7 @@ const CustomInput = ({
         </div>
       ) : (
         <div
-          className={`${!formik?.errors[labelFor] && 'hover:border-black'} ${containerStyles} ${!containerStyles && `${defaultContainerStyles} ${maxW} `} ${
+          className={`relative ${!formik?.errors[labelFor] && 'hover:border-black'} ${containerStyles} ${!containerStyles && `${defaultContainerStyles} ${maxW} `} ${
             useTouched && formik?.touched[labelFor] && formik?.errors[labelFor]
               ? 'border-red-400'
               : ''
@@ -91,8 +93,12 @@ const CustomInput = ({
             onChange={formik?.handleChange}
             value={formik?.values[labelFor]}
             onBlur={() => formik?.handleBlur}
+            disabled={disabled}
           />
           {icon}
+          {disabled && (
+            <span className={`absolute inset-0 h-full w-full rounded-lg bg-gray-400 opacity-30`} />
+          )}
         </div>
       )}
 

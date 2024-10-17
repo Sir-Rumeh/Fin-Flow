@@ -115,29 +115,40 @@ function CreateProfile() {
                     label="Merchant ID"
                     formik={formik}
                     useTouched
-                    options={formatApiDataForDropdown(data?.responseData?.items, 'id')}
+                    options={formatApiDataForDropdown(data?.responseData?.items, 'id', 'id')}
+                    scrollableOptions
+                    scrollableHeight="max-h-[15rem]"
                   />
                   <FormSelect
                     labelFor="merchantName"
                     label="Merchant Name"
                     formik={formik}
                     useTouched
-                    options={formatApiDataForDropdown(data?.responseData?.items, 'name')}
+                    options={formatApiDataForDropdown(data?.responseData?.items, 'name', 'name')}
+                    scrollableOptions
+                    scrollableHeight="max-h-[15rem]"
                   />
                   <FormSelect
                     labelFor="accountID"
                     label="Account Id"
                     formik={formik}
-                    options={formatApiDataForDropdown(accountData?.responseData?.items, 'id')}
+                    useTouched
+                    options={formatApiDataForDropdown(accountData?.responseData?.items, 'id', 'id')}
+                    scrollableOptions
+                    scrollableHeight="max-h-[15rem]"
                   />
                   <FormSelect
                     labelFor="accountNumber"
                     label="Account Number"
                     formik={formik}
+                    useTouched
                     options={formatApiDataForDropdown(
                       accountData?.responseData?.items,
                       'accountNumber',
+                      'accountNumber',
                     )}
+                    scrollableOptions
+                    scrollableHeight="max-h-[15rem]"
                   />
                   <CustomInput
                     labelFor="firstName"

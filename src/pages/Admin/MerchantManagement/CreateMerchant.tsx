@@ -107,6 +107,7 @@ const CreateMerchant = () => {
                     formik={formik}
                     useTouched={false}
                     verticalMargin={false}
+                    disabled={merchantCifValidated && validatedMerchantCif.length > 0}
                   />
                 </div>
                 <ButtonComponent

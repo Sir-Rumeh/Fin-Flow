@@ -1,8 +1,9 @@
-import { DataTableState, QueryParams } from 'utils/interfaces';
+import { DataTableState, QueryParams, UpdateRequestDisplay } from 'utils/interfaces';
 import { AppConfig } from 'config/index';
 import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
 import { DropdownOption } from 'components/FormElements/FormSelect';
+import { canBeUpdated } from 'utils/constants';
 
 export const checkRoute = (pathname: string, pathToCheck: string) => {
   if (pathname.includes(pathToCheck)) {
@@ -131,17 +132,75 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
     params.append('searchFilter', formattedQueryParams.searchFilter);
   if (formattedQueryParams.startDate) params.append('StartDate', formattedQueryParams.startDate);
   if (formattedQueryParams.endDate) params.append('EndDate', formattedQueryParams.endDate);
+  if (formattedQueryParams.actor) params.append('Actor', formattedQueryParams.actor);
 };
 
-export const formatApiDataForDropdown = (dataArray: any[], dataKey: string) => {
+export const formatApiDataForDropdown = (dataArray: any[], dataKey: string, dataValue: string) => {
   let formattedArrayOptions: DropdownOption[] = [];
   dataArray?.map((dataOption: any) => {
     const newOption = {
-      value: dataOption[dataKey] as string,
+      value: dataOption[dataValue] as string,
       label: capitalize(dataOption[dataKey] as string),
     };
     formattedArrayOptions.push(newOption);
   });
 
   return formattedArrayOptions;
+};
+export const displayUpdateRequestData = (
+  oldData: Object,
+  newData: Object,
+): UpdateRequestDisplay[] | undefined => {
+  if (oldData && newData) {
+    let updateList: UpdateRequestDisplay[] = [];
+    Object.entries(oldData).forEach(([oldDataKey, oldDataValue]) => {
+      Object.entries(newData).forEach(([newDataKey, newDataValue]) => {
+        if (oldDataKey === newDataKey) {
+          if (canBeUpdated[oldDataKey] && oldDataValue !== newDataValue) {
+            const updateData = {
+              name: capitalize(oldDataKey),
+              oldValue: oldDataValue,
+              newValue: newDataValue,
+            };
+            updateList.push(updateData);
+          }
+        }
+      });
+    });
+    return updateList;
+  }
+};
+
+export const formatNumberDisplay = (number: number | string) => {
+  if (number || number == 0) {
+    let numberString =
+      typeof number === 'number' ? number?.toFixed(2) : parseInt(number).toFixed(2);
+    let parts = numberString?.split('.');
+    parts[0] = parseInt(parts?.[0], 10)?.toLocaleString();
+    return parts.join('.');
+  }
+};
+
+export const getDateRange = (dataArray: any[]) => {
+  if (dataArray.length === 0) return 'No data available';
+
+  const sortedData = [...dataArray].sort(
+    (a, b) => new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime(),
+  );
+
+  const firstDate = new Date(sortedData[0].dateCreated);
+  const lastDate = new Date(sortedData[sortedData.length - 1].dateCreated);
+
+  const firstMonth = firstDate.toLocaleString('default', { month: 'long' });
+  const firstYear = firstDate.getFullYear();
+  const lastMonth = lastDate.toLocaleString('default', { month: 'long' });
+  const lastYear = lastDate.getFullYear();
+
+  if (firstYear === lastYear && firstMonth === lastMonth) {
+    return `${firstMonth}, ${firstYear}`;
+  } else if (firstYear === lastYear) {
+    return `${firstMonth} to ${lastMonth}, ${firstYear}`;
+  } else {
+    return `${firstMonth}, ${firstYear} to ${lastMonth}, ${lastYear}`;
+  }
 };
