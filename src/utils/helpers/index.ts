@@ -139,8 +139,8 @@ export const formatApiDataForDropdown = (dataArray: any[], dataKey: string, data
   let formattedArrayOptions: DropdownOption[] = [];
   dataArray?.map((dataOption: any) => {
     const newOption = {
-      value: dataOption[dataValue] as string,
       label: capitalize(dataOption[dataKey] as string),
+      value: dataOption[dataValue] as string,
     };
     formattedArrayOptions.push(newOption);
   });

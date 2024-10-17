@@ -201,6 +201,14 @@ export interface MerchantRequest {
   address: string | undefined;
   cif?: string | undefined;
 }
+
+export interface AccountRequest {
+  accountId?: string | undefined;
+  accountName: string | undefined;
+  accountNumber: string | undefined;
+  merchantName?: string | undefined;
+  merchantId: string | undefined;
+}
 export interface UpdateRequestDisplay {
   name: string | undefined;
   oldValue: string | number | undefined;

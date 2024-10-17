@@ -94,6 +94,19 @@ export const getMandateById = async (requestId: string | undefined) => {
     throw error;
   }
 };
+export const getMandateByMerchantId = async (
+  merchantId: string | undefined,
+  queryParams?: QueryParams,
+) => {
+  const params = new URLSearchParams();
+  appendParams(params, queryParams);
+  try {
+    const response = await AxiosClient.get(`/mandates/merchant/${merchantId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const deleteMandate = async (requestId: string | undefined) => {
   try {

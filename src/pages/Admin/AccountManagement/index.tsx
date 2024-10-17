@@ -1,5 +1,5 @@
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TableFilter from 'components/TableFilter';
 import CustomTable from 'components/CustomTable';
 import appRoutes from 'utils/constants/routes';
@@ -15,10 +15,18 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 import { useMediaQuery } from '@mui/material';
+import { QueryParams } from 'utils/interfaces';
 
 const AccountManagement = () => {
-  const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [paginationData, setPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
+
+  const [selectedAccountId, setSelectedAccountId] = useState('');
+
   const [modals, setModals] = useState({
     confirmDisable: false,
     disableSuccessful: false,
@@ -47,6 +55,46 @@ const AccountManagement = () => {
       setSearchTerm('');
     },
   });
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    status: formik.values.statusFilter,
+    pageNo: paginationData.pageNumber,
+    pageSize: paginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+    searchFilter: formik.values.searchAccount,
+    startDate: formik.values.fromDateFilter,
+    endDate: formik.values.toDateFilter,
+  });
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+      searchFilter: formik.values.searchAccount,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  }, [paginationData]);
+
+  const handleOptionsFilter = () => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  };
+
+  const excelHeaders = [
+    { label: 'Merchant ID', key: 'merchantId' },
+    { label: 'Account Number', key: 'accountNumber' },
+    { label: 'CIF Number', key: 'cif' },
+    { label: 'Active Status', key: 'isActive' },
+    { label: 'Date Requested', key: 'dateCreated' },
+  ];
 
   const columns: GridColDef[] = [
     {
@@ -95,7 +143,7 @@ const AccountManagement = () => {
       },
     },
     {
-      field: 'dateRequested',
+      field: 'dateCreated',
       headerName: 'Date Requested',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -109,11 +157,11 @@ const AccountManagement = () => {
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
         return (
-          <div className="-ml-1 h-full border-none">
+          <div className="h-full border-none">
             <CustomPopover
               popoverId={params?.row.id}
               buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-15}
+              translationX={-12}
               translationY={45}
             >
               <div className="flex flex-col rounded-md p-1">
@@ -129,6 +177,7 @@ const AccountManagement = () => {
                 >
                   View Details
                 </button>
+
                 <button
                   onClick={() =>
                     navigate({
@@ -141,19 +190,25 @@ const AccountManagement = () => {
                 >
                   Edit Details
                 </button>
-                {params?.row.status === 'Enabled' && (
+
+                {params?.row.isActive ? (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmDisable')}
+                    onClick={() => {
+                      setSelectedAccountId(params?.row.id);
+                      openModal('confirmDisable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                   >
                     Disable
                   </button>
-                )}
-                {params?.row.status === 'Disabled' && (
+                ) : (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmEnable')}
+                    onClick={() => {
+                      setSelectedAccountId(params?.row.id);
+                      openModal('confirmEnable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
                   >
                     Enable
@@ -161,7 +216,10 @@ const AccountManagement = () => {
                 )}
                 <button
                   type="button"
-                  onClick={() => openModal('confirmDelete')}
+                  onClick={() => {
+                    setSelectedAccountId(params?.row.id);
+                    openModal('confirmDelete');
+                  }}
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
                   Delete
