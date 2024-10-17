@@ -430,7 +430,7 @@ const MandatetManagement = () => {
                 <div className="">
                   <TableFilter
                     name={'searchMandate'}
-                    placeholder={'Search Mandate'}
+                    placeholder={'Search Mandate Code'}
                     label={'Search Mandate'}
                     value={searchTerm}
                     setSearch={setSearchTerm}

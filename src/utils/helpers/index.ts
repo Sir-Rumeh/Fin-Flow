@@ -130,8 +130,10 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
   if (formattedQueryParams.sortOrder) params.append('SortOrder', formattedQueryParams.sortOrder);
   if (formattedQueryParams.searchFilter) {
     params.append('searchFilter', formattedQueryParams.searchFilter);
+    params.append('UserName', formattedQueryParams.searchFilter);
     params.append('AccountNumber', formattedQueryParams.searchFilter);
     params.append('Cif', formattedQueryParams.searchFilter);
+    params.append('MandateCode', formattedQueryParams.searchFilter);
   }
   if (formattedQueryParams.startDate) params.append('StartDate', formattedQueryParams.startDate);
   if (formattedQueryParams.endDate) params.append('EndDate', formattedQueryParams.endDate);

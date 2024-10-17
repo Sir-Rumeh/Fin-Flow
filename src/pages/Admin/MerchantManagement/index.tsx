@@ -173,7 +173,7 @@ const MerchantManagement = () => {
             <CustomPopover
               popoverId={params?.row.id}
               buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-6}
+              translationX={-12}
               translationY={45}
             >
               <div className="flex flex-col rounded-md p-1">

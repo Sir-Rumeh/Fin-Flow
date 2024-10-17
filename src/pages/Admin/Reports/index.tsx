@@ -28,7 +28,7 @@ import {
   deleteMandate,
   disableMandate,
   enableMandate,
-  getMandateByMerchantId,
+  getMandatesByMerchantId,
   getMandates,
   updateMandate,
 } from 'config/actions/dashboard-actions';
@@ -412,7 +412,7 @@ const Reports = () => {
 
   const getMandateReports = async () => {
     const res = formik.values.merchant
-      ? await getMandateByMerchantId(formik.values.merchant, queryParams as QueryParams)
+      ? await getMandatesByMerchantId(formik.values.merchant, queryParams as QueryParams)
       : await getMandates(queryParams as QueryParams);
     if (res) {
       setMandateRecords(res);

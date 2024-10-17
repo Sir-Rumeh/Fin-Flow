@@ -60,6 +60,8 @@ import StaffUserUpdateRequestDetails from 'pages/Admin/Requests/StaffUserRequest
 import StaffUserDisableRequestDetails from 'pages/Admin/Requests/StaffUserRequests/StaffUserDisableRequestDetails';
 import UserRequestsIcon from 'assets/icons/UserRequestsIcon';
 import StaffUserEnableRequestDetails from 'pages/Admin/Requests/StaffUserRequests/StaffUserEnableRequestDetails';
+import MerchantDetailsRoutes from 'pages/Admin/MerchantManagement/MerchantDetails/MerchantDetailsRoutes';
+import AccountDetailsRoutes from 'pages/Admin/AccountManagement/AccountDetails/AccountDetailsRoutes';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -126,7 +128,7 @@ const adminRoutes: RoutesType[] = [
       {
         name: 'Merchant Details',
         path: 'merchant-details/*',
-        component: <MerchantDetails />,
+        component: <MerchantDetailsRoutes />,
       },
       {
         name: 'Onboard Merchant',
@@ -199,8 +201,8 @@ const adminRoutes: RoutesType[] = [
     children: [
       {
         name: 'Account Details',
-        path: 'account-details',
-        component: <AdminAccountDetails />,
+        path: 'account-details/*',
+        component: <AccountDetailsRoutes />,
       },
       {
         name: 'Create Account',

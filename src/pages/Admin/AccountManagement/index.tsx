@@ -316,7 +316,7 @@ const AccountManagement = () => {
                 <div className="">
                   <TableFilter
                     name={'searchAccount'}
-                    placeholder={'Search Account'}
+                    placeholder={'Search Account Number'}
                     label={'Search Account'}
                     value={searchTerm}
                     setSearch={setSearchTerm}

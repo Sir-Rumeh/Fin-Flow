@@ -42,6 +42,20 @@ export const getAccountById = async (requestId: string | undefined) => {
   }
 };
 
+export const getAccountsByMerchantId = async (
+  merchantId: string | undefined,
+  queryParams?: QueryParams,
+) => {
+  const params = new URLSearchParams();
+  appendParams(params, queryParams);
+  try {
+    const response = await AxiosClient.get(`/accounts/merchant/${merchantId}`, { params });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getAccountRequestById = async (requestId: string | undefined) => {
   try {
     const response = await AxiosClient.get(`/accountrequests/${requestId}`);

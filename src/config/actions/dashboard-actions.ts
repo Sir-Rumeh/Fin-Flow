@@ -94,7 +94,8 @@ export const getMandateById = async (requestId: string | undefined) => {
     throw error;
   }
 };
-export const getMandateByMerchantId = async (
+
+export const getMandatesByMerchantId = async (
   merchantId: string | undefined,
   queryParams?: QueryParams,
 ) => {

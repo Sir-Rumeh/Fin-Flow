@@ -23,6 +23,20 @@ export const getProfileById = async (requestId: string | undefined) => {
   }
 };
 
+export const getProfilesByMerchantId = async (
+  merchantId: string | undefined,
+  queryParams?: QueryParams,
+) => {
+  const params = new URLSearchParams();
+  appendParams(params, queryParams);
+  try {
+    const response = await AxiosClient.get(`/profiles/merchant/${merchantId}`, { params });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const enableProfile = async (requestId: string | undefined) => {
   try {
     const response = await AxiosClient.put(`/profiles/enable/${requestId}`);
