@@ -114,3 +114,10 @@ export const createProfileSchema = Yup.object().shape({
   password: Yup.string().required('Employee ID is required'),
   role: Yup.string().required('User role is required'),
 });
+export const createAccountSchema = Yup.object().shape({
+  merchantId: Yup.string().required('Merchant ID is required'),
+  merchantName: Yup.string().required('Merchant name is required'),
+  accountName: Yup.string().required('Account name is required'),
+  accountNumber: Yup.string().required('Account number is required'),
+  cif: Yup.string().required('CIF number is required'),
+});
