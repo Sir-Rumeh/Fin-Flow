@@ -153,6 +153,7 @@ export interface QueryParams {
   searchFilter?: string | undefined;
   startDate?: string | undefined;
   endDate?: string | undefined;
+  actor?: string | undefined;
 }
 
 export interface StaffUserRequest {
@@ -199,4 +200,9 @@ export interface MerchantRequest {
   rcNumber: string | undefined;
   address: string | undefined;
   cif?: string | undefined;
+}
+export interface UpdateRequestDisplay {
+  name: string | undefined;
+  oldValue: string | number | undefined;
+  newValue: string | number | undefined;
 }

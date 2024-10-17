@@ -87,11 +87,7 @@ const FormSelect = ({
             <p
               className={`text-base ${selectedOption ? 'font-[400]' : scrollableOptions ? 'text-blackInput' : 'text-gray-400'} `}
             >
-              {selectedOption
-                ? selectedOption
-                : scrollableOptions
-                  ? options[0].value
-                  : 'Select here'}
+              {selectedOption ? selectedOption : 'Select here'}
             </p>
             <i className="scale-125">
               <DarkArrowDown />
@@ -101,7 +97,7 @@ const FormSelect = ({
 
         {isOpen && (
           <div
-            className={`${scrollableOptions ? `custom-scrollbar overflow-y-scroll pb-10 ${scrollableHeight}` : ''} slide-downward absolute z-[999] mt-1 flex w-full flex-col rounded-sm bg-white text-sm shadow`}
+            className={`${scrollableOptions ? `custom-scrollbar overflow-y-scroll pb-10 ${scrollableHeight}` : ''} slide-downward absolute z-[999] mt-1 flex w-full flex-col rounded-sm bg-white text-sm shadow-lg`}
           >
             {options.map((option, index) => {
               return (

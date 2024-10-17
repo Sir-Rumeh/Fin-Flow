@@ -143,3 +143,15 @@ export const getMandateStatistics = async () => {
     throw error;
   }
 };
+
+// AUDIT TRAIL
+export const getAuditTrail = async (queryParams?: QueryParams) => {
+  const params = new URLSearchParams();
+  appendParams(params, queryParams);
+  try {
+    const response = await AxiosClient.get(`/audits`, { params });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

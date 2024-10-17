@@ -1,7 +1,7 @@
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import CustomTable from 'components/CustomTable';
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { CloseIcon } from 'assets/icons';
 import { auditTrailList } from 'utils/constants';
 import ExportBUtton from 'components/FormElements/ExportButton';
@@ -11,12 +11,20 @@ import CustomInput from 'components/FormElements/CustomInput';
 import FormDatePicker from 'components/FormElements/FormDatePicker';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
+import { useQuery } from '@tanstack/react-query';
+import { QueryParams } from 'utils/interfaces';
+import { getAuditTrail } from 'config/actions/dashboard-actions';
+import { getDateRange } from 'utils/helpers';
 
 const AuditTrail = () => {
+  const printPdfRef = useRef(null);
   const [modals, setModals] = useState({
     viewDetails: false,
   });
+
+  const [selectedAudit, setSelectedAudit] = useState<any>();
   const [showFilteredAudit, setShowFilteredAudit] = useState(false);
+  const [auditRecords, setAuditRecords] = useState<any>();
 
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
@@ -34,20 +42,31 @@ const AuditTrail = () => {
   const formik = useFormik({
     initialValues: {
       statusFilter: '',
+      searchFilter: '',
+      startDate: '',
+      endDate: '',
     },
     onSubmit: (values) => {},
   });
 
+  const excelHeaders = [
+    { label: 'Ref No', key: 'targetId' },
+    { label: 'Account Name', key: 'actor' },
+    { label: 'Affected Module', key: 'module' },
+    { label: 'Performed Action', key: 'action' },
+    { label: 'Date Created', key: 'dateCreated' },
+  ];
+
   const columns: GridColDef[] = [
     {
-      field: 'referenceNumber',
+      field: 'targetId',
       headerName: 'Ref No',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
     },
     {
-      field: 'accountName',
+      field: 'actor',
       headerName: 'Account Name',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -61,14 +80,14 @@ const AuditTrail = () => {
       headerClassName: 'ag-thead',
     },
     {
-      field: 'performedAction',
+      field: 'action',
       headerName: 'Performed Action',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
     },
     {
-      field: 'date',
+      field: 'dateCreated',
       headerName: 'Date',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -76,15 +95,18 @@ const AuditTrail = () => {
       valueGetter: (params: any) => new Date(params).toLocaleDateString(),
     },
     {
-      field: 'action',
+      field: '',
       headerName: 'Action',
       width: 150,
       headerClassName: 'ag-thead',
-      renderCell: () => (
+      renderCell: (params: GridRenderCellParams) => (
         <>
           <button
             type="button"
-            onClick={() => openModal('viewDetails')}
+            onClick={() => {
+              setSelectedAudit(params?.row);
+              openModal('viewDetails');
+            }}
             className="cursor-pointer font-semibold text-lightPurple"
           >
             View Details
@@ -95,6 +117,41 @@ const AuditTrail = () => {
   ];
 
   const isSmallWidth = useMediaQuery('(max-width:370px)');
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    actor: formik.values.searchFilter,
+    pageNo: paginationData.pageNumber,
+    pageSize: paginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+    startDate: formik.values.startDate,
+    endDate: formik.values.endDate,
+  });
+
+  const getAuditTrailRecords = async () => {
+    const res = await getAuditTrail(queryParams as QueryParams);
+    if (res.responseData) {
+      setAuditRecords(res.responseData);
+      setShowFilteredAudit(true);
+    }
+  };
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      actor: formik.values.searchFilter,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+      startDate: formik.values.startDate,
+      endDate: formik.values.endDate,
+    }));
+  }, [paginationData.pageNumber]);
+
+  useEffect(() => {
+    if (queryParams.pageNo) {
+      getAuditTrailRecords();
+    }
+  }, [queryParams.pageNo]);
 
   return (
     <>
@@ -151,33 +208,43 @@ const AuditTrail = () => {
                   width={isSmallWidth ? '10rem' : undefined}
                   height="3rem"
                   onClick={() => {
-                    setShowFilteredAudit(true);
+                    getAuditTrailRecords();
                   }}
                 />
               </div>
             </div>
           </div>
 
-          {showFilteredAudit && (
+          {showFilteredAudit && auditRecords.items && (
             <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
               <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
-                <h2 className="text-xl font-bold text-lightPurple">Staff Name: Abimbola Adeyemi</h2>
-                <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
-                  <ExportBUtton />
+                {formik.values.searchFilter ? (
+                  <h2 className="text-xl font-bold text-lightPurple">{`Staff Name: ${auditRecords.items[0].actor}`}</h2>
+                ) : null}
+                <div
+                  className={`flex w-full items-center ${formik.values.searchFilter ? 'lg:w-[50%]' : 'lg:w-full'} lg:justify-end`}
+                >
+                  <ExportBUtton
+                    data={auditRecords.items}
+                    printPdfRef={printPdfRef}
+                    headers={excelHeaders}
+                    fileName="audits.csv"
+                  />
                 </div>
               </div>
               <h3 className="mt-2 w-full rounded-tl-xl rounded-tr-xl border px-3 py-4 text-lg font-semibold">
-                Activities between June to July, 2024
+                {` Activities between ${getDateRange(auditRecords.items)}`}
               </h3>
               <div className="w-full">
-                <CustomTable
-                  tableData={auditTrailList}
-                  columns={columns}
-                  rowCount={257}
-                  defaultAnimation={false}
-                  paginationData={paginationData}
-                  setPaginationData={setPaginationData}
-                />
+                <div ref={printPdfRef} className="w-full">
+                  <CustomTable
+                    tableData={auditRecords?.items}
+                    columns={columns}
+                    rowCount={auditRecords?.totalCount}
+                    paginationData={paginationData}
+                    setPaginationData={setPaginationData}
+                  />
+                </div>
               </div>
             </div>
           )}
@@ -207,11 +274,17 @@ const AuditTrail = () => {
                 </div>
                 <div className="h-[2px] w-full bg-grayPrimary"></div>
                 <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-y-[20px]">
-                  <DetailsCard title="Reference" content="12345" />
-                  <DetailsCard title="Account Name" content="John Wick" />
-                  <DetailsCard title="Affected Module" content="Account Management" />
-                  <DetailsCard title="Performed Action" content="Disable Account" />
-                  <DetailsCard title="Date Performed" content="12/12/2024 : 12:12:12" />
+                  <DetailsCard title="Reference" content={selectedAudit.targetId} />
+                  <DetailsCard title="Account Name" content={selectedAudit.actor} />
+                  <DetailsCard title="Affected Module" content={selectedAudit.module} />
+                  <DetailsCard title="Performed Action" content={selectedAudit.action} />
+                  <DetailsCard
+                    title="Date Performed"
+                    content={
+                      selectedAudit.dateCreated &&
+                      new Date(selectedAudit.dateCreated).toLocaleDateString()
+                    }
+                  />
                 </div>
               </div>
             </div>

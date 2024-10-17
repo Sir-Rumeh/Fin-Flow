@@ -22,6 +22,7 @@ import { MandateRequestStatus } from 'utils/enums';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import CustomInput from 'components/FormElements/CustomInput';
+import { formatNumberDisplay } from 'utils/helpers';
 
 const CreationRequestDetails = () => {
   const { id } = useParams();
@@ -191,7 +192,7 @@ const CreationRequestDetails = () => {
             <DetailsCard title="Product ID" content={data?.responseData?.productId} />
             <DetailsCard
               title="Amount"
-              content={data?.responseData?.amount}
+              content={formatNumberDisplay(data?.responseData?.amount)}
               contentClassName="text-lightPurple"
             />
             <DetailsCard

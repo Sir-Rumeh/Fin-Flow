@@ -18,6 +18,7 @@ interface CustomTableProps {
   defaultAnimation?: boolean;
   paginationData?: PaginationProps;
   setPaginationData?: React.Dispatch<React.SetStateAction<PaginationProps>>;
+  handlePageChange?: () => void;
 }
 
 function CustomTable({
@@ -27,6 +28,7 @@ function CustomTable({
   defaultAnimation = true,
   paginationData,
   setPaginationData,
+  handlePageChange,
 }: CustomTableProps): JSX.Element {
   const isSmallWidth = useMediaQuery('(max-width:1440px)');
 
@@ -49,6 +51,10 @@ function CustomTable({
       setPaginationCountArray(newArr);
     }
   }, [rowCount, paginationSplitPosition, paginationData]);
+
+  // const handlePageChange = () => {
+  //   console.log('page no', paginationData?.pageNumber);
+  // };
 
   return (
     <div className={`${defaultAnimation ? 'slide-down' : ''} w-full`}>
@@ -108,6 +114,7 @@ function CustomTable({
                       });
                     }
                   }
+                  handlePageChange?.();
                 }}
               >
                 <ChevronLeft />
@@ -130,6 +137,7 @@ function CustomTable({
                           x2: prev.x2,
                         };
                       });
+                      handlePageChange?.();
                     }}
                   >
                     {1}
@@ -144,15 +152,16 @@ function CustomTable({
                     <button
                       key={index}
                       className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData?.pageNumber === count ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
-                      onClick={() =>
+                      onClick={() => {
                         setPaginationData?.((prev) => {
                           return {
                             ...prev,
                             pageSize: 10,
                             pageNumber: count,
                           };
-                        })
-                      }
+                        });
+                        handlePageChange?.();
+                      }}
                     >
                       {count}
                     </button>
@@ -178,6 +187,7 @@ function CustomTable({
                           x2: prev.x2,
                         };
                       });
+                      handlePageChange?.();
                     }}
                   >
                     {paginationCount.toString()}
@@ -199,6 +209,7 @@ function CustomTable({
                       };
                     });
                   }
+                  handlePageChange?.();
                 }}
               >
                 <ChevronRightIcon />
