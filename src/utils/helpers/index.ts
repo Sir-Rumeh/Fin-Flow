@@ -131,6 +131,7 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
   if (formattedQueryParams.searchFilter) {
     params.append('searchFilter', formattedQueryParams.searchFilter);
     params.append('AccountNumber', formattedQueryParams.searchFilter);
+    params.append('Cif', formattedQueryParams.searchFilter);
   }
   if (formattedQueryParams.startDate) params.append('StartDate', formattedQueryParams.startDate);
   if (formattedQueryParams.endDate) params.append('EndDate', formattedQueryParams.endDate);

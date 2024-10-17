@@ -4,7 +4,7 @@ import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
 import appRoutes from 'utils/constants/routes';
 import ButtonComponent from 'components/FormElements/Button';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
@@ -14,20 +14,17 @@ import ApprovedIcon from 'assets/icons/ApprovedIcon';
 import CustomInput from 'components/FormElements/CustomInput';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
-  approveMerchantRequest,
-  getMerchantRequestById,
-  rejectMerchantRequest,
-} from 'config/actions/merchant-actions';
+  approveAccountRequest,
+  getAccountRequestById,
+  rejectAccountRequest,
+} from 'config/actions/account-actions';
 import RejectedIcon from 'assets/icons/RejectedIcon';
-import { displayUpdateRequestData, formatNumberDisplay } from 'utils/helpers';
-import { UpdateRequestDisplay } from 'utils/interfaces';
 
-const MerchantUpdateRequestDetails = () => {
+const AccountEnableRequestDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const merchantId = searchParams?.get('id') || '';
+  const accountId = searchParams?.get('id') || '';
   const queryClient = useQueryClient();
-  const [updateDataList, setUpdateDataList] = useState<UpdateRequestDisplay[]>();
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
     confirmRejectRequest: false,
@@ -42,47 +39,38 @@ const MerchantUpdateRequestDetails = () => {
   const closeModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
+
   const formik = useFormik({
     initialValues: {
       remark: '',
     },
     validationSchema: reasonForRejectionSchema,
     onSubmit: () => {
-      rejectMerchantRequestMutation.mutate(merchantId);
+      rejectAccountRequestMutation.mutate(accountId);
     },
   });
 
   const { data } = useQuery({
-    queryKey: ['merchantRequests', merchantId],
-    queryFn: ({ queryKey }) => getMerchantRequestById(queryKey[1]),
+    queryKey: ['accountRequests', accountId],
+    queryFn: ({ queryKey }) => getAccountRequestById(queryKey[1]),
   });
 
-  useEffect(() => {
-    const updatedDataList = displayUpdateRequestData(
-      data?.responseData?.oldData,
-      data?.responseData,
-    );
-    if (updatedDataList) {
-      setUpdateDataList(updatedDataList);
-    }
-  }, [data]);
-
-  const approveMerchantRequestMutation = useMutation({
-    mutationFn: (requestId: string | undefined) => approveMerchantRequest(requestId),
+  const approveAccountRequestMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => approveAccountRequest(requestId),
     onSuccess: () => {
       closeModal('confirmApproveRequest');
       openModal('approveSuccessfulModal');
-      queryClient.invalidateQueries({ queryKey: ['merchantRequests'] });
+      queryClient.invalidateQueries({ queryKey: ['accountRequests'] });
     },
     onError: (error) => console.log(error.message),
   });
 
-  const rejectMerchantRequestMutation = useMutation({
-    mutationFn: (requestId: string | undefined) => rejectMerchantRequest(requestId, formik.values),
+  const rejectAccountRequestMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => rejectAccountRequest(requestId, formik.values),
     onSuccess: () => {
       closeModal('confirmRejectRequest');
       openModal('rejectSuccessfulModal');
-      queryClient.invalidateQueries({ queryKey: ['merchantRequests'] });
+      queryClient.invalidateQueries({ queryKey: ['accountRequests'] });
     },
     onError: (error) => console.log(error.message),
   });
@@ -92,16 +80,15 @@ const MerchantUpdateRequestDetails = () => {
       <div className="px-5 py-1">
         <div className="slide-down mt-2 flex items-center gap-2 text-lg">
           <Link
-            to={`/${appRoutes.adminDashboard.requests.merchantRequests.index}`}
+            to={`/${appRoutes.adminDashboard.requests.accountRequests.index}`}
             className="cursor-pointer text-darkgray"
           >
-            Merchant Requests
+            Account Requests
           </Link>{' '}
-          <ChevronRight />
-          <span className="text-lightPurple">Merchant Update Request Details</span>
+          <ChevronRight />s<span className="text-lightPurple">Enable Account Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
-          <h2 className="text-lg font-semibold md:text-2xl">{`Merchant ID : ${data?.responseData?.id}`}</h2>
+          <h2 className="text-lg font-semibold md:text-2xl">{`Account ID : ${data?.responseData?.id}`}</h2>
           <div className="flex w-1/2 items-center justify-end gap-4">
             <div className="w-auto">
               <ButtonComponent
@@ -134,54 +121,17 @@ const MerchantUpdateRequestDetails = () => {
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
           <div className="">
-            <ItemDetailsContainer title="Old Information">
-              {updateDataList?.map((updatedData, index) => {
-                return (
-                  <DetailsCard
-                    key={index}
-                    title={`Old ${updatedData.name}`}
-                    content={
-                      typeof updatedData.oldValue === 'number' && updatedData.name === 'Amount'
-                        ? formatNumberDisplay(updatedData.oldValue)
-                        : typeof updatedData.oldValue === 'string' && updatedData.name === 'Amount'
-                          ? formatNumberDisplay(parseInt(updatedData.oldValue))
-                          : updatedData.oldValue
-                    }
-                  />
-                );
-              })}
-            </ItemDetailsContainer>
-          </div>
-          <div className="mt-10">
-            <ItemDetailsContainer title="New Information">
-              {updateDataList?.map((updatedData, index) => {
-                return (
-                  <DetailsCard
-                    key={index}
-                    title={`New ${updatedData.name}`}
-                    content={
-                      typeof updatedData.oldValue === 'number' && updatedData.name === 'Amount'
-                        ? formatNumberDisplay(updatedData.oldValue)
-                        : typeof updatedData.oldValue === 'string' && updatedData.name === 'Amount'
-                          ? formatNumberDisplay(parseInt(updatedData.oldValue))
-                          : updatedData.oldValue
-                    }
-                  />
-                );
-              })}
-            </ItemDetailsContainer>
-          </div>
-          <div className="mt-10">
-            <ItemDetailsContainer title="Merchant Details">
-              <DetailsCard title="Merchant ID" content={data?.responseData?.id} />
-              <DetailsCard title="Merchant Name" content={data?.responseData?.name} />
-              <DetailsCard title="Merchant Code" content={data?.responseData?.merchantCode} />
+            <ItemDetailsContainer title="Request Details">
+              <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
+              <DetailsCard title="Merchant Name" content={data?.responseData?.merchantName} />
               <DetailsCard title="CIF Number" content={data?.responseData?.cif} />
+              <DetailsCard title="Account Name" content={data?.responseData?.accountName} />
+              <DetailsCard title="Account Number" content={data?.responseData?.accountNumber} />
               <DetailsCard
                 title="Date Created"
                 content={
-                  data?.responseData?.createdAt &&
-                  new Date(data.responseData.createdAt).toLocaleDateString()
+                  data?.responseData?.dateCreated &&
+                  new Date(data.responseData.dateCreated).toLocaleDateString()
                 }
               />
             </ItemDetailsContainer>
@@ -193,8 +143,8 @@ const MerchantUpdateRequestDetails = () => {
               <DetailsCard
                 title="Date Created"
                 content={
-                  data?.responseData?.createdAt &&
-                  new Date(data.responseData.createdAt).toLocaleDateString()
+                  data?.responseData?.dateCreated &&
+                  new Date(data.responseData.dateCreated).toLocaleDateString()
                 }
               />
               <DetailsCard title="Address" content={data?.responseData?.address} />
@@ -231,6 +181,7 @@ const MerchantUpdateRequestDetails = () => {
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Requested By">
+              <DetailsCard title="ID" content={data?.responseData?.requesterId} />
               <DetailsCard title="Requested By" content={data?.responseData?.requestedBy} />
               <DetailsCard
                 title="Date Requested"
@@ -247,14 +198,14 @@ const MerchantUpdateRequestDetails = () => {
         <ModalWrapper
           isOpen={modals.confirmApproveRequest}
           setIsOpen={() => closeModal('confirmApproveRequest')}
-          title={'Approve Merchant Request?'}
+          title={'Approve account Request?'}
           info={
-            'You are about to approve this merchant update request, would you want to proceed with this?'
+            'You are about to approve this enable account request, would you want to proceed with this?'
           }
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            approveMerchantRequestMutation.mutate(merchantId);
+            approveAccountRequestMutation.mutate(accountId);
           }}
         />
       )}
@@ -264,12 +215,12 @@ const MerchantUpdateRequestDetails = () => {
           isOpen={modals.approveSuccessfulModal}
           setIsOpen={() => closeModal('approveSuccessfulModal')}
           title={'Success!!'}
-          info={'You have successfully approved this merchant update request'}
+          info={'You have successfully approved this enable account request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
             closeModal('approveSuccessfulModal');
-            navigate(`/${appRoutes.adminDashboard.requests.merchantRequests.index}`);
+            navigate(`/${appRoutes.adminDashboard.requests.accountRequests.index}`);
           }}
         />
       )}
@@ -279,9 +230,9 @@ const MerchantUpdateRequestDetails = () => {
           isOpen={modals.confirmRejectRequest}
           width="700px"
           setIsOpen={() => closeModal('confirmRejectRequest')}
-          title={'Reject Merchant Request?'}
+          title={'Reject account Request?'}
           info={
-            'You are about to reject this merchant update request, would you want to proceed with this?'
+            'You are about to reject this enable account request, would you want to proceed with this?'
           }
           feedback={
             <div className="w-full md:col-span-1">
@@ -309,12 +260,12 @@ const MerchantUpdateRequestDetails = () => {
           isOpen={modals.rejectSuccessfulModal}
           setIsOpen={() => closeModal('rejectSuccessfulModal')}
           title={'Success!!'}
-          info={'You have successfully rejected this merchant update request'}
+          info={'You have successfully rejected this enable account request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
             closeModal('rejectSuccessfulModal');
-            navigate(`/${appRoutes.adminDashboard.requests.merchantRequests.index}`);
+            navigate(`/${appRoutes.adminDashboard.requests.accountRequests.index}`);
           }}
         />
       )}
@@ -322,4 +273,4 @@ const MerchantUpdateRequestDetails = () => {
   );
 };
 
-export default MerchantUpdateRequestDetails;
+export default AccountEnableRequestDetails;

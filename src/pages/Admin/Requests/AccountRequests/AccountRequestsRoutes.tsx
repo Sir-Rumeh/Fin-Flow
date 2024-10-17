@@ -5,6 +5,7 @@ import AccountCreationRequestDetails from './AccountCreationRequestDetails';
 import AccountDeletionRequestDetails from './AccountDeletionRequestDetails';
 import AccountUpdateRequestDetails from './AccountUpdateRequestDetails';
 import AccountDisableRequestDetails from './AccountDisableRequestDetails';
+import AccountEnableRequestDetails from './AccountEnableRequestDetails';
 
 const AccountRequestsRoutes = () => {
   return (
@@ -14,6 +15,7 @@ const AccountRequestsRoutes = () => {
       <Route path="deletion-request-details" element={<AccountDeletionRequestDetails />} />
       <Route path="update-request-details" element={<AccountUpdateRequestDetails />} />
       <Route path="disable-request-details" element={<AccountDisableRequestDetails />} />
+      <Route path="enable-request-details" element={<AccountEnableRequestDetails />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

@@ -1,4 +1,4 @@
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
@@ -8,15 +8,23 @@ import { useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
-import FormInput from 'components/FormElements/FormInput';
 import { useFormik } from 'formik';
 import { reasonForRejectionSchema } from 'utils/formValidators';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
-import { UpdateRequestIcon } from 'assets/icons';
 import CustomInput from 'components/FormElements/CustomInput';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  approveAccountRequest,
+  getAccountRequestById,
+  rejectAccountRequest,
+} from 'config/actions/account-actions';
+import RejectedIcon from 'assets/icons/RejectedIcon';
 
 const AccountDeletionRequestDetails = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const accountId = searchParams?.get('id') || '';
+  const queryClient = useQueryClient();
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
     confirmRejectRequest: false,
@@ -34,10 +42,37 @@ const AccountDeletionRequestDetails = () => {
 
   const formik = useFormik({
     initialValues: {
-      reasonForRejection: '',
+      remark: '',
     },
     validationSchema: reasonForRejectionSchema,
-    onSubmit: () => {},
+    onSubmit: () => {
+      rejectAccountRequestMutation.mutate(accountId);
+    },
+  });
+
+  const { data } = useQuery({
+    queryKey: ['accountRequests', accountId],
+    queryFn: ({ queryKey }) => getAccountRequestById(queryKey[1]),
+  });
+
+  const approveAccountRequestMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => approveAccountRequest(requestId),
+    onSuccess: () => {
+      closeModal('confirmApproveRequest');
+      openModal('approveSuccessfulModal');
+      queryClient.invalidateQueries({ queryKey: ['accountRequests'] });
+    },
+    onError: (error) => console.log(error.message),
+  });
+
+  const rejectAccountRequestMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => rejectAccountRequest(requestId, formik.values),
+    onSuccess: () => {
+      closeModal('confirmRejectRequest');
+      openModal('rejectSuccessfulModal');
+      queryClient.invalidateQueries({ queryKey: ['accountRequests'] });
+    },
+    onError: (error) => console.log(error.message),
   });
 
   return (
@@ -54,11 +89,12 @@ const AccountDeletionRequestDetails = () => {
           <span className="text-lightPurple">Account Deletion Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
-          <h2 className="text-lg font-semibold md:text-2xl">Request ID : Req123456</h2>
+          <h2 className="text-lg font-semibold md:text-2xl">{`Account ID : ${data?.responseData?.id}`}</h2>
           <div className="flex w-1/2 items-center justify-end gap-4">
             <div className="w-auto">
               <ButtonComponent
-                color="purplePrimary"
+                color="#5C068C"
+                borderColor="#5C068C"
                 variant="outlined"
                 type="button"
                 title="Reject"
@@ -87,36 +123,75 @@ const AccountDeletionRequestDetails = () => {
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
           <div className="">
             <ItemDetailsContainer title="Request Details">
-              <DetailsCard title="Merchant ID" content="12345" />
-              <DetailsCard title="Merchant Name" content="Fair Money" />
-              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
-
-              <DetailsCard title="CIF Number" content="12345" />
-              <DetailsCard title="Account Number" content="8907812345" />
+              <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
+              <DetailsCard title="Merchant Name" content={data?.responseData?.merchantName} />
+              <DetailsCard title="CIF Number" content={data?.responseData?.cif} />
+              <DetailsCard title="Account Name" content={data?.responseData?.accountName} />
+              <DetailsCard title="Account Number" content={data?.responseData?.accountNumber} />
+              <DetailsCard
+                title="Date Created"
+                content={
+                  data?.responseData?.dateCreated &&
+                  new Date(data.responseData.dateCreated).toLocaleDateString()
+                }
+              />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Creator Details">
-              <DetailsCard title="ID" content="9344243" />
-              <DetailsCard title="Created By" content="John Doe" />
-
-              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
-              <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
+              <DetailsCard title="ID" content={data?.responseData?.creatorId} />
+              <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
+              <DetailsCard
+                title="Date Created"
+                content={
+                  data?.responseData?.dateCreated &&
+                  new Date(data.responseData.dateCreated).toLocaleDateString()
+                }
+              />
+              <DetailsCard title="Address" content={data?.responseData?.address} />
             </ItemDetailsContainer>
           </div>
 
           <div className="mt-10">
-            <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
-              <DetailsCard title="ID" content="9344243" />
-              <DetailsCard title="Approved By" content="John Doe" />
-              <DetailsCard title="Date Approved" content="12/12/2024 : 03:00pm" />
-            </ItemDetailsContainer>
+            {data?.responseData?.status === 'Approved' && (
+              <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
+                <DetailsCard title="ID" content={data?.responseData?.approverId} />
+                <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
+                <DetailsCard
+                  title="Date Approved"
+                  content={
+                    data?.responseData?.dateApproved &&
+                    new Date(data.responseData.dateApproved).toLocaleDateString()
+                  }
+                />
+              </ItemDetailsContainer>
+            )}
+            {data?.responseData?.status === 'Declined' && (
+              <ItemDetailsContainer title="Rejector Details" titleExtension={<RejectedIcon />}>
+                <DetailsCard title="ID" content={data?.responseData?.rejectorId} />
+                <DetailsCard title="Rejected By" content={data?.responseData?.rejectedBy} />
+                <DetailsCard
+                  title="Date Rejected"
+                  content={
+                    data?.responseData?.dateRejected &&
+                    new Date(data.responseData.dateRejected).toLocaleDateString()
+                  }
+                />
+                <DetailsCard title="Reason for Rejection" content={data?.responseData?.remark} />
+              </ItemDetailsContainer>
+            )}
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Requested By">
-              <DetailsCard title="ID" content="9344243" />
-              <DetailsCard title="Requested By" content="John Doe" />
-              <DetailsCard title="Date Requested" content="12/12/2024 : 03:00pm" />
+              <DetailsCard title="ID" content={data?.responseData?.requesterId} />
+              <DetailsCard title="Requested By" content={data?.responseData?.requestedBy} />
+              <DetailsCard
+                title="Date Requested"
+                content={
+                  data?.responseData?.dateRequested &&
+                  new Date(data.responseData.dateRequested).toLocaleDateString()
+                }
+              />
             </ItemDetailsContainer>
           </div>
         </div>
@@ -132,8 +207,7 @@ const AccountDeletionRequestDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmApproveRequest');
-            openModal('approveSuccessfulModal');
+            approveAccountRequestMutation.mutate(accountId);
           }}
         />
       )}
@@ -165,7 +239,7 @@ const AccountDeletionRequestDetails = () => {
           feedback={
             <div className="w-full md:col-span-1">
               <CustomInput
-                labelFor="reasonForRejection"
+                labelFor="remark"
                 label="Reason For Rejection"
                 inputType="text"
                 placeholder="Type here"
@@ -179,8 +253,7 @@ const AccountDeletionRequestDetails = () => {
           proceedBackgroundColor="#F34E4E"
           hoverBackgroundColor="#8B0000"
           proceedAction={() => {
-            closeModal('confirmRejectRequest');
-            openModal('rejectSuccessfulModal');
+            formik.handleSubmit();
           }}
         />
       )}
