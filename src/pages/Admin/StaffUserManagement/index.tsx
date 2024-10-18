@@ -357,7 +357,7 @@ const StaffUserManagement = () => {
                   data={data?.responseData?.items}
                   printPdfRef={printPdfRef}
                   headers={excelHeaders}
-                  fileName="staff_users.csv"
+                  fileName="Staff-Uers.csv"
                 />
               </div>
             </div>

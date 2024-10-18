@@ -14,19 +14,20 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 import { QueryParams } from 'utils/interfaces';
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
 import {
-  deleteAccount,
-  disableAccount,
-  enableAccount,
-  getAccountsByMerchantId,
-} from 'config/actions/account-actions';
-import { getMerchantById } from 'config/actions/merchant-actions';
+  deleteProfile,
+  disableProfile,
+  enableProfile,
+  getProfilesByAccountId,
+} from 'config/actions/profile-actions';
+import { getAccountById } from 'config/actions/account-actions';
 
-const MerchantAccounts = () => {
+const AccountProfiles = () => {
   const [searchParams] = useSearchParams();
-  const merchantId = searchParams?.get('id') || '';
+  const accountId = searchParams?.get('id') || '';
+  const queryClient = useQueryClient();
   const printPdfRef = useRef(null);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
@@ -35,7 +36,7 @@ const MerchantAccounts = () => {
     pageSize: 10,
   });
 
-  const [selectedAccountId, setSelectedAccountId] = useState('');
+  const [selectedProfileId, setSelectedProfileId] = useState('');
 
   const [modals, setModals] = useState({
     confirmDisable: false,
@@ -56,7 +57,7 @@ const MerchantAccounts = () => {
 
   const formik = useFormik({
     initialValues: {
-      searchAccount: '',
+      searchProfile: '',
       fromDateFilter: '',
       toDateFilter: '',
       statusFilter: '',
@@ -67,12 +68,13 @@ const MerchantAccounts = () => {
   });
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
+    mandateCode: '',
     status: formik.values.statusFilter,
     pageNo: paginationData.pageNumber,
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
-    searchFilter: formik.values.searchAccount,
+    searchFilter: formik.values.searchProfile,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });
@@ -83,7 +85,7 @@ const MerchantAccounts = () => {
       status: formik.values.statusFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchAccount,
+      searchFilter: formik.values.searchProfile,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
@@ -99,38 +101,38 @@ const MerchantAccounts = () => {
   };
 
   const excelHeaders = [
-    { label: 'Merchant ID', key: 'merchantId' },
-    { label: 'Account Number', key: 'accountNumber' },
-    { label: 'CIF Number', key: 'cif' },
+    { label: 'Account ID', key: 'accountId' },
+    { label: 'User Name', key: 'userName' },
+    { label: 'Email', key: 'email' },
     { label: 'Active Status', key: 'isActive' },
-    { label: 'Date Requested', key: 'dateCreated' },
+    { label: 'Date Requested', key: 'createdAt' },
   ];
 
   const columns: GridColDef[] = [
     {
-      field: 'merchantId',
-      headerName: 'Merchant ID',
+      field: 'accountID',
+      headerName: 'Account ID',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
     },
     {
-      field: 'accountNumber',
-      headerName: 'Account Number',
+      field: 'userName',
+      headerName: 'User Name',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
     },
     {
-      field: 'cif',
-      headerName: 'CIF',
+      field: 'email',
+      headerName: 'Email',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       sortable: false,
     },
     {
-      field: 'status',
+      field: 'isActive',
       headerName: 'Status',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -157,7 +159,7 @@ const MerchantAccounts = () => {
       },
     },
     {
-      field: 'dateCreated',
+      field: 'createdAt',
       headerName: 'Date Requested',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -175,14 +177,14 @@ const MerchantAccounts = () => {
             <CustomPopover
               popoverId={params?.row.id}
               buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-12}
+              translationX={-10}
               translationY={45}
             >
               <div className="flex flex-col rounded-md p-1">
                 <button
                   onClick={() =>
                     navigate({
-                      pathname: `/${appRoutes.adminDashboard.accountManagement.accountDetails}`,
+                      pathname: `/${appRoutes.adminDashboard.profileManagement.profileDetails}`,
                       search: `?${createSearchParams({ id: params?.row.id })}`,
                     })
                   }
@@ -191,11 +193,10 @@ const MerchantAccounts = () => {
                 >
                   View Details
                 </button>
-
                 <button
                   onClick={() =>
                     navigate({
-                      pathname: `/${appRoutes.adminDashboard.accountManagement.editAccount}`,
+                      pathname: `/${appRoutes.adminDashboard.profileManagement.editProfile}`,
                       search: `?${createSearchParams({ id: params?.row.id })}`,
                     })
                   }
@@ -204,12 +205,11 @@ const MerchantAccounts = () => {
                 >
                   Edit Details
                 </button>
-
                 {params?.row.isActive ? (
                   <button
                     type="button"
                     onClick={() => {
-                      setSelectedAccountId(params?.row.id);
+                      setSelectedProfileId(params.row.id);
                       openModal('confirmDisable');
                     }}
                     className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
@@ -220,7 +220,7 @@ const MerchantAccounts = () => {
                   <button
                     type="button"
                     onClick={() => {
-                      setSelectedAccountId(params?.row.id);
+                      setSelectedProfileId(params.row.id);
                       openModal('confirmEnable');
                     }}
                     className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
@@ -231,7 +231,7 @@ const MerchantAccounts = () => {
                 <button
                   type="button"
                   onClick={() => {
-                    setSelectedAccountId(params?.row.id);
+                    setSelectedProfileId(params.row.id);
                     openModal('confirmDelete');
                   }}
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
@@ -247,45 +247,45 @@ const MerchantAccounts = () => {
   ];
 
   const { data, refetch } = useQuery({
-    queryKey: ['accounts', queryParams],
-    queryFn: ({ queryKey }) => getAccountsByMerchantId(merchantId, queryKey[1] as QueryParams),
+    queryKey: ['profiles', queryParams],
+    queryFn: ({ queryKey }) => getProfilesByAccountId(accountId, queryKey[1] as QueryParams),
   });
 
-  const { data: merchantData, refetch: refetchMerchant } = useQuery({
-    queryKey: ['merchants', merchantId],
-    queryFn: ({ queryKey }) => getMerchantById(queryKey[1]),
+  const { data: accountData } = useQuery({
+    queryKey: ['accounts', accountId],
+    queryFn: ({ queryKey }) => getAccountById(queryKey[1]),
   });
 
-  const enableAccountMutation = useMutation({
-    mutationFn: (requestId: string | undefined) => enableAccount(requestId),
+  const enableProfileMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => enableProfile(requestId),
     onSuccess: () => {
-      closeModal('confirmEnable');
       openModal('enableSuccessful');
+      queryClient.invalidateQueries({ queryKey: ['profiles'] });
     },
     onError: (error) => {
-      closeModal('confirmEnable');
+      closeModal('enableSuccessful');
     },
   });
 
-  const disableAccountMutation = useMutation({
-    mutationFn: (requestId: string | undefined) => disableAccount(requestId),
+  const disableProfileMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => disableProfile(requestId),
     onSuccess: () => {
-      closeModal('confirmDisable');
-      openModal('disableSuccessful');
+      openModal('enableSuccessful');
+      queryClient.invalidateQueries({ queryKey: ['profiles'] });
     },
     onError: (error) => {
-      closeModal('confirmDisable');
+      closeModal('enableSuccessful');
     },
   });
 
-  const deleteAccountMutation = useMutation({
-    mutationFn: (requestId: string | undefined) => deleteAccount(requestId),
+  const deleteProfileMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => deleteProfile(requestId),
     onSuccess: () => {
-      closeModal('confirmDelete');
       openModal('deleteSuccessful');
+      queryClient.invalidateQueries({ queryKey: ['mandates'] });
     },
     onError: (error) => {
-      closeModal('confirmDelete');
+      closeModal('deleteSuccessful');
     },
   });
 
@@ -297,24 +297,24 @@ const MerchantAccounts = () => {
             to={`/${appRoutes.adminDashboard.merchantManagement.index}`}
             className="cursor-pointer text-darkgray"
           >
-            Merchant Management
+            Account Management
           </Link>
           <ChevronRight />
           <Link
             to={{
               pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantDetails}`,
-              search: `?${createSearchParams({ id: merchantId })}`,
+              search: `?${createSearchParams({ id: accountId })}`,
             }}
             className="cursor-pointer text-darkgray"
           >
-            Merchant Details
+            Account Details
           </Link>{' '}
           <ChevronRight />
-          <span className="text-lightPurple">Merchant Accounts</span>
+          <span className="text-lightPurple">Account Profiles</span>
         </div>
         <div className="fade-in-down my-2 mt-6 flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold md:text-2xl">{`Accounts Under Merchant: ${merchantData?.responseData?.name ? merchantData?.responseData?.name : ''}`}</h1>
+            <h1 className="text-lg font-semibold md:text-2xl">{`Profiles Under Account: ${accountData?.responseData?.userName ? accountData?.responseData?.userName : ''}`}</h1>
           </div>
         </div>
         <div className="mt-5">
@@ -323,9 +323,9 @@ const MerchantAccounts = () => {
               <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-start">
                 <div className="">
                   <TableFilter
-                    name={'searchAccount'}
-                    placeholder={'Search Account Number'}
-                    label={'Search Account'}
+                    name={'searchProfile'}
+                    placeholder={'Search Profile'}
+                    label={'Search Profile'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
                     handleOptionsFilter={handleOptionsFilter}
@@ -341,7 +341,7 @@ const MerchantAccounts = () => {
                   data={data?.responseData?.items}
                   printPdfRef={printPdfRef}
                   headers={excelHeaders}
-                  fileName="Accounts.csv"
+                  fileName="Profiles.csv"
                 />
               </div>
             </div>
@@ -364,12 +364,13 @@ const MerchantAccounts = () => {
         <ModalWrapper
           isOpen={modals.confirmDisable}
           setIsOpen={() => closeModal('confirmDisable')}
-          title={'Disable Account?'}
-          info={'You are about to disable this account, would you want to proceed with this?'}
+          title={'Disable Profile?'}
+          info={'You are about to disable this profile, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            disableAccountMutation.mutate(selectedAccountId);
+            disableProfileMutation.mutate(selectedProfileId);
+            closeModal('confirmDisable');
           }}
         />
       )}
@@ -378,7 +379,7 @@ const MerchantAccounts = () => {
           isOpen={modals.disableSuccessful}
           setIsOpen={() => closeModal('disableSuccessful')}
           title={'Success!!'}
-          info={'You have successfully disabled this account'}
+          info={'You have successfully disabled this profile'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -391,12 +392,13 @@ const MerchantAccounts = () => {
         <ModalWrapper
           isOpen={modals.confirmEnable}
           setIsOpen={() => closeModal('confirmEnable')}
-          title={'Enable Account?'}
-          info={'You are about to enable this account, would you want to proceed with this?'}
+          title={'Enable Profile?'}
+          info={'You are about to enable this profile, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            enableAccountMutation.mutate(selectedAccountId);
+            enableProfileMutation.mutate(selectedProfileId);
+            closeModal('confirmEnable');
           }}
         />
       )}
@@ -405,7 +407,7 @@ const MerchantAccounts = () => {
           isOpen={modals.enableSuccessful}
           setIsOpen={() => closeModal('enableSuccessful')}
           title={'Success!!'}
-          info={'You have successfully enabled this account'}
+          info={'You have successfully enabled this profile'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -418,12 +420,13 @@ const MerchantAccounts = () => {
         <ModalWrapper
           isOpen={modals.confirmDelete}
           setIsOpen={() => closeModal('confirmDelete')}
-          title={'Delete Account?'}
-          info={'You are about to delete this account, would you want to proceed with this?'}
+          title={'Delete Profile?'}
+          info={'You are about to delete this profile, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            deleteAccountMutation.mutate(selectedAccountId);
+            deleteProfileMutation.mutate(selectedProfileId);
+            closeModal('confirmDelete');
           }}
         />
       )}
@@ -432,7 +435,7 @@ const MerchantAccounts = () => {
           isOpen={modals.deleteSuccessful}
           setIsOpen={() => closeModal('deleteSuccessful')}
           title={'Success!!'}
-          info={'You have successfully deleted this account'}
+          info={'You have successfully deleted this profile'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -445,4 +448,4 @@ const MerchantAccounts = () => {
   );
 };
 
-export default MerchantAccounts;
+export default AccountProfiles;

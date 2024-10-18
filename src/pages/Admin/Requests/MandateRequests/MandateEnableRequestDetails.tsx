@@ -143,7 +143,7 @@ const MandateEnableRequestDetails = () => {
               >
                 <DetailsCard title="Account ID" content={data?.responseData?.accountId} />
                 <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
-                <DetailsCard title="Merchant Code" content={data?.responseData?.mandateCode} />
+                <DetailsCard title="Mandate Code" content={data?.responseData?.mandateCode} />
                 <DetailsCard
                   title="Date Created"
                   content={

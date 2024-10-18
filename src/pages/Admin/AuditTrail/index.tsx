@@ -13,8 +13,8 @@ import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import { useQuery } from '@tanstack/react-query';
 import { QueryParams } from 'utils/interfaces';
-import { getAuditTrail } from 'config/actions/dashboard-actions';
 import { getDateRange } from 'utils/helpers';
+import { getAuditTrails } from 'config/actions/audit-trail-actions';
 
 const AuditTrail = () => {
   const printPdfRef = useRef(null);
@@ -129,7 +129,7 @@ const AuditTrail = () => {
   });
 
   const getAuditTrailRecords = async () => {
-    const res = await getAuditTrail(queryParams as QueryParams);
+    const res = await getAuditTrails(queryParams as QueryParams);
     if (res.responseData) {
       setAuditRecords(res.responseData);
       setShowFilteredAudit(true);
@@ -228,7 +228,7 @@ const AuditTrail = () => {
                     data={auditRecords.items}
                     printPdfRef={printPdfRef}
                     headers={excelHeaders}
-                    fileName="audits.csv"
+                    fileName="Audits.csv"
                   />
                 </div>
               </div>

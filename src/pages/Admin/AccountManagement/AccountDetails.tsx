@@ -12,13 +12,18 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import DashboardCard from 'components/common/DashboardCards/DashboardCard';
 import SubTitleIconYellow from 'assets/icons/SubTitleIconYellow';
 import DetailsActionButton from 'components/common/DetailsActionButton';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  deleteAccount,
+  disableAccount,
+  enableAccount,
+  getAccountById,
+} from 'config/actions/account-actions';
 
 const ProfileDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const id = searchParams?.get('id') || '';
-
-  let accountStatus = 'Disabled';
+  const accountId = searchParams?.get('id') || '';
 
   const [modals, setModals] = useState({
     confirmDisable: false,
@@ -37,6 +42,44 @@ const ProfileDetails = () => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
 
+  const { data, refetch } = useQuery({
+    queryKey: ['accounts', accountId],
+    queryFn: ({ queryKey }) => getAccountById(queryKey[1]),
+  });
+
+  const enableAccountMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => enableAccount(requestId),
+    onSuccess: () => {
+      closeModal('confirmEnable');
+      openModal('enableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmEnable');
+    },
+  });
+
+  const disableAccountMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => disableAccount(requestId),
+    onSuccess: () => {
+      closeModal('confirmDisable');
+      openModal('disableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDisable');
+    },
+  });
+
+  const deleteAccountMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => deleteAccount(requestId),
+    onSuccess: () => {
+      closeModal('confirmDelete');
+      openModal('deleteSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDelete');
+    },
+  });
+
   return (
     <>
       <div className="px-5 py-1">
@@ -52,13 +95,13 @@ const ProfileDetails = () => {
         </div>
         <div className="slide-down mt-3 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold md:text-2xl">Account ID : Req123456</h2>
+            <h2 className="text-lg font-semibold md:text-2xl">{`Account ID : ${data?.responseData?.id ? data?.responseData?.id : ''}`}</h2>
           </div>
           <div className="w-auto">
             <CustomPopover
               popoverId={1}
               buttonIcon={<DetailsActionButton />}
-              translationX={8}
+              translationX={0}
               translationY={54}
             >
               <div className="flex w-[7.2rem] flex-col rounded-md p-1">
@@ -66,7 +109,7 @@ const ProfileDetails = () => {
                   onClick={() =>
                     navigate({
                       pathname: `/${appRoutes.adminDashboard.accountManagement.editAccount}`,
-                      search: `?${createSearchParams({ id })}`,
+                      search: `?${createSearchParams({ id: accountId })}`,
                     })
                   }
                   type="button"
@@ -74,19 +117,22 @@ const ProfileDetails = () => {
                 >
                   Edit Details
                 </button>
-                {accountStatus === 'Enabled' && (
+                {data?.responseData?.isActive ? (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmDisable')}
+                    onClick={() => {
+                      openModal('confirmDisable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                   >
                     Disable
                   </button>
-                )}
-                {accountStatus === 'Disabled' && (
+                ) : (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmEnable')}
+                    onClick={() => {
+                      openModal('confirmEnable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
                   >
                     Enable
@@ -129,27 +175,48 @@ const ProfileDetails = () => {
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Account Details">
-              <DetailsCard title="Merchant ID" content="12345" />
-              <DetailsCard title="Merchant Name" content="Fair Money" />
-              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
-              <DetailsCard title="CIF Number" content="12345" />
-              <DetailsCard title="Account Number" content="8907812345" />
+              <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
+              <DetailsCard title="Merchant Name" content={data?.responseData?.name} />
+              <DetailsCard title="CIF Number" content={data?.responseData?.cif} />
+              <DetailsCard title="Account Name" content={data?.responseData?.accountName} />
+              <DetailsCard title="Account Number" content={data?.responseData?.accountNumber} />
+              <DetailsCard
+                title="Date Created"
+                content={
+                  data?.responseData?.dateCreated &&
+                  new Date(data.responseData.dateCreated).toLocaleDateString()
+                }
+              />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Creator Details">
-              <DetailsCard title="ID" content="9344243" />
-              <DetailsCard title="Created By" content="John Doe" />
-              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
-              <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
+              <DetailsCard title="ID" content={data?.responseData?.creatorId} />
+              <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
+              <DetailsCard
+                title="Date Created"
+                content={
+                  data?.responseData?.dateCreated &&
+                  new Date(data.responseData.dateCreated).toLocaleDateString()
+                }
+              />
+              <DetailsCard title="Address" content={data?.responseData?.address} />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
-            <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
-              <DetailsCard title="ID" content="9344243" />
-              <DetailsCard title="Approved By" content="John Doe" />
-              <DetailsCard title="Date Approved" content="12/12/2024 : 03:00pm" />
-            </ItemDetailsContainer>
+            {data?.responseData?.status === 'Approved' && (
+              <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
+                <DetailsCard title="ID" content={data?.responseData?.approverId} />
+                <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
+                <DetailsCard
+                  title="Date Approved"
+                  content={
+                    data?.responseData?.dateApproved &&
+                    new Date(data.responseData.dateApproved).toLocaleDateString()
+                  }
+                />
+              </ItemDetailsContainer>
+            )}
           </div>
         </div>
       </div>
@@ -162,8 +229,7 @@ const ProfileDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDisable');
-            openModal('disableSuccessful');
+            disableAccountMutation.mutate(accountId);
           }}
         />
       )}
@@ -176,6 +242,7 @@ const ProfileDetails = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('disableSuccessful');
           }}
         />
@@ -189,8 +256,7 @@ const ProfileDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmEnable');
-            openModal('enableSuccessful');
+            enableAccountMutation.mutate(accountId);
           }}
         />
       )}
@@ -203,6 +269,7 @@ const ProfileDetails = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('enableSuccessful');
           }}
         />
@@ -216,8 +283,7 @@ const ProfileDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDelete');
-            openModal('deleteSuccessful');
+            deleteAccountMutation.mutate(accountId);
           }}
         />
       )}

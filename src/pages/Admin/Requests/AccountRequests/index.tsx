@@ -1,9 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import TableFilter from 'components/TableFilter';
-import { TabsProps } from 'utils/interfaces';
+import { QueryParams, TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
 import { TabsListTabNames } from 'utils/enums';
-import { accountRequestsList } from 'utils/constants';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { createSearchParams, Link } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
@@ -17,32 +16,20 @@ import { RequestTypes } from 'utils/enums';
 import CustomTable from 'components/CustomTable';
 import { useFormik } from 'formik';
 import { useMediaQuery } from '@mui/material';
+import { useQuery } from '@tanstack/react-query';
+import { getAccountsRequests, getAccountsRequestsStatistics } from 'config/actions/account-actions';
 
 const AccountRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
-  const total = 20;
   const [activeTab, setActiveTab] = useState(TabsListTabNames.Pending);
-  const tabsList: TabsProps[] = [
-    {
-      tabIndex: 1,
-      tabName: TabsListTabNames.Pending,
-      tabTotal: total,
-    },
-    {
-      tabIndex: 2,
-      tabName: TabsListTabNames.Approved,
-      tabTotal: total,
-    },
-    {
-      tabIndex: 3,
-      tabName: TabsListTabNames.Declined,
-      tabTotal: total,
-    },
-  ];
+  const [paginationData, setPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
 
   const formik = useFormik({
     initialValues: {
-      searchAccount: '',
+      searchAccountNumber: '',
       fromDateFilter: '',
       toDateFilter: '',
       statusFilter: '',
@@ -51,6 +38,38 @@ const AccountRequests = () => {
       setSearchTerm('');
     },
   });
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    status: activeTab,
+    pageNo: paginationData.pageNumber,
+    pageSize: paginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+    searchFilter: formik.values.searchAccountNumber,
+    startDate: formik.values.fromDateFilter,
+    endDate: formik.values.toDateFilter,
+  });
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: activeTab,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+      searchFilter: formik.values.searchAccountNumber,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  }, [activeTab, paginationData]);
+
+  const handleOptionsFilter = () => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  };
 
   const columns: GridColDef[] = [
     {
@@ -77,7 +96,6 @@ const AccountRequests = () => {
       headerClassName: 'ag-thead',
       sortable: false,
     },
-
     {
       field: 'requestType',
       headerName: 'Request Type',
@@ -96,6 +114,8 @@ const AccountRequests = () => {
             return renderIcon(CreationRequestIcon, 'text-greenPrimary');
           case RequestTypes.Update:
             return renderIcon(UpdateRequestIcon, 'text-lightPurple');
+          case RequestTypes.Enable:
+            return renderIcon(CreationRequestIcon, 'text-greenPrimary');
           case RequestTypes.Disable:
             return renderIcon(DisableRequestIcon, 'text-yellowNeutral');
           case RequestTypes.Deletion:
@@ -106,7 +126,7 @@ const AccountRequests = () => {
       },
     },
     {
-      field: 'dateRequested',
+      field: 'dateCreated',
       headerName: 'Date Requested',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -128,7 +148,9 @@ const AccountRequests = () => {
                 ? `/${appRoutes.adminDashboard.requests.accountRequests.accountUpdateRequest}`
                 : params?.row.requestType === RequestTypes.Disable
                   ? `/${appRoutes.adminDashboard.requests.accountRequests.accountDisableRequest}`
-                  : undefined;
+                  : params?.row.requestType === RequestTypes.Enable
+                    ? `/${appRoutes.adminDashboard.requests.accountRequests.accountEnableRequest}`
+                    : undefined;
         return (
           <div className="">
             <Link
@@ -143,6 +165,34 @@ const AccountRequests = () => {
           </div>
         );
       },
+    },
+  ];
+
+  const { data, refetch } = useQuery({
+    queryKey: ['accountRequests', queryParams],
+    queryFn: ({ queryKey }) => getAccountsRequests(queryKey[1] as QueryParams),
+  });
+
+  const { data: statisticsData } = useQuery({
+    queryKey: ['accountRequests'],
+    queryFn: ({ queryKey }) => getAccountsRequestsStatistics(),
+  });
+
+  const tabsList: TabsProps[] = [
+    {
+      tabIndex: 1,
+      tabName: TabsListTabNames.Pending,
+      tabTotal: statisticsData ? statisticsData?.responseData?.totalPending : 0,
+    },
+    {
+      tabIndex: 2,
+      tabName: TabsListTabNames.Approved,
+      tabTotal: statisticsData ? statisticsData?.responseData?.totalApproved : 0,
+    },
+    {
+      tabIndex: 3,
+      tabName: TabsListTabNames.Declined,
+      tabTotal: statisticsData ? statisticsData?.responseData?.totalRejected : 0,
     },
   ];
   const isLargeWidth = useMediaQuery('(min-width:1320px)');
@@ -163,8 +213,8 @@ const AccountRequests = () => {
               <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
                 <div className="">
                   <TableFilter
-                    name={'searchAccount'}
-                    placeholder={'Search Account'}
+                    name={'searchAccountNumber'}
+                    placeholder={'Search Account Number'}
                     label={'Search Account'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
@@ -180,7 +230,13 @@ const AccountRequests = () => {
               </div>
             </div>
             <div className="mt-6 w-full">
-              <CustomTable tableData={accountRequestsList} columns={columns} rowCount={73} />
+              <CustomTable
+                tableData={data?.responseData?.items}
+                columns={columns}
+                rowCount={data?.responseData?.totalCount}
+                paginationData={paginationData}
+                setPaginationData={setPaginationData}
+              />
             </div>
           </div>
         </div>

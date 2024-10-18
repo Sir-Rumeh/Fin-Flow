@@ -430,7 +430,7 @@ const MandatetManagement = () => {
                 <div className="">
                   <TableFilter
                     name={'searchMandate'}
-                    placeholder={'Search Mandate'}
+                    placeholder={'Search Mandate Code'}
                     label={'Search Mandate'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
@@ -447,7 +447,7 @@ const MandatetManagement = () => {
                   data={data?.responseData?.items}
                   printPdfRef={printPdfRef}
                   headers={excelHeaders}
-                  fileName="mandates.csv"
+                  fileName="Mandates.csv"
                 />
               </div>
             </div>

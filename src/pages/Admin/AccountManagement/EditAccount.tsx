@@ -1,16 +1,28 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
 import ChevronRight from 'assets/icons/ChevronRight';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { AccountRequest, QueryParams } from 'utils/interfaces';
+import { createAccountSchema } from 'utils/formValidators';
+import { getAccountById, updateAccountRequest } from 'config/actions/account-actions';
+import { getMerchants } from 'config/actions/merchant-actions';
+import FormSelect from 'components/FormElements/FormSelect';
+import { formatApiDataForDropdown } from 'utils/helpers';
 
 function EditAccount() {
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
+  const [searchParams] = useSearchParams();
+  const accountId = searchParams?.get('id') || undefined;
+  const [accountRequest, setAccountRequest] = useState<AccountRequest>();
+
   const [modals, setModals] = useState({
     confirmEdit: false,
     editSuccessful: false,
@@ -25,13 +37,69 @@ function EditAccount() {
   };
 
   const formik = useFormik({
-    initialValues: {},
-
+    initialValues: {
+      merchantId: '',
+      merchantName: '',
+      accountName: '',
+      accountNumber: '',
+      cif: '',
+    },
+    validationSchema: createAccountSchema,
     onSubmit: (values) => {
+      const payload = {
+        accountId: accountId,
+        merchantId: values.merchantId,
+        merchantName: values.merchantName,
+        accountName: values.accountName,
+        accountNumber: values.accountNumber,
+        cif: values.cif,
+      };
+      setAccountRequest(payload);
       openModal('confirmEdit');
     },
   });
 
+  const { data: accountData } = useQuery({
+    queryKey: ['accounts', accountId],
+    queryFn: ({ queryKey }) => getAccountById(queryKey[1]),
+  });
+
+  useEffect(() => {
+    formik.setValues({
+      merchantId: accountData?.responseData?.merchantId || '',
+      merchantName: accountData?.responseData?.merchantName || '',
+      accountName: accountData?.responseData?.accountName || '',
+      accountNumber: accountData?.responseData?.accountNumber || '',
+      cif: accountData?.responseData?.cif || '',
+    });
+  }, [accountData]);
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
+
+  const { data } = useQuery({
+    queryKey: ['merchants', queryParams],
+    queryFn: ({ queryKey }) => getMerchants(queryKey[1] as QueryParams),
+  });
+
+  const updateAccountMutation = useMutation({
+    mutationFn: ({
+      requestId,
+      payload,
+    }: {
+      requestId: string | undefined;
+      payload: AccountRequest | undefined;
+    }) => updateAccountRequest(requestId, payload),
+    onSuccess: () => {
+      openModal('editSuccessful');
+      queryClient.invalidateQueries({ queryKey: ['accounts'] });
+    },
+    onError: (error) => {
+      closeModal('editSuccessful');
+    },
+  });
   return (
     <>
       <div className="px-5 py-1">
@@ -53,29 +121,32 @@ function EditAccount() {
             <form onSubmit={formik.handleSubmit} noValidate className="relative w-full">
               <div className="slide-down">
                 <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
-                  <CustomInput
+                  <FormSelect
                     labelFor="merchantId"
                     label="Merchant ID"
-                    inputType="text"
-                    placeholder="Enter here"
-                    maxW="w-full"
                     formik={formik}
+                    useTouched
+                    options={formatApiDataForDropdown(data?.responseData?.items, 'id', 'id')}
+                    scrollableOptions
+                    scrollableHeight="max-h-[15rem]"
                   />
-                  <CustomInput
+                  <FormSelect
                     labelFor="merchantName"
                     label="Merchant Name"
-                    inputType="text"
-                    placeholder="Enter here"
-                    maxW="w-full"
                     formik={formik}
+                    useTouched
+                    options={formatApiDataForDropdown(data?.responseData?.items, 'name', 'name')}
+                    scrollableOptions
+                    scrollableHeight="max-h-[15rem]"
                   />
-                  <CustomInput
+                  <FormSelect
                     labelFor="cif"
                     label="CIF"
-                    inputType="text"
-                    placeholder="Enter here"
-                    maxW="w-full"
                     formik={formik}
+                    useTouched
+                    options={formatApiDataForDropdown(data?.responseData?.items, 'cif', 'cif')}
+                    scrollableOptions
+                    scrollableHeight="max-h-[15rem]"
                   />
                   <CustomInput
                     labelFor="accountName"
@@ -125,8 +196,7 @@ function EditAccount() {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmEdit');
-            openModal('editSuccessful');
+            updateAccountMutation.mutate({ requestId: accountId, payload: accountRequest });
           }}
         />
       )}

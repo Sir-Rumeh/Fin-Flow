@@ -101,7 +101,7 @@ const MerchantManagement = () => {
     { label: 'Merchant Name', key: 'name' },
     { label: 'CIF Number', key: 'cif' },
     { label: 'Active Status', key: 'isActive' },
-    { label: 'Date Requested', key: 'createdAt' },
+    { label: 'Date Requested', key: 'dateCreated' },
   ];
 
   const columns: GridColDef[] = [
@@ -155,7 +155,7 @@ const MerchantManagement = () => {
       },
     },
     {
-      field: 'createdAt',
+      field: 'dateCreated',
       headerName: 'Date Requested',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -165,7 +165,6 @@ const MerchantManagement = () => {
     {
       field: 'actions',
       headerName: 'Action',
-      // width: 110,
       headerClassName: 'ag-thead ',
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
@@ -174,7 +173,7 @@ const MerchantManagement = () => {
             <CustomPopover
               popoverId={params?.row.id}
               buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-6}
+              translationX={-12}
               translationY={45}
             >
               <div className="flex flex-col rounded-md p-1">
@@ -333,7 +332,7 @@ const MerchantManagement = () => {
                   data={data?.responseData?.items}
                   printPdfRef={printPdfRef}
                   headers={excelHeaders}
-                  fileName="merchants.csv"
+                  fileName="Merchants.csv"
                 />
               </div>
             </div>

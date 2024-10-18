@@ -16,11 +16,20 @@ import { useFormik } from 'formik';
 import { QueryParams, TabsProps } from 'utils/interfaces';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
+import {
+  deleteAccount,
+  disableAccount,
+  enableAccount,
+  getAccountById,
+  getAccountsByMerchantId,
+} from 'config/actions/account-actions';
 import { getMerchantById } from 'config/actions/merchant-actions';
 import {
   deleteMandate,
   disableMandate,
   enableMandate,
+  getMandates,
+  getMandatesByAccountId,
   getMandatesByMerchantId,
   updateMandate,
 } from 'config/actions/dashboard-actions';
@@ -33,9 +42,9 @@ import CustomTabs from 'hoc/CustomTabs';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
 
-const MerchantMandates = () => {
+const AccountMandates = () => {
   const [searchParams] = useSearchParams();
-  const merchantId = searchParams?.get('id') || '';
+  const accountId = searchParams?.get('id') || '';
   const printPdfRef = useRef(null);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
@@ -92,7 +101,6 @@ const MerchantMandates = () => {
   });
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
-    mandateCode: '',
     status: formik.values.statusFilter,
     pageNo: paginationData.pageNumber,
     pageSize: paginationData.pageSize,
@@ -345,13 +353,13 @@ const MerchantMandates = () => {
   ];
 
   const { data, refetch } = useQuery({
-    queryKey: ['accounts', queryParams],
-    queryFn: ({ queryKey }) => getMandatesByMerchantId(merchantId, queryKey[1] as QueryParams),
+    queryKey: ['mandates', queryParams],
+    queryFn: ({ queryKey }) => getMandatesByAccountId(accountId, queryKey[1] as QueryParams),
   });
 
-  const { data: merchantData } = useQuery({
-    queryKey: ['merchants', merchantId],
-    queryFn: ({ queryKey }) => getMerchantById(queryKey[1]),
+  const { data: accountData } = useQuery({
+    queryKey: ['accounts', accountId],
+    queryFn: ({ queryKey }) => getAccountById(queryKey[1]),
   });
 
   const updateMandateMutation = useMutation({
@@ -408,24 +416,24 @@ const MerchantMandates = () => {
             to={`/${appRoutes.adminDashboard.merchantManagement.index}`}
             className="cursor-pointer text-darkgray"
           >
-            Merchant Management
+            Account Management
           </Link>
           <ChevronRight />
           <Link
             to={{
               pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantDetails}`,
-              search: `?${createSearchParams({ id: merchantId })}`,
+              search: `?${createSearchParams({ id: accountId })}`,
             }}
             className="cursor-pointer text-darkgray"
           >
-            Merchant Details
+            Account Details
           </Link>{' '}
           <ChevronRight />
-          <span className="text-lightPurple">Merchant Mandates</span>
+          <span className="text-lightPurple">Account Mandates</span>
         </div>
         <div className="fade-in-down my-2 mt-6 flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold md:text-2xl">{`Mandates Under Merchant: ${merchantData?.responseData?.name ? merchantData?.responseData?.name : ''}`}</h1>
+            <h1 className="text-lg font-semibold md:text-2xl">{`Mandates Under Account: ${accountData?.responseData?.accountName ? accountData?.responseData?.accountName : ''}`}</h1>
           </div>
         </div>
         <div className="mt-5">
@@ -699,4 +707,4 @@ const MerchantMandates = () => {
   );
 };
 
-export default MerchantMandates;
+export default AccountMandates;

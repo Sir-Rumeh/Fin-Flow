@@ -33,7 +33,7 @@ const MerchantRequests = () => {
 
   const formik = useFormik({
     initialValues: {
-      searchMerchantName: '',
+      searchMerchantCif: '',
       fromDateFilter: '',
       toDateFilter: '',
       statusFilter: '',
@@ -49,7 +49,7 @@ const MerchantRequests = () => {
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
-    searchFilter: formik.values.searchMerchantName,
+    searchFilter: formik.values.searchMerchantCif,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });
@@ -60,7 +60,7 @@ const MerchantRequests = () => {
       status: activeTab,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchMerchantName,
+      searchFilter: formik.values.searchMerchantCif,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
@@ -216,8 +216,8 @@ const MerchantRequests = () => {
               <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-end">
                 <div className="">
                   <TableFilter
-                    name={'searchMerchantName'}
-                    placeholder={'Search Merchant Name'}
+                    name={'searchMerchantCif'}
+                    placeholder={'Search Merchant CIF'}
                     label={'Search Merchant'}
                     value={searchTerm}
                     setSearch={setSearchTerm}

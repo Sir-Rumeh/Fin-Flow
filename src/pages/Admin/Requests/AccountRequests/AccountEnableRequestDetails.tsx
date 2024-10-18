@@ -4,7 +4,7 @@ import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
 import appRoutes from 'utils/constants/routes';
 import ButtonComponent from 'components/FormElements/Button';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
@@ -18,16 +18,13 @@ import {
   getAccountRequestById,
   rejectAccountRequest,
 } from 'config/actions/account-actions';
-import { UpdateRequestDisplay } from 'utils/interfaces';
-import { displayUpdateRequestData, formatNumberDisplay } from 'utils/helpers';
 import RejectedIcon from 'assets/icons/RejectedIcon';
 
-const AccountUpdateRequestDetails = () => {
+const AccountEnableRequestDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const accountId = searchParams?.get('id') || '';
   const queryClient = useQueryClient();
-  const [updateDataList, setUpdateDataList] = useState<UpdateRequestDisplay[]>();
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
     confirmRejectRequest: false,
@@ -42,6 +39,7 @@ const AccountUpdateRequestDetails = () => {
   const closeModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
+
   const formik = useFormik({
     initialValues: {
       remark: '',
@@ -56,16 +54,6 @@ const AccountUpdateRequestDetails = () => {
     queryKey: ['accountRequests', accountId],
     queryFn: ({ queryKey }) => getAccountRequestById(queryKey[1]),
   });
-
-  useEffect(() => {
-    const updatedDataList = displayUpdateRequestData(
-      data?.responseData?.oldData,
-      data?.responseData,
-    );
-    if (updatedDataList) {
-      setUpdateDataList(updatedDataList);
-    }
-  }, [data]);
 
   const approveAccountRequestMutation = useMutation({
     mutationFn: (requestId: string | undefined) => approveAccountRequest(requestId),
@@ -97,8 +85,7 @@ const AccountUpdateRequestDetails = () => {
           >
             Account Requests
           </Link>{' '}
-          <ChevronRight />
-          <span className="text-lightPurple">Account Update Request Details</span>
+          <ChevronRight />s<span className="text-lightPurple">Enable Account Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
           <h2 className="text-lg font-semibold md:text-2xl">{`Account ID : ${data?.responseData?.id}`}</h2>
@@ -134,45 +121,7 @@ const AccountUpdateRequestDetails = () => {
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
           <div className="">
-            <ItemDetailsContainer title="Old Information">
-              {updateDataList?.map((updatedData, index) => {
-                return (
-                  <DetailsCard
-                    key={index}
-                    title={`Old ${updatedData.name}`}
-                    content={
-                      typeof updatedData.oldValue === 'number' && updatedData.name === 'Amount'
-                        ? formatNumberDisplay(updatedData.oldValue)
-                        : typeof updatedData.oldValue === 'string' && updatedData.name === 'Amount'
-                          ? formatNumberDisplay(parseInt(updatedData.oldValue))
-                          : updatedData.oldValue
-                    }
-                  />
-                );
-              })}
-            </ItemDetailsContainer>
-          </div>
-          <div className="mt-10">
-            <ItemDetailsContainer title="New Information">
-              {updateDataList?.map((updatedData, index) => {
-                return (
-                  <DetailsCard
-                    key={index}
-                    title={`New ${updatedData.name}`}
-                    content={
-                      typeof updatedData.newValue === 'number' && updatedData.name === 'Amount'
-                        ? formatNumberDisplay(updatedData.newValue)
-                        : typeof updatedData.newValue === 'string' && updatedData.name === 'Amount'
-                          ? formatNumberDisplay(parseInt(updatedData.newValue))
-                          : updatedData.newValue
-                    }
-                  />
-                );
-              })}
-            </ItemDetailsContainer>
-          </div>
-          <div className="mt-10">
-            <ItemDetailsContainer title="Account Details">
+            <ItemDetailsContainer title="Request Details">
               <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
               <DetailsCard title="Merchant Name" content={data?.responseData?.merchantName} />
               <DetailsCard title="CIF Number" content={data?.responseData?.cif} />
@@ -251,7 +200,7 @@ const AccountUpdateRequestDetails = () => {
           setIsOpen={() => closeModal('confirmApproveRequest')}
           title={'Approve account Request?'}
           info={
-            'You are about to approve this account update request, would you want to proceed with this?'
+            'You are about to approve this enable account request, would you want to proceed with this?'
           }
           icon={<RedAlertIcon />}
           type={'confirmation'}
@@ -266,7 +215,7 @@ const AccountUpdateRequestDetails = () => {
           isOpen={modals.approveSuccessfulModal}
           setIsOpen={() => closeModal('approveSuccessfulModal')}
           title={'Success!!'}
-          info={'You have successfully approved this account update request'}
+          info={'You have successfully approved this enable account request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -283,7 +232,7 @@ const AccountUpdateRequestDetails = () => {
           setIsOpen={() => closeModal('confirmRejectRequest')}
           title={'Reject account Request?'}
           info={
-            'You are about to reject this account update request, would you want to proceed with this?'
+            'You are about to reject this enable account request, would you want to proceed with this?'
           }
           feedback={
             <div className="w-full md:col-span-1">
@@ -311,7 +260,7 @@ const AccountUpdateRequestDetails = () => {
           isOpen={modals.rejectSuccessfulModal}
           setIsOpen={() => closeModal('rejectSuccessfulModal')}
           title={'Success!!'}
-          info={'You have successfully rejected this account update request'}
+          info={'You have successfully rejected this enable account request'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -324,4 +273,4 @@ const AccountUpdateRequestDetails = () => {
   );
 };
 
-export default AccountUpdateRequestDetails;
+export default AccountEnableRequestDetails;

@@ -1,5 +1,5 @@
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import TableFilter from 'components/TableFilter';
 import CustomTable from 'components/CustomTable';
 import appRoutes from 'utils/constants/routes';
@@ -15,10 +15,26 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 import { useMediaQuery } from '@mui/material';
+import { QueryParams } from 'utils/interfaces';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import {
+  deleteAccount,
+  disableAccount,
+  enableAccount,
+  getAccounts,
+} from 'config/actions/account-actions';
 
 const AccountManagement = () => {
-  const [searchTerm, setSearchTerm] = useState('');
+  const printPdfRef = useRef(null);
   const navigate = useNavigate();
+  const [searchTerm, setSearchTerm] = useState('');
+  const [paginationData, setPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
+
+  const [selectedAccountId, setSelectedAccountId] = useState('');
+
   const [modals, setModals] = useState({
     confirmDisable: false,
     disableSuccessful: false,
@@ -47,6 +63,46 @@ const AccountManagement = () => {
       setSearchTerm('');
     },
   });
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    status: formik.values.statusFilter,
+    pageNo: paginationData.pageNumber,
+    pageSize: paginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+    searchFilter: formik.values.searchAccount,
+    startDate: formik.values.fromDateFilter,
+    endDate: formik.values.toDateFilter,
+  });
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+      searchFilter: formik.values.searchAccount,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  }, [paginationData]);
+
+  const handleOptionsFilter = () => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  };
+
+  const excelHeaders = [
+    { label: 'Merchant ID', key: 'merchantId' },
+    { label: 'Account Number', key: 'accountNumber' },
+    { label: 'CIF Number', key: 'cif' },
+    { label: 'Active Status', key: 'isActive' },
+    { label: 'Date Requested', key: 'dateCreated' },
+  ];
 
   const columns: GridColDef[] = [
     {
@@ -78,24 +134,28 @@ const AccountManagement = () => {
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       renderCell: (params: GridRenderCellParams) => {
-        const renderIcon = (IconComponent: React.ComponentType, colorClass: string) => (
+        const renderIcon = (
+          IconComponent: React.ComponentType,
+          colorClass: string,
+          title: string,
+        ) => (
           <div className="flex w-full items-center gap-2 font-semibold">
             <IconComponent />
-            <span className={`mb-[1px] ${colorClass}`}>{params?.row.status}</span>
+            <span className={`mb-[1px] ${colorClass}`}>{title}</span>
           </div>
         );
-        switch (params?.row.status) {
-          case 'Enabled':
-            return renderIcon(CreationRequestIcon, 'text-greenPrimary');
-          case 'Disabled':
-            return renderIcon(DeleteRequestIcon, 'text-redSecondary');
+        switch (params?.row.isActive) {
+          case true:
+            return renderIcon(CreationRequestIcon, 'text-greenPrimary', 'Enabled');
+          case false:
+            return renderIcon(DeleteRequestIcon, 'text-redSecondary', 'Disabled');
           default:
-            return <span>{params?.row.status}</span>;
+            return <span>{params?.row.isActive ? 'Enabled' : 'Disabled'}</span>;
         }
       },
     },
     {
-      field: 'dateRequested',
+      field: 'dateCreated',
       headerName: 'Date Requested',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -109,11 +169,11 @@ const AccountManagement = () => {
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
         return (
-          <div className="-ml-1 h-full border-none">
+          <div className="h-full border-none">
             <CustomPopover
               popoverId={params?.row.id}
               buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-15}
+              translationX={-12}
               translationY={45}
             >
               <div className="flex flex-col rounded-md p-1">
@@ -129,6 +189,7 @@ const AccountManagement = () => {
                 >
                   View Details
                 </button>
+
                 <button
                   onClick={() =>
                     navigate({
@@ -141,19 +202,25 @@ const AccountManagement = () => {
                 >
                   Edit Details
                 </button>
-                {params?.row.status === 'Enabled' && (
+
+                {params?.row.isActive ? (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmDisable')}
+                    onClick={() => {
+                      setSelectedAccountId(params?.row.id);
+                      openModal('confirmDisable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                   >
                     Disable
                   </button>
-                )}
-                {params?.row.status === 'Disabled' && (
+                ) : (
                   <button
                     type="button"
-                    onClick={() => openModal('confirmEnable')}
+                    onClick={() => {
+                      setSelectedAccountId(params?.row.id);
+                      openModal('confirmEnable');
+                    }}
                     className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
                   >
                     Enable
@@ -161,7 +228,10 @@ const AccountManagement = () => {
                 )}
                 <button
                   type="button"
-                  onClick={() => openModal('confirmDelete')}
+                  onClick={() => {
+                    setSelectedAccountId(params?.row.id);
+                    openModal('confirmDelete');
+                  }}
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
                 >
                   Delete
@@ -175,6 +245,44 @@ const AccountManagement = () => {
   ];
 
   const isSmallWidth = useMediaQuery('(max-width:370px)');
+
+  const { data, refetch } = useQuery({
+    queryKey: ['accounts', queryParams],
+    queryFn: ({ queryKey }) => getAccounts(queryKey[1] as QueryParams),
+  });
+
+  const enableAccountMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => enableAccount(requestId),
+    onSuccess: () => {
+      closeModal('confirmEnable');
+      openModal('enableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmEnable');
+    },
+  });
+
+  const disableAccountMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => disableAccount(requestId),
+    onSuccess: () => {
+      closeModal('confirmDisable');
+      openModal('disableSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDisable');
+    },
+  });
+
+  const deleteAccountMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => deleteAccount(requestId),
+    onSuccess: () => {
+      closeModal('confirmDelete');
+      openModal('deleteSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmDelete');
+    },
+  });
 
   return (
     <>
@@ -208,11 +316,11 @@ const AccountManagement = () => {
                 <div className="">
                   <TableFilter
                     name={'searchAccount'}
-                    placeholder={'Search Account'}
+                    placeholder={'Search Account Number'}
                     label={'Search Account'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
-                    handleOptionsFilter={() => {}}
+                    handleOptionsFilter={handleOptionsFilter}
                     formik={formik}
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}
@@ -221,13 +329,24 @@ const AccountManagement = () => {
                 </div>
               </div>
               <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
-                <ExportBUtton />
+                <ExportBUtton
+                  data={data?.responseData?.items}
+                  printPdfRef={printPdfRef}
+                  headers={excelHeaders}
+                  fileName="Accounts.csv"
+                />
               </div>
             </div>
 
             <div className="mt-6 w-full">
-              <div className="w-full">
-                <CustomTable tableData={accountRequestsList} columns={columns} rowCount={73} />
+              <div ref={printPdfRef} className="w-full">
+                <CustomTable
+                  tableData={data?.responseData?.items}
+                  columns={columns}
+                  rowCount={data?.responseData?.totalCount}
+                  paginationData={paginationData}
+                  setPaginationData={setPaginationData}
+                />
               </div>
             </div>
           </div>
@@ -242,8 +361,7 @@ const AccountManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDisable');
-            openModal('disableSuccessful');
+            disableAccountMutation.mutate(selectedAccountId);
           }}
         />
       )}
@@ -256,6 +374,7 @@ const AccountManagement = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('disableSuccessful');
           }}
         />
@@ -269,8 +388,7 @@ const AccountManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmEnable');
-            openModal('enableSuccessful');
+            enableAccountMutation.mutate(selectedAccountId);
           }}
         />
       )}
@@ -283,6 +401,7 @@ const AccountManagement = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('enableSuccessful');
           }}
         />
@@ -296,8 +415,7 @@ const AccountManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmDelete');
-            openModal('deleteSuccessful');
+            deleteAccountMutation.mutate(selectedAccountId);
           }}
         />
       )}
@@ -310,6 +428,7 @@ const AccountManagement = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            refetch();
             closeModal('deleteSuccessful');
           }}
         />

@@ -141,9 +141,9 @@ const MerchantUpdateRequestDetails = () => {
                     key={index}
                     title={`Old ${updatedData.name}`}
                     content={
-                      typeof updatedData.oldValue === 'number'
+                      typeof updatedData.oldValue === 'number' && updatedData.name === 'Amount'
                         ? formatNumberDisplay(updatedData.oldValue)
-                        : typeof updatedData.oldValue === 'string'
+                        : typeof updatedData.oldValue === 'string' && updatedData.name === 'Amount'
                           ? formatNumberDisplay(parseInt(updatedData.oldValue))
                           : updatedData.oldValue
                     }
@@ -160,9 +160,9 @@ const MerchantUpdateRequestDetails = () => {
                     key={index}
                     title={`New ${updatedData.name}`}
                     content={
-                      typeof updatedData.newValue === 'number'
+                      typeof updatedData.newValue === 'number' && updatedData.name === 'Amount'
                         ? formatNumberDisplay(updatedData.newValue)
-                        : typeof updatedData.newValue === 'string'
+                        : typeof updatedData.newValue === 'string' && updatedData.name === 'Amount'
                           ? formatNumberDisplay(parseInt(updatedData.newValue))
                           : updatedData.newValue
                     }

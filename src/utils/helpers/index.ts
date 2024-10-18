@@ -128,8 +128,13 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
     params.append('PageSize', formattedQueryParams.pageSize.toString());
   if (formattedQueryParams.sortBy) params.append('SortBy', formattedQueryParams.sortBy);
   if (formattedQueryParams.sortOrder) params.append('SortOrder', formattedQueryParams.sortOrder);
-  if (formattedQueryParams.searchFilter)
+  if (formattedQueryParams.searchFilter) {
     params.append('searchFilter', formattedQueryParams.searchFilter);
+    params.append('UserName', formattedQueryParams.searchFilter);
+    params.append('AccountNumber', formattedQueryParams.searchFilter);
+    params.append('Cif', formattedQueryParams.searchFilter);
+    params.append('MandateCode', formattedQueryParams.searchFilter);
+  }
   if (formattedQueryParams.startDate) params.append('StartDate', formattedQueryParams.startDate);
   if (formattedQueryParams.endDate) params.append('EndDate', formattedQueryParams.endDate);
   if (formattedQueryParams.actor) params.append('Actor', formattedQueryParams.actor);
@@ -139,8 +144,8 @@ export const formatApiDataForDropdown = (dataArray: any[], dataKey: string, data
   let formattedArrayOptions: DropdownOption[] = [];
   dataArray?.map((dataOption: any) => {
     const newOption = {
-      value: dataOption[dataValue] as string,
       label: capitalize(dataOption[dataKey] as string),
+      value: dataOption[dataValue] as string,
     };
     formattedArrayOptions.push(newOption);
   });

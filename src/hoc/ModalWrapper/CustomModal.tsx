@@ -38,7 +38,6 @@ const CustomModal = ({ title, isOpen, setIsOpen, children, width = '700px', padd
   return (
     <>
       <Modal
-        className="z-10"
         open={isOpen}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"

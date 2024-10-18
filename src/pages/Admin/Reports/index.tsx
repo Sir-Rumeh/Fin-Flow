@@ -28,6 +28,7 @@ import {
   deleteMandate,
   disableMandate,
   enableMandate,
+  getMandatesByMerchantId,
   getMandates,
   updateMandate,
 } from 'config/actions/dashboard-actions';
@@ -80,6 +81,7 @@ const Reports = () => {
       fromDateFilter: '',
       toDateFilter: '',
       reportType: '',
+      merchant: '',
       status: '',
     },
     onSubmit: (values) => {
@@ -409,7 +411,9 @@ const Reports = () => {
   });
 
   const getMandateReports = async () => {
-    const res = await getMandates(queryParams as QueryParams);
+    const res = formik.values.merchant
+      ? await getMandatesByMerchantId(formik.values.merchant, queryParams as QueryParams)
+      : await getMandates(queryParams as QueryParams);
     if (res) {
       setMandateRecords(res);
       setShowFilteredReport(true);
@@ -550,7 +554,7 @@ const Reports = () => {
                   labelFor="merchant"
                   label="Merchant"
                   formik={formik}
-                  options={formatApiDataForDropdown(data?.responseData?.items, 'name', 'name')}
+                  options={formatApiDataForDropdown(data?.responseData?.items, 'name', 'id')}
                   scrollableOptions
                   scrollableHeight="max-h-[10rem]"
                 />
@@ -587,7 +591,7 @@ const Reports = () => {
                     data={mandateRecords?.responseData.items}
                     printPdfRef={printPdfRef}
                     headers={mandateExcelHeaders}
-                    fileName="mandate-reports.csv"
+                    fileName="Mandate-Reports.csv"
                   />
                 </div>
               </div>

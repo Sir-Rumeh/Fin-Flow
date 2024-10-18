@@ -95,6 +95,33 @@ export const getMandateById = async (requestId: string | undefined) => {
   }
 };
 
+export const getMandatesByMerchantId = async (
+  merchantId: string | undefined,
+  queryParams?: QueryParams,
+) => {
+  const params = new URLSearchParams();
+  appendParams(params, queryParams);
+  try {
+    const response = await AxiosClient.get(`/mandates/merchant/${merchantId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getMandatesByAccountId = async (
+  accountId: string | undefined,
+  queryParams?: QueryParams,
+) => {
+  const params = new URLSearchParams();
+  appendParams(params, queryParams);
+  try {
+    const response = await AxiosClient.get(`/mandates/account/${accountId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const deleteMandate = async (requestId: string | undefined) => {
   try {
     const response = await AxiosClient.delete(`/mandates/${requestId}`);
@@ -138,18 +165,6 @@ export const updateMandate = async (
 export const getMandateStatistics = async () => {
   try {
     const response = await AxiosClient.get(`/mandaterequests/statistics`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-// AUDIT TRAIL
-export const getAuditTrail = async (queryParams?: QueryParams) => {
-  const params = new URLSearchParams();
-  appendParams(params, queryParams);
-  try {
-    const response = await AxiosClient.get(`/audits`, { params });
     return response.data;
   } catch (error) {
     throw error;

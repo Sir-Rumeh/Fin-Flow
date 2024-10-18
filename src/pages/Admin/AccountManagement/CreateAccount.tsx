@@ -8,8 +8,16 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
+import { AccountRequest, QueryParams } from 'utils/interfaces';
+import { createAccountSchema } from 'utils/formValidators';
+import FormSelect from 'components/FormElements/FormSelect';
+import { formatApiDataForDropdown } from 'utils/helpers';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { getMerchants } from 'config/actions/merchant-actions';
+import { addAccountRequest, getAccounts } from 'config/actions/account-actions';
 
 function CreateAccount() {
+  const [accountRequest, setAccountRequest] = useState<AccountRequest | undefined>();
   const navigate = useNavigate();
   const [modals, setModals] = useState({
     confirmCreate: false,
@@ -25,10 +33,45 @@ function CreateAccount() {
   };
 
   const formik = useFormik({
-    initialValues: {},
-
+    initialValues: {
+      merchantId: '',
+      merchantName: '',
+      accountName: '',
+      accountNumber: '',
+      cif: '',
+    },
+    validationSchema: createAccountSchema,
     onSubmit: (values) => {
+      const payload = {
+        accountId: '',
+        merchantId: values.merchantId,
+        merchantName: values.merchantName,
+        accountName: values.accountName,
+        accountNumber: values.accountNumber,
+        cif: values.cif,
+      };
+      setAccountRequest(payload);
       openModal('confirmCreate');
+    },
+  });
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
+
+  const { data } = useQuery({
+    queryKey: ['merchants', queryParams],
+    queryFn: ({ queryKey }) => getMerchants(queryKey[1] as QueryParams),
+  });
+
+  const addAccountRequestMutation = useMutation({
+    mutationFn: (payload: AccountRequest | undefined) => addAccountRequest(payload),
+    onSuccess: () => {
+      openModal('creationSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmCreate');
     },
   });
 
@@ -53,29 +96,32 @@ function CreateAccount() {
             <form onSubmit={formik.handleSubmit} noValidate className="relative w-full">
               <div className="slide-down">
                 <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
-                  <CustomInput
+                  <FormSelect
                     labelFor="merchantId"
                     label="Merchant ID"
-                    inputType="text"
-                    placeholder="Enter here"
-                    maxW="w-full"
                     formik={formik}
+                    useTouched
+                    options={formatApiDataForDropdown(data?.responseData?.items, 'id', 'id')}
+                    scrollableOptions
+                    scrollableHeight="max-h-[15rem]"
                   />
-                  <CustomInput
+                  <FormSelect
                     labelFor="merchantName"
                     label="Merchant Name"
-                    inputType="text"
-                    placeholder="Enter here"
-                    maxW="w-full"
                     formik={formik}
+                    useTouched
+                    options={formatApiDataForDropdown(data?.responseData?.items, 'name', 'name')}
+                    scrollableOptions
+                    scrollableHeight="max-h-[15rem]"
                   />
-                  <CustomInput
+                  <FormSelect
                     labelFor="cif"
                     label="CIF"
-                    inputType="text"
-                    placeholder="Enter here"
-                    maxW="w-full"
                     formik={formik}
+                    useTouched
+                    options={formatApiDataForDropdown(data?.responseData?.items, 'cif', 'cif')}
+                    scrollableOptions
+                    scrollableHeight="max-h-[15rem]"
                   />
                   <CustomInput
                     labelFor="accountName"
@@ -85,7 +131,6 @@ function CreateAccount() {
                     maxW="w-full"
                     formik={formik}
                   />
-
                   <div className="md:col-span-2">
                     <CustomInput
                       labelFor="accountNumber"
@@ -124,7 +169,7 @@ function CreateAccount() {
           type={'confirmation'}
           proceedAction={() => {
             closeModal('confirmCreate');
-            openModal('creationSuccessful');
+            addAccountRequestMutation.mutate(accountRequest);
           }}
         />
       )}
