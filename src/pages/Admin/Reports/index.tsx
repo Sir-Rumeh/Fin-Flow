@@ -125,7 +125,6 @@ const Reports = () => {
   });
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
-    mandateCode: '',
     status:
       formik.values.status && !formik.values.statusFilter
         ? formik.values.status
@@ -447,7 +446,14 @@ const Reports = () => {
     if (queryParams.pageNo && !isFirstRender) {
       getMandateReports();
     }
-  }, [queryParams.pageNo]);
+  }, [
+    queryParams.pageNo,
+    queryParams.status,
+    queryParams.mandateCode,
+    queryParams.startDate,
+    queryParams.endDate,
+    queryParams.searchFilter,
+  ]);
 
   const updateMandateMutation = useMutation({
     mutationFn: (requestId: string | undefined) =>

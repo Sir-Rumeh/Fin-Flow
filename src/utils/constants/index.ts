@@ -15,12 +15,12 @@ import {
 } from 'utils/interfaces';
 
 export const statusDropdownOptions = [
-  { value: 'All', label: 'All' },
+  { value: '', label: 'All' },
   { value: 'Enabled', label: 'Enabled' },
   { value: 'Disabled', label: 'Disabled' },
 ];
 export const requestTypeDropdownOptions = [
-  { value: 'All', label: 'All' },
+  { value: '', label: 'All' },
   { value: 'Creation', label: 'Creation' },
   { value: 'Update', label: 'Update' },
   { value: 'Enable', label: 'Enable' },

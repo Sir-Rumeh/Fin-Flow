@@ -71,7 +71,7 @@ const Dashboard = () => {
   useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
-      status: formik.values.status !== 'All' ? formik.values.status : undefined,
+      status: formik.values.status,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
     }));
@@ -298,7 +298,7 @@ const Dashboard = () => {
                   <div className="slide-downward flex w-[7rem] flex-col rounded-md bg-white py-1 text-sm">
                     <span
                       onClick={() => {
-                        formik.setFieldValue('status', 'All');
+                        formik.setFieldValue('status', '');
                       }}
                       className="cursor-pointer border-b px-3 py-1 text-start hover:bg-lilacPurple"
                     >
