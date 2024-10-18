@@ -1,4 +1,10 @@
-import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import {
+  createSearchParams,
+  Link,
+  useLocation,
+  useNavigate,
+  useSearchParams,
+} from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
@@ -132,8 +138,10 @@ const MerchantDeletionRequestDetails = () => {
                 backgroundColor="bg-white"
                 textColor="text-purplePrimary"
                 icon={<SubTitleIconGreen />}
-                route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
-                // navigate to MerchantAccounts which will import table from Account Management
+                route={{
+                  pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantAccounts}`,
+                  search: `?${createSearchParams({ id: merchantId })}`,
+                }}
               />
               <DashboardCard
                 title="Total Profiles"
@@ -141,8 +149,10 @@ const MerchantDeletionRequestDetails = () => {
                 backgroundColor="bg-white"
                 textColor="text-purplePrimary"
                 icon={<SubTitleIconYellow />}
-                route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
-                // navigate to MerchantProfiles which will import table from Profile Management
+                route={{
+                  pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantProfiles}`,
+                  search: `?${createSearchParams({ id: merchantId })}`,
+                }}
               />
               <DashboardCard
                 title="Total Mandates"
@@ -150,8 +160,10 @@ const MerchantDeletionRequestDetails = () => {
                 backgroundColor="bg-white"
                 textColor="text-purplePrimary"
                 icon={<SubTitleIconYellow />}
-                route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
-                // navigate to MerchantMandates  which will import table from Mandate  Management
+                route={{
+                  pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantMandates}`,
+                  search: `?${createSearchParams({ id: merchantId })}`,
+                }}
               />
             </div>
           </div>

@@ -4,7 +4,7 @@ import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
 import appRoutes from 'utils/constants/routes';
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
@@ -19,12 +19,15 @@ import {
   rejectStaffUserRequest,
 } from 'config/actions/staff-user-actions';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
+import { UpdateRequestDisplay } from 'utils/interfaces';
+import { displayUpdateRequestData } from 'utils/helpers';
 
 const StaffUserUpdateRequestDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const staffUserId = searchParams?.get('id') || '';
   const queryClient = useQueryClient();
+  const [updateDataList, setUpdateDataList] = useState<UpdateRequestDisplay[]>();
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
     confirmRejectRequest: false,
@@ -53,6 +56,16 @@ const StaffUserUpdateRequestDetails = () => {
     queryKey: ['staffuserRequests', staffUserId],
     queryFn: ({ queryKey }) => getStaffUserRequestById(queryKey[1]),
   });
+
+  useEffect(() => {
+    const updatedDataList = displayUpdateRequestData(
+      data?.responseData?.oldData,
+      data?.responseData,
+    );
+    if (updatedDataList) {
+      setUpdateDataList(updatedDataList);
+    }
+  }, [data]);
 
   const approveStaffUserRequestMutation = useMutation({
     mutationFn: (requestId: string | undefined) => approveStaffUserRequest(requestId),
@@ -122,14 +135,28 @@ const StaffUserUpdateRequestDetails = () => {
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
           <div className="">
             <ItemDetailsContainer title="Old Information">
-              <DetailsCard title="First Name" content="John" />
-              <DetailsCard title="Last Name" content="Doe" />
+              {updateDataList?.map((updatedData, index) => {
+                return (
+                  <DetailsCard
+                    key={index}
+                    title={`Old ${updatedData.name}`}
+                    content={updatedData.oldValue}
+                  />
+                );
+              })}
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="New Information">
-              <DetailsCard title="First Name" content="Jon" />
-              <DetailsCard title="Last Name" content="Dow" />
+              {updateDataList?.map((updatedData, index) => {
+                return (
+                  <DetailsCard
+                    key={index}
+                    title={`New ${updatedData.name}`}
+                    content={updatedData.newValue}
+                  />
+                );
+              })}
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">

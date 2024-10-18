@@ -4,7 +4,7 @@ import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
 import appRoutes from 'utils/constants/routes';
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
@@ -19,12 +19,15 @@ import {
   getProfileRequestById,
   rejectProfileRequest,
 } from 'config/actions/profile-actions';
+import { UpdateRequestDisplay } from 'utils/interfaces';
+import { displayUpdateRequestData } from 'utils/helpers';
 
 const ProfileUpdateRequestDetails = () => {
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
   const requestId = searchParams?.get('id') || '';
-  const navigate = useNavigate();
+  const [updateDataList, setUpdateDataList] = useState<UpdateRequestDisplay[]>();
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
     confirmRejectRequest: false,
@@ -58,6 +61,16 @@ const ProfileUpdateRequestDetails = () => {
     queryKey: ['profileRequests', requestId],
     queryFn: ({ queryKey }) => getProfileRequestById(queryKey[1]),
   });
+
+  useEffect(() => {
+    const updatedDataList = displayUpdateRequestData(
+      data?.responseData?.oldData,
+      data?.responseData,
+    );
+    if (updatedDataList) {
+      setUpdateDataList(updatedDataList);
+    }
+  }, [data]);
 
   const approveProfileRequestMutation = useMutation({
     mutationFn: (requestId: string | undefined) => approveProfileRequest(requestId),
@@ -140,14 +153,28 @@ const ProfileUpdateRequestDetails = () => {
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
           <div className="">
             <ItemDetailsContainer title="Old Information">
-              <DetailsCard title="Profile Name" content="John Doe" />
-              <DetailsCard title="Profile Email Address" content="johndoe@gmail.com" />
+              {updateDataList?.map((updatedData, index) => {
+                return (
+                  <DetailsCard
+                    key={index}
+                    title={`Old ${updatedData.name}`}
+                    content={updatedData.oldValue}
+                  />
+                );
+              })}
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="New Information">
-              <DetailsCard title="Profile Name" content="John Doe" />
-              <DetailsCard title="Profile Email Address" content="johndoe@gmail.com" />
+              {updateDataList?.map((updatedData, index) => {
+                return (
+                  <DetailsCard
+                    key={index}
+                    title={`New ${updatedData.name}`}
+                    content={updatedData.newValue}
+                  />
+                );
+              })}
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">

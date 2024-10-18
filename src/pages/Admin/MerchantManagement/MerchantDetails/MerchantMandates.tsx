@@ -16,18 +16,11 @@ import { useFormik } from 'formik';
 import { QueryParams, TabsProps } from 'utils/interfaces';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { useSearchParams } from 'react-router-dom';
-import {
-  deleteAccount,
-  disableAccount,
-  enableAccount,
-  getAccountsByMerchantId,
-} from 'config/actions/account-actions';
 import { getMerchantById } from 'config/actions/merchant-actions';
 import {
   deleteMandate,
   disableMandate,
   enableMandate,
-  getMandates,
   getMandatesByMerchantId,
   updateMandate,
 } from 'config/actions/dashboard-actions';

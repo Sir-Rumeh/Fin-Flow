@@ -36,6 +36,19 @@ export const getProfilesByMerchantId = async (
     throw error;
   }
 };
+export const getProfilesByAccountId = async (
+  accountId: string | undefined,
+  queryParams?: QueryParams,
+) => {
+  const params = new URLSearchParams();
+  appendParams(params, queryParams);
+  try {
+    const response = await AxiosClient.get(`/profiles/account/${accountId}`, { params });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const enableProfile = async (requestId: string | undefined) => {
   try {
