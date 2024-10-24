@@ -121,3 +121,12 @@ export const createAccountSchema = Yup.object().shape({
   accountNumber: Yup.string().required('Account number is required'),
   cif: Yup.string().required('CIF number is required'),
 });
+
+export const addRoleSchema = Yup.object().shape({
+  roleName: Yup.string().required('Role name is required'),
+  roleDescription: Yup.string().required('Role Description is required'),
+});
+
+export const addRolePermissionSchema = Yup.object().shape({
+  groupName: Yup.string().required('Group name is required'),
+});

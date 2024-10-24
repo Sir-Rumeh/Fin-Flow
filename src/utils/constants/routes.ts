@@ -100,6 +100,11 @@ export const appRoutes = {
       staffUserDisableRequest: `${BASE_ROUTES.ADMIN}/staff-user-requests/disable-request-details`,
       staffUserEnableRequest: `${BASE_ROUTES.ADMIN}/staff-user-requests/enable-request-details`,
     },
+    rolesPermission: {
+      index: `${BASE_ROUTES.ADMIN}/roles-permission`,
+      addRole: `${BASE_ROUTES.ADMIN}/roles-permission/add-role`,
+      addRolePermission: `${BASE_ROUTES.ADMIN}/roles-permission/add-role-permission`,
+    },
   },
   merchantDashboard: {
     dashboard: {

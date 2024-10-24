@@ -1,6 +1,5 @@
-import { Link, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
-import ChevronDown from 'assets/icons/ChevronDown';
 import ChevronRight from 'assets/icons/ChevronRight';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
@@ -250,6 +249,7 @@ function EditProfile() {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
+            closeModal('confirmEdit');
             updateProfileMutation.mutate({ requestId: profileId, payload: profileRequest });
           }}
         />

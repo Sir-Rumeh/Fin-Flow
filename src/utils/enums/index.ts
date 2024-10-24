@@ -48,3 +48,9 @@ export enum MandateRequestStatus {
   Declined = 'Declined',
   Pending = 'Pending',
 }
+
+export enum RequestStatus {
+  Approved = 'Approved',
+  Declined = 'Declined',
+  Pending = 'Pending',
+}

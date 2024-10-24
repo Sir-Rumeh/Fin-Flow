@@ -167,20 +167,6 @@ export interface StaffUserRequest {
   role: string | undefined;
 }
 
-// export interface ProfileRequest {
-//   profileID?: string | undefined;
-//   merchantID?: string | undefined;
-//   merchantName?: string | undefined;
-//   userName?: string | undefined;
-//   password?: string | undefined;
-//   accountID?: string | undefined;
-//   accountNumber?: string | undefined;
-//   firstName: string | undefined;
-//   lastName: string | undefined;
-//   email: string | undefined;
-//   role: string | undefined;
-// }
-
 export interface ProfileRequest {
   profileID?: string | undefined;
   merchantID: string | undefined;
@@ -213,4 +199,11 @@ export interface UpdateRequestDisplay {
   name: string | undefined;
   oldValue: string | number | undefined;
   newValue: string | number | undefined;
+}
+
+export interface RoleType {
+  id: number;
+  roleName: string;
+  roleDescription: string;
+  dateCreated: string;
 }

@@ -146,12 +146,8 @@ const ProfileRequests = () => {
           <div className="">
             <Link
               className="w-full text-start font-semibold text-lightPurple"
-              // to={{
-              //   pathname: route,
-              //   search: `?${createSearchParams({ id: params?.row.id })}`,
-              // }}
               to={{
-                pathname: `/${appRoutes.adminDashboard.requests.profileRequests.profileCreationRequest}`,
+                pathname: route,
                 search: `?${createSearchParams({ id: params?.row.id })}`,
               }}
             >
