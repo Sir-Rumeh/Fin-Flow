@@ -11,6 +11,7 @@ import {
   AuditDataRow,
   TransactionsReport,
   StaffUserDataRow,
+  RoleType,
 } from 'utils/interfaces';
 
 export const statusDropdownOptions = [
@@ -1397,5 +1398,102 @@ export const auditTrailList: AuditDataRow[] = [
     module: 'Mandates',
     performedAction: 'Modification',
     date: '2015-03-25T12:00:00-06:30',
+  },
+];
+
+export const roleList: RoleType[] = [
+  {
+    id: 1,
+    roleName: 'SuperAdmin',
+    roleDescription: 'Super role description',
+    dateCreated: '10/24/2024',
+  },
+  {
+    id: 2,
+    roleName: 'Super SuperAdmin',
+    roleDescription: 'Super role description',
+    dateCreated: '10/24/2024',
+  },
+  {
+    id: 3,
+    roleName: 'Admin',
+    roleDescription: 'Admin role description',
+    dateCreated: '10/24/2024',
+  },
+  {
+    id: 4,
+    roleName: 'Merchant',
+    roleDescription: 'Merchant role description',
+    dateCreated: '10/24/2024',
+  },
+  {
+    id: 5,
+    roleName: 'User',
+    roleDescription: 'User role description',
+    dateCreated: '10/24/2024',
+  },
+];
+
+export const rolePermissionList = [
+  {
+    id: 1,
+    groupName: 'Syscon Staff',
+    hasAccessTo: 'Mandate, Account, Profile',
+    dateCreated: '10/24/2024',
+  },
+  {
+    id: 1,
+    groupName: 'SME Liability',
+    hasAccessTo: 'Mandate, Account, Profile',
+    dateCreated: '10/24/2024',
+  },
+  {
+    id: 1,
+    groupName: 'Syscon Staff',
+    hasAccessTo: 'Mandate, Account, Audit',
+    dateCreated: '10/24/2024',
+  },
+];
+
+export const accessRights = [
+  {
+    id: 1,
+    module: 'Requests',
+  },
+  {
+    id: 2,
+    module: 'Merchant',
+  },
+  {
+    id: 3,
+    module: 'Mandate',
+  },
+  {
+    id: 4,
+    module: 'Profile',
+  },
+  {
+    id: 5,
+    module: 'Account',
+  },
+  {
+    id: 6,
+    module: 'Audit',
+  },
+  {
+    id: 7,
+    module: 'Reports',
+  },
+  {
+    id: 8,
+    module: 'Staff User',
+  },
+  {
+    id: 9,
+    module: 'User Requests',
+  },
+  {
+    id: 10,
+    module: 'Role Permissions',
   },
 ];

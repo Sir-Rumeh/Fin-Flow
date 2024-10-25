@@ -62,6 +62,10 @@ import UserRequestsIcon from 'assets/icons/UserRequestsIcon';
 import StaffUserEnableRequestDetails from 'pages/Admin/Requests/StaffUserRequests/StaffUserEnableRequestDetails';
 import MerchantDetailsRoutes from 'pages/Admin/MerchantManagement/MerchantDetails/MerchantDetailsRoutes';
 import AccountDetailsRoutes from 'pages/Admin/AccountManagement/AccountDetails/AccountDetailsRoutes';
+import RolesPermission from 'pages/Admin/RolesPermission';
+import SecurityIcon from 'assets/icons/SecurityIcon';
+import AddRole from 'pages/Admin/RolesPermission/AddRole';
+import AddRolePermission from 'pages/Admin/RolesPermission/AddRolePermission';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -298,6 +302,27 @@ const adminRoutes: RoutesType[] = [
         name: 'Disable Request Details',
         path: 'disable-request-details',
         component: <StaffUserDisableRequestDetails />,
+      },
+    ],
+  },
+  {
+    name: 'Roles Permission',
+    layout: `/${BASE_ROUTES.ADMIN}`,
+    path: 'roles-permission',
+    icon: <SecurityIcon />,
+    component: <RolesPermission />,
+    rolesWithAccess: [AdminUserRoles.Admin],
+    willChildLinkShow: false,
+    children: [
+      {
+        name: 'Add Role',
+        path: 'add-role',
+        component: <AddRole />,
+      },
+      {
+        name: 'Add Role Permission',
+        path: 'add-role-permission',
+        component: <AddRolePermission />,
       },
     ],
   },
