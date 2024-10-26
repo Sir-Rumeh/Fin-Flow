@@ -66,6 +66,8 @@ import RolesPermission from 'pages/Admin/RolesPermission';
 import SecurityIcon from 'assets/icons/SecurityIcon';
 import AddRole from 'pages/Admin/RolesPermission/AddRole';
 import AddRolePermission from 'pages/Admin/RolesPermission/AddRolePermission';
+import RoleDetails from 'pages/Admin/RolesPermission/RoleDetails';
+import RolePermissionDetails from 'pages/Admin/RolesPermission/RolePermissionDetails';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -314,6 +316,16 @@ const adminRoutes: RoutesType[] = [
     rolesWithAccess: [AdminUserRoles.Admin],
     willChildLinkShow: false,
     children: [
+      {
+        name: 'View Role Details',
+        path: 'role-details',
+        component: <RoleDetails />,
+      },
+      {
+        name: 'View Role Permission Details',
+        path: 'role-permission-details',
+        component: <RolePermissionDetails />,
+      },
       {
         name: 'Add Role',
         path: 'add-role',

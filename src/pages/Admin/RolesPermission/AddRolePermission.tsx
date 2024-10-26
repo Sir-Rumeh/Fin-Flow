@@ -10,7 +10,7 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import FormSelect from 'components/FormElements/FormSelect';
 import ToggleSwitch from 'components/FormElements/ToggleSwitch';
-import { accessRights } from 'utils/constants';
+import { adminAccessRights } from 'utils/constants';
 
 const AddRolePermission = () => {
   const navigate = useNavigate();
@@ -83,14 +83,14 @@ const AddRolePermission = () => {
                 />
               </div>
             </div>
-            <div className="mt-10 grid grid-cols-2 gap-20 md:grid-cols-4">
-              {accessRights.map((right) => (
+            <div className="mt-10 grid grid-cols-2 gap-20 rounded-lg border p-2 md:grid-cols-4 md:p-3 2xl:p-4">
+              {adminAccessRights.map((right) => (
                 <ToggleSwitch
                   key={right.id}
                   id={right.id}
                   toggleLabel={right.module}
-                  checked={selectedModules.includes(right.module)}
-                  onChange={handleToggleChange(right.module)}
+                  checked={selectedModules.includes(right.moduleValue)}
+                  onChange={handleToggleChange(right.moduleValue)}
                 />
               ))}
             </div>
@@ -151,6 +151,7 @@ const AddRolePermission = () => {
           type={'completed'}
           proceedAction={() => {
             closeModal('addRolePermissionSuccessful');
+            navigate(`/${appRoutes.adminDashboard.rolesPermission.index}`);
           }}
         />
       )}

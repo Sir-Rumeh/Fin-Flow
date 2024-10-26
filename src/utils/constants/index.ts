@@ -1407,30 +1407,35 @@ export const roleList: RoleType[] = [
     id: 1,
     roleName: 'SuperAdmin',
     roleDescription: 'Super role description',
+    designator: 'John Doe',
     dateCreated: '10/24/2024',
   },
   {
     id: 2,
     roleName: 'Super SuperAdmin',
     roleDescription: 'Super role description',
+    designator: 'John Doe',
     dateCreated: '10/24/2024',
   },
   {
     id: 3,
     roleName: 'Admin',
     roleDescription: 'Admin role description',
+    designator: 'John Doe',
     dateCreated: '10/24/2024',
   },
   {
     id: 4,
     roleName: 'Merchant',
     roleDescription: 'Merchant role description',
+    designator: 'John Doe',
     dateCreated: '10/24/2024',
   },
   {
     id: 5,
     roleName: 'User',
     roleDescription: 'User role description',
+    designator: 'John Doe',
     dateCreated: '10/24/2024',
   },
 ];
@@ -1456,45 +1461,60 @@ export const rolePermissionList = [
   },
 ];
 
-export const accessRights = [
+export const adminAccessRights: { id: number; module: string; moduleValue: string }[] = [
+  {
+    id: 0,
+    module: 'Dashboard',
+    moduleValue: 'Dashboard',
+  },
   {
     id: 1,
     module: 'Requests',
+    moduleValue: 'Requests',
   },
   {
     id: 2,
     module: 'Merchant',
+    moduleValue: 'Merchant',
   },
   {
     id: 3,
     module: 'Mandate',
+    moduleValue: 'Mandate',
   },
   {
     id: 4,
     module: 'Profile',
+    moduleValue: 'Profile',
   },
   {
     id: 5,
     module: 'Account',
+    moduleValue: 'Account',
   },
   {
     id: 6,
     module: 'Audit',
+    moduleValue: 'Audit',
   },
   {
     id: 7,
     module: 'Reports',
+    moduleValue: 'Reports',
   },
   {
     id: 8,
     module: 'Staff User',
+    moduleValue: 'StaffUser',
   },
   {
     id: 9,
     module: 'User Requests',
+    moduleValue: 'UserRequests',
   },
   {
     id: 10,
     module: 'Role Permissions',
+    moduleValue: 'RolePermissions',
   },
 ];

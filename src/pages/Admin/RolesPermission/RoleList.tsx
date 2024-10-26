@@ -1,8 +1,10 @@
 import { useMediaQuery } from '@mui/material';
-import { GridColDef } from '@mui/x-data-grid';
+import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import PopoverTitle from 'components/common/PopoverTitle';
 import CustomTable from 'components/CustomTable';
 import ButtonComponent from 'components/FormElements/Button';
-import { useNavigate } from 'react-router-dom';
+import CustomPopover from 'hoc/PopOverWrapper';
+import { createSearchParams, useNavigate } from 'react-router-dom';
 import { roleList } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
 
@@ -26,12 +28,51 @@ const RoleList = () => {
       headerClassName: 'ag-thead',
     },
     {
+      field: 'designator',
+      headerName: 'Designator',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
+    {
       field: 'dateCreated',
       headerName: 'Date Created',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
-      // valueGetter: (params: any) => new Date(params).toLocaleDateString(),
+    },
+    {
+      field: 'actions',
+      headerName: 'Action',
+      headerClassName: 'ag-thead ',
+      sortable: false,
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <div className="h-full border-none">
+            <CustomPopover
+              popoverId={params?.row.id}
+              buttonIcon={<PopoverTitle title="Actions" />}
+              translationX={-10}
+              translationY={45}
+            >
+              <div className="flex flex-col rounded-md p-1">
+                <button
+                  onClick={() =>
+                    navigate({
+                      pathname: `/${appRoutes.adminDashboard.rolesPermission.roleDetails}`,
+                      search: `?${createSearchParams({ id: params?.row.id })}`,
+                    })
+                  }
+                  type="button"
+                  className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
+                >
+                  View Details
+                </button>
+              </div>
+            </CustomPopover>
+          </div>
+        );
+      },
     },
   ];
 

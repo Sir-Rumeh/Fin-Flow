@@ -40,10 +40,9 @@ const RolesPermission = () => {
   return (
     <div className="px-5 py-1">
       <div className="slide-down mt-3 flex items-center justify-between">
-        <h2 className="mt-3 text-xl font-semibold">Roles and Role Permission</h2>
+        <h1 className="text-lg font-semibold md:text-2xl">Roles and Role Permissions</h1>
       </div>
-
-      <div className="slide-down mt-3 flex w-full flex-row items-center justify-start gap-6 md:gap-10">
+      <div className="slide-down mt-5 flex w-full flex-row items-center justify-start gap-6 md:gap-10">
         <CustomTabs
           width="w-auto"
           tabs={tabsList}

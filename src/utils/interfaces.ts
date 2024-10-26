@@ -205,5 +205,6 @@ export interface RoleType {
   id: number;
   roleName: string;
   roleDescription: string;
+  designator: string;
   dateCreated: string;
 }

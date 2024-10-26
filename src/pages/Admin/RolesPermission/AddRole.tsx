@@ -76,7 +76,7 @@ const AddRole = () => {
               />
             </div>
           </div>
-          <div className="mt-5">
+          <div className="mt-6">
             <div className="flex w-full items-center justify-end gap-4">
               <div className="w-auto">
                 <ButtonComponent
@@ -132,6 +132,7 @@ const AddRole = () => {
           type={'completed'}
           proceedAction={() => {
             closeModal('addRoleSuccessful');
+            navigate(`/${appRoutes.adminDashboard.rolesPermission.index}`);
           }}
         />
       )}
