@@ -38,6 +38,7 @@ export const userLevel = [
   { value: 'Initiator', label: 'Initiator' },
   { value: 'Approver', label: 'Approver' },
 ];
+
 export const canBeUpdated: any = {
   name: true,
   accountNumber: true,

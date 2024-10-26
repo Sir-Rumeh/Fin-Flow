@@ -95,6 +95,7 @@ const Reports = () => {
   ];
 
   const itemStatus = [
+    { value: '', label: 'All' },
     { value: 'Enabled', label: 'Enabled' },
     { value: 'Disabled', label: 'Disabled' },
   ];
@@ -125,10 +126,7 @@ const Reports = () => {
   });
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
-    status:
-      formik.values.status && !formik.values.statusFilter
-        ? formik.values.status
-        : formik.values.statusFilter,
+    status: formik.values.statusFilter,
     pageNo: paginationData.pageNumber,
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
@@ -422,7 +420,7 @@ const Reports = () => {
   useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
-      status: formik.values.statusFilter,
+      status: formik.values.status,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
       searchFilter: formik.values.searchMandate,
@@ -431,7 +429,7 @@ const Reports = () => {
     }));
 
     setIsFirstRender(false);
-  }, [paginationData.pageNumber]);
+  }, [paginationData.pageNumber, formik.values.status, formik.values.searchMandate]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
@@ -513,7 +511,7 @@ const Reports = () => {
           </div>
         </div>
         <div className="mt-5">
-          <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 pb-6 md:p-4 md:pb-8">
+          <div className="slide-down relative z-[999] mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 pb-6 md:p-4 md:pb-8">
             <div className="flex w-full items-center justify-start border-b pb-2">
               <h2 className="text-xl font-semibold tracking-wide">Generate Report</h2>
             </div>
