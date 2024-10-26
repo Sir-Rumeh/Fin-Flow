@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { DarkArrowDown } from 'assets/icons';
 
 export interface DropdownOption {
+  id?: string | number;
   value: string;
   label: string;
 }

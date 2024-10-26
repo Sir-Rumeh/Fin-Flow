@@ -6,7 +6,6 @@ import appRoutes from 'utils/constants/routes';
 import DashboardCard from 'components/common/DashboardCards/DashboardCard';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
-import { muiDashboardMerchantsList } from 'utils/constants';
 import { useEffect, useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
@@ -14,12 +13,12 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import CustomTable from 'components/CustomTable';
 import { chartsGridClasses } from '@mui/x-charts/ChartsGrid';
 import { QueryParams } from 'utils/interfaces';
-import { useMediaQuery } from '@mui/material';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   deleteMerchant,
   disableMerchant,
   enableMerchant,
+  getMerchantOnboardingAnalytics,
   getMerchants,
 } from 'config/actions/merchant-actions';
 import { useFormik } from 'formik';
@@ -33,6 +32,9 @@ const Dashboard = () => {
   });
 
   const [selectedMerchantId, setSelectedMerchantId] = useState('');
+  const [chartData, setChartData] = useState<number[] | undefined>([
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+  ]);
 
   const [modals, setModals] = useState({
     confirmDisable: false,
@@ -91,8 +93,6 @@ const Dashboard = () => {
     'NOV',
     'DEC',
   ];
-
-  const barData = [35, 44, 24, 34, 35, 44, 24, 34, 35, 44, 24, 34];
 
   const chartSetting = {
     yAxis: [
@@ -231,12 +231,24 @@ const Dashboard = () => {
     },
   ];
 
-  const isSmallWidth = useMediaQuery('(max-width:370px)');
-
   const { data, refetch } = useQuery({
     queryKey: ['merchants', queryParams],
     queryFn: ({ queryKey }) => getMerchants(queryKey[1] as QueryParams),
   });
+
+  const { data: merchantAnalytics } = useQuery({
+    queryKey: ['merchants-analytics'],
+    queryFn: ({ queryKey }) => getMerchantOnboardingAnalytics(),
+  });
+
+  useEffect(() => {
+    if (merchantAnalytics?.responseData) {
+      const monthlyValues = Object.keys(merchantAnalytics?.responseData)
+        .filter((key) => key !== 'total')
+        .map((key) => merchantAnalytics?.responseData[key]);
+      setChartData(monthlyValues);
+    }
+  }, [merchantAnalytics]);
 
   const enableMerchantMutation = useMutation({
     mutationFn: (requestId: string | undefined) => enableMerchant(requestId),
@@ -327,7 +339,7 @@ const Dashboard = () => {
             <div className="mt-6 flex items-center justify-start gap-x-4">
               <DashboardCard
                 title="Total Onboarded Merchants"
-                numberOfRequest={1200}
+                numberOfRequest={merchantAnalytics?.responseData?.total}
                 backgroundColor="bg-extraLightPurple"
                 textColor="text-purplePrimary"
                 route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
@@ -340,7 +352,7 @@ const Dashboard = () => {
             </div>
             <BarChart
               grid={{ horizontal: true }}
-              series={[{ data: barData, type: 'bar' }]}
+              series={[{ data: chartData, type: 'bar' }]}
               xAxis={[
                 {
                   data: barAxisX,

@@ -27,6 +27,7 @@ import {
   disableMerchant,
   enableMerchant,
   getMerchantById,
+  getMerchantDetailsStatistics,
 } from 'config/actions/merchant-actions';
 
 const MerchantDetails = () => {
@@ -56,6 +57,10 @@ const MerchantDetails = () => {
   const { data, refetch } = useQuery({
     queryKey: ['merchants', merchantId],
     queryFn: ({ queryKey }) => getMerchantById(queryKey[1]),
+  });
+  const { data: detailsStatistics } = useQuery({
+    queryKey: ['merchants-details', merchantId],
+    queryFn: ({ queryKey }) => getMerchantDetailsStatistics(queryKey[1]),
   });
 
   const enableMerchantMutation = useMutation({
@@ -176,7 +181,7 @@ const MerchantDetails = () => {
             <div className="mt-4 flex flex-col items-center justify-between gap-6 gap-x-4 md:flex-row">
               <DashboardCard
                 title="Total Accounts"
-                numberOfRequest={1200}
+                numberOfRequest={detailsStatistics?.responseData?.totalAccounts}
                 backgroundColor="bg-white"
                 textColor="text-purplePrimary"
                 icon={<SubTitleIconGreen />}
@@ -187,7 +192,7 @@ const MerchantDetails = () => {
               />
               <DashboardCard
                 title="Total Profiles"
-                numberOfRequest={1200}
+                numberOfRequest={detailsStatistics?.responseData?.totalProfiles}
                 backgroundColor="bg-white"
                 textColor="text-purplePrimary"
                 icon={<SubTitleIconYellow />}
@@ -198,7 +203,7 @@ const MerchantDetails = () => {
               />
               <DashboardCard
                 title="Total Mandates"
-                numberOfRequest={1200}
+                numberOfRequest={detailsStatistics?.responseData?.totalMandates}
                 backgroundColor="bg-white"
                 textColor="text-purplePrimary"
                 icon={<SubTitleIconYellow />}

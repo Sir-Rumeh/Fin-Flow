@@ -17,6 +17,13 @@ import { useMutation } from '@tanstack/react-query';
 import { addMandateRequest } from 'config/actions/dashboard-actions';
 import { notifyError } from 'utils/helpers';
 import dayjs from 'dayjs';
+import {
+  dailyFrequencyOptions,
+  frequencyOptions,
+  monthlyFrequencyOptions,
+  serviceOptions,
+  weeklyFrequencyOptions,
+} from 'utils/constants';
 
 const SingleUpload = () => {
   const navigate = useNavigate();
@@ -118,12 +125,18 @@ const SingleUpload = () => {
     },
   });
 
-  const dayToApplyOptions = [
-    { value: 'Day 1', label: 'Day 1' },
-    { value: 'Day 2', label: 'Day 2' },
-    { value: 'Day 3', label: 'Day 3' },
-    { value: 'Day 4', label: 'Day 4' },
-  ];
+  const getDayToApplyOptions = () => {
+    if (formik.values.frequency === 'Daily') {
+      return dailyFrequencyOptions;
+    } else if (formik.values.frequency === 'Weekly') {
+      return weeklyFrequencyOptions;
+    } else if (formik.values.frequency === 'Monthly') {
+      return monthlyFrequencyOptions;
+    }
+    return dailyFrequencyOptions;
+  };
+
+  const dayToApplyOptions = getDayToApplyOptions();
 
   return (
     <>
@@ -234,28 +247,30 @@ const SingleUpload = () => {
               </div>
               <div className="md:col-span-1">
                 <FormSelect
+                  labelFor="frequency"
+                  label="Frequency"
+                  formik={formik}
+                  options={frequencyOptions}
+                  useTouched
+                />
+              </div>
+              <div className="md:col-span-1">
+                <FormSelect
                   labelFor="dayToApply"
                   label="Day to Apply"
                   formik={formik}
                   options={dayToApplyOptions}
                   useTouched
+                  scrollableOptions
                 />
               </div>
-              <div className="md:col-span-1">
-                <FormSelect
-                  labelFor="frequency"
-                  label="Frequency"
-                  formik={formik}
-                  options={dayToApplyOptions}
-                  useTouched
-                />
-              </div>
+
               <div className="md:col-span-1">
                 <FormSelect
                   labelFor="service"
                   label="Service"
                   formik={formik}
-                  options={dayToApplyOptions}
+                  options={serviceOptions}
                   useTouched
                 />
               </div>

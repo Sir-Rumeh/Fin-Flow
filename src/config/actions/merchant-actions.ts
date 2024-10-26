@@ -32,6 +32,22 @@ export const getMerchantsRequestsStatistics = async () => {
     throw error;
   }
 };
+export const getMerchantOnboardingAnalytics = async () => {
+  try {
+    const response = await AxiosClient.get(`/merchants/analytics`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getMerchantDetailsStatistics = async (requestId: string | undefined) => {
+  try {
+    const response = await AxiosClient.get(`/merchants/statistics/${requestId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const getMerchantById = async (requestId: string | undefined) => {
   try {

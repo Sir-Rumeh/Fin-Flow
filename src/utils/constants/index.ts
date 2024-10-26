@@ -1518,3 +1518,211 @@ export const adminAccessRights: { id: number; module: string; moduleValue: strin
     moduleValue: 'RolePermissions',
   },
 ];
+
+export const frequencyOptions = [
+  {
+    id: 1,
+    value: 'Daily',
+    label: 'Daily',
+  },
+  {
+    id: 2,
+    value: 'Weekly',
+    label: 'Weekly',
+  },
+  {
+    id: 3,
+    value: 'Monthly',
+    label: 'Monthly',
+  },
+];
+
+export const dailyFrequencyOptions = [
+  {
+    id: 1,
+    value: 'Day 1',
+    label: 'Day 1',
+  },
+  {
+    id: 2,
+    value: 'Day 2',
+    label: 'Day 2',
+  },
+  {
+    id: 3,
+    value: 'Day 3',
+    label: 'Day 3',
+  },
+  {
+    id: 4,
+    value: 'Day 4',
+    label: 'Day 4',
+  },
+  {
+    id: 5,
+    value: 'Day 5',
+    label: 'Day 5',
+  },
+  {
+    id: 6,
+    value: 'Day 6',
+    label: 'Day 6',
+  },
+  {
+    id: 7,
+    value: 'Day 7',
+    label: 'Day 7',
+  },
+  {
+    id: 8,
+    value: 'Day 8',
+    label: 'Day 8',
+  },
+  {
+    id: 9,
+    value: 'Day 9',
+    label: 'Day 9',
+  },
+  {
+    id: 10,
+    value: 'Day 10',
+    label: 'Day 10',
+  },
+  {
+    id: 11,
+    value: 'Day 11',
+    label: 'Day 11',
+  },
+  {
+    id: 12,
+    value: 'Day 12',
+    label: 'Day 12',
+  },
+  {
+    id: 13,
+    value: 'Day 13',
+    label: 'Day 13',
+  },
+  {
+    id: 14,
+    value: 'Day 14',
+    label: 'Day 14',
+  },
+  {
+    id: 15,
+    value: 'Day 15',
+    label: 'Day 15',
+  },
+  {
+    id: 16,
+    value: 'Day 16',
+    label: 'Day 16',
+  },
+  {
+    id: 17,
+    value: 'Day 17',
+    label: 'Day 17',
+  },
+  {
+    id: 18,
+    value: 'Day 18',
+    label: 'Day 18',
+  },
+  {
+    id: 19,
+    value: 'Day 19',
+    label: 'Day 19',
+  },
+  {
+    id: 20,
+    value: 'Day 20',
+    label: 'Day 20',
+  },
+  {
+    id: 21,
+    value: 'Day 21',
+    label: 'Day 21',
+  },
+  {
+    id: 22,
+    value: 'Day 22',
+    label: 'Day 22',
+  },
+  {
+    id: 23,
+    value: 'Day 23',
+    label: 'Day 23',
+  },
+  {
+    id: 24,
+    value: 'Day 24',
+    label: 'Day 24',
+  },
+  {
+    id: 25,
+    value: 'Day 25',
+    label: 'Day 25',
+  },
+  {
+    id: 26,
+    value: 'Day 26',
+    label: 'Day 26',
+  },
+  {
+    id: 27,
+    value: 'Day 27',
+    label: 'Day 27',
+  },
+  {
+    id: 28,
+    value: 'Day 28',
+    label: 'Day 28',
+  },
+];
+export const weeklyFrequencyOptions = [
+  {
+    id: 1,
+    value: 'Week 1',
+    label: 'Week 1',
+  },
+  {
+    id: 2,
+    value: 'Week 2',
+    label: 'Week 2',
+  },
+  {
+    id: 3,
+    value: 'Week 3',
+    label: 'Week 3',
+  },
+  {
+    id: 4,
+    value: 'Week 4',
+    label: 'Week 4',
+  },
+];
+export const monthlyFrequencyOptions = [
+  { id: 1, value: 'January', label: 'January' },
+  { id: 2, value: 'February', label: 'February' },
+  { id: 3, value: 'March', label: 'March' },
+  { id: 4, value: 'April', label: 'April' },
+  { id: 5, value: 'May', label: 'May' },
+  { id: 6, value: 'June', label: 'June' },
+  { id: 7, value: 'July', label: 'July' },
+  { id: 8, value: 'August', label: 'August' },
+  { id: 9, value: 'September', label: 'September' },
+  { id: 10, value: 'October', label: 'October' },
+  { id: 11, value: 'November', label: 'November' },
+  { id: 12, value: 'December', label: 'December' },
+];
+
+export const serviceOptions = [
+  { value: 'Micro-loans', label: 'Micro-loans' },
+  { value: 'Loans', label: 'Loans' },
+  { value: 'Subscription', label: 'Subscription' },
+  { value: 'Hired-purchase', label: 'Hired-purchase' },
+  { value: 'Mortgage', label: 'Mortgage' },
+  { value: 'Pension', label: 'Pension' },
+  { value: 'Insurance', label: 'Insurance' },
+  { value: 'Taxes', label: 'Taxes' },
+];
