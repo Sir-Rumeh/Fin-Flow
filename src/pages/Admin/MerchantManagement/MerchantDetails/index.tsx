@@ -58,8 +58,9 @@ const MerchantDetails = () => {
     queryKey: ['merchants', merchantId],
     queryFn: ({ queryKey }) => getMerchantById(queryKey[1]),
   });
-  const { data: detailsStatistics } = useQuery({
-    queryKey: ['merchants-details', merchantId],
+
+  const { data: merchantDetailsStatistics } = useQuery({
+    queryKey: ['merchant-details', merchantId],
     queryFn: ({ queryKey }) => getMerchantDetailsStatistics(queryKey[1]),
   });
 
@@ -181,7 +182,7 @@ const MerchantDetails = () => {
             <div className="mt-4 flex flex-col items-center justify-between gap-6 gap-x-4 md:flex-row">
               <DashboardCard
                 title="Total Accounts"
-                numberOfRequest={detailsStatistics?.responseData?.totalAccounts}
+                numberOfRequest={merchantDetailsStatistics?.responseData?.totalAccounts ?? 0}
                 backgroundColor="bg-white"
                 textColor="text-purplePrimary"
                 icon={<SubTitleIconGreen />}
@@ -192,7 +193,7 @@ const MerchantDetails = () => {
               />
               <DashboardCard
                 title="Total Profiles"
-                numberOfRequest={detailsStatistics?.responseData?.totalProfiles}
+                numberOfRequest={merchantDetailsStatistics?.responseData?.totalProfiles ?? 0}
                 backgroundColor="bg-white"
                 textColor="text-purplePrimary"
                 icon={<SubTitleIconYellow />}
@@ -203,7 +204,7 @@ const MerchantDetails = () => {
               />
               <DashboardCard
                 title="Total Mandates"
-                numberOfRequest={detailsStatistics?.responseData?.totalMandates}
+                numberOfRequest={merchantDetailsStatistics?.responseData?.totalMandates ?? 0}
                 backgroundColor="bg-white"
                 textColor="text-purplePrimary"
                 icon={<SubTitleIconYellow />}

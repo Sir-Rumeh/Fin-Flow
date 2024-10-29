@@ -40,6 +40,7 @@ export const getMerchantOnboardingAnalytics = async () => {
     throw error;
   }
 };
+
 export const getMerchantDetailsStatistics = async (requestId: string | undefined) => {
   try {
     const response = await AxiosClient.get(`/merchants/statistics/${requestId}`);

@@ -33,6 +33,15 @@ export const getAccountsRequestsStatistics = async () => {
   }
 };
 
+export const getAccountDetailsStatistics = async (requestId: string | undefined) => {
+  try {
+    const response = await AxiosClient.get(`/accounts/statistics/${requestId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getAccountById = async (requestId: string | undefined) => {
   try {
     const response = await AxiosClient.get(`/accounts/${requestId}`);

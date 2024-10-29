@@ -154,6 +154,7 @@ export interface QueryParams {
   startDate?: string | undefined;
   endDate?: string | undefined;
   actor?: string | undefined;
+  roleName?: string | undefined;
 }
 
 export interface StaffUserRequest {
@@ -207,4 +208,24 @@ export interface RoleType {
   roleDescription: string;
   designator: string;
   dateCreated: string;
+}
+
+export interface RoleRequest {
+  name: string | undefined;
+  description: string | undefined;
+}
+
+export interface Permission {
+  module: string;
+  canList: boolean;
+  canListAll: boolean;
+  canDelete: boolean;
+  canRead: boolean;
+  canCreate: boolean;
+  canUpdate: boolean;
+}
+
+export interface RolePermissionRequest {
+  roleId: string | undefined;
+  permissions: Permission[] | undefined;
 }
