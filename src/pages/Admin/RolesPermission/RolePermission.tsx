@@ -27,6 +27,11 @@ const RolePermission = () => {
     sortBy: 'asc',
     sortOrder: 'desc',
   });
+  const [roleQueryParams, setRoleQueryParams] = useState<QueryParams>({
+    pageSize: 100,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
 
   useEffect(() => {
     setQueryParams((prev) => ({
@@ -41,7 +46,7 @@ const RolePermission = () => {
   };
 
   const { data: roles } = useQuery({
-    queryKey: ['roles', queryParams],
+    queryKey: ['roles', roleQueryParams],
     queryFn: ({ queryKey }) => getRoles(queryKey[1] as QueryParams),
   });
 
@@ -78,7 +83,7 @@ const RolePermission = () => {
               return (
                 <span className={`mr-2`} key={permission.module}>
                   {permission.module}
-                  {index !== params.row.permissions.length ? ',' : ''}
+                  {index !== params.row.permissions.length - 1 ? ',' : ''}
                 </span>
               );
             })}
