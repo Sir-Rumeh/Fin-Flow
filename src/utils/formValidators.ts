@@ -130,4 +130,8 @@ export const addRoleSchema = Yup.object().shape({
 
 export const addRolePermissionSchema = Yup.object().shape({
   groupId: Yup.string().required('Group name is required'),
+  permissions: Yup.array()
+    .min(1, 'Please select permissions for this group')
+    .nullable()
+    .required('User permission is required'),
 });

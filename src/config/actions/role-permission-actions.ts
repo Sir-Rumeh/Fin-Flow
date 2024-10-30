@@ -22,6 +22,26 @@ export const getRoleById = async (requestId: string | undefined) => {
   }
 };
 
+export const getRolePermissions = async (queryParams?: QueryParams) => {
+  const params = new URLSearchParams();
+  appendParams(params, queryParams);
+  try {
+    const response = await AxiosClient.get(`/rolepermissions`, { params });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getRolePermissionByRoleId = async (requestId: string | undefined) => {
+  try {
+    const response = await AxiosClient.get(`rolepermissions/role/${requestId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const addRoleRequest = async (payload: RoleRequest | undefined) => {
   try {
     const response = await AxiosClient.post('/roles/add', payload);

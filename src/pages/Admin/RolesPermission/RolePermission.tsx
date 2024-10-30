@@ -1,44 +1,90 @@
 import { useMediaQuery } from '@mui/material';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { useQuery } from '@tanstack/react-query';
 import PopoverTitle from 'components/common/PopoverTitle';
 import CustomTable from 'components/CustomTable';
 import ButtonComponent from 'components/FormElements/Button';
-import TableFilter from 'components/TableFilter';
-import { useFormik } from 'formik';
+import { getRolePermissions, getRoles } from 'config/actions/role-permission-actions';
 import CustomPopover from 'hoc/PopOverWrapper';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
-import { rolePermissionList } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
+import { Permission, QueryParams } from 'utils/interfaces';
 
 const RolePermission = () => {
   const navigate = useNavigate();
   const isSmallWidth = useMediaQuery('(max-width:370px)');
   const [searchTerm, setSearchTerm] = useState('');
-
-  const formik = useFormik({
-    initialValues: {
-      searchRole: '',
-    },
-    onSubmit: (values) => {
-      setSearchTerm('');
-    },
+  const [allRoles, setAllRoles] = useState<any[]>([]);
+  const [paginationData, setPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
   });
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    pageNo: paginationData.pageNumber,
+    pageSize: paginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+    }));
+  }, [paginationData]);
+
+  const getRoleGroupName = (roleId: string) => {
+    return allRoles?.find((role) => role.id === roleId)?.name;
+  };
+
+  const { data: roles } = useQuery({
+    queryKey: ['roles', queryParams],
+    queryFn: ({ queryKey }) => getRoles(queryKey[1] as QueryParams),
+  });
+
+  const { data, refetch } = useQuery({
+    queryKey: ['role-permissions', queryParams],
+    queryFn: ({ queryKey }) => getRolePermissions(queryKey[1] as QueryParams),
+  });
+
+  useEffect(() => {
+    setAllRoles(roles?.responseData?.items);
+  }, [roles]);
 
   const rolePermissionColumns: GridColDef[] = [
     {
-      field: 'groupName',
+      field: 'roleId',
       headerName: 'Group Name',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      renderCell: (params: GridRenderCellParams) => {
+        return <p className="w-full">{getRoleGroupName(params.row.roleId)}</p>;
+      },
     },
     {
-      field: 'hasAccessTo',
+      field: 'permissions',
       headerName: 'Has Access to',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <div className="w-full">
+            {params.row.permissions?.map((permission: Permission, index: number) => {
+              return (
+                <span className={`mr-2`} key={permission.module}>
+                  {permission.module}
+                  {index !== params.row.permissions.length ? ',' : ''}
+                </span>
+              );
+            })}
+          </div>
+        );
+      },
     },
     {
       field: 'dateCreated',
@@ -46,6 +92,13 @@ const RolePermission = () => {
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <div className="w-full">
+            {new Date(params.row.permissions?.[0]?.createdAt).toLocaleDateString()}
+          </div>
+        );
+      },
     },
     {
       field: 'actions',
@@ -56,7 +109,7 @@ const RolePermission = () => {
         return (
           <div className="h-full border-none">
             <CustomPopover
-              popoverId={params?.row.id}
+              popoverId={params?.row.roleId}
               buttonIcon={<PopoverTitle title="Actions" />}
               translationX={-10}
               translationY={45}
@@ -66,7 +119,7 @@ const RolePermission = () => {
                   onClick={() =>
                     navigate({
                       pathname: `/${appRoutes.adminDashboard.rolesPermission.rolePermissionDetails}`,
-                      search: `?${createSearchParams({ id: params?.row.id })}`,
+                      search: `?${createSearchParams({ id: params?.row.roleId })}`,
                     })
                   }
                   type="button"
@@ -105,30 +158,18 @@ const RolePermission = () => {
       </div>
       <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
         <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
-          <h2 className="text-xl font-bold">Role Permission (5)</h2>
-          <div>
-            <TableFilter
-              name={'searchRole'}
-              placeholder={'Search Role'}
-              label={'Search Role'}
-              value={searchTerm}
-              setSearch={setSearchTerm}
-              handleOptionsFilter={() => {}}
-              formik={formik}
-              fromDateName={'fromDateFilter'}
-              toDateName={'toDateFilter'}
-              selectName={'statusFilter'}
-              showOptionsFilter={false}
-            />
-          </div>
+          <h2 className="text-xl font-bold">{`Role Permissions (${data?.responseData?.totalCount})`}</h2>
+          <div></div>
         </div>
         <div className="mt-1 w-full rounded-md border px-3 pt-2">
           <div className="mt-4 w-full">
             <CustomTable
-              tableData={rolePermissionList}
+              tableData={data?.responseData?.items}
               columns={rolePermissionColumns}
-              rowCount={73}
-              defaultAnimation={false}
+              rowCount={data?.responseData?.totalCount}
+              paginationData={paginationData}
+              setPaginationData={setPaginationData}
+              getRowId={(row) => row.roleId}
             />
           </div>
         </div>

@@ -11,7 +11,7 @@ const RoleDetails = () => {
   const roleId = searchParams?.get('id') || '';
 
   const { data } = useQuery({
-    queryKey: ['roles', roleId],
+    queryKey: ['roles-details', roleId],
     queryFn: ({ queryKey }) => getRoleById(queryKey[1]),
   });
 

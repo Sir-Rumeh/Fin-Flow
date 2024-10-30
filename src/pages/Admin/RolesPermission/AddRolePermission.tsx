@@ -40,6 +40,7 @@ const AddRolePermission = () => {
   const formik = useFormik({
     initialValues: {
       groupId: '',
+      permissions: selectedModules,
     },
     validationSchema: addRolePermissionSchema,
     onSubmit: (values) => {
@@ -85,6 +86,9 @@ const AddRolePermission = () => {
     )[0];
     setRole(selectedRole);
   }, [formik.values.groupId]);
+  useEffect(() => {
+    formik.setFieldValue('permissions', selectedModules);
+  }, [selectedModules]);
 
   const addRolePermissionRequestMutation = useMutation({
     mutationFn: (payload: RolePermissionRequest | undefined) => addRolePermissionRequest(payload),
@@ -122,6 +126,7 @@ const AddRolePermission = () => {
                   formik={formik}
                   options={formatApiDataForDropdown(data?.responseData?.items, 'name', 'id')}
                   scrollableOptions
+                  scrollableHeight="h-[20rem]"
                   useTouched
                 />
               </div>
@@ -167,6 +172,13 @@ const AddRolePermission = () => {
                         onChange={handleToggleChange(right.moduleValue)}
                       />
                     ))}
+            </div>
+            <div className="">
+              {formik?.touched.permissions && formik?.errors.permissions && (
+                <p className={`absolute bottom-14 text-xs italic text-red-400`}>
+                  {formik?.errors.permissions as any}
+                </p>
+              )}
             </div>
             <div className="mt-10">
               <div className="flex w-full items-center justify-end gap-4">
