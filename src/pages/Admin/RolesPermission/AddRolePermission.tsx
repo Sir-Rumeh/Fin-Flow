@@ -3,18 +3,26 @@ import ChevronRight from 'assets/icons/ChevronRight';
 import appRoutes from 'utils/constants/routes';
 import ButtonComponent from 'components/FormElements/Button';
 import { useFormik } from 'formik';
-import { addRolePermissionSchema, addRoleSchema } from 'utils/formValidators';
-import { useState } from 'react';
+import { addRolePermissionSchema } from 'utils/formValidators';
+import { useEffect, useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import FormSelect from 'components/FormElements/FormSelect';
 import ToggleSwitch from 'components/FormElements/ToggleSwitch';
-import { adminAccessRights } from 'utils/constants';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { Permission, QueryParams, RolePermissionRequest } from 'utils/interfaces';
+import { addRolePermissionRequest, getRoles } from 'config/actions/role-permission-actions';
+import { capitalize, formatApiDataForDropdown } from 'utils/helpers';
+import { adminAccessRights, merchantAccessRights } from 'routes/appRoutes';
 
 const AddRolePermission = () => {
   const navigate = useNavigate();
-  const [selectedModules, setSelectedModules] = useState<string[]>([]);
+  const [selectedModules, setSelectedModules] = useState<Permission[]>([]);
+  const [addPermissionRequest, setAddPermissionRequest] = useState<
+    RolePermissionRequest | undefined
+  >();
+  const [role, setRole] = useState<any>();
 
   const [modals, setModals] = useState({
     confirmAddRolePermission: false,
@@ -31,29 +39,63 @@ const AddRolePermission = () => {
 
   const formik = useFormik({
     initialValues: {
-      groupName: '',
+      groupId: '',
     },
     validationSchema: addRolePermissionSchema,
     onSubmit: (values) => {
-      console.log('Form values:', values);
-      console.log('Selected toggle values:', selectedModules);
+      const payload = {
+        roleId: values.groupId,
+        permissions: selectedModules,
+      };
+      setAddPermissionRequest(payload);
       openModal('confirmAddRolePermission');
     },
   });
 
-  const groupNameOptions = [
-    { value: 'Syscon Staff', label: 'Syscon Staff' },
-    { value: 'Merchant', label: 'Merchant' },
-    { value: 'Staff Admin', label: 'Staff Admin' },
-  ];
-
   const handleToggleChange = (module: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const permission = {
+      module: module,
+      canList: true,
+      canListAll: true,
+      canDelete: true,
+      canRead: true,
+      canCreate: true,
+      canUpdate: true,
+    };
     if (event.target.checked) {
-      setSelectedModules((prev) => [...prev, module]);
+      setSelectedModules((prev) => [...prev, permission]);
     } else {
-      setSelectedModules((prev) => prev.filter((mod) => mod !== module));
+      setSelectedModules((prev) => prev.filter((mod) => mod.module !== module));
     }
   };
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
+
+  const { data, refetch } = useQuery({
+    queryKey: ['roles', queryParams],
+    queryFn: ({ queryKey }) => getRoles(queryKey[1] as QueryParams),
+  });
+
+  useEffect(() => {
+    const selectedRole = data?.responseData?.items.filter(
+      (role: any) => role.id === formik.values.groupId,
+    )[0];
+    setRole(selectedRole);
+  }, [formik.values.groupId]);
+
+  const addRolePermissionRequestMutation = useMutation({
+    mutationFn: (payload: RolePermissionRequest | undefined) => addRolePermissionRequest(payload),
+    onSuccess: () => {
+      closeModal('confirmAddRolePermission');
+      openModal('addRolePermissionSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmAddRolePermission');
+    },
+  });
 
   return (
     <>
@@ -75,24 +117,56 @@ const AddRolePermission = () => {
             <div className="grid grid-cols-2 gap-10">
               <div className="w-full">
                 <FormSelect
-                  labelFor="groupName"
+                  labelFor="groupId"
                   label="Group Name"
                   formik={formik}
-                  options={groupNameOptions}
+                  options={formatApiDataForDropdown(data?.responseData?.items, 'name', 'id')}
+                  scrollableOptions
                   useTouched
                 />
               </div>
             </div>
             <div className="mt-10 grid grid-cols-2 gap-20 rounded-lg border p-2 md:grid-cols-4 md:p-3 2xl:p-4">
-              {adminAccessRights.map((right) => (
-                <ToggleSwitch
-                  key={right.id}
-                  id={right.id}
-                  toggleLabel={right.module}
-                  checked={selectedModules.includes(right.moduleValue)}
-                  onChange={handleToggleChange(right.moduleValue)}
-                />
-              ))}
+              {role?.designation === 'StaffUser'
+                ? adminAccessRights.map((right) => (
+                    <ToggleSwitch
+                      key={right.id}
+                      id={right.id}
+                      toggleLabel={right.module}
+                      checked={selectedModules.some(
+                        (mod: Permission) =>
+                          mod.module.toLocaleLowerCase() === right.moduleValue.toLocaleLowerCase(),
+                      )}
+                      onChange={handleToggleChange(right.moduleValue)}
+                    />
+                  ))
+                : role?.designation === 'Merchant'
+                  ? merchantAccessRights.map((right) => (
+                      <ToggleSwitch
+                        key={right.id}
+                        id={right.id}
+                        toggleLabel={right.module}
+                        checked={selectedModules.some(
+                          (mod: Permission) =>
+                            mod.module.toLocaleLowerCase() ===
+                            right.moduleValue.toLocaleLowerCase(),
+                        )}
+                        onChange={handleToggleChange(right.moduleValue)}
+                      />
+                    ))
+                  : adminAccessRights.map((right) => (
+                      <ToggleSwitch
+                        key={right.id}
+                        id={right.id}
+                        toggleLabel={right.module}
+                        checked={selectedModules.some(
+                          (mod: Permission) =>
+                            mod.module.toLocaleLowerCase() ===
+                            right.moduleValue.toLocaleLowerCase(),
+                        )}
+                        onChange={handleToggleChange(right.moduleValue)}
+                      />
+                    ))}
             </div>
             <div className="mt-10">
               <div className="flex w-full items-center justify-end gap-4">
@@ -136,8 +210,7 @@ const AddRolePermission = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmAddRolePermission');
-            openModal('addRolePermissionSuccessful');
+            addRolePermissionRequestMutation.mutate(addPermissionRequest);
           }}
         />
       )}
@@ -150,6 +223,7 @@ const AddRolePermission = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            formik.resetForm();
             closeModal('addRolePermissionSuccessful');
             navigate(`/${appRoutes.adminDashboard.rolesPermission.index}`);
           }}

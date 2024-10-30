@@ -129,5 +129,5 @@ export const addRoleSchema = Yup.object().shape({
 });
 
 export const addRolePermissionSchema = Yup.object().shape({
-  groupName: Yup.string().required('Group name is required'),
+  groupId: Yup.string().required('Group name is required'),
 });

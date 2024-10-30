@@ -31,17 +31,6 @@ const AddRole = () => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
 
-  const addRoleRequestMutation = useMutation({
-    mutationFn: (payload: RoleRequest | undefined) => addRoleRequest(payload),
-    onSuccess: () => {
-      closeModal('confirmAddRole');
-      openModal('addRoleSuccessful');
-    },
-    onError: (error) => {
-      closeModal('confirmAddRole');
-    },
-  });
-
   const formik = useFormik({
     initialValues: {
       roleName: '',
@@ -57,6 +46,17 @@ const AddRole = () => {
       };
       setRoleRequest(payload);
       openModal('confirmAddRole');
+    },
+  });
+
+  const addRoleRequestMutation = useMutation({
+    mutationFn: (payload: RoleRequest | undefined) => addRoleRequest(payload),
+    onSuccess: () => {
+      closeModal('confirmAddRole');
+      openModal('addRoleSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmAddRole');
     },
   });
 

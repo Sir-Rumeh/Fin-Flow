@@ -445,4 +445,94 @@ const merchantRoutes: RoutesType[] = [
   },
 ];
 
-export { adminRoutes, merchantRoutes };
+const adminAccessRights: { id: number; module: string; moduleValue: string }[] = [
+  {
+    id: 0,
+    module: 'Dashboard',
+    moduleValue: 'Dashboard',
+  },
+  {
+    id: 1,
+    module: 'Requests',
+    moduleValue: 'Requests',
+  },
+  {
+    id: 2,
+    module: 'Merchant',
+    moduleValue: 'Merchant',
+  },
+  {
+    id: 3,
+    module: 'Mandate',
+    moduleValue: 'Mandate',
+  },
+  {
+    id: 4,
+    module: 'Profile',
+    moduleValue: 'Profile',
+  },
+  {
+    id: 5,
+    module: 'Account',
+    moduleValue: 'Account',
+  },
+  {
+    id: 6,
+    module: 'Audit',
+    moduleValue: 'Audit',
+  },
+  {
+    id: 7,
+    module: 'Reports',
+    moduleValue: 'Reports',
+  },
+  {
+    id: 8,
+    module: 'Staff User',
+    moduleValue: 'StaffUser',
+  },
+  {
+    id: 9,
+    module: 'User Requests',
+    moduleValue: 'UserRequests',
+  },
+  {
+    id: 10,
+    module: 'Role Permissions',
+    moduleValue: 'RolePermissions',
+  },
+];
+const merchantAccessRights: { id: number; module: string; moduleValue: string }[] = [
+  {
+    id: 0,
+    module: 'Dashboard',
+    moduleValue: 'Dashboard',
+  },
+  {
+    id: 1,
+    module: 'Requests',
+    moduleValue: 'Requests',
+  },
+  {
+    id: 3,
+    module: 'Mandate',
+    moduleValue: 'Mandate',
+  },
+  {
+    id: 4,
+    module: 'User',
+    moduleValue: 'Profile',
+  },
+  {
+    id: 6,
+    module: 'Audit',
+    moduleValue: 'Audit',
+  },
+  {
+    id: 7,
+    module: 'Reports',
+    moduleValue: 'Reports',
+  },
+];
+
+export { adminRoutes, merchantRoutes, adminAccessRights, merchantAccessRights };
