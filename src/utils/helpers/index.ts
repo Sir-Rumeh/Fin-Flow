@@ -4,6 +4,7 @@ import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
 import { DropdownOption } from 'components/FormElements/FormSelect';
 import { canBeUpdated } from 'utils/constants';
+import { SearchTypes } from 'utils/enums';
 
 export const checkRoute = (pathname: string, pathToCheck: string) => {
   if (pathname.includes(pathToCheck)) {
@@ -129,6 +130,9 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
   if (formattedQueryParams.sortBy) params.append('SortBy', formattedQueryParams.sortBy);
   if (formattedQueryParams.sortOrder) params.append('SortOrder', formattedQueryParams.sortOrder);
   if (formattedQueryParams.searchFilter) {
+    if (formattedQueryParams.searchType === SearchTypes.SearchRoles) {
+      params.append('Name', formattedQueryParams.searchFilter);
+    }
     params.append('searchFilter', formattedQueryParams.searchFilter);
     params.append('UserName', formattedQueryParams.searchFilter);
     params.append('AccountNumber', formattedQueryParams.searchFilter);

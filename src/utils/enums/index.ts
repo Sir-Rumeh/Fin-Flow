@@ -54,3 +54,7 @@ export enum RequestStatus {
   Declined = 'Declined',
   Pending = 'Pending',
 }
+
+export enum SearchTypes {
+  SearchRoles = 'SearchRoles',
+}

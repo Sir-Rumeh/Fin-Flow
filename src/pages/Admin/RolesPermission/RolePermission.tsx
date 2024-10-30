@@ -3,7 +3,10 @@ import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import PopoverTitle from 'components/common/PopoverTitle';
 import CustomTable from 'components/CustomTable';
 import ButtonComponent from 'components/FormElements/Button';
+import TableFilter from 'components/TableFilter';
+import { useFormik } from 'formik';
 import CustomPopover from 'hoc/PopOverWrapper';
+import { useState } from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { rolePermissionList } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
@@ -11,6 +14,16 @@ import appRoutes from 'utils/constants/routes';
 const RolePermission = () => {
   const navigate = useNavigate();
   const isSmallWidth = useMediaQuery('(max-width:370px)');
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const formik = useFormik({
+    initialValues: {
+      searchRole: '',
+    },
+    onSubmit: (values) => {
+      setSearchTerm('');
+    },
+  });
 
   const rolePermissionColumns: GridColDef[] = [
     {
@@ -71,25 +84,41 @@ const RolePermission = () => {
 
   return (
     <div>
+      <div className="flex w-full items-center justify-end">
+        <div className="w-auto">
+          <ButtonComponent
+            variant="contained"
+            color="white"
+            backgroundColor="#5C068C"
+            hoverBackgroundColor="#2F0248"
+            type="button"
+            title="Add Role Permission"
+            customPaddingX="1.4rem"
+            width={isSmallWidth ? '10rem' : undefined}
+            onClick={() => {
+              navigate({
+                pathname: `/${appRoutes.adminDashboard.rolesPermission.addRolePermission}`,
+              });
+            }}
+          />
+        </div>
+      </div>
       <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
         <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
           <h2 className="text-xl font-bold">Role Permission (5)</h2>
-
-          <div className="w-auto">
-            <ButtonComponent
-              variant="contained"
-              color="white"
-              backgroundColor="#5C068C"
-              hoverBackgroundColor="#2F0248"
-              type="button"
-              title="Add Role Permission"
-              customPaddingX="1.4rem"
-              width={isSmallWidth ? '10rem' : undefined}
-              onClick={() => {
-                navigate({
-                  pathname: `/${appRoutes.adminDashboard.rolesPermission.addRolePermission}`,
-                });
-              }}
+          <div>
+            <TableFilter
+              name={'searchRole'}
+              placeholder={'Search Role'}
+              label={'Search Role'}
+              value={searchTerm}
+              setSearch={setSearchTerm}
+              handleOptionsFilter={() => {}}
+              formik={formik}
+              fromDateName={'fromDateFilter'}
+              toDateName={'toDateFilter'}
+              selectName={'statusFilter'}
+              showOptionsFilter={false}
             />
           </div>
         </div>

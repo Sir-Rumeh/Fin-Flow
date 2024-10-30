@@ -151,6 +151,7 @@ export interface QueryParams {
   sortBy?: string | undefined;
   sortOrder?: string | undefined;
   searchFilter?: string | undefined;
+  searchType?: string | undefined;
   startDate?: string | undefined;
   endDate?: string | undefined;
   actor?: string | undefined;

@@ -32,13 +32,17 @@ const StaffUserRequests = () => {
 
   const formik = useFormik({
     initialValues: {
-      searchAccount: '',
+      searchStaffUser: '',
       fromDateFilter: '',
       toDateFilter: '',
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchStaffUser,
+      }));
+      refetch();
     },
   });
 
@@ -48,7 +52,7 @@ const StaffUserRequests = () => {
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
-    searchFilter: formik.values.searchAccount,
+    searchFilter: formik.values.searchStaffUser,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });
@@ -59,7 +63,7 @@ const StaffUserRequests = () => {
       status: activeTab,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchAccount,
+      searchFilter: formik.values.searchStaffUser,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
@@ -88,6 +92,9 @@ const StaffUserRequests = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      renderCell: (params: GridRenderCellParams) => {
+        return <>{`${params?.row.firstName} ${params?.row.lastName}`}</>;
+      },
     },
     {
       field: 'email',

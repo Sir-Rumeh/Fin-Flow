@@ -41,6 +41,7 @@ const MandateDetails = () => {
   const mandateId = searchParams?.get('id') || '';
   const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
   const [searchTerm, setSearchTerm] = useState('');
+  const [transactionsSearchTerm, setTransactionsSearchTerm] = useState('');
 
   const [modals, setModals] = useState({
     confirmDisable: false,
@@ -600,8 +601,8 @@ const MandateDetails = () => {
                     name={'searchTransactionHistory'}
                     placeholder={'Search Transactions'}
                     label={'Search Transactions'}
-                    value={searchTerm}
-                    setSearch={setSearchTerm}
+                    value={transactionsSearchTerm}
+                    setSearch={setTransactionsSearchTerm}
                     handleOptionsFilter={() => {}}
                     formik={formik}
                     fromDateName={'fromDateFilter'}

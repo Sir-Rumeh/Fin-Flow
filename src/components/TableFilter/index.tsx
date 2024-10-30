@@ -177,8 +177,15 @@ const TableFilter = ({
               name={name}
               placeholder={placeholder}
               height={'100%'}
-              value={value}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setSearch(e.target.value)}
+              value={formik.values[name]}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                formik.setFieldValue(name, e.target.value);
+              }}
+              onKeyDown={(e) => {
+                if (e.code === 'Enter') {
+                  formik.handleSubmit();
+                }
+              }}
             />
           </div>
         </form>
