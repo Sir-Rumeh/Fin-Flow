@@ -125,6 +125,7 @@ export const createAccountSchema = Yup.object().shape({
 export const addRoleSchema = Yup.object().shape({
   roleName: Yup.string().required('Role name is required'),
   roleDescription: Yup.string().required('Role Description is required'),
+  designation: Yup.string().required('Designation is required'),
 });
 
 export const addRolePermissionSchema = Yup.object().shape({

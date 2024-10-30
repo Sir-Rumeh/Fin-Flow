@@ -75,8 +75,8 @@ const RoleList = () => {
       headerClassName: 'ag-thead',
     },
     {
-      field: 'designator',
-      headerName: 'Designator',
+      field: 'designation',
+      headerName: 'Designation',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',

@@ -12,7 +12,6 @@ import FormSelect from 'components/FormElements/FormSelect';
 import { StaffUserRequest } from 'utils/interfaces';
 import { useMutation } from '@tanstack/react-query';
 import { addStaffUserRequest } from 'config/actions/staff-user-actions';
-import { notifyError } from 'utils/helpers';
 import { createStaffUserSchema } from 'utils/formValidators';
 import { roles, userLevel } from 'utils/constants';
 

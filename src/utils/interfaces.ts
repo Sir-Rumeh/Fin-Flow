@@ -214,6 +214,7 @@ export interface RoleType {
 export interface RoleRequest {
   name: string | undefined;
   description: string | undefined;
+  designation: string | undefined;
 }
 
 export interface Permission {

@@ -1536,6 +1536,18 @@ export const frequencyOptions = [
     label: 'Monthly',
   },
 ];
+export const designationOptions = [
+  {
+    id: 1,
+    value: 'StaffUser',
+    label: 'Staff User',
+  },
+  {
+    id: 2,
+    value: 'Merchant',
+    label: 'Merchant',
+  },
+];
 
 export const dailyFrequencyOptions = [
   {

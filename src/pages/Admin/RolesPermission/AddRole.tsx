@@ -9,10 +9,15 @@ import { useState } from 'react';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
+import { useMutation } from '@tanstack/react-query';
+import { RoleRequest } from 'utils/interfaces';
+import { addRoleRequest } from 'config/actions/role-permission-actions';
+import FormSelect from 'components/FormElements/FormSelect';
+import { designationOptions } from 'utils/constants';
 
 const AddRole = () => {
   const navigate = useNavigate();
-
+  const [roleRequest, setRoleRequest] = useState<RoleRequest>();
   const [modals, setModals] = useState({
     confirmAddRole: false,
     addRoleSuccessful: false,
@@ -26,14 +31,31 @@ const AddRole = () => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
 
+  const addRoleRequestMutation = useMutation({
+    mutationFn: (payload: RoleRequest | undefined) => addRoleRequest(payload),
+    onSuccess: () => {
+      closeModal('confirmAddRole');
+      openModal('addRoleSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmAddRole');
+    },
+  });
+
   const formik = useFormik({
     initialValues: {
       roleName: '',
       roleDescription: '',
+      designation: '',
     },
     validationSchema: addRoleSchema,
     onSubmit: (values) => {
-      console.log(values);
+      const payload = {
+        name: values.roleName,
+        description: values.roleDescription,
+        designation: values.designation,
+      };
+      setRoleRequest(payload);
       openModal('confirmAddRole');
     },
   });
@@ -73,6 +95,15 @@ const AddRole = () => {
                 placeholder="Enter here"
                 maxW="w-full"
                 formik={formik}
+              />
+            </div>
+            <div className="">
+              <FormSelect
+                labelFor="designation"
+                label="Role Designation"
+                formik={formik}
+                options={designationOptions}
+                useTouched
               />
             </div>
           </div>
@@ -117,8 +148,7 @@ const AddRole = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmAddRole');
-            openModal('addRoleSuccessful');
+            addRoleRequestMutation.mutate(roleRequest);
           }}
         />
       )}
@@ -131,6 +161,7 @@ const AddRole = () => {
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
+            formik.resetForm();
             closeModal('addRoleSuccessful');
             navigate(`/${appRoutes.adminDashboard.rolesPermission.index}`);
           }}
