@@ -151,7 +151,7 @@ const RoleList = () => {
       </div>
       <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
         <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
-          <h2 className="text-xl font-bold">{`Roles (${data?.responseData?.totalCount})`}</h2>
+          <h2 className="text-xl font-bold">{`Roles (${data?.responseData?.totalCount ?? 0})`}</h2>
           <div>
             <TableFilter
               name={'searchRole'}
