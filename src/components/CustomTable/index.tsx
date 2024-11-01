@@ -1,4 +1,4 @@
-import { DataGrid, gridClasses } from '@mui/x-data-grid';
+import { DataGrid, DataGridProps, gridClasses } from '@mui/x-data-grid';
 import TableLogo from 'assets/images/table_logo.png';
 import { useEffect, useState } from 'react';
 import { useMediaQuery } from '@mui/material';
@@ -11,7 +11,7 @@ interface PaginationProps {
   pageSize: number;
 }
 
-interface CustomTableProps {
+type CustomTableProps = {
   tableData: any;
   columns: any;
   rowCount: number;
@@ -19,7 +19,7 @@ interface CustomTableProps {
   paginationData?: PaginationProps;
   setPaginationData?: React.Dispatch<React.SetStateAction<PaginationProps>>;
   handlePageChange?: () => void;
-}
+} & DataGridProps;
 
 function CustomTable({
   tableData,
@@ -29,6 +29,7 @@ function CustomTable({
   paginationData,
   setPaginationData,
   handlePageChange,
+  ...props
 }: CustomTableProps): JSX.Element {
   const isSmallWidth = useMediaQuery('(max-width:1440px)');
 
@@ -87,6 +88,7 @@ function CustomTable({
             paginationMode="server"
             rowCount={rowCount}
             hideFooterPagination
+            {...props}
           />
           <>
             <div className="-mt-5 flex w-full items-center justify-start gap-x-2 p-3 md:gap-x-3 2xl:gap-x-5">

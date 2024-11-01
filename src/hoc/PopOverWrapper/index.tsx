@@ -42,7 +42,9 @@ const CustomPopover = ({
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? `simple-popover${popoverId.toString()}` : undefined;
+  const id = open
+    ? `simple-popover${typeof popoverId === 'number' ? popoverId.toString() : popoverId}`
+    : undefined;
 
   useEffect(() => {
     handleClose();

@@ -18,6 +18,7 @@ import CustomInput from 'components/FormElements/CustomInput';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   approveMerchantRequest,
+  getMerchantDetailsStatistics,
   getMerchantRequestById,
   rejectMerchantRequest,
 } from 'config/actions/merchant-actions';
@@ -55,6 +56,10 @@ const MerchantEnableRequestDetails = () => {
   const { data } = useQuery({
     queryKey: ['merchantRequests', merchantId],
     queryFn: ({ queryKey }) => getMerchantRequestById(queryKey[1]),
+  });
+  const { data: detailsStatistics } = useQuery({
+    queryKey: ['merchants-details', merchantId],
+    queryFn: ({ queryKey }) => getMerchantDetailsStatistics(queryKey[1]),
   });
 
   const approveMerchantRequestMutation = useMutation({
@@ -128,7 +133,7 @@ const MerchantEnableRequestDetails = () => {
             <div className="mt-4 flex flex-col items-center justify-between gap-6 gap-x-4 md:flex-row">
               <DashboardCard
                 title="Total Accounts"
-                numberOfRequest={1200}
+                numberOfRequest={detailsStatistics?.responseData?.totalAccounts}
                 backgroundColor="bg-white"
                 textColor="text-purplePrimary"
                 icon={<SubTitleIconGreen />}
@@ -139,7 +144,7 @@ const MerchantEnableRequestDetails = () => {
               />
               <DashboardCard
                 title="Total Profiles"
-                numberOfRequest={1200}
+                numberOfRequest={detailsStatistics?.responseData?.totalProfiles}
                 backgroundColor="bg-white"
                 textColor="text-purplePrimary"
                 icon={<SubTitleIconYellow />}
@@ -150,7 +155,7 @@ const MerchantEnableRequestDetails = () => {
               />
               <DashboardCard
                 title="Total Mandates"
-                numberOfRequest={1200}
+                numberOfRequest={detailsStatistics?.responseData?.totalMandates}
                 backgroundColor="bg-white"
                 textColor="text-purplePrimary"
                 icon={<SubTitleIconYellow />}

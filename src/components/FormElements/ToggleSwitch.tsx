@@ -13,7 +13,19 @@ const ToggleSwitch = ({ id, toggleLabel, checked, onChange }: ToggleSwitchProps)
   return (
     <div key={id} className="flex items-center justify-between">
       <p className="font-semibold">{toggleLabel}</p>
-      <Switch {...label} checked={checked} onChange={onChange} />
+      <Switch
+        sx={{
+          '& .MuiSwitch-switchBase.Mui-checked': {
+            color: '#5C068C',
+          },
+          '& .MuiSwitch-switchBase.Mui-checked + .MuiSwitch-track': {
+            backgroundColor: '#5C068C',
+          },
+        }}
+        {...label}
+        checked={checked}
+        onChange={onChange}
+      />
     </div>
   );
 };

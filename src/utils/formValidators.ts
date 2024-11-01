@@ -125,8 +125,13 @@ export const createAccountSchema = Yup.object().shape({
 export const addRoleSchema = Yup.object().shape({
   roleName: Yup.string().required('Role name is required'),
   roleDescription: Yup.string().required('Role Description is required'),
+  designation: Yup.string().required('Designation is required'),
 });
 
 export const addRolePermissionSchema = Yup.object().shape({
-  groupName: Yup.string().required('Group name is required'),
+  groupId: Yup.string().required('Group name is required'),
+  permissions: Yup.array()
+    .min(1, 'Please select permissions for this group')
+    .nullable()
+    .required('User permission is required'),
 });

@@ -19,6 +19,7 @@ import { notifyError } from 'utils/helpers';
 import FormDatePicker from 'components/FormElements/FormDatePicker';
 import CustomFileUpload from 'components/FormElements/CustomFileUpload';
 import FormSelect from 'components/FormElements/FormSelect';
+import { serviceOptions } from 'utils/constants';
 
 const CreateMandate = () => {
   const { tab, setTab } = useTabContext();
@@ -135,17 +136,6 @@ const CreateMandate = () => {
     { value: 'weekly', label: 'Weekly' },
     { value: 'monthly', label: 'Monthy' },
     { value: 'yearly', label: 'Yearly' },
-  ];
-
-  const serviceOptions = [
-    { value: 'Micro-loans', label: 'Micro-loans' },
-    { value: 'Loans', label: 'Loans' },
-    { value: 'Subscription', label: 'Subscription' },
-    { value: 'Hired-purchase', label: 'Hired-purchase' },
-    { value: 'Mortgage', label: 'Mortgage' },
-    { value: 'Pension', label: 'Pension' },
-    { value: 'Insurance', label: 'Insurance' },
-    { value: 'Taxes', label: 'Taxes' },
   ];
 
   return (

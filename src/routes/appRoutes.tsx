@@ -66,6 +66,8 @@ import RolesPermission from 'pages/Admin/RolesPermission';
 import SecurityIcon from 'assets/icons/SecurityIcon';
 import AddRole from 'pages/Admin/RolesPermission/AddRole';
 import AddRolePermission from 'pages/Admin/RolesPermission/AddRolePermission';
+import RoleDetails from 'pages/Admin/RolesPermission/RoleDetails';
+import RolePermissionDetails from 'pages/Admin/RolesPermission/RolePermissionDetails';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -315,6 +317,16 @@ const adminRoutes: RoutesType[] = [
     willChildLinkShow: false,
     children: [
       {
+        name: 'View Role Details',
+        path: 'role-details',
+        component: <RoleDetails />,
+      },
+      {
+        name: 'View Role Permission Details',
+        path: 'role-permission-details',
+        component: <RolePermissionDetails />,
+      },
+      {
         name: 'Add Role',
         path: 'add-role',
         component: <AddRole />,
@@ -433,4 +445,94 @@ const merchantRoutes: RoutesType[] = [
   },
 ];
 
-export { adminRoutes, merchantRoutes };
+const adminAccessRights: { id: number; module: string; moduleValue: string }[] = [
+  {
+    id: 0,
+    module: 'Dashboard',
+    moduleValue: 'Dashboard',
+  },
+  {
+    id: 1,
+    module: 'Requests',
+    moduleValue: 'Requests',
+  },
+  {
+    id: 2,
+    module: 'Merchant',
+    moduleValue: 'Merchant',
+  },
+  {
+    id: 3,
+    module: 'Mandate',
+    moduleValue: 'Mandate',
+  },
+  {
+    id: 4,
+    module: 'Profile',
+    moduleValue: 'Profile',
+  },
+  {
+    id: 5,
+    module: 'Account',
+    moduleValue: 'Account',
+  },
+  {
+    id: 6,
+    module: 'Audit',
+    moduleValue: 'Audit',
+  },
+  {
+    id: 7,
+    module: 'Reports',
+    moduleValue: 'Reports',
+  },
+  {
+    id: 8,
+    module: 'Staff User',
+    moduleValue: 'StaffUser',
+  },
+  {
+    id: 9,
+    module: 'User Requests',
+    moduleValue: 'UserRequests',
+  },
+  {
+    id: 10,
+    module: 'Role Permissions',
+    moduleValue: 'RolePermissions',
+  },
+];
+const merchantAccessRights: { id: number; module: string; moduleValue: string }[] = [
+  {
+    id: 0,
+    module: 'Dashboard',
+    moduleValue: 'Dashboard',
+  },
+  {
+    id: 1,
+    module: 'Requests',
+    moduleValue: 'Requests',
+  },
+  {
+    id: 3,
+    module: 'Mandate',
+    moduleValue: 'Mandate',
+  },
+  {
+    id: 4,
+    module: 'User',
+    moduleValue: 'Profile',
+  },
+  {
+    id: 6,
+    module: 'Audit',
+    moduleValue: 'Audit',
+  },
+  {
+    id: 7,
+    module: 'Reports',
+    moduleValue: 'Reports',
+  },
+];
+
+export { adminRoutes, merchantRoutes, adminAccessRights, merchantAccessRights };

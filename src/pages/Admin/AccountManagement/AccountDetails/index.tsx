@@ -18,6 +18,7 @@ import {
   disableAccount,
   enableAccount,
   getAccountById,
+  getAccountDetailsStatistics,
 } from 'config/actions/account-actions';
 
 const AccountDetails = () => {
@@ -45,6 +46,11 @@ const AccountDetails = () => {
   const { data, refetch } = useQuery({
     queryKey: ['accounts', accountId],
     queryFn: ({ queryKey }) => getAccountById(queryKey[1]),
+  });
+
+  const { data: accountDetailsStatistics } = useQuery({
+    queryKey: ['account-details', accountId],
+    queryFn: ({ queryKey }) => getAccountDetailsStatistics(queryKey[1]),
   });
 
   const enableAccountMutation = useMutation({
@@ -155,7 +161,7 @@ const AccountDetails = () => {
             <div className="mt-4 flex flex-col items-center justify-between gap-6 gap-x-4 md:flex-row">
               <DashboardCard
                 title="Total Profiles"
-                numberOfRequest={1200}
+                numberOfRequest={accountDetailsStatistics?.responseData?.totalProfiles ?? 0}
                 backgroundColor="bg-white"
                 textColor="text-purplePrimary"
                 icon={<SubTitleIconYellow />}
@@ -166,7 +172,7 @@ const AccountDetails = () => {
               />
               <DashboardCard
                 title="Total Mandates"
-                numberOfRequest={1200}
+                numberOfRequest={accountDetailsStatistics?.responseData?.totalMandates ?? 0}
                 backgroundColor="bg-white"
                 textColor="text-purplePrimary"
                 icon={<SubTitleIconYellow />}
@@ -180,7 +186,7 @@ const AccountDetails = () => {
           <div className="mt-10">
             <ItemDetailsContainer title="Account Details">
               <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
-              <DetailsCard title="Merchant Name" content={data?.responseData?.name} />
+              <DetailsCard title="Merchant Name" content={data?.responseData?.merchantName} />
               <DetailsCard title="CIF Number" content={data?.responseData?.cif} />
               <DetailsCard title="Account Name" content={data?.responseData?.accountName} />
               <DetailsCard title="Account Number" content={data?.responseData?.accountNumber} />

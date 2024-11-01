@@ -151,9 +151,11 @@ export interface QueryParams {
   sortBy?: string | undefined;
   sortOrder?: string | undefined;
   searchFilter?: string | undefined;
+  searchType?: string | undefined;
   startDate?: string | undefined;
   endDate?: string | undefined;
   actor?: string | undefined;
+  roleName?: string | undefined;
 }
 
 export interface StaffUserRequest {
@@ -205,5 +207,27 @@ export interface RoleType {
   id: number;
   roleName: string;
   roleDescription: string;
+  designator: string;
   dateCreated: string;
+}
+
+export interface RoleRequest {
+  name: string | undefined;
+  description: string | undefined;
+  designation: string | undefined;
+}
+
+export interface Permission {
+  module: string;
+  canList: boolean;
+  canListAll: boolean;
+  canDelete: boolean;
+  canRead: boolean;
+  canCreate: boolean;
+  canUpdate: boolean;
+}
+
+export interface RolePermissionRequest {
+  roleId: string | undefined;
+  permissions: Permission[] | undefined;
 }
