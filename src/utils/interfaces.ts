@@ -231,3 +231,26 @@ export interface RolePermissionRequest {
   roleId: string | undefined;
   permissions: Permission[] | undefined;
 }
+
+export interface UserData {
+  id: string;
+  userName: string | null;
+  role: string;
+  firstName: string;
+  lastName: string;
+  middleName: string;
+  employeeId: string | null;
+  email: string;
+  address: string;
+  phoneNumber: string;
+  branch: string;
+  isActive: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AuthData {
+  userData: UserData;
+  token: string;
+  timeStamp: string;
+}

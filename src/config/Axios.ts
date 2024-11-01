@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
 import store from 'store/index';
 import { AppConfig } from './index';
-import { generateHeader, notifyError } from 'utils/helpers/index';
+import { generateHeader, getUserFromLocalStorage, notifyError } from 'utils/helpers/index';
 import { uiStartLoading, uiStopLoading } from 'store/reducers/LoadingSlice';
 
 const AxiosClient = axios.create({
@@ -26,6 +26,16 @@ AxiosClient.interceptors.request.use(
       throw new Error(networkErrorMessage);
     }
     dispatch(uiStartLoading());
+
+    const user = getUserFromLocalStorage();
+
+    if (user) {
+      const { token } = user;
+      axiosConfig.headers.Authorization = `Bearer ${token}`;
+    } else {
+      delete axiosConfig.headers.Authorization;
+    }
+
     const headers = generateHeader();
     axiosConfig.headers.UTCTimestamp = headers.UTCTimestamp;
     axiosConfig.headers.Client_ID = headers.Client_ID;

@@ -1,4 +1,4 @@
-import { DataTableState, QueryParams, UpdateRequestDisplay } from 'utils/interfaces';
+import { AuthData, DataTableState, QueryParams, UpdateRequestDisplay } from 'utils/interfaces';
 import { AppConfig } from 'config/index';
 import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
@@ -213,4 +213,10 @@ export const getDateRange = (dataArray: any[]) => {
   } else {
     return `${firstMonth}, ${firstYear} to ${lastMonth}, ${lastYear}`;
   }
+};
+
+export const getUserFromLocalStorage = () => {
+  const storedUser = localStorage.getItem('user');
+  const userDetails: AuthData | null = storedUser ? JSON.parse(storedUser) : null;
+  return userDetails;
 };
