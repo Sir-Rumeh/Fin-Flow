@@ -95,7 +95,7 @@ const AuditTrail = () => {
       valueGetter: (params: any) => new Date(params).toLocaleDateString(),
     },
     {
-      field: '',
+      field: 'actions',
       headerName: 'Action',
       width: 150,
       headerClassName: 'ag-thead',

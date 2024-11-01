@@ -102,6 +102,8 @@ export const appRoutes = {
     },
     rolesPermission: {
       index: `${BASE_ROUTES.ADMIN}/roles-permission`,
+      roleDetails: `${BASE_ROUTES.ADMIN}/roles-permission/role-details`,
+      rolePermissionDetails: `${BASE_ROUTES.ADMIN}/roles-permission/role-permission-details`,
       addRole: `${BASE_ROUTES.ADMIN}/roles-permission/add-role`,
       addRolePermission: `${BASE_ROUTES.ADMIN}/roles-permission/add-role-permission`,
     },

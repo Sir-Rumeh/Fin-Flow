@@ -29,13 +29,14 @@ import {
   getMandates,
   updateMandate,
 } from 'config/actions/dashboard-actions';
-import { capitalize, notifyError } from 'utils/helpers';
+import { capitalize } from 'utils/helpers';
 import { updateMandateSchema } from 'utils/formValidators';
 
 const MandatetManagement = () => {
   const printPdfRef = useRef(null);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const [transactionsSearchTerm, setTransactionsSearchTerm] = useState('');
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
     pageSize: 10,
@@ -87,6 +88,7 @@ const MandatetManagement = () => {
   const formik = useFormik({
     initialValues: {
       searchMandate: '',
+      searchTransactionHistory: '',
       fromDateFilter: '',
       toDateFilter: '',
       statusFilter: '',
@@ -668,8 +670,8 @@ const MandatetManagement = () => {
                     name={'searchTransactionHistory'}
                     placeholder={'Search Transactions'}
                     label={'Search Transactions'}
-                    value={searchTerm}
-                    setSearch={setSearchTerm}
+                    value={transactionsSearchTerm}
+                    setSearch={setTransactionsSearchTerm}
                     handleOptionsFilter={() => {}}
                     formik={formik}
                     fromDateName={'fromDateFilter'}

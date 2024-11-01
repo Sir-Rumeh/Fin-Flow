@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { DarkArrowDown } from 'assets/icons';
 
 export interface DropdownOption {
+  id?: string | number;
   value: string;
   label: string;
 }
@@ -32,9 +33,16 @@ const FormSelect = ({
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
 
+  const getTextToDisplay = (stringValue: string) => {
+    const object = options.find((option) => option.value === stringValue);
+    return object?.label;
+  };
+
   useEffect(() => {
-    if (formik.values[labelFor] && formik.values[labelFor] !== '') {
-      setSelectedOption(formik.values[labelFor]);
+    // if (formik.values[labelFor] && formik.values[labelFor] !== '') {
+    const selectedOptionLabel = getTextToDisplay(formik.values[labelFor]);
+    if (selectedOptionLabel) {
+      setSelectedOption(selectedOptionLabel);
     }
   }, [formik.values[labelFor]]);
 
@@ -55,7 +63,7 @@ const FormSelect = ({
   }, [formSelectRef]);
 
   const handleChange = (option: DropdownOption) => {
-    setSelectedOption(option.value);
+    setSelectedOption(option.label);
     setIsOpen(false);
     formik.setFieldValue(labelFor, option.value);
   };
