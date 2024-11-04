@@ -31,6 +31,7 @@ import {
 } from 'config/actions/dashboard-actions';
 import { capitalize } from 'utils/helpers';
 import { updateMandateSchema } from 'utils/formValidators';
+import { TransactionsTabsListTabNames } from 'utils/enums';
 
 const MandatetManagement = () => {
   const printPdfRef = useRef(null);
@@ -52,12 +53,17 @@ const MandatetManagement = () => {
   const tabsList: TabsProps[] = [
     {
       tabIndex: 1,
-      tabName: 'Successful',
+      tabName: TransactionsTabsListTabNames.Successful,
       tabTotal: total,
     },
     {
       tabIndex: 2,
-      tabName: 'Failed',
+      tabName: TransactionsTabsListTabNames.Pending,
+      tabTotal: total,
+    },
+    {
+      tabIndex: 3,
+      tabName: TransactionsTabsListTabNames.Failed,
       tabTotal: total,
     },
   ];
@@ -643,7 +649,7 @@ const MandatetManagement = () => {
         <CustomModal
           isOpen={modals.openTransactionHistory}
           setIsOpen={() => closeModal('openTransactionHistory')}
-          width={'900px'}
+          width={'1000px'}
           paddingX={0}
         >
           <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -657,7 +663,7 @@ const MandatetManagement = () => {
           </Typography>
           <div className="mt-2">
             <div className="">
-              <div className="slide-down flex items-center justify-between">
+              <div className="slide-down flex flex-col items-start justify-between gap-y-2 lg:flex-row lg:items-center">
                 <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10">
                   <CustomTabs
                     tabs={tabsList}

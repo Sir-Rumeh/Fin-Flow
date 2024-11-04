@@ -91,7 +91,6 @@ export const updateMandateSchema = Yup.object().shape({
 });
 
 export const createStaffUserSchema = Yup.object().shape({
-  userName: Yup.string().required('Username is required'),
   firstName: Yup.string().required('Firstname is required'),
   lastName: Yup.string().required('Lastname is required'),
   staffId: Yup.string().required('Employee ID is required'),
@@ -101,6 +100,7 @@ export const createStaffUserSchema = Yup.object().shape({
   phoneNumber: Yup.string().required('Employee phone number is required'),
   branch: Yup.string().required('Branch is required'),
   role: Yup.string().required('User role is required'),
+  address: Yup.string().required('User address is required'),
 });
 
 export const createProfileSchema = Yup.object().shape({
