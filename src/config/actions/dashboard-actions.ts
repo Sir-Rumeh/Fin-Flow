@@ -12,6 +12,15 @@ export const addMandateRequest = async (payload: MandateRequest | undefined) => 
   }
 };
 
+export const addBulkMandateRequest = async (payload: MandateRequest[] | undefined) => {
+  try {
+    const response = await AxiosClient.post('/mandaterequests/add/bulk', payload);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getMandateRequests = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
   appendParams(params, queryParams);
@@ -116,6 +125,25 @@ export const getMandatesByAccountId = async (
   appendParams(params, queryParams);
   try {
     const response = await AxiosClient.get(`/mandates/account/${accountId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getMandateTransactions = async (queryParams?: QueryParams) => {
+  const params = new URLSearchParams();
+  appendParams(params, queryParams);
+  try {
+    const response = await AxiosClient.get(`/transactions`, { params });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getMandateTransactionById = async (requestId: string | undefined) => {
+  try {
+    const response = await AxiosClient.get(`/transactions/${requestId}`);
     return response.data;
   } catch (error) {
     throw error;

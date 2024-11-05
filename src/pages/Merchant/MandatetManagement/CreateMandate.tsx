@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Tab from 'components/Tabs';
 import { Link, useNavigate } from 'react-router-dom';
 import { useTabContext } from '../../../context/TabContext';
@@ -7,29 +7,35 @@ import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
-import { ArrowRightIcon, DownloadIcon, SuccessModalIcon } from 'assets/icons';
-import { useDropzone } from 'react-dropzone';
+import { ArrowRightIcon, CloseIcon, DownloadIcon, SuccessModalIcon } from 'assets/icons';
+import { FileWithPath, useDropzone } from 'react-dropzone';
 import { useFormik } from 'formik';
 import { createMandateSchema } from 'utils/formValidators';
 import dayjs from 'dayjs';
 import { useMutation } from '@tanstack/react-query';
-import { addMandateRequest } from 'config/actions/dashboard-actions';
+import { addBulkMandateRequest, addMandateRequest } from 'config/actions/dashboard-actions';
 import { MandateRequest } from 'utils/interfaces';
-import { notifyError } from 'utils/helpers';
+import { convertArrayToObjects, isFileSizeValid, notifyError } from 'utils/helpers';
 import FormDatePicker from 'components/FormElements/FormDatePicker';
 import CustomFileUpload from 'components/FormElements/CustomFileUpload';
 import FormSelect from 'components/FormElements/FormSelect';
 import { serviceOptions } from 'utils/constants';
+import * as XLSX from 'xlsx';
+import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 
 const CreateMandate = () => {
   const { tab, setTab } = useTabContext();
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone();
+
   const [mandateRequest, setMandateRequest] = useState<MandateRequest>();
   const navigate = useNavigate();
+  const [jsonData, setJsonData] = useState<any[]>([]);
+  const [formattedBulkData, setFormattedBulkData] = useState<MandateRequest[]>([]);
 
   const [modals, setModals] = useState({
     addMandate: false,
     confirmAddMandate: false,
+    addBulkMandate: false,
+    confirmAddBulkMandate: false,
   });
 
   const openModal = (modalName: keyof typeof modals) => {
@@ -39,6 +45,58 @@ const CreateMandate = () => {
   const closeModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
+
+  const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
+    try {
+      acceptedFiles.forEach((file: FileWithPath) => {
+        if (file) {
+          if (!isFileSizeValid(file.size, 500)) {
+            throw 'File should be lesser than or equal to 100MB';
+          }
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const data = new Uint8Array(e.target?.result as ArrayBuffer);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+            const sheetJson = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+            setJsonData(sheetJson);
+          };
+          reader.readAsArrayBuffer(file);
+        }
+      });
+    } catch (error: any) {
+      notifyError(error);
+    }
+  }, []);
+
+  let { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+    onDrop,
+    accept: {
+      'application/vnd.ms-excel': ['.xls', '.csv'],
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet': ['.xlsx', '.csv'],
+    },
+  });
+
+  const [uploadedFiles, setUploadedFiles] = useState<File[] | undefined>();
+
+  const clearFiles = () => {
+    setUploadedFiles([]);
+    acceptedFiles = [];
+  };
+
+  useEffect(() => {
+    setUploadedFiles(acceptedFiles);
+  }, [acceptedFiles]);
+
+  useEffect(() => {
+    const newData = convertArrayToObjects(
+      jsonData,
+      ['mandateId', 'mandateCode', 'supportingDocument'],
+      ['mandateId', 'mandateCode', 'supportingDocument'],
+    );
+    setFormattedBulkData(newData as MandateRequest[]);
+  }, [jsonData]);
 
   const files = acceptedFiles.map((file, index) => (
     <li key={index}>
@@ -57,11 +115,21 @@ const CreateMandate = () => {
     },
   });
 
+  const addBulkMandateMutation = useMutation({
+    mutationFn: (payload: MandateRequest[] | undefined) => addBulkMandateRequest(payload),
+    onSuccess: () => {
+      closeModal('addBulkMandate');
+      openModal('confirmAddBulkMandate');
+    },
+    onError: (error) => {
+      closeModal('addBulkMandate');
+    },
+  });
+
   const formik = useFormik({
     initialValues: {
       variableType: '',
       merchantId: '',
-      merchantCode: '',
       productId: '',
       amount: '',
       startDate: null,
@@ -72,6 +140,7 @@ const CreateMandate = () => {
       service: '',
       accountName: '',
       accountNumber: '',
+      accountId: '',
       bankCode: '',
       supportingDocument: '',
       narration: '',
@@ -94,24 +163,23 @@ const CreateMandate = () => {
     onSubmit: (values) => {
       const formattedStartDate = dayjs(values.startDate).toISOString();
       const formattedEndDate = dayjs(values.endDate).toISOString();
-      console.log(values);
-
       const payload = {
         mandateId: '',
+        mandateCode: '',
         merchantId: values.merchantId,
-        mandateCode: values.merchantCode,
         productId: values.productId,
         amount: parseFloat(values.amount),
         startDate: formattedStartDate,
         endDate: formattedEndDate,
-        dayToApply: '15',
+        dayToApply: values.dayToApply,
         mandateType: values.mandateType,
         frequency: values.frequency,
         service: values.service,
         accountName: values.accountName,
         accountNumber: values.accountNumber,
+        accountId: values.accountId,
         bankCode: values.bankCode,
-        supportingDocument: 'support_doc.pdf',
+        supportingDocument: values.supportingDocument,
         narration: values.narration,
         payerName: values.payerName,
         payeeName: values.payeeName,
@@ -125,7 +193,6 @@ const CreateMandate = () => {
         billerID: values.billerId,
         billerAccountNumber: values.billerAccountNumber,
       };
-
       setMandateRequest(payload);
       openModal('addMandate');
     },
@@ -220,8 +287,8 @@ const CreateMandate = () => {
                       formik={formik}
                     />
                     <CustomInput
-                      labelFor="merchantCode"
-                      label="Merchant Code"
+                      labelFor="bankCode"
+                      label="Bank Code"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
                       inputType="text"
@@ -303,12 +370,11 @@ const CreateMandate = () => {
                       formik={formik}
                     />
                     <CustomInput
-                      labelFor="bankCode"
-                      label="Bank Code"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
-                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
+                      labelFor="accountId"
+                      label="Account ID"
                       inputType="text"
                       placeholder="Enter here"
+                      maxW="w-full"
                       formik={formik}
                     />
                   </div>
@@ -546,6 +612,14 @@ const CreateMandate = () => {
                   <aside className="mt-4 flex flex-col">
                     <div className="text-sm text-lightPurple">{files}</div>
                   </aside>
+                  {uploadedFiles && uploadedFiles.length > 0 && (
+                    <button
+                      onClick={clearFiles}
+                      className="mt-3 flex scale-[90%] items-center justify-center rounded-full border border-lightPurple bg-gradient-to-r from-[#2F0248] via-yellow-800 to-[#5C068C] bg-clip-text p-1 text-center font-semibold text-transparent"
+                    >
+                      <CloseIcon />
+                    </button>
+                  )}
                 </section>
               </div>
             </div>
@@ -602,6 +676,35 @@ const CreateMandate = () => {
             formik.resetForm();
             closeModal('confirmAddMandate');
             navigate(`/${appRoutes.merchantDashboard.requests.index}`);
+          }}
+        />
+      )}
+      {modals.addBulkMandate && (
+        <ModalWrapper
+          isOpen={modals.addBulkMandate}
+          setIsOpen={() => closeModal('addBulkMandate')}
+          title={'Add Mandate?'}
+          info={'You are about to add a new mandate, would you want to proceed with this?'}
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
+          proceedAction={() => {
+            addBulkMandateMutation.mutate(formattedBulkData);
+            closeModal('addBulkMandate');
+          }}
+        />
+      )}
+
+      {modals.confirmAddBulkMandate && (
+        <ModalWrapper
+          isOpen={modals.confirmAddBulkMandate}
+          setIsOpen={() => closeModal('confirmAddBulkMandate')}
+          title={'Success!!'}
+          info={'You have successfully added a new mandate'}
+          icon={<ActionSuccessIcon />}
+          type={'completed'}
+          proceedAction={() => {
+            closeModal('confirmAddBulkMandate');
+            navigate(`/${appRoutes.adminDashboard.mandateManagement.index}`);
           }}
         />
       )}

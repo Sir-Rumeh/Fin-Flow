@@ -1,23 +1,40 @@
+import { useMutation } from '@tanstack/react-query';
 import { CloseIcon } from 'assets/icons';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import UploadIcon from 'assets/icons/UploadIcon';
 import ButtonComponent from 'components/FormElements/Button';
+import { addBulkMandateRequest } from 'config/actions/dashboard-actions';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import { useCallback, useEffect, useState } from 'react';
 import { FileWithPath, useDropzone } from 'react-dropzone';
 import { useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
-import { isFileSizeValid, notifyError } from 'utils/helpers';
+import { convertArrayToObjects, isFileSizeValid, notifyError } from 'utils/helpers';
+import { MandateRequest } from 'utils/interfaces';
+import * as XLSX from 'xlsx';
 
 const BulkUpload = () => {
+  const navigate = useNavigate();
+  const [jsonData, setJsonData] = useState<any[]>([]);
+  const [formattedBulkData, setFormattedBulkData] = useState<MandateRequest[]>([]);
   const onDrop = useCallback((acceptedFiles: FileWithPath[]) => {
     try {
       acceptedFiles.forEach((file: FileWithPath) => {
         if (file) {
           if (!isFileSizeValid(file.size, 500)) {
-            throw 'File should be lesser than or equal to 50MB';
+            throw 'File should be lesser than or equal to 100MB';
           }
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            const data = new Uint8Array(e.target?.result as ArrayBuffer);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const sheetName = workbook.SheetNames[0];
+            const sheet = workbook.Sheets[sheetName];
+            const sheetJson = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+            setJsonData(sheetJson);
+          };
+          reader.readAsArrayBuffer(file);
         }
       });
     } catch (error: any) {
@@ -43,7 +60,14 @@ const BulkUpload = () => {
     setUploadedFiles(acceptedFiles);
   }, [acceptedFiles]);
 
-  const navigate = useNavigate();
+  useEffect(() => {
+    const newData = convertArrayToObjects(
+      jsonData,
+      ['mandateId', 'mandateCode', 'supportingDocument'],
+      ['mandateId', 'mandateCode', 'supportingDocument'],
+    );
+    setFormattedBulkData(newData as MandateRequest[]);
+  }, [jsonData]);
 
   const [modals, setModals] = useState({
     confirmCreate: false,
@@ -57,6 +81,17 @@ const BulkUpload = () => {
   const closeModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
+
+  const addBulkMandateMutation = useMutation({
+    mutationFn: (payload: MandateRequest[] | undefined) => addBulkMandateRequest(payload),
+    onSuccess: () => {
+      closeModal('confirmCreate');
+      openModal('creationSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmCreate');
+    },
+  });
 
   const files = uploadedFiles?.map((file, index) => (
     <li key={index}>
@@ -149,8 +184,8 @@ const BulkUpload = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
+            addBulkMandateMutation.mutate(formattedBulkData);
             closeModal('confirmCreate');
-            openModal('creationSuccessful');
           }}
         />
       )}

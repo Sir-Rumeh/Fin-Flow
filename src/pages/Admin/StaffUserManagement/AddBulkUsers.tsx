@@ -9,7 +9,12 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
 import UploadIcon from 'assets/icons/UploadIcon';
 import { FileWithPath, useDropzone } from 'react-dropzone';
-import { convertTCamelCase, isFileSizeValid, notifyError } from 'utils/helpers';
+import {
+  convertArrayToObjects,
+  convertTCamelCase,
+  isFileSizeValid,
+  notifyError,
+} from 'utils/helpers';
 import * as XLSX from 'xlsx';
 import { CloseIcon } from 'assets/icons';
 import { useMutation } from '@tanstack/react-query';
@@ -19,7 +24,7 @@ import { addBulkStaffUserRequest } from 'config/actions/staff-user-actions';
 function AddUser() {
   const navigate = useNavigate();
   const [jsonData, setJsonData] = useState<any[]>([]);
-  const [formattedBulkData, setFormattedBulkData] = useState<any[]>([]);
+  const [formattedBulkData, setFormattedBulkData] = useState<StaffUserRequest[]>([]);
   const [modals, setModals] = useState({
     confirmCreate: false,
     creationSuccessful: false,
@@ -81,29 +86,13 @@ function AddUser() {
   };
 
   useEffect(() => {
-    const convertArrayToObjects = (data: any[][]) => {
-      if (data.length < 2) return [];
-      const headers = data[0].map(convertTCamelCase);
-      const rows = data.slice(1);
-      return rows.map((row) => {
-        const rowObject = headers.reduce(
-          (obj, header, index) => {
-            obj[header] = String(row[index] || '');
-            return obj;
-          },
-          {} as Record<string, any>,
-        );
-        rowObject.userName = `${rowObject.firstName} ${rowObject.lastName}`;
-        return rowObject;
-      });
-    };
-    const newData = convertArrayToObjects(jsonData);
-    setFormattedBulkData(newData);
-  }, [jsonData]);
-
-  useEffect(() => {
     setUploadedFiles(acceptedFiles);
   }, [acceptedFiles]);
+
+  useEffect(() => {
+    const newData = convertArrayToObjects(jsonData, ['userName'], ['firstName, lastName']);
+    setFormattedBulkData(newData as StaffUserRequest[]);
+  }, [jsonData]);
 
   const addBulkStaffUserMutation = useMutation({
     mutationFn: (payload: StaffUserRequest[] | undefined) => addBulkStaffUserRequest(payload),

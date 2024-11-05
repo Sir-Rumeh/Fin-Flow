@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { DropdownOption } from 'components/FormElements/FormSelect';
 import { canBeUpdated } from 'utils/constants';
 import { SearchTypes } from 'utils/enums';
+import dayjs from 'dayjs';
 
 export const checkRoute = (pathname: string, pathToCheck: string) => {
   if (pathname.includes(pathToCheck)) {
@@ -227,3 +228,47 @@ export const convertTCamelCase = (str: string) =>
       index === 0 ? match.toLowerCase() : match.toUpperCase(),
     )
     .replace(/\s+/g, '');
+
+export const convertArrayToObjects = (
+  data: any[][],
+  extraFields?: string[],
+  extraValues?: string[],
+) => {
+  if (data.length < 2) return [];
+  const headers = data[0].map(convertTCamelCase);
+  const rows = data.slice(1);
+  const numericFields = ['amount'];
+  return rows.map((row) => {
+    const rowObject = headers.reduce(
+      (obj, header, index) => {
+        const value = row[index];
+        const numberValue = Number(value);
+        if (!isNaN(numberValue) && value !== '') {
+          obj[header] = numberValue;
+        } else {
+          if (header === 'startDate' || 'endDate') {
+            const formattedDate = dayjs(value).toISOString();
+            obj[header] = formattedDate;
+          } else {
+            obj[header] = String(value || '');
+          }
+        }
+        return obj;
+      },
+      {} as Record<string, any>,
+    );
+    if (extraFields && extraFields.length > 0) {
+      extraFields?.forEach((newField, index) => {
+        const valueFields = extraValues?.[index];
+        if (valueFields) {
+          const fieldsToConcatenate = valueFields.split(',').map((field) => field.trim());
+          rowObject[newField] = fieldsToConcatenate
+            .map((field) => rowObject[field])
+            .filter(Boolean)
+            .join(' ');
+        }
+      });
+    }
+    return rowObject;
+  });
+};

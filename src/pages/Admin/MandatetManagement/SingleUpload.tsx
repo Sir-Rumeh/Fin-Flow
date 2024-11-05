@@ -59,7 +59,6 @@ const SingleUpload = () => {
       startDate: null,
       endDate: null,
       supportingDocument: '',
-      merchantCode: '',
       productId: '',
       amount: '',
       dayToApply: '',
@@ -67,6 +66,7 @@ const SingleUpload = () => {
       service: '',
       accountName: '',
       accountNumber: '',
+      accountId: '',
       bankCode: '',
       narration: '',
       payerName: '',
@@ -88,12 +88,11 @@ const SingleUpload = () => {
     onSubmit: (values) => {
       const formattedStartDate = dayjs(values.startDate).toISOString();
       const formattedEndDate = dayjs(values.endDate).toISOString();
-      console.log(values);
-
       const payload = {
         mandateId: '',
+        mandateCode: '',
         merchantId: values.merchantId,
-        mandateCode: values.merchantCode,
+        accountId: values.accountId,
         productId: values.productId,
         amount: parseFloat(values.amount),
         startDate: formattedStartDate,
@@ -105,7 +104,7 @@ const SingleUpload = () => {
         accountName: values.accountName,
         accountNumber: values.accountNumber,
         bankCode: values.bankCode,
-        supportingDocument: 'support_doc.pdf',
+        supportingDocument: values.supportingDocument,
         narration: values.narration,
         payerName: values.payerName,
         payeeName: values.payeeName,
@@ -119,7 +118,6 @@ const SingleUpload = () => {
         billerID: values.billerId,
         billerAccountNumber: values.billerAccountNumber,
       };
-
       setMandateRequest(payload);
       openModal('confirmCreate');
     },
@@ -199,16 +197,6 @@ const SingleUpload = () => {
               </div>
               <div className="w-full md:col-span-1">
                 <CustomInput
-                  labelFor="merchantCode"
-                  label="Merchant Code"
-                  inputType="text"
-                  placeholder="Enter here"
-                  maxW="w-full"
-                  formik={formik}
-                />
-              </div>
-              <div className="w-full md:col-span-1">
-                <CustomInput
                   labelFor="productId"
                   label="Product ID"
                   inputType="text"
@@ -264,7 +252,6 @@ const SingleUpload = () => {
                   scrollableOptions
                 />
               </div>
-
               <div className="md:col-span-1">
                 <FormSelect
                   labelFor="service"
@@ -288,6 +275,16 @@ const SingleUpload = () => {
                 <CustomInput
                   labelFor="accountNumber"
                   label="Account Number"
+                  inputType="text"
+                  placeholder="Enter here"
+                  maxW="w-full"
+                  formik={formik}
+                />
+              </div>
+              <div className="w-full md:col-span-1">
+                <CustomInput
+                  labelFor="accountId"
+                  label="Account ID"
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
@@ -517,6 +514,7 @@ const SingleUpload = () => {
           type={'confirmation'}
           proceedAction={() => {
             addMandateRequestMutation.mutate(mandateRequest);
+            closeModal('confirmCreate');
           }}
         />
       )}
