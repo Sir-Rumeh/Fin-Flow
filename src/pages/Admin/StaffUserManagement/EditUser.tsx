@@ -71,8 +71,6 @@ function EditUser() {
         role: values.role,
         address: values.address,
       };
-      console.log(payload);
-
       setStaffUserRequest(payload);
       openModal('confirmEdit');
     },

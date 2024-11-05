@@ -220,3 +220,10 @@ export const getUserFromLocalStorage = () => {
   const userDetails: AuthData | null = storedUser ? JSON.parse(storedUser) : null;
   return userDetails;
 };
+export const convertTCamelCase = (str: string) =>
+  str
+    .toLowerCase()
+    .replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, (match, index) =>
+      index === 0 ? match.toLowerCase() : match.toUpperCase(),
+    )
+    .replace(/\s+/g, '');

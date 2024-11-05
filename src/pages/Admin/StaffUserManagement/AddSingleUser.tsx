@@ -110,14 +110,6 @@ function AddUser() {
                     formik={formik}
                   />
                   <CustomInput
-                    labelFor="userName"
-                    label="Enter User Name"
-                    inputType="text"
-                    placeholder="Enter user name"
-                    maxW="w-full"
-                    formik={formik}
-                  />
-                  <CustomInput
                     labelFor="staffId"
                     label="Enter Employee ID"
                     inputType="text"
