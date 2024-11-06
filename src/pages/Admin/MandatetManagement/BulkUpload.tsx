@@ -12,7 +12,7 @@ import { useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
 import { convertExcelArrayToObjects, isFileSizeValid, notifyError } from 'utils/helpers';
 import { MandateRequest } from 'utils/interfaces';
-import * as XLSX from 'xlsx';
+import * as XLSX from 'https://unpkg.com/xlsx/xlsx.mjs';
 
 const BulkUpload = () => {
   const navigate = useNavigate();

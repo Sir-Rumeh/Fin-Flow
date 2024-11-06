@@ -9,13 +9,8 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
 import UploadIcon from 'assets/icons/UploadIcon';
 import { FileWithPath, useDropzone } from 'react-dropzone';
-import {
-  convertArrayToObjects,
-  convertTCamelCase,
-  isFileSizeValid,
-  notifyError,
-} from 'utils/helpers';
-import * as XLSX from 'xlsx';
+import { convertExcelArrayToObjects, isFileSizeValid, notifyError } from 'utils/helpers';
+import * as XLSX from 'https://unpkg.com/xlsx/xlsx.mjs';
 import { CloseIcon } from 'assets/icons';
 import { useMutation } from '@tanstack/react-query';
 import { StaffUserRequest } from 'utils/interfaces';
@@ -55,12 +50,18 @@ function AddUser() {
           }
           const reader = new FileReader();
           reader.onload = (e) => {
+            // const data = new Uint8Array(e.target?.result as ArrayBuffer);
+            // const workbook = XLSX.read(data, { type: 'array' });
+            // const sheetName = workbook.SheetNames[0];
+            // const sheet = workbook.Sheets[sheetName];
+            // const sheetJson = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+            // setJsonData(sheetJson);
+
             const data = new Uint8Array(e.target?.result as ArrayBuffer);
             const workbook = XLSX.read(data, { type: 'array' });
-            const sheetName = workbook.SheetNames[0];
-            const sheet = workbook.Sheets[sheetName];
-            const sheetJson = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-            setJsonData(sheetJson);
+            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+            setJsonData(json);
           };
           reader.readAsArrayBuffer(file);
         }
@@ -90,7 +91,9 @@ function AddUser() {
   }, [acceptedFiles]);
 
   useEffect(() => {
-    const newData = convertArrayToObjects(jsonData, ['userName'], ['firstName, lastName']);
+    const newData = convertExcelArrayToObjects(jsonData, ['userName'], ['firstName, lastName']);
+    console.log('new json dsta', newData);
+
     setFormattedBulkData(newData as StaffUserRequest[]);
   }, [jsonData]);
 

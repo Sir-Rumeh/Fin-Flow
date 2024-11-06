@@ -148,7 +148,7 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
 
 export const formatApiDataForDropdown = (dataArray: any[], dataKey: string, dataValue: string) => {
   let formattedArrayOptions: DropdownOption[] = [];
-  dataArray?.map((dataOption: any) => {
+  dataArray?.forEach((dataOption: any) => {
     const newOption = {
       label: capitalize(dataOption[dataKey] as string),
       value: dataOption[dataValue] as string,
@@ -244,7 +244,7 @@ export const convertExcelArrayToObjects = (
       (obj, header, index) => {
         const value = row[index];
         const numberValue = Number(value);
-        if (!isNaN(numberValue) && value !== '') {
+        if (typeof numberValue === 'number') {
           obj[header] = numberValue;
         } else {
           if (header === 'startDate' || 'endDate') {

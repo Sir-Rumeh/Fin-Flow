@@ -119,11 +119,10 @@ const StaffUserRequests = () => {
         );
         switch (params?.row.requestType) {
           case RequestTypes.Creation:
+          case RequestTypes.Enable:
             return renderIcon(CreationRequestIcon, 'text-greenPrimary');
           case RequestTypes.Update:
             return renderIcon(UpdateRequestIcon, 'text-lightPurple');
-          case RequestTypes.Enable:
-            return renderIcon(CreationRequestIcon, 'text-greenPrimary');
           case RequestTypes.Disable:
             return renderIcon(DisableRequestIcon, 'text-yellowNeutral');
           case RequestTypes.Deletion:

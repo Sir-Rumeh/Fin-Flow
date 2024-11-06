@@ -20,7 +20,7 @@ import FormDatePicker from 'components/FormElements/FormDatePicker';
 import CustomFileUpload from 'components/FormElements/CustomFileUpload';
 import FormSelect from 'components/FormElements/FormSelect';
 import { serviceOptions } from 'utils/constants';
-import * as XLSX from 'xlsx';
+import * as XLSX from 'https://unpkg.com/xlsx/xlsx.mjs';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 
 const CreateMandate = () => {
