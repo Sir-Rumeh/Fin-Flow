@@ -433,7 +433,6 @@ const Reports = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-
     setIsFirstRender(false);
   }, [paginationData.pageNumber, formik.values.status, formik.values.searchMandate]);
 

@@ -15,7 +15,7 @@ import dayjs from 'dayjs';
 import { useMutation } from '@tanstack/react-query';
 import { addBulkMandateRequest, addMandateRequest } from 'config/actions/dashboard-actions';
 import { MandateRequest } from 'utils/interfaces';
-import { convertArrayToObjects, isFileSizeValid, notifyError } from 'utils/helpers';
+import { convertExcelArrayToObjects, isFileSizeValid, notifyError } from 'utils/helpers';
 import FormDatePicker from 'components/FormElements/FormDatePicker';
 import CustomFileUpload from 'components/FormElements/CustomFileUpload';
 import FormSelect from 'components/FormElements/FormSelect';
@@ -90,7 +90,7 @@ const CreateMandate = () => {
   }, [acceptedFiles]);
 
   useEffect(() => {
-    const newData = convertArrayToObjects(
+    const newData = convertExcelArrayToObjects(
       jsonData,
       ['mandateId', 'mandateCode', 'supportingDocument'],
       ['mandateId', 'mandateCode', 'supportingDocument'],

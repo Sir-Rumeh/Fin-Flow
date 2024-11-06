@@ -10,7 +10,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { FileWithPath, useDropzone } from 'react-dropzone';
 import { useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
-import { convertArrayToObjects, isFileSizeValid, notifyError } from 'utils/helpers';
+import { convertExcelArrayToObjects, isFileSizeValid, notifyError } from 'utils/helpers';
 import { MandateRequest } from 'utils/interfaces';
 import * as XLSX from 'xlsx';
 
@@ -61,7 +61,7 @@ const BulkUpload = () => {
   }, [acceptedFiles]);
 
   useEffect(() => {
-    const newData = convertArrayToObjects(
+    const newData = convertExcelArrayToObjects(
       jsonData,
       ['mandateId', 'mandateCode', 'supportingDocument'],
       ['mandateId', 'mandateCode', 'supportingDocument'],

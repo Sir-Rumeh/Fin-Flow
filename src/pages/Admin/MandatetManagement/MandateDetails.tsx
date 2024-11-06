@@ -13,7 +13,7 @@ import CustomTabs from 'hoc/CustomTabs';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
-import { TabsProps } from 'utils/interfaces';
+import { QueryParams, TabsProps } from 'utils/interfaces';
 import CustomTable from 'components/CustomTable';
 import { transactionHistory } from 'utils/constants';
 import { GridColDef } from '@mui/x-data-grid';
@@ -30,6 +30,7 @@ import {
   disableMandate,
   enableMandate,
   getMandateById,
+  getMandateTransactions,
   updateMandate,
 } from 'config/actions/dashboard-actions';
 import { capitalize, formatNumberDisplay, notifyError } from 'utils/helpers';
@@ -43,6 +44,11 @@ const MandateDetails = () => {
   const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
   const [searchTerm, setSearchTerm] = useState('');
   const [transactionsSearchTerm, setTransactionsSearchTerm] = useState('');
+
+  const [transactionPaginationData, setTransactionPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
 
   const [modals, setModals] = useState({
     confirmDisable: false,
@@ -121,7 +127,7 @@ const MandateDetails = () => {
       headerClassName: 'ag-thead',
     },
     {
-      field: 'date',
+      field: 'effectiveDate',
       headerName: 'Date',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -148,6 +154,20 @@ const MandateDetails = () => {
   const { data, refetch } = useQuery({
     queryKey: ['mandates', mandateId],
     queryFn: ({ queryKey }) => getMandateById(queryKey[1]),
+  });
+
+  const [transactionsQueryParams, setTransactionsQueryParams] = useState<QueryParams>({
+    mandateCode: data?.responseData?.mandateCode,
+    status: activeTransactionTab,
+    pageNo: transactionPaginationData.pageNumber,
+    pageSize: transactionPaginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
+
+  const { data: transactions, refetch: refetchTransactions } = useQuery({
+    queryKey: ['transactions', transactionsQueryParams],
+    queryFn: ({ queryKey }) => getMandateTransactions(queryKey[1] as QueryParams),
   });
 
   const updateMandateMutation = useMutation({
@@ -621,9 +641,11 @@ const MandateDetails = () => {
               <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
               <div className="slide-down mt-6">
                 <CustomTable
-                  tableData={transactionHistory}
+                  tableData={transactions}
                   columns={transactionsTableColumn}
-                  rowCount={73}
+                  rowCount={transactions?.responseData?.totalCount}
+                  paginationData={transactionPaginationData}
+                  setPaginationData={setTransactionPaginationData}
                 />
               </div>
             </div>

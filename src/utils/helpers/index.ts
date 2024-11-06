@@ -221,6 +221,7 @@ export const getUserFromLocalStorage = () => {
   const userDetails: AuthData | null = storedUser ? JSON.parse(storedUser) : null;
   return userDetails;
 };
+
 export const convertTCamelCase = (str: string) =>
   str
     .toLowerCase()
@@ -229,7 +230,7 @@ export const convertTCamelCase = (str: string) =>
     )
     .replace(/\s+/g, '');
 
-export const convertArrayToObjects = (
+export const convertExcelArrayToObjects = (
   data: any[][],
   extraFields?: string[],
   extraValues?: string[],

@@ -27,6 +27,7 @@ import {
   disableMandate,
   enableMandate,
   getMandates,
+  getMandateTransactions,
   updateMandate,
 } from 'config/actions/dashboard-actions';
 import { capitalize } from 'utils/helpers';
@@ -42,10 +43,15 @@ const MandatetManagement = () => {
     pageNumber: 1,
     pageSize: 10,
   });
+  const [transactionPaginationData, setTransactionPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
   const [selectedMandate, setSelectedMandate] = useState({
     id: '',
     mandateType: '',
   });
+  const [selectedMandateCode, setSelectedMandateCode] = useState('');
   const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
 
   const total = 20;
@@ -126,6 +132,15 @@ const MandatetManagement = () => {
     endDate: formik.values.toDateFilter,
   });
 
+  const [transactionsQueryParams, setTransactionsQueryParams] = useState<QueryParams>({
+    mandateCode: selectedMandateCode,
+    status: activeTransactionTab,
+    pageNo: transactionPaginationData.pageNumber,
+    pageSize: transactionPaginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
+
   useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
@@ -137,6 +152,14 @@ const MandatetManagement = () => {
       endDate: formik.values.toDateFilter,
     }));
   }, [paginationData]);
+  useEffect(() => {
+    setTransactionsQueryParams((prev) => ({
+      ...prev,
+      status: activeTransactionTab,
+      pageNo: transactionPaginationData.pageNumber,
+      pageSize: transactionPaginationData.pageSize,
+    }));
+  }, [transactionPaginationData]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
@@ -242,6 +265,7 @@ const MandatetManagement = () => {
                 </button>
                 <button
                   onClick={() => {
+                    setSelectedMandateCode(params.row.mandateCode);
                     openModal('openTransactionHistory');
                   }}
                   type="button"
@@ -330,7 +354,7 @@ const MandatetManagement = () => {
       headerClassName: 'ag-thead',
     },
     {
-      field: 'date',
+      field: 'effectiveDate',
       headerName: 'Date',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -357,6 +381,11 @@ const MandatetManagement = () => {
   const { data, refetch } = useQuery({
     queryKey: ['mandates', queryParams],
     queryFn: ({ queryKey }) => getMandates(queryKey[1] as QueryParams),
+  });
+
+  const { data: transactions, refetch: refetchTransactions } = useQuery({
+    queryKey: ['transactions', transactionsQueryParams],
+    queryFn: ({ queryKey }) => getMandateTransactions(queryKey[1] as QueryParams),
   });
 
   const updateMandateMutation = useMutation({
@@ -690,9 +719,11 @@ const MandatetManagement = () => {
               <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
               <div className="slide-down mt-6">
                 <CustomTable
-                  tableData={transactionHistory}
+                  tableData={transactions}
                   columns={transactionsTableColumn}
-                  rowCount={73}
+                  rowCount={transactions?.responseData?.totalCount}
+                  paginationData={transactionPaginationData}
+                  setPaginationData={setTransactionPaginationData}
                 />
               </div>
             </div>
