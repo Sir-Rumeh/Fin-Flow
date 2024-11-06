@@ -56,20 +56,20 @@ function EditUser() {
       phoneNumber: '',
       branch: '',
       role: '',
-      staffLevel: '',
+      address: '',
     },
     validationSchema: createStaffUserSchema,
     onSubmit: (values) => {
       const payload = {
         staffId: values.staffId,
-        userName: values.userName,
+        userName: `${values.firstName} ${values.lastName}`,
         firstName: values.firstName,
         lastName: values.lastName,
         email: values.email,
         phoneNumber: values.phoneNumber,
         branch: values.branch,
         role: values.role,
-        // staffLevel: values.staffLevel,
+        address: values.address,
       };
       setStaffUserRequest(payload);
       openModal('confirmEdit');
@@ -91,7 +91,7 @@ function EditUser() {
       phoneNumber: data?.responseData?.phoneNumber || '',
       branch: data?.responseData?.branch || '',
       role: data?.responseData?.role || '',
-      staffLevel: data?.responseData?.staffLevel || '',
+      address: data?.responseData?.address || '',
     });
   }, [data]);
 
@@ -116,16 +116,6 @@ function EditUser() {
             <form onSubmit={formik.handleSubmit} noValidate className="relative w-full">
               <div className="slide-down">
                 <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
-                  <div className="w-full sm:col-span-2">
-                    <CustomInput
-                      labelFor="userName"
-                      label="Enter User Name"
-                      inputType="text"
-                      placeholder="Enter user name"
-                      maxW="w-full"
-                      formik={formik}
-                    />
-                  </div>
                   <CustomInput
                     labelFor="firstName"
                     label="Enter First Name"
@@ -174,21 +164,22 @@ function EditUser() {
                     maxW="w-full"
                     formik={formik}
                   />
+                  <div className="w-full">
+                    <CustomInput
+                      labelFor="address"
+                      label="Enter Address"
+                      inputType="text"
+                      placeholder="Enter Address"
+                      maxW="w-full"
+                      formik={formik}
+                    />
+                  </div>
                   <div className="">
                     <FormSelect
                       labelFor="role"
                       label="Assign Role"
                       formik={formik}
                       options={roles}
-                      useTouched
-                    />
-                  </div>
-                  <div className="">
-                    <FormSelect
-                      labelFor="userLevel"
-                      label="Assign User Approval Level"
-                      formik={formik}
-                      options={userLevel}
                       useTouched
                     />
                   </div>

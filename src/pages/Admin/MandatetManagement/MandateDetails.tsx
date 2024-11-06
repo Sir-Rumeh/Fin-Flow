@@ -13,7 +13,7 @@ import CustomTabs from 'hoc/CustomTabs';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
-import { TabsProps } from 'utils/interfaces';
+import { QueryParams, TabsProps } from 'utils/interfaces';
 import CustomTable from 'components/CustomTable';
 import { transactionHistory } from 'utils/constants';
 import { GridColDef } from '@mui/x-data-grid';
@@ -30,10 +30,12 @@ import {
   disableMandate,
   enableMandate,
   getMandateById,
+  getMandateTransactions,
   updateMandate,
 } from 'config/actions/dashboard-actions';
 import { capitalize, formatNumberDisplay, notifyError } from 'utils/helpers';
 import { updateMandateSchema } from 'utils/formValidators';
+import { TransactionsTabsListTabNames } from 'utils/enums';
 
 const MandateDetails = () => {
   const navigate = useNavigate();
@@ -42,6 +44,11 @@ const MandateDetails = () => {
   const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
   const [searchTerm, setSearchTerm] = useState('');
   const [transactionsSearchTerm, setTransactionsSearchTerm] = useState('');
+
+  const [transactionPaginationData, setTransactionPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
 
   const [modals, setModals] = useState({
     confirmDisable: false,
@@ -89,12 +96,17 @@ const MandateDetails = () => {
   const tabsList: TabsProps[] = [
     {
       tabIndex: 1,
-      tabName: 'Successful',
+      tabName: TransactionsTabsListTabNames.Successful,
       tabTotal: total,
     },
     {
       tabIndex: 2,
-      tabName: 'Failed',
+      tabName: TransactionsTabsListTabNames.Pending,
+      tabTotal: total,
+    },
+    {
+      tabIndex: 3,
+      tabName: TransactionsTabsListTabNames.Failed,
       tabTotal: total,
     },
   ];
@@ -115,7 +127,7 @@ const MandateDetails = () => {
       headerClassName: 'ag-thead',
     },
     {
-      field: 'date',
+      field: 'effectiveDate',
       headerName: 'Date',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -142,6 +154,20 @@ const MandateDetails = () => {
   const { data, refetch } = useQuery({
     queryKey: ['mandates', mandateId],
     queryFn: ({ queryKey }) => getMandateById(queryKey[1]),
+  });
+
+  const [transactionsQueryParams, setTransactionsQueryParams] = useState<QueryParams>({
+    mandateCode: data?.responseData?.mandateCode,
+    status: activeTransactionTab,
+    pageNo: transactionPaginationData.pageNumber,
+    pageSize: transactionPaginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
+
+  const { data: transactions, refetch: refetchTransactions } = useQuery({
+    queryKey: ['transactions', transactionsQueryParams],
+    queryFn: ({ queryKey }) => getMandateTransactions(queryKey[1] as QueryParams),
   });
 
   const updateMandateMutation = useMutation({
@@ -575,7 +601,7 @@ const MandateDetails = () => {
         <CustomModal
           isOpen={modals.openTransactionHistory}
           setIsOpen={() => closeModal('openTransactionHistory')}
-          width={'900px'}
+          width={'1000px'}
         >
           <Typography id="modal-modal-title" variant="h6" component="h2">
             <div className="flex items-center justify-between">
@@ -588,7 +614,7 @@ const MandateDetails = () => {
           </Typography>
           <Typography id="modal-modal-description" sx={{ mt: 2 }}>
             <div className="">
-              <div className="slide-down flex items-center justify-between">
+              <div className="slide-down flex flex-col items-start justify-between gap-y-2 lg:flex-row lg:items-center">
                 <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10">
                   <CustomTabs
                     tabs={tabsList}
@@ -615,9 +641,11 @@ const MandateDetails = () => {
               <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
               <div className="slide-down mt-6">
                 <CustomTable
-                  tableData={transactionHistory}
+                  tableData={transactions}
                   columns={transactionsTableColumn}
-                  rowCount={73}
+                  rowCount={transactions?.responseData?.totalCount}
+                  paginationData={transactionPaginationData}
+                  setPaginationData={setTransactionPaginationData}
                 />
               </div>
             </div>

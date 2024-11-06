@@ -49,7 +49,6 @@ export const addSingleMandateSchema = Yup.object().shape({
 export const createMandateSchema = Yup.object().shape({
   mandateType: Yup.string().required('mandate type is required'),
   merchantId: Yup.string().required('Merchant ID is required'),
-  merchantCode: Yup.string().required('Merchant Code is required'),
   productId: Yup.string().required('Product ID is required'),
   amount: Yup.number()
     .required('Amount is required')
@@ -62,6 +61,7 @@ export const createMandateSchema = Yup.object().shape({
   service: Yup.string().required('Service is required'),
   accountName: Yup.string().required('Account name is required'),
   accountNumber: Yup.string().required('Account number is required'),
+  accountId: Yup.string().required('Account ID is required'),
   bankCode: Yup.string().required('Bank code is required'),
   supportingDocument: Yup.string().required('File is required'),
   narration: Yup.string().required('Narration is required'),
@@ -91,7 +91,6 @@ export const updateMandateSchema = Yup.object().shape({
 });
 
 export const createStaffUserSchema = Yup.object().shape({
-  userName: Yup.string().required('Username is required'),
   firstName: Yup.string().required('Firstname is required'),
   lastName: Yup.string().required('Lastname is required'),
   staffId: Yup.string().required('Employee ID is required'),
@@ -101,6 +100,7 @@ export const createStaffUserSchema = Yup.object().shape({
   phoneNumber: Yup.string().required('Employee phone number is required'),
   branch: Yup.string().required('Branch is required'),
   role: Yup.string().required('User role is required'),
+  address: Yup.string().required('User address is required'),
 });
 
 export const createProfileSchema = Yup.object().shape({

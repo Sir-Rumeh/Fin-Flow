@@ -119,11 +119,10 @@ const StaffUserRequests = () => {
         );
         switch (params?.row.requestType) {
           case RequestTypes.Creation:
+          case RequestTypes.Enable:
             return renderIcon(CreationRequestIcon, 'text-greenPrimary');
           case RequestTypes.Update:
             return renderIcon(UpdateRequestIcon, 'text-lightPurple');
-          case RequestTypes.Enable:
-            return renderIcon(CreationRequestIcon, 'text-greenPrimary');
           case RequestTypes.Disable:
             return renderIcon(DisableRequestIcon, 'text-yellowNeutral');
           case RequestTypes.Deletion:
@@ -134,8 +133,8 @@ const StaffUserRequests = () => {
       },
     },
     {
-      field: 'dateRequested',
-      headerName: 'Date Requested',
+      field: 'dateCreated',
+      headerName: 'Date Created',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
@@ -144,7 +143,7 @@ const StaffUserRequests = () => {
     {
       field: 'actions',
       headerName: 'Action',
-      headerClassName: 'ag-thead ',
+      headerClassName: 'ag-thead',
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
         const route =

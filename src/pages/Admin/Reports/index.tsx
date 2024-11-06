@@ -34,6 +34,7 @@ import {
 } from 'config/actions/dashboard-actions';
 import { formatApiDataForDropdown, getDateRange } from 'utils/helpers';
 import { getMerchants } from 'config/actions/merchant-actions';
+import { TransactionsTabsListTabNames } from 'utils/enums';
 
 const Reports = () => {
   const printPdfRef = useRef(null);
@@ -105,12 +106,17 @@ const Reports = () => {
   const tabsList: TabsProps[] = [
     {
       tabIndex: 1,
-      tabName: 'Successful',
+      tabName: TransactionsTabsListTabNames.Successful,
       tabTotal: total,
     },
     {
       tabIndex: 2,
-      tabName: 'Failed',
+      tabName: TransactionsTabsListTabNames.Pending,
+      tabTotal: total,
+    },
+    {
+      tabIndex: 3,
+      tabName: TransactionsTabsListTabNames.Failed,
       tabTotal: total,
     },
   ];
@@ -427,7 +433,6 @@ const Reports = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-
     setIsFirstRender(false);
   }, [paginationData.pageNumber, formik.values.status, formik.values.searchMandate]);
 
@@ -864,7 +869,7 @@ const Reports = () => {
         <CustomModal
           isOpen={modals.openTransactionHistory}
           setIsOpen={() => closeModal('openTransactionHistory')}
-          width={'900px'}
+          width={'1000px'}
           paddingX={0}
         >
           <Typography id="modal-modal-title" variant="h6" component="h2">
@@ -878,7 +883,7 @@ const Reports = () => {
           </Typography>
           <div className="mt-2">
             <div className="">
-              <div className="slide-down flex items-center justify-between">
+              <div className="slide-down flex flex-col items-start justify-between gap-y-2 lg:flex-row lg:items-center">
                 <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10">
                   <CustomTabs
                     tabs={tabsList}

@@ -78,7 +78,7 @@ const RolePermission = () => {
       headerClassName: 'ag-thead',
       renderCell: (params: GridRenderCellParams) => {
         return (
-          <div className="w-full">
+          <div className="w-full flex-wrap overflow-hidden whitespace-normal text-wrap break-words">
             {params.row.permissions?.map((permission: Permission, index: number) => {
               return (
                 <span className={`mr-2`} key={permission.module}>
@@ -163,7 +163,7 @@ const RolePermission = () => {
       </div>
       <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
         <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
-          <h2 className="text-xl font-bold">{`Role Permissions (${data?.responseData?.totalCount})`}</h2>
+          <h2 className="text-xl font-bold">{`Role Permissions (${data?.responseData?.totalCount ?? 0})`}</h2>
           <div></div>
         </div>
         <div className="mt-1 w-full rounded-md border px-3 pt-2">

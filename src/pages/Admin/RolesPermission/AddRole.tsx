@@ -74,10 +74,10 @@ const AddRole = () => {
       <div className="slide-down mt-3 flex items-center justify-between">
         <h2 className="mt-3 text-xl font-semibold">Add Role</h2>
       </div>
-      <div className="slide-down mt-5 rounded-lg bg-white px-10 py-10">
+      <div className="slide-down mt-5 rounded-lg bg-white px-2 py-10 sm:px-4 md:px-10">
         <form onSubmit={formik.handleSubmit} noValidate className="relative w-full">
           <div className="grid grid-cols-2 gap-10">
-            <div className="w-full">
+            <div className="col-span-2 w-full sm:col-span-1">
               <CustomInput
                 labelFor="roleName"
                 label="Role Name"
@@ -87,7 +87,7 @@ const AddRole = () => {
                 formik={formik}
               />
             </div>
-            <div className="w-full">
+            <div className="col-span-2 w-full sm:col-span-1">
               <CustomInput
                 labelFor="roleDescription"
                 label="Role Description"
@@ -97,7 +97,7 @@ const AddRole = () => {
                 formik={formik}
               />
             </div>
-            <div className="">
+            <div className="col-span-2 w-full md:col-span-1">
               <FormSelect
                 labelFor="designation"
                 label="Role Designation"
