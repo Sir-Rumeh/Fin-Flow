@@ -1,13 +1,15 @@
 import ButtonComponent from 'components/FormElements/Button';
 import { Dispatch } from 'react';
-import { TabsListTabNames } from 'utils/enums';
+import { TabsListTabNames, TransactionsTabsListTabNames } from 'utils/enums';
 import { TabsProps } from 'utils/interfaces';
 
 interface CustomTabProps {
   tabs: TabsProps[];
   activeTab: string;
   width?: string;
-  setActiveTab: Dispatch<React.SetStateAction<TabsListTabNames | any>>;
+  setActiveTab: Dispatch<
+    React.SetStateAction<TabsListTabNames | TransactionsTabsListTabNames | any>
+  >;
   backgroundColor?: string;
   showTabTotal?: boolean;
 }

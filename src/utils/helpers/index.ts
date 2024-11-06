@@ -5,6 +5,7 @@ import { toast } from 'react-toastify';
 import { DropdownOption } from 'components/FormElements/FormSelect';
 import { canBeUpdated } from 'utils/constants';
 import { SearchTypes } from 'utils/enums';
+import dayjs from 'dayjs';
 
 export const checkRoute = (pathname: string, pathToCheck: string) => {
   if (pathname.includes(pathToCheck)) {
@@ -147,7 +148,7 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
 
 export const formatApiDataForDropdown = (dataArray: any[], dataKey: string, dataValue: string) => {
   let formattedArrayOptions: DropdownOption[] = [];
-  dataArray?.map((dataOption: any) => {
+  dataArray?.forEach((dataOption: any) => {
     const newOption = {
       label: capitalize(dataOption[dataKey] as string),
       value: dataOption[dataValue] as string,
@@ -219,4 +220,56 @@ export const getUserFromLocalStorage = () => {
   const storedUser = localStorage.getItem('user');
   const userDetails: AuthData | null = storedUser ? JSON.parse(storedUser) : null;
   return userDetails;
+};
+
+export const convertTCamelCase = (str: string) =>
+  str
+    .toLowerCase()
+    .replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, (match, index) =>
+      index === 0 ? match.toLowerCase() : match.toUpperCase(),
+    )
+    .replace(/\s+/g, '');
+
+export const convertExcelArrayToObjects = (
+  data: any[][],
+  extraFields?: string[],
+  extraValues?: string[],
+) => {
+  if (data.length < 2) return [];
+  const headers = data[0].map(convertTCamelCase);
+  const rows = data.slice(1);
+  const numericFields = ['amount'];
+  return rows.map((row) => {
+    const rowObject = headers.reduce(
+      (obj, header, index) => {
+        const value = row[index];
+        const numberValue = Number(value);
+        if (typeof numberValue === 'number') {
+          obj[header] = numberValue;
+        } else {
+          if (header === 'startDate' || 'endDate') {
+            const formattedDate = dayjs(value).toISOString();
+            obj[header] = formattedDate;
+          } else {
+            obj[header] = String(value || '');
+          }
+        }
+        return obj;
+      },
+      {} as Record<string, any>,
+    );
+    if (extraFields && extraFields.length > 0) {
+      extraFields?.forEach((newField, index) => {
+        const valueFields = extraValues?.[index];
+        if (valueFields) {
+          const fieldsToConcatenate = valueFields.split(',').map((field) => field.trim());
+          rowObject[newField] = fieldsToConcatenate
+            .map((field) => rowObject[field])
+            .filter(Boolean)
+            .join(' ');
+        }
+      });
+    }
+    return rowObject;
+  });
 };

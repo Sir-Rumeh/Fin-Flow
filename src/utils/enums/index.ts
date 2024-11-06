@@ -22,6 +22,11 @@ export enum TabsListTabNames {
   Rejected = 'Rejected',
   Declined = 'Declined',
 }
+export enum TransactionsTabsListTabNames {
+  Successful = 'Successful',
+  Pending = 'Pending',
+  Failed = 'Failed',
+}
 
 export enum AdminDashboardPageType {
   DashboardIndex = 'DashboardIndex',

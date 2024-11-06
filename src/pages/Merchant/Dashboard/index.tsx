@@ -76,7 +76,6 @@ const Dashboard = () => {
 
         switch (params.value) {
           case RequestType.Creation:
-            return renderIcon(CreationRequestIcon, 'text-greenPrimary font-semibold');
           case RequestType.Enable:
             return renderIcon(CreationRequestIcon, 'text-greenPrimary font-semibold');
           case RequestType.Update:

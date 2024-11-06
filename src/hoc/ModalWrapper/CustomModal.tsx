@@ -30,7 +30,7 @@ const CustomModal = ({ title, isOpen, setIsOpen, children, width = '700px', padd
     bgcolor: 'white',
     borderRadius: '1rem',
     boxShadow: 24,
-    px: paddingX ? paddingX : 5,
+    px: paddingX ? paddingX : 3,
     pt: 6,
     pb: 5,
   };

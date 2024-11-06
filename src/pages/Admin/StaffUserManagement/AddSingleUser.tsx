@@ -52,20 +52,20 @@ function AddUser() {
       phoneNumber: '',
       branch: '',
       role: '',
-      userLevel: '',
+      address: '',
     },
     validationSchema: createStaffUserSchema,
     onSubmit: (values) => {
       const payload = {
         staffId: values.staffId,
-        userName: values.userName,
+        userName: `${values.firstName} ${values.lastName}`,
         firstName: values.firstName,
         lastName: values.lastName,
         email: values.email,
         phoneNumber: values.phoneNumber,
         branch: values.branch,
         role: values.role,
-        // userLevel: values.userLevel,
+        address: values.address,
       };
       setStaffUserRequest(payload);
       openModal('confirmCreate');
@@ -93,17 +93,6 @@ function AddUser() {
             <form onSubmit={formik.handleSubmit} noValidate className="relativew-full">
               <div className="slide-down">
                 <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
-                  <div className="w-full sm:col-span-2">
-                    <CustomInput
-                      labelFor="userName"
-                      label="Enter User Name"
-                      inputType="text"
-                      placeholder="Enter user name"
-                      maxW="w-full"
-                      formik={formik}
-                    />
-                  </div>
-
                   <CustomInput
                     labelFor="firstName"
                     label="Enter First Name"
@@ -152,21 +141,22 @@ function AddUser() {
                     maxW="w-full"
                     formik={formik}
                   />
+                  <div className="w-full">
+                    <CustomInput
+                      labelFor="address"
+                      label="Enter Address"
+                      inputType="text"
+                      placeholder="Enter Address"
+                      maxW="w-full"
+                      formik={formik}
+                    />
+                  </div>
                   <div className="">
                     <FormSelect
                       labelFor="role"
                       label="Assign Role"
                       formik={formik}
                       options={roles}
-                      useTouched
-                    />
-                  </div>
-                  <div className="">
-                    <FormSelect
-                      labelFor="userLevel"
-                      label="Assign User Approval Level"
-                      formik={formik}
-                      options={userLevel}
                       useTouched
                     />
                   </div>

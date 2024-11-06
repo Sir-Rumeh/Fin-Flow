@@ -69,7 +69,9 @@ AxiosClient.interceptors.response.use(
       dispatch(uiStopLoading());
       // dispatch(logout());
       notifyError('Your session timed out, sign in again to continue');
-      window.location.href = '/';
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1500);
     } else if (error?.response?.status === 404) {
       const url = window.location.href.split('/').slice(0, 5).join('/');
       dispatch(uiStopLoading());

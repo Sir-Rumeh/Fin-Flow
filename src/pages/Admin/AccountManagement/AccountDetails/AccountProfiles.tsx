@@ -294,7 +294,7 @@ const AccountProfiles = () => {
       <section className="p-2 md:p-4">
         <div className="flex items-center gap-2 text-lg">
           <Link
-            to={`/${appRoutes.adminDashboard.merchantManagement.index}`}
+            to={`/${appRoutes.adminDashboard.accountManagement.index}`}
             className="cursor-pointer text-darkgray"
           >
             Account Management
@@ -302,7 +302,7 @@ const AccountProfiles = () => {
           <ChevronRight />
           <Link
             to={{
-              pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantDetails}`,
+              pathname: `/${appRoutes.adminDashboard.accountManagement.accountDetails}`,
               search: `?${createSearchParams({ id: accountId })}`,
             }}
             className="cursor-pointer text-darkgray"

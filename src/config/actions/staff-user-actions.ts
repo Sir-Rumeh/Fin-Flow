@@ -10,6 +10,14 @@ export const addStaffUserRequest = async (payload: StaffUserRequest | undefined)
     throw error;
   }
 };
+export const addBulkStaffUserRequest = async (payload: StaffUserRequest[] | undefined) => {
+  try {
+    const response = await AxiosClient.post('/userrequests/add/bulk', payload);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
 
 export const updateStaffUserRequest = async (
   requestId: string | undefined,

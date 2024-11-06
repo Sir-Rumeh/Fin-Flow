@@ -13,16 +13,15 @@ import ToggleSwitch from 'components/FormElements/ToggleSwitch';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { Permission, QueryParams, RolePermissionRequest } from 'utils/interfaces';
 import { addRolePermissionRequest, getRoles } from 'config/actions/role-permission-actions';
-import { capitalize, formatApiDataForDropdown } from 'utils/helpers';
+import { formatApiDataForDropdown } from 'utils/helpers';
 import { adminAccessRights, merchantAccessRights } from 'routes/appRoutes';
 
 const AddRolePermission = () => {
   const navigate = useNavigate();
-  const [selectedModules, setSelectedModules] = useState<Permission[]>([]);
   const [addPermissionRequest, setAddPermissionRequest] = useState<
     RolePermissionRequest | undefined
   >();
-  const [role, setRole] = useState<any>();
+  const [selectedRole, setSelectedRole] = useState<any>();
 
   const [modals, setModals] = useState({
     confirmAddRolePermission: false,
@@ -40,13 +39,13 @@ const AddRolePermission = () => {
   const formik = useFormik({
     initialValues: {
       groupId: '',
-      permissions: selectedModules,
+      permissions: [] as Permission[],
     },
     validationSchema: addRolePermissionSchema,
     onSubmit: (values) => {
       const payload = {
         roleId: values.groupId,
-        permissions: selectedModules,
+        permissions: values.permissions,
       };
       setAddPermissionRequest(payload);
       openModal('confirmAddRolePermission');
@@ -54,7 +53,7 @@ const AddRolePermission = () => {
   });
 
   const handleToggleChange = (module: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const permission = {
+    const newPermission: Permission = {
       module: module,
       canList: true,
       canListAll: true,
@@ -64,9 +63,12 @@ const AddRolePermission = () => {
       canUpdate: true,
     };
     if (event.target.checked) {
-      setSelectedModules((prev) => [...prev, permission]);
+      formik.setFieldValue('permissions', [...(formik.values.permissions || []), newPermission]);
     } else {
-      setSelectedModules((prev) => prev.filter((mod) => mod.module !== module));
+      formik.setFieldValue(
+        'permissions',
+        formik.values.permissions.filter((mod: Permission) => mod.module !== module),
+      );
     }
   };
 
@@ -81,14 +83,11 @@ const AddRolePermission = () => {
   });
 
   useEffect(() => {
-    const selectedRole = data?.responseData?.items.filter(
+    const role = data?.responseData?.items.filter(
       (role: any) => role.id === formik.values.groupId,
     )[0];
-    setRole(selectedRole);
+    setSelectedRole(role);
   }, [formik.values.groupId]);
-  useEffect(() => {
-    formik.setFieldValue('permissions', selectedModules);
-  }, [selectedModules]);
 
   const addRolePermissionRequestMutation = useMutation({
     mutationFn: (payload: RolePermissionRequest | undefined) => addRolePermissionRequest(payload),
@@ -116,7 +115,7 @@ const AddRolePermission = () => {
         <div className="slide-down mt-3 flex items-center justify-between">
           <h2 className="mt-3 text-xl font-semibold">Add Role Permission</h2>
         </div>
-        <div className="slide-down mt-5 rounded-lg bg-white px-10 py-10">
+        <div className="slide-down mt-5 rounded-lg bg-white px-2 py-10 sm:px-4 md:px-10">
           <form onSubmit={formik.handleSubmit} noValidate className="relative w-full">
             <div className="grid grid-cols-2 gap-10">
               <div className="w-full">
@@ -132,26 +131,26 @@ const AddRolePermission = () => {
               </div>
             </div>
             <div className="mt-10 grid grid-cols-2 gap-20 rounded-lg border p-2 md:grid-cols-4 md:p-3 2xl:p-4">
-              {role?.designation === 'StaffUser'
+              {selectedRole?.designation === 'StaffUser'
                 ? adminAccessRights.map((right) => (
                     <ToggleSwitch
                       key={right.id}
                       id={right.id}
                       toggleLabel={right.module}
-                      checked={selectedModules.some(
+                      checked={formik.values.permissions.some(
                         (mod: Permission) =>
                           mod.module.toLocaleLowerCase() === right.moduleValue.toLocaleLowerCase(),
                       )}
                       onChange={handleToggleChange(right.moduleValue)}
                     />
                   ))
-                : role?.designation === 'Merchant'
+                : selectedRole?.designation === 'Merchant'
                   ? merchantAccessRights.map((right) => (
                       <ToggleSwitch
                         key={right.id}
                         id={right.id}
                         toggleLabel={right.module}
-                        checked={selectedModules.some(
+                        checked={formik.values.permissions.some(
                           (mod: Permission) =>
                             mod.module.toLocaleLowerCase() ===
                             right.moduleValue.toLocaleLowerCase(),
@@ -164,7 +163,7 @@ const AddRolePermission = () => {
                         key={right.id}
                         id={right.id}
                         toggleLabel={right.module}
-                        checked={selectedModules.some(
+                        checked={formik.values.permissions.some(
                           (mod: Permission) =>
                             mod.module.toLocaleLowerCase() ===
                             right.moduleValue.toLocaleLowerCase(),

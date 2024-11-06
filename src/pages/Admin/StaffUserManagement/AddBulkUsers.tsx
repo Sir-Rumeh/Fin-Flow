@@ -2,17 +2,24 @@ import { Link, useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
 import ChevronRight from 'assets/icons/ChevronRight';
 import ButtonComponent from 'components/FormElements/Button';
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
 import UploadIcon from 'assets/icons/UploadIcon';
 import { FileWithPath, useDropzone } from 'react-dropzone';
-import { isFileSizeValid, notifyError } from 'utils/helpers';
+import { convertExcelArrayToObjects, isFileSizeValid, notifyError } from 'utils/helpers';
+import * as XLSX from 'https://unpkg.com/xlsx/xlsx.mjs';
+import { CloseIcon } from 'assets/icons';
+import { useMutation } from '@tanstack/react-query';
+import { StaffUserRequest } from 'utils/interfaces';
+import { addBulkStaffUserRequest } from 'config/actions/staff-user-actions';
 
 function AddUser() {
   const navigate = useNavigate();
+  const [jsonData, setJsonData] = useState<any[]>([]);
+  const [formattedBulkData, setFormattedBulkData] = useState<StaffUserRequest[]>([]);
   const [modals, setModals] = useState({
     confirmCreate: false,
     creationSuccessful: false,
@@ -41,13 +48,30 @@ function AddUser() {
           if (!isFileSizeValid(file.size, 100)) {
             throw 'File should be lesser than or equal to 100MB';
           }
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            // const data = new Uint8Array(e.target?.result as ArrayBuffer);
+            // const workbook = XLSX.read(data, { type: 'array' });
+            // const sheetName = workbook.SheetNames[0];
+            // const sheet = workbook.Sheets[sheetName];
+            // const sheetJson = XLSX.utils.sheet_to_json(sheet, { header: 1 });
+            // setJsonData(sheetJson);
+
+            const data = new Uint8Array(e.target?.result as ArrayBuffer);
+            const workbook = XLSX.read(data, { type: 'array' });
+            const worksheet = workbook.Sheets[workbook.SheetNames[0]];
+            const json = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+            setJsonData(json);
+          };
+          reader.readAsArrayBuffer(file);
         }
       });
     } catch (error: any) {
       notifyError(error);
     }
   }, []);
-  const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
+
+  let { acceptedFiles, getRootProps, getInputProps } = useDropzone({
     onDrop,
     accept: {
       'application/vnd.ms-excel': ['.xls', '.csv'],
@@ -55,9 +79,38 @@ function AddUser() {
     },
   });
 
-  const files = acceptedFiles.map((file, index) => (
+  const [uploadedFiles, setUploadedFiles] = useState<File[] | undefined>();
+
+  const clearFiles = () => {
+    setUploadedFiles([]);
+    acceptedFiles = [];
+  };
+
+  useEffect(() => {
+    setUploadedFiles(acceptedFiles);
+  }, [acceptedFiles]);
+
+  useEffect(() => {
+    const newData = convertExcelArrayToObjects(jsonData, ['userName'], ['firstName, lastName']);
+    console.log('new json dsta', newData);
+
+    setFormattedBulkData(newData as StaffUserRequest[]);
+  }, [jsonData]);
+
+  const addBulkStaffUserMutation = useMutation({
+    mutationFn: (payload: StaffUserRequest[] | undefined) => addBulkStaffUserRequest(payload),
+    onSuccess: () => {
+      closeModal('confirmCreate');
+      openModal('creationSuccessful');
+    },
+    onError: (error) => {
+      closeModal('confirmCreate');
+    },
+  });
+
+  const files = uploadedFiles?.map((file, index) => (
     <li key={index}>
-      {file.name} - {file.size} bytes
+      {file.name} - {file.size / 1000} kb
     </li>
   ));
   return (
@@ -104,6 +157,14 @@ function AddUser() {
                       {files}
                     </div>
                   </div>
+                  {uploadedFiles && uploadedFiles.length > 0 && (
+                    <button
+                      onClick={clearFiles}
+                      className="mt-3 flex scale-[90%] items-center justify-center rounded-full border border-lightPurple bg-gradient-to-r from-[#2F0248] via-yellow-800 to-[#5C068C] bg-clip-text p-1 text-center font-semibold text-transparent"
+                    >
+                      <CloseIcon />
+                    </button>
+                  )}
                 </section>
               </div>
             </div>
@@ -111,7 +172,8 @@ function AddUser() {
               <div className="flex w-full items-center justify-end gap-4">
                 <div className="w-auto">
                   <ButtonComponent
-                    color="purplePrimary"
+                    color="#5C068C"
+                    borderColor="#5C068C"
                     variant="outlined"
                     type="button"
                     title="Cancel"
@@ -151,8 +213,7 @@ function AddUser() {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmCreate');
-            openModal('creationSuccessful');
+            addBulkStaffUserMutation.mutate(formattedBulkData);
           }}
         />
       )}
