@@ -6,12 +6,18 @@ import { UserLoginRoles } from 'utils/enums';
 import { useNavigate } from 'react-router-dom';
 import { BASE_ROUTES } from 'utils/constants/routes';
 import WhiteClose from 'assets/icons/WhiteClose';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import { getUserFromLocalStorage, isAdminAuthData, isMerchantAuthData } from 'utils/helpers';
+import { logoutMerchant, logoutStaff } from 'config/actions/authentication-actions';
+import { AdminAuthData, MerchantAuthData } from 'utils/interfaces';
 
 const Sidebar = (props: { open: boolean; onClose: any; userRole: string }) => {
   const navigate = useNavigate();
   const { open, onClose, userRole } = props;
+  const [userEmail, setUserEmail] = useState('');
+  const [userRefreshToken, setUserRefreshToken] = useState('');
 
+  const user = getUserFromLocalStorage();
   const sidebarRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -27,6 +33,42 @@ const Sidebar = (props: { open: boolean; onClose: any; userRole: string }) => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [sidebarRef]);
+
+  const getUserEmail = (user: AdminAuthData | MerchantAuthData) => {
+    if (isAdminAuthData(user)) {
+      return user.userData.email;
+    } else if (isMerchantAuthData(user)) {
+      return user.profileData.email;
+    }
+    return '';
+  };
+
+  useEffect(() => {
+    if (user) {
+      setUserRefreshToken(user.refreshToken);
+      setUserEmail(getUserEmail(user));
+    }
+  }, [user]);
+
+  const logoutUser = async () => {
+    if (user && userEmail && userRefreshToken) {
+      try {
+        const isAdmin = isAdminAuthData(user);
+        const isMerchant = isMerchantAuthData(user);
+        const logoutResponse = isAdmin
+          ? await logoutStaff({ email: userEmail, refreshToken: userRefreshToken })
+          : isMerchant
+            ? await logoutMerchant({ email: userEmail })
+            : null;
+
+        if (logoutResponse && logoutResponse.responseCode === 200) {
+          navigate('/');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+  };
 
   return (
     <div
@@ -58,9 +100,10 @@ const Sidebar = (props: { open: boolean; onClose: any; userRole: string }) => {
         <ul className="mt-auto flex items-center justify-start border-t border-gray-50 pt-1">
           <button
             className="relative mb-3 flex px-2 py-4 hover:cursor-pointer"
-            onClick={() => {
-              navigate(`${BASE_ROUTES.LOGIN}`);
-            }}
+            // onClick={() => {
+            //   navigate(`${BASE_ROUTES.LOGIN}`);
+            // }}
+            onClick={() => logoutUser()}
           >
             <li className="my-[3px] flex w-full cursor-pointer items-center justify-center px-5">
               <span className="font-medium text-white">

@@ -232,7 +232,7 @@ export interface RolePermissionRequest {
   permissions: Permission[] | undefined;
 }
 
-export interface UserData {
+export interface AdminUserData {
   id: string;
   userName: string | null;
   role: string;
@@ -249,8 +249,33 @@ export interface UserData {
   updatedAt: string;
 }
 
-export interface AuthData {
-  userData: UserData;
+export interface AdminAuthData {
+  userData: AdminUserData;
+  refreshToken: string;
+  token: string;
+  timeStamp: string;
+}
+
+export interface MerchantUserData {
+  id: string;
+  merchantID: string;
+  accountID: string;
+  userName: string;
+  role: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  status: string;
+  createdBy: string;
+  approvedBy: string;
+  createdAt: string;
+  updatedAt: string;
+  isActive: boolean;
+}
+
+export interface MerchantAuthData {
+  profileData: MerchantUserData;
+  refreshToken: string;
   token: string;
   timeStamp: string;
 }

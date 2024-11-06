@@ -1,4 +1,10 @@
-import { AuthData, DataTableState, QueryParams, UpdateRequestDisplay } from 'utils/interfaces';
+import {
+  AdminAuthData,
+  DataTableState,
+  MerchantAuthData,
+  QueryParams,
+  UpdateRequestDisplay,
+} from 'utils/interfaces';
 import { AppConfig } from 'config/index';
 import CryptoJS from 'crypto-js';
 import { toast } from 'react-toastify';
@@ -216,11 +222,20 @@ export const getDateRange = (dataArray: any[]) => {
   }
 };
 
-export const getUserFromLocalStorage = () => {
+export const getUserFromLocalStorage = (): AdminAuthData | MerchantAuthData | null => {
   const storedUser = localStorage.getItem('user');
-  const userDetails: AuthData | null = storedUser ? JSON.parse(storedUser) : null;
-  return userDetails;
+  return storedUser ? JSON.parse(storedUser) : null;
 };
+
+export function isAdminAuthData(user: AdminAuthData | MerchantAuthData): user is AdminAuthData {
+  return (user as AdminAuthData).userData !== undefined;
+}
+
+export function isMerchantAuthData(
+  user: AdminAuthData | MerchantAuthData,
+): user is MerchantAuthData {
+  return (user as MerchantAuthData).profileData !== undefined;
+}
 
 export const convertTCamelCase = (str: string) =>
   str

@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { GridColDef, GridRenderCellParams, GridTreeNodeWithRender } from '@mui/x-data-grid';
 import {
@@ -35,6 +35,13 @@ import { updateMandateSchema } from 'utils/formValidators';
 import CustomInput from 'components/FormElements/CustomInput';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import CustomTabs from 'hoc/CustomTabs';
+import {
+  getUserFromLocalStorage,
+  isAdminAuthData,
+  isMerchantAuthData,
+  notifyError,
+} from 'utils/helpers';
+import { refreshMerchantToken, refreshStaffToken } from 'config/actions/authentication-actions';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -57,6 +64,9 @@ const MandatetManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMandateId, setSelectedMandateId] = useState<string | undefined>('');
   const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
+  const [adminEmail, setAdminEmail] = useState('');
+  const [merchantEmail, setMerchantEmail] = useState('');
+  const [userRefreshToken, setUserRefreshToken] = useState('');
 
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
@@ -331,6 +341,7 @@ const MandatetManagement = () => {
   const { data } = useQuery({
     queryKey: ['mandates', queryParams],
     queryFn: ({ queryKey }) => getMandates(queryKey[1] as QueryParams),
+    retry: 2,
   });
 
   const updateMandateMutation = useMutation({
@@ -387,6 +398,42 @@ const MandatetManagement = () => {
     },
   });
 
+  useEffect(() => {
+    const user = getUserFromLocalStorage();
+
+    if (user) {
+      setUserRefreshToken(user.refreshToken);
+      if (isAdminAuthData(user)) {
+        setAdminEmail(user.userData.email);
+      } else if (isMerchantAuthData(user)) {
+        setMerchantEmail(user.profileData.email);
+      }
+    }
+  }, []);
+
+  const refreshUserToken = async () => {
+    const user = getUserFromLocalStorage();
+
+    if (user) {
+      try {
+        if (isAdminAuthData(user)) {
+          const res = await refreshStaffToken({ email: adminEmail });
+          console.log(res);
+        } else if (isMerchantAuthData(user)) {
+          console.log(user.profileData.email);
+          const res = await refreshMerchantToken({
+            email: merchantEmail,
+            refreshToken: userRefreshToken,
+          });
+          console.log(res);
+        }
+      } catch (error) {
+        notifyError('Failed to refresh session. Please log in again.');
+        // window.location.href = '/';
+      }
+    }
+  };
+
   return (
     <>
       <div className="px-5 py-5">
@@ -394,9 +441,10 @@ const MandatetManagement = () => {
           <h2 className="text-xl font-semibold md:text-2xl">Mandate Management</h2>
           <div className="">
             <ButtonComponent
-              onClick={() =>
-                navigate(`/${appRoutes.merchantDashboard.mandateManagement.createMandate}`)
-              }
+              // onClick={() =>
+              //   navigate(`/${appRoutes.merchantDashboard.mandateManagement.createMandate}`)
+              // }
+              onClick={() => refreshUserToken()}
               title="Create Mandate"
               backgroundColor="#5C068C"
               hoverBackgroundColor="#2F0248"
