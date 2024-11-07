@@ -150,6 +150,8 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
   if (formattedQueryParams.endDate) params.append('EndDate', formattedQueryParams.endDate);
   if (formattedQueryParams.actor) params.append('Actor', formattedQueryParams.actor);
   if (formattedQueryParams.roleName) params.append('Name', formattedQueryParams.roleName);
+  if (formattedQueryParams.requestType)
+    params.append('RequestType', formattedQueryParams.requestType);
 };
 
 export const formatApiDataForDropdown = (dataArray: any[], dataKey: string, dataValue: string) => {

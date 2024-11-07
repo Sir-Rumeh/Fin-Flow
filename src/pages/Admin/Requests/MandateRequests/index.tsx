@@ -41,6 +41,7 @@ const MandateRequests = () => {
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
     status: activeTab,
+    requestType: '',
     pageNo: paginationData.pageNumber,
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
@@ -54,6 +55,7 @@ const MandateRequests = () => {
     setQueryParams((prev) => ({
       ...prev,
       status: activeTab,
+      requestType: formik.values.statusFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
       searchFilter: formik.values.searchMandate,
@@ -65,7 +67,7 @@ const MandateRequests = () => {
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
       ...prev,
-      status: formik.values.statusFilter,
+      requestType: formik.values.statusFilter,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));

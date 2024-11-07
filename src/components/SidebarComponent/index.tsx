@@ -59,11 +59,12 @@ const Sidebar = (props: { open: boolean; onClose: any; userRole: string }) => {
           : isMerchant
             ? await logoutMerchant({ email: userEmail, refreshToken: userRefreshToken })
             : null;
-
         if (logoutResponse && logoutResponse.responseCode === 200) {
+          localStorage.clear();
           navigate('/');
         }
       } catch (error) {
+        localStorage.clear();
         console.error(error);
       }
     }
