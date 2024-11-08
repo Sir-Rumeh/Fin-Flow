@@ -46,7 +46,7 @@ const MandateRequests = () => {
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
     mandateCode: '',
-    status: formik.values.statusFilter,
+    status: activeTab,
     pageNo: paginationData.pageNumber,
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
@@ -200,6 +200,15 @@ const MandateRequests = () => {
     paginationData,
   ]);
 
+  const handleOptionsFilter = () => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  };
+
   return (
     <>
       <div className="px-5 py-5">
@@ -217,7 +226,7 @@ const MandateRequests = () => {
                 label={'Search Mandate'}
                 value={searchTerm}
                 setSearch={setSearchTerm}
-                handleOptionsFilter={() => refetch()}
+                handleOptionsFilter={handleOptionsFilter}
                 formik={formik}
                 fromDateName={'fromDateFilter'}
                 toDateName={'toDateFilter'}

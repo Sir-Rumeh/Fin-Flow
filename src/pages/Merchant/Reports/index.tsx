@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
+import { useRef, useState } from 'react';
+import { GridColDef, GridRenderCellParams, GridTreeNodeWithRender } from '@mui/x-data-grid';
 import {
   mandateList,
   mandateRequestsList,
@@ -25,6 +25,7 @@ import {
   DeleteRequestIcon,
   DisableRequestIcon,
   DownloadIcon,
+  SuccessModalIcon,
   UpdateRequestIcon,
 } from 'assets/icons';
 import CustomSelect from 'components/FormElements/CustomSelect';
@@ -32,7 +33,7 @@ import { useTabContext } from '../../../context/TabContext';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import TableFilter from 'components/TableFilter';
 import { useFormik } from 'formik';
-import { TabsProps } from 'utils/interfaces';
+import { QueryParams, TabsProps } from 'utils/interfaces';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
@@ -41,6 +42,18 @@ import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import CustomTabs from 'hoc/CustomTabs';
 import FormSelect from 'components/FormElements/FormSelect';
 import FormDatePicker from 'components/FormElements/FormDatePicker';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  deleteMandate,
+  disableMandate,
+  enableMandate,
+  getMandates,
+  getTransactions,
+  updateMandate,
+} from 'config/actions/dashboard-actions';
+import * as Yup from 'yup';
+import dayjs from 'dayjs';
+import { updateMandateSchema } from 'utils/formValidators';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -56,29 +69,60 @@ const style = {
 };
 
 const Reports = () => {
+  const printPdfRef = useRef(null);
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
+  const [reportType, setReportType] = useState('');
   const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
-  let mandateType = 'Fixed';
+
   const [modals, setModals] = useState({
-    confirmDisable: false,
-    disableSuccessful: false,
-    confirmEnable: false,
-    enableSuccessful: false,
-    confirmDelete: false,
-    deleteSuccessful: false,
     openTransactionHistory: false,
-    editMandate: false,
-    confirmEdit: false,
-    editSuccessful: false,
+    openModifyMandate: false,
+    confirmModifyMandate: false,
+    saveModifyMandate: false,
+    openEnableMandate: false,
+    openDisableMandate: false,
+    confirmDisableMandate: false,
+    confirmEnableMandate: false,
+    openDeleteProfile: false,
+    confirmDeleteProfile: false,
   });
 
   const [showFilteredReport, setShowFilteredReport] = useState(false);
+  const [selectedMandateId, setSelectedMandateId] = useState<string | undefined>('');
 
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
     pageSize: 10,
   });
+
+  const formikFilter = useFormik({
+    initialValues: {
+      searchMandate: '',
+      fromDateFilter: '',
+      toDateFilter: '',
+      statusFilter: '',
+    },
+    onSubmit: (values) => {
+      setSearchTerm('');
+    },
+  });
+
+  const excelHeaders = [
+    { label: 'Merchant ID', key: 'merchantId' },
+    { label: 'Mandate Code', key: 'mandateCode' },
+    { label: 'Mandate Type', key: 'mandateType' },
+    { label: 'Active Status', key: 'isActive' },
+    { label: 'Date Requested', key: 'dateCreated' },
+  ];
+
+  const transactionHeaders = [
+    { label: 'Account ID', key: 'accountId' },
+    { label: 'Mandate ID', key: 'mandateId' },
+    { label: 'Amount', key: 'amount' },
+    { label: 'Date', key: 'dateCreated' },
+  ];
 
   const openModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: true }));
@@ -88,12 +132,56 @@ const Reports = () => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
 
+  const validationSchema = Yup.object().shape({
+    startDate: Yup.string().required('Start date is required.'),
+    endDate: Yup.string().required('End date is required.'),
+    reportType: Yup.string().required('Report type is required.'),
+    status: Yup.string().required('Status is required.'),
+  });
+
   const formik = useFormik({
     initialValues: {
-      statusFilter: '',
+      startDate: '',
+      endDate: '',
+      status: '',
       reportType: '',
     },
-    onSubmit: (values) => {},
+    validationSchema: validationSchema,
+    onSubmit: (values) => {
+      const { startDate, endDate } = values;
+      const formattedStartDate = startDate ? dayjs(startDate).format('YYYY-MM-DD') : '';
+      const formattedEndDate = endDate ? dayjs(endDate).format('YYYY-MM-DD') : '';
+
+      if (values.reportType === reportTypes[0].value) {
+        setReportType(values.reportType);
+      } else if (values.reportType === reportTypes[1].value) {
+        setReportType(values.reportType);
+      }
+
+      setQueryParams((prev) => ({
+        ...prev,
+        status: values.status,
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+        pageNo: paginationData.pageNumber,
+        pageSize: paginationData.pageSize,
+      }));
+      setShowFilteredReport(true);
+    },
+  });
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    mandateCode: '',
+    status: formikFilter.values.statusFilter
+      ? formikFilter.values.statusFilter
+      : formik.values.status,
+    pageNo: paginationData.pageNumber,
+    pageSize: paginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+    searchFilter: formikFilter.values.searchMandate,
+    startDate: formikFilter.values.fromDateFilter,
+    endDate: formikFilter.values.toDateFilter,
   });
 
   const reportTypes = [
@@ -102,9 +190,20 @@ const Reports = () => {
   ];
 
   const itemStatus = [
-    { value: 'Enabled', label: 'Enabled' },
-    { value: 'Disabled', label: 'Disabled' },
+    { value: 'enabled', label: 'Enabled' },
+    { value: 'disabled', label: 'Disabled' },
   ];
+
+  const modifyMandateValidation = useFormik({
+    initialValues: {
+      amount: 0,
+    },
+    validationSchema: updateMandateSchema,
+    onSubmit: (values) => {
+      openModal('confirmModifyMandate');
+      closeModal('openModifyMandate');
+    },
+  });
 
   const total = 20;
 
@@ -121,14 +220,14 @@ const Reports = () => {
     },
   ];
 
-  const mandateColumns: GridColDef[] = [
-    {
-      field: 'accountId',
-      headerName: 'Account ID',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-    },
+  const MandateTableColumn: GridColDef[] = [
+    // {
+    //   field: 'accountId',
+    //   headerName: 'Account ID',
+    //   width: screen.width < 1000 ? 200 : undefined,
+    //   flex: screen.width >= 1000 ? 1 : undefined,
+    //   headerClassName: 'ag-thead',
+    // },
     {
       field: 'merchantId',
       headerName: 'Merchant ID',
@@ -156,25 +255,41 @@ const Reports = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
-      renderCell: (params: GridRenderCellParams) => {
-        const renderIcon = (IconComponent: React.ComponentType, colorClass: string) => (
-          <div className="flex w-full items-center gap-2 font-semibold">
+      renderCell: (params) => {
+        const renderIcon = (IconComponent: any, colorClass: string, text: string) => (
+          <div className="flex items-center gap-2">
             <IconComponent />
-            <span className={`mb-[1px] ${colorClass}`}>{params?.row.status}</span>
+            <span className={`mb-0 ${colorClass}`}>{text}</span>
           </div>
         );
-        switch (params?.row.status) {
-          case 'Enabled':
-            return renderIcon(CreationRequestIcon, 'text-greenPrimary');
-          case 'Disabled':
-            return renderIcon(DeleteRequestIcon, 'text-redSecondary');
-          default:
-            return <span>{params?.row.status}</span>;
-        }
+
+        const getIconAndColor = (
+          requestType: GridRenderCellParams<any, any, any, GridTreeNodeWithRender>,
+          isActive: boolean,
+        ) => {
+          if (isActive) {
+            return {
+              IconComponent: CreationRequestIcon,
+              colorClass: 'text-greenPrimary font-semibold',
+              text: 'Enabled',
+            };
+          } else {
+            return {
+              IconComponent: DeleteRequestIcon,
+              colorClass: 'text-redSecondary font-semibold',
+              text: 'Disabled',
+            };
+          }
+        };
+
+        const isActive = params?.row?.isActive;
+        const iconAndColor = getIconAndColor(params.value, isActive);
+
+        return renderIcon(iconAndColor.IconComponent, iconAndColor.colorClass, iconAndColor.text);
       },
     },
     {
-      field: 'dateRequested',
+      field: 'dateCreated',
       headerName: 'Date Requested',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -184,116 +299,76 @@ const Reports = () => {
     {
       field: 'actions',
       headerName: 'Action',
+      width: 120,
       headerClassName: 'ag-thead ',
       sortable: false,
       renderCell: (params: GridRenderCellParams) => {
+        const buttonTitle = params.row.isActive ? 'Disable' : 'Enable';
+        const buttonColorClass = params.row.isActive ? 'text-red-400' : 'text-greenPrimary';
+
+        const selectModal = () => {
+          if (buttonTitle === 'Enable') {
+            return openModal('openEnableMandate');
+          } else {
+            return openModal('openDisableMandate');
+          }
+        };
+
         return (
-          <div className="-ml-1 h-full border-none">
+          <div className="h-full border-none">
             <CustomPopover
               popoverId={params?.row.id}
               buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-45}
+              translationX={-15}
               translationY={45}
             >
-              <div className="flex flex-col rounded-md p-1">
-                <button
-                  onClick={() =>
-                    navigate({
-                      pathname: `/${appRoutes.adminDashboard.mandateManagement.mandateDetails}`,
-                      search: `?${createSearchParams({ id: params?.row.id })}`,
-                    })
-                  }
-                  type="button"
-                  className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
+              <div className="flex w-[8rem] flex-col rounded-md p-1 text-[12px]">
+                <Link
+                  to={`/${appRoutes.merchantDashboard.mandateManagement.mandateDetails}/${params.id}`}
+                  className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
                 >
                   View Details
-                </button>
+                </Link>
                 <button
-                  onClick={() => openModal('openTransactionHistory')}
                   type="button"
-                  className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
+                  onClick={() => openModal('openTransactionHistory')}
+                  className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
                 >
                   View Transactions
                 </button>
-
-                {params?.row.mandateType === 'Variable' && (
-                  <button
-                    onClick={() => openModal('editMandate')}
-                    type="button"
-                    className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
-                  >
-                    Update Amount
-                  </button>
-                )}
-
-                {params?.row.status === 'Enabled' && (
-                  <button
-                    type="button"
-                    onClick={() => openModal('confirmDisable')}
-                    className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
-                  >
-                    Disable
-                  </button>
-                )}
-                {params?.row.status === 'Disabled' && (
-                  <button
-                    type="button"
-                    onClick={() => openModal('confirmEnable')}
-                    className="w-full px-3 py-2 text-start font-[600] text-green-400 hover:bg-purpleSecondary"
-                  >
-                    Enable
-                  </button>
-                )}
                 <button
                   type="button"
-                  onClick={() => openModal('confirmDelete')}
+                  onClick={() => {
+                    setSelectedMandateId(params.row.id);
+                    openModal('openModifyMandate');
+                  }}
+                  className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
+                >
+                  Update Amount
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setSelectedMandateId(params.row.id);
+                    selectModal();
+                  }}
+                  className={`w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary ${buttonColorClass}`}
+                >
+                  {buttonTitle}
+                </button>
+                <button
+                  type="button"
                   className="w-full px-3 py-2 text-start font-[600] text-red-400 hover:bg-purpleSecondary"
+                  onClick={() => {
+                    setSelectedMandateId(params.row.id);
+                    openModal('openDeleteProfile');
+                  }}
                 >
                   Delete
                 </button>
               </div>
             </CustomPopover>
           </div>
-        );
-      },
-    },
-  ];
-
-  const transactionsTableColumn: GridColDef[] = [
-    {
-      field: 'accountId',
-      headerName: 'Account ID',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-    },
-    {
-      field: 'amount',
-      headerName: 'Amount',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-    },
-    {
-      field: 'date',
-      headerName: 'Date',
-      width: screen.width < 1000 ? 50 : 50,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-      valueGetter: (params: any) => new Date(params).toLocaleDateString(),
-    },
-    {
-      field: 'actions',
-      headerName: 'Action',
-      headerClassName: 'ag-thead ',
-      sortable: false,
-      width: 180,
-      renderCell: (params) => {
-        return (
-          <button className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple">
-            <DownloadIcon />
-            Download Receipt
-          </button>
         );
       },
     },
@@ -322,7 +397,7 @@ const Reports = () => {
       headerClassName: 'ag-thead',
     },
     {
-      field: 'date',
+      field: 'dateCreated',
       headerName: 'Date',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -348,6 +423,74 @@ const Reports = () => {
 
   const isSmallWidth = useMediaQuery('(max-width:370px)');
   const isLargeWidth = useMediaQuery('(min-width:1320px)');
+
+  const { data } = useQuery({
+    queryKey: ['mandates', queryParams],
+    queryFn: ({ queryKey }) => getMandates(queryKey[1] as QueryParams),
+    enabled: reportType === reportTypes[0].value,
+    retry: 2,
+  });
+
+  const { data: transactionsData } = useQuery({
+    queryKey: ['transactions', queryParams],
+    queryFn: ({ queryKey }) => getTransactions(queryKey[1] as QueryParams),
+    enabled: reportType === reportTypes[1].value,
+    retry: 2,
+  });
+
+  const updateMandateMutation = useMutation({
+    mutationFn: ({
+      requestId,
+      payload,
+    }: {
+      requestId: string | undefined;
+      payload: { amount: number };
+    }) => updateMandate(requestId, payload),
+    onSuccess: () => {
+      openModal('saveModifyMandate');
+      closeModal('confirmModifyMandate');
+      queryClient.invalidateQueries({ queryKey: ['mandates'] });
+    },
+    onError: (error) => {
+      closeModal('confirmModifyMandate');
+    },
+  });
+
+  const enableMandateMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => enableMandate(requestId),
+    onSuccess: () => {
+      openModal('confirmEnableMandate');
+      closeModal('openEnableMandate');
+      queryClient.invalidateQueries({ queryKey: ['mandates'] });
+    },
+    onError: (error) => {
+      closeModal('openEnableMandate');
+    },
+  });
+
+  const disableMandateMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => disableMandate(requestId),
+    onSuccess: () => {
+      openModal('confirmDisableMandate');
+      closeModal('openDisableMandate');
+      queryClient.invalidateQueries({ queryKey: ['mandates'] });
+    },
+    onError: (error) => {
+      closeModal('openDisableMandate');
+    },
+  });
+
+  const deleteMandateMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => deleteMandate(requestId),
+    onSuccess: () => {
+      openModal('confirmDeleteProfile');
+      closeModal('openDeleteProfile');
+      queryClient.invalidateQueries({ queryKey: ['mandates'] });
+    },
+    onError: (error) => {
+      closeModal('openDeleteProfile');
+    },
+  });
 
   return (
     <>
@@ -413,22 +556,31 @@ const Reports = () => {
                 type="button"
                 title="Generate Report"
                 customPaddingX="1.4rem"
-                onClick={() => {
-                  if (!formik.values.reportType)
-                    return formik.setFieldError('reportType', 'Report Type is required');
-                  setShowFilteredReport(true);
-                }}
+                onClick={formik.handleSubmit}
               />
             </div>
           </div>
-          {showFilteredReport && formik.values.reportType === 'Mandate Status Reports' && (
+          {showFilteredReport && formik.values.reportType === reportTypes[0].value && (
             <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
               <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
                 <h2 className="text-xl font-bold">
-                  Mandate Status Report ( June 2023 to August 2023 ){' '}
+                  Mandate Status Report (
+                  {formik.values.startDate
+                    ? dayjs(formik.values.startDate).format('D MMMM')
+                    : 'Start Date'}{' '}
+                  to{' '}
+                  {formik.values.endDate
+                    ? dayjs(formik.values.endDate).format('D MMMM, YYYY')
+                    : 'End Date'}
+                  )
                 </h2>
                 <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
-                  <ExportBUtton />
+                  <ExportBUtton
+                    data={data?.responseData?.items}
+                    printPdfRef={printPdfRef}
+                    headers={excelHeaders}
+                    fileName="Mandates.csv"
+                  />
                 </div>
               </div>
               <div className="mt-1 w-full rounded-md border px-3 pt-2">
@@ -445,7 +597,7 @@ const Reports = () => {
                         value={searchTerm}
                         setSearch={setSearchTerm}
                         handleOptionsFilter={() => {}}
-                        formik={formik}
+                        formik={formikFilter}
                         fromDateName={'fromDateFilter'}
                         toDateName={'toDateFilter'}
                         selectName={'statusFilter'}
@@ -454,12 +606,11 @@ const Reports = () => {
                     </div>
                   </div>
                 </div>
-                <div className="w-full">
+                <div ref={printPdfRef} className="w-full">
                   <CustomTable
-                    tableData={mandateRequestsList}
-                    columns={mandateColumns}
-                    rowCount={257}
-                    defaultAnimation={false}
+                    tableData={data?.responseData?.items}
+                    columns={MandateTableColumn}
+                    rowCount={data?.responseData?.totalCount}
                     paginationData={paginationData}
                     setPaginationData={setPaginationData}
                   />
@@ -467,14 +618,27 @@ const Reports = () => {
               </div>
             </div>
           )}
-          {showFilteredReport && formik.values.reportType === 'Transaction Reports' && (
+          {showFilteredReport && formik.values.reportType === reportTypes[1].value && (
             <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
               <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
                 <h2 className="text-xl font-bold">
-                  Mono Tech Transaction Report Details (June 2023 to August 2023)
+                  Mono Tech Transaction Report Details (
+                  {formik.values.startDate
+                    ? dayjs(formik.values.startDate).format('D MMMM')
+                    : 'Start Date'}{' '}
+                  to{' '}
+                  {formik.values.endDate
+                    ? dayjs(formik.values.endDate).format('D MMMM, YYYY')
+                    : 'End Date'}
+                  )
                 </h2>
                 <div className="flex w-full items-center lg:w-[20%] lg:justify-end">
-                  <ExportBUtton />
+                  <ExportBUtton
+                    data={transactionsData?.responseData?.items}
+                    printPdfRef={printPdfRef}
+                    headers={transactionHeaders}
+                    fileName="Transactions.csv"
+                  />
                 </div>
               </div>
               <div className="mt-1 w-full rounded-md border px-3 pt-2">
@@ -495,7 +659,7 @@ const Reports = () => {
                         value={searchTerm}
                         setSearch={setSearchTerm}
                         handleOptionsFilter={() => {}}
-                        formik={formik}
+                        formik={formikFilter}
                         fromDateName={'fromDateFilter'}
                         toDateName={'toDateFilter'}
                         selectName={'statusFilter'}
@@ -505,12 +669,11 @@ const Reports = () => {
                   </div>
                 </div>
 
-                <div className="mt-4 w-full">
+                <div ref={printPdfRef} className="mt-4 w-full">
                   <CustomTable
-                    tableData={transactionHistory}
+                    tableData={transactionsData?.responseData?.items}
                     columns={transactionsReportColumn}
-                    rowCount={73}
-                    defaultAnimation={false}
+                    rowCount={transactionsData?.responseData?.totalCount}
                     paginationData={paginationData}
                     setPaginationData={setPaginationData}
                   />
@@ -520,87 +683,6 @@ const Reports = () => {
           )}
         </div>
       </section>
-      {modals.confirmDisable && (
-        <ModalWrapper
-          isOpen={modals.confirmDisable}
-          setIsOpen={() => closeModal('confirmDisable')}
-          title={'Disable Mandate?'}
-          info={'You are about to disable this mandate, would you want to proceed with this?'}
-          icon={<RedAlertIcon />}
-          type={'confirmation'}
-          proceedAction={() => {
-            closeModal('confirmDisable');
-            openModal('disableSuccessful');
-          }}
-        />
-      )}
-      {modals.disableSuccessful && (
-        <ModalWrapper
-          isOpen={modals.disableSuccessful}
-          setIsOpen={() => closeModal('disableSuccessful')}
-          title={'Success!!'}
-          info={'You have successfully disabled this mandate'}
-          icon={<ActionSuccessIcon />}
-          type={'completed'}
-          proceedAction={() => {
-            closeModal('disableSuccessful');
-          }}
-        />
-      )}
-      {modals.confirmEnable && (
-        <ModalWrapper
-          isOpen={modals.confirmEnable}
-          setIsOpen={() => closeModal('confirmEnable')}
-          title={'Enable Mandate?'}
-          info={'You are about to enable this mandate, would you want to proceed with this?'}
-          icon={<RedAlertIcon />}
-          type={'confirmation'}
-          proceedAction={() => {
-            closeModal('confirmEnable');
-            openModal('enableSuccessful');
-          }}
-        />
-      )}
-      {modals.enableSuccessful && (
-        <ModalWrapper
-          isOpen={modals.enableSuccessful}
-          setIsOpen={() => closeModal('enableSuccessful')}
-          title={'Success!!'}
-          info={'You have successfully enabled this mandate'}
-          icon={<ActionSuccessIcon />}
-          type={'completed'}
-          proceedAction={() => {
-            closeModal('enableSuccessful');
-          }}
-        />
-      )}
-      {modals.confirmDelete && (
-        <ModalWrapper
-          isOpen={modals.confirmDelete}
-          setIsOpen={() => closeModal('confirmDelete')}
-          title={'Delete Mandate?'}
-          info={'You are about to delete this mandate, would you want to proceed with this?'}
-          icon={<RedAlertIcon />}
-          type={'confirmation'}
-          proceedAction={() => {
-            closeModal('confirmDelete');
-            openModal('deleteSuccessful');
-          }}
-        />
-      )}
-      {modals.deleteSuccessful && (
-        <ModalWrapper
-          isOpen={modals.deleteSuccessful}
-          setIsOpen={() => closeModal('deleteSuccessful')}
-          title={'Success!!'}
-          info={'You have successfully deleted this mandate'}
-          icon={<ActionSuccessIcon />}
-          type={'completed'}
-          proceedAction={() => {
-            closeModal('deleteSuccessful');
-          }}
-        />
-      )}
       {modals.openTransactionHistory && (
         <CustomModal
           isOpen={modals.openTransactionHistory}
@@ -647,7 +729,7 @@ const Reports = () => {
               <div className="slide-down mt-6">
                 <CustomTable
                   tableData={transactionHistory}
-                  columns={transactionsTableColumn}
+                  columns={transactionsReportColumn}
                   rowCount={73}
                 />
               </div>
@@ -655,72 +737,60 @@ const Reports = () => {
           </div>
         </CustomModal>
       )}
-      {modals.editMandate && (
-        <CustomModal
-          isOpen={modals.editMandate}
-          setIsOpen={() => closeModal('editMandate')}
-          width={'800px'}
-          paddingX={0}
+      {modals.openModifyMandate && (
+        <Modal
+          open={modals.openModifyMandate}
+          onClose={() => closeModal('openModifyMandate')}
+          aria-labelledby="modal-modal-title"
+          aria-describedby="modal-modal-description"
         >
-          <Typography id="modal-modal-title" variant="h6" component="h2">
-            <div className="slide-down flex items-center justify-between">
-              <h1 className="text-xl font-semibold">Modify Mandate Details</h1>
-              <button className="scale-[110%]" onClick={() => closeModal('editMandate')}>
-                <CloseIcon />
-              </button>
-            </div>
-            <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
-          </Typography>
-          <div id="modal-modal-description" className="mt-2">
-            {mandateType === 'Variable' ? (
-              <form
-                onSubmit={(e) => {
-                  e.preventDefault();
-                }}
-                noValidate
-                className="slide-down mt-8 w-full"
-              >
-                <div className="mt-14 flex flex-col items-end gap-x-8 gap-y-4 md:flex-row md:items-center md:justify-between">
-                  <div className="w-full">
-                    <CustomInput
-                      labelFor="modifiedAmount"
-                      label="Modify Amount"
-                      inputType="text"
-                      placeholder="Enter here"
-                      maxW="w-full"
-                      verticalMargin={false}
-                    />
-                  </div>
-                  <ButtonComponent
-                    variant="contained"
-                    color="white"
-                    backgroundColor="#5C068C"
-                    hoverBackgroundColor="#2F0248"
-                    type="submit"
-                    title="Save"
-                    height="3rem"
-                    width="9rem"
-                    customPaddingX="1.4rem"
-                    onClick={() => {
-                      closeModal('editMandate');
-                      openModal('confirmEdit');
-                    }}
+          <Box sx={style}>
+            <Typography id="modal-modal-title" variant="h6" component="h2">
+              <div className="flex items-center justify-between font-gotham">
+                <h1 className="font-semibold">Modify Mandate Details</h1>
+                <button onClick={() => closeModal('openModifyMandate')}>
+                  <CloseIcon />
+                </button>
+              </div>
+              <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
+            </Typography>
+            <Typography id="modal-modal-description" sx={{ mt: 2 }}>
+              <form onSubmit={modifyMandateValidation.handleSubmit}>
+                <div className="flex flex-col gap-2 font-gotham">
+                  <CustomInput
+                    labelFor="amount"
+                    label="Modify Amount"
+                    containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full mt-[4px]"
+                    inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
+                    inputType="number"
+                    placeholder="Enter here"
+                    formik={modifyMandateValidation}
                   />
                 </div>
+                <div className="mt-4 flex justify-end">
+                  <div className="">
+                    <ButtonComponent
+                      type="submit"
+                      title="Save"
+                      backgroundColor="#5C068C"
+                      hoverBackgroundColor="#5C067C"
+                      color="white"
+                      width="155px"
+                      height="42px"
+                      fontWeight={600}
+                      fontSize="14px"
+                    />
+                  </div>
+                </div>
               </form>
-            ) : (
-              <span className="slide-down flex items-center justify-start gap-1">
-                <h3 className="text-red-300">Error:</h3>
-                <h3 className="">You cannot modify a fixed mandate</h3>
-              </span>
-            )}
-          </div>
-        </CustomModal>
+            </Typography>
+          </Box>
+        </Modal>
       )}
-      {modals.confirmEdit && (
+      {modals.confirmModifyMandate && (
         <ModalWrapper
-          isOpen={modals.confirmEdit}
-          setIsOpen={() => closeModal('confirmEdit')}
+          isOpen={modals.confirmModifyMandate}
+          setIsOpen={() => closeModal('confirmModifyMandate')}
           title={'Save Changes?'}
           info={
             'You are about to save changes made to this mandate, would you want to proceed with this?'
@@ -728,22 +798,98 @@ const Reports = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmEdit');
-            openModal('editSuccessful');
+            updateMandateMutation.mutate({
+              requestId: selectedMandateId,
+              payload: modifyMandateValidation.values,
+            });
+            closeModal('confirmModifyMandate');
           }}
         />
       )}
-      {modals.editSuccessful && (
+      {modals.saveModifyMandate && (
         <ModalWrapper
-          isOpen={modals.editSuccessful}
-          setIsOpen={() => closeModal('editSuccessful')}
+          isOpen={modals.saveModifyMandate}
+          setIsOpen={() => closeModal('saveModifyMandate')}
           title={'Success!!'}
           info={'You have successfully saved new changes'}
-          icon={<ActionSuccessIcon />}
+          icon={<SuccessModalIcon />}
           type={'completed'}
+          proceedAction={() => closeModal('saveModifyMandate')}
+        />
+      )}
+      {modals.openEnableMandate && (
+        <ModalWrapper
+          isOpen={modals.openEnableMandate}
+          setIsOpen={() => closeModal('openEnableMandate')}
+          title={'Enable Mandate?'}
+          info={'You are about to enable this mandate, would you want to proceed with this?'}
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
           proceedAction={() => {
-            closeModal('editSuccessful');
+            enableMandateMutation.mutate(selectedMandateId);
+            closeModal('openEnableMandate');
           }}
+        />
+      )}
+      {modals.confirmEnableMandate && (
+        <ModalWrapper
+          isOpen={modals.confirmEnableMandate}
+          setIsOpen={() => closeModal('confirmEnableMandate')}
+          title={'Success!!'}
+          info={'You have successfully enabled this mandate'}
+          icon={<SuccessModalIcon />}
+          type={'completed'}
+          proceedAction={() => closeModal('confirmEnableMandate')}
+        />
+      )}
+      {modals.openDisableMandate && (
+        <ModalWrapper
+          isOpen={modals.openDisableMandate}
+          setIsOpen={() => closeModal('openDisableMandate')}
+          title={'Disable Mandate?'}
+          info={'You are about to disable this mandate, would you want to proceed with this?'}
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
+          proceedAction={() => {
+            disableMandateMutation.mutate(selectedMandateId);
+            closeModal('openDisableMandate');
+          }}
+        />
+      )}
+      {modals.confirmDisableMandate && (
+        <ModalWrapper
+          isOpen={modals.confirmDisableMandate}
+          setIsOpen={() => closeModal('confirmDisableMandate')}
+          title={'Success!!'}
+          info={'You have successfully disabled this mandate'}
+          icon={<SuccessModalIcon />}
+          type={'completed'}
+          proceedAction={() => closeModal('confirmDisableMandate')}
+        />
+      )}
+      {modals.openDeleteProfile && (
+        <ModalWrapper
+          isOpen={modals.openDeleteProfile}
+          setIsOpen={() => closeModal('openDeleteProfile')}
+          title={'Delete Profile?'}
+          info={'You are about to delete this mandate, would you want to proceed with this?'}
+          icon={<RedAlertIcon />}
+          type={'confirmation'}
+          proceedAction={() => {
+            deleteMandateMutation.mutate(selectedMandateId);
+            closeModal('openDeleteProfile');
+          }}
+        />
+      )}
+      {modals.confirmDeleteProfile && (
+        <ModalWrapper
+          isOpen={modals.confirmDeleteProfile}
+          setIsOpen={() => closeModal('confirmDeleteProfile')}
+          title={'Success!!'}
+          info={'You have successfully deleted this mandate'}
+          icon={<SuccessModalIcon />}
+          type={'completed'}
+          proceedAction={() => closeModal('confirmDeleteProfile')}
         />
       )}
     </>

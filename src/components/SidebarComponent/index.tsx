@@ -4,7 +4,6 @@ import FcmbIcon from 'assets/icons//FcmbIcon';
 import SignoutIcon from 'assets/icons/SignoutIcon';
 import { UserLoginRoles } from 'utils/enums';
 import { useNavigate } from 'react-router-dom';
-import { BASE_ROUTES } from 'utils/constants/routes';
 import WhiteClose from 'assets/icons/WhiteClose';
 import { useEffect, useRef, useState } from 'react';
 import { getUserFromLocalStorage, isAdminAuthData, isMerchantAuthData } from 'utils/helpers';
@@ -58,7 +57,7 @@ const Sidebar = (props: { open: boolean; onClose: any; userRole: string }) => {
         const logoutResponse = isAdmin
           ? await logoutStaff({ email: userEmail, refreshToken: userRefreshToken })
           : isMerchant
-            ? await logoutMerchant({ email: userEmail })
+            ? await logoutMerchant({ email: userEmail, refreshToken: userRefreshToken })
             : null;
 
         if (logoutResponse && logoutResponse.responseCode === 200) {
@@ -100,9 +99,6 @@ const Sidebar = (props: { open: boolean; onClose: any; userRole: string }) => {
         <ul className="mt-auto flex items-center justify-start border-t border-gray-50 pt-1">
           <button
             className="relative mb-3 flex px-2 py-4 hover:cursor-pointer"
-            // onClick={() => {
-            //   navigate(`${BASE_ROUTES.LOGIN}`);
-            // }}
             onClick={() => logoutUser()}
           >
             <li className="my-[3px] flex w-full cursor-pointer items-center justify-center px-5">

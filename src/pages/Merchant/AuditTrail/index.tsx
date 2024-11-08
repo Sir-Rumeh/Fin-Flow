@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { GridColDef } from '@mui/x-data-grid';
 import CustomTable from 'components/CustomTable';
 import CustomInput from 'components/FormElements/CustomInput';
@@ -29,6 +29,7 @@ interface AuditTrailEntry {
 }
 
 const AuditTrail = () => {
+  const printPdfRef = useRef(null);
   const isSmallWidth = useMediaQuery('(max-width:370px)');
   const [showFilteredAudit, setShowFilteredAudit] = useState(false);
   const [selectedRowData, setSelectedRowData] = useState<AuditTrailEntry>();
@@ -48,6 +49,14 @@ const AuditTrail = () => {
   const closeModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
+
+  const excelHeaders = [
+    { label: 'Actor ID', key: 'actorId' },
+    { label: 'Account Name', key: 'actor' },
+    { label: 'Affected Module', key: 'module' },
+    { label: 'Performed Action', key: 'action' },
+    { label: 'Date Requested', key: 'dateCreated' },
+  ];
 
   const AuditTableColumn: GridColDef[] = [
     {
@@ -86,23 +95,6 @@ const AuditTrail = () => {
       headerClassName: 'ag-thead',
       valueGetter: (params: any) => new Date(params).toLocaleDateString(),
     },
-    // {
-    //   field: '',
-    //   headerName: 'Action',
-    //   width: 150,
-    //   headerClassName: 'ag-thead',
-    //   renderCell: () => (
-    //     <>
-    //       <button
-    //         type="button"
-    //         onClick={() => openModal('viewDetails')}
-    //         className="cursor-pointer font-semibold text-lightPurple"
-    //       >
-    //         View Details
-    //       </button>
-    //     </>
-    //   ),
-    // },
     {
       field: '',
       headerName: 'Action',
@@ -235,7 +227,12 @@ const AuditTrail = () => {
                 Staff Name: {formik.values.actor}
               </h2>
               <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
-                <ExportBUtton />
+                <ExportBUtton
+                  data={data?.responseData?.items}
+                  printPdfRef={printPdfRef}
+                  headers={excelHeaders}
+                  fileName="Mandates.csv"
+                />
               </div>
             </div>
             <h3 className="mt-2 w-full rounded-tl-xl rounded-tr-xl border px-3 py-4 text-lg font-semibold">
@@ -248,7 +245,7 @@ const AuditTrail = () => {
                 ? dayjs(formik.values.endDate).format('D MMMM, YYYY')
                 : 'End Date'}
             </h3>
-            <div className="w-full">
+            <div ref={printPdfRef} className="w-full">
               <CustomTable
                 tableData={data?.responseData?.items}
                 columns={AuditTableColumn}

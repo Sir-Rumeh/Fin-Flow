@@ -35,13 +35,6 @@ import { updateMandateSchema } from 'utils/formValidators';
 import CustomInput from 'components/FormElements/CustomInput';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import CustomTabs from 'hoc/CustomTabs';
-import {
-  getUserFromLocalStorage,
-  isAdminAuthData,
-  isMerchantAuthData,
-  notifyError,
-} from 'utils/helpers';
-import { refreshMerchantToken, refreshStaffToken } from 'config/actions/authentication-actions';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -64,14 +57,19 @@ const MandatetManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedMandateId, setSelectedMandateId] = useState<string | undefined>('');
   const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
-  const [adminEmail, setAdminEmail] = useState('');
-  const [merchantEmail, setMerchantEmail] = useState('');
-  const [userRefreshToken, setUserRefreshToken] = useState('');
 
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
     pageSize: 10,
   });
+
+  const excelHeaders = [
+    { label: 'Merchant ID', key: 'merchantId' },
+    { label: 'Mandate Code', key: 'mandateCode' },
+    { label: 'Mandate Type', key: 'mandateType' },
+    { label: 'Active Status', key: 'isActive' },
+    { label: 'Date Requested', key: 'dateCreated' },
+  ];
 
   const formik = useFormik({
     initialValues: {
@@ -128,6 +126,15 @@ const MandatetManagement = () => {
       closeModal('openModifyMandate');
     },
   });
+
+  const handleOptionsFilter = () => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  };
 
   const total = 20;
 
@@ -398,42 +405,6 @@ const MandatetManagement = () => {
     },
   });
 
-  useEffect(() => {
-    const user = getUserFromLocalStorage();
-
-    if (user) {
-      setUserRefreshToken(user.refreshToken);
-      if (isAdminAuthData(user)) {
-        setAdminEmail(user.userData.email);
-      } else if (isMerchantAuthData(user)) {
-        setMerchantEmail(user.profileData.email);
-      }
-    }
-  }, []);
-
-  const refreshUserToken = async () => {
-    const user = getUserFromLocalStorage();
-
-    if (user) {
-      try {
-        if (isAdminAuthData(user)) {
-          const res = await refreshStaffToken({ email: adminEmail });
-          console.log(res);
-        } else if (isMerchantAuthData(user)) {
-          console.log(user.profileData.email);
-          const res = await refreshMerchantToken({
-            email: merchantEmail,
-            refreshToken: userRefreshToken,
-          });
-          console.log(res);
-        }
-      } catch (error) {
-        notifyError('Failed to refresh session. Please log in again.');
-        // window.location.href = '/';
-      }
-    }
-  };
-
   return (
     <>
       <div className="px-5 py-5">
@@ -441,10 +412,9 @@ const MandatetManagement = () => {
           <h2 className="text-xl font-semibold md:text-2xl">Mandate Management</h2>
           <div className="">
             <ButtonComponent
-              // onClick={() =>
-              //   navigate(`/${appRoutes.merchantDashboard.mandateManagement.createMandate}`)
-              // }
-              onClick={() => refreshUserToken()}
+              onClick={() =>
+                navigate(`/${appRoutes.merchantDashboard.mandateManagement.createMandate}`)
+              }
               title="Create Mandate"
               backgroundColor="#5C068C"
               hoverBackgroundColor="#2F0248"
@@ -459,19 +429,24 @@ const MandatetManagement = () => {
           <div className="flex items-center justify-between">
             <div className="">
               <TableFilter
-                name={'searchMerchantName'}
-                placeholder={'Search '}
-                label={'Search Merchant'}
+                name={'searchMandate'}
+                placeholder={'Search Mandate Code'}
+                label={'Search Mandate'}
                 value={searchTerm}
                 setSearch={setSearchTerm}
-                handleOptionsFilter={() => {}}
+                handleOptionsFilter={handleOptionsFilter}
                 formik={formik}
                 fromDateName={'fromDateFilter'}
                 toDateName={'toDateFilter'}
                 selectName={'statusFilter'}
               />
             </div>
-            <ExportBUtton />
+            <ExportBUtton
+              data={data?.responseData?.items}
+              printPdfRef={printPdfRef}
+              headers={excelHeaders}
+              fileName="Mandates.csv"
+            />
           </div>
           <div className="mt-4 h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-6 w-full">
