@@ -24,6 +24,7 @@ import {
   getStaffUsers,
 } from 'config/actions/staff-user-actions';
 import { capitalize, notifyError } from 'utils/helpers';
+import { SearchTypes } from 'utils/enums';
 
 const StaffUserManagement = () => {
   const printPdfRef = useRef(null);
@@ -60,7 +61,11 @@ const StaffUserManagement = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchStaffUser,
+      }));
+      refetch();
     },
   });
 
@@ -71,6 +76,7 @@ const StaffUserManagement = () => {
     sortBy: 'asc',
     sortOrder: 'desc',
     searchFilter: formik.values.searchStaffUser,
+    searchType: SearchTypes.SearchStaffUser,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });

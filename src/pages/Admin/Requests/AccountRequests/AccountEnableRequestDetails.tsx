@@ -19,6 +19,7 @@ import {
   rejectAccountRequest,
 } from 'config/actions/account-actions';
 import RejectedIcon from 'assets/icons/RejectedIcon';
+import { RequestStatus } from 'utils/enums';
 
 const AccountEnableRequestDetails = () => {
   const navigate = useNavigate();
@@ -89,35 +90,37 @@ const AccountEnableRequestDetails = () => {
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
           <h2 className="text-lg font-semibold md:text-2xl">{`Account ID : ${data?.responseData?.id}`}</h2>
-          <div className="flex w-1/2 items-center justify-end gap-4">
-            <div className="w-auto">
-              <ButtonComponent
-                color="#5C068C"
-                borderColor="#5C068C"
-                variant="outlined"
-                type="button"
-                title="Reject"
-                customPaddingX="3rem"
-                onClick={() => {
-                  openModal('confirmRejectRequest');
-                }}
-              />
+          {data?.responseData?.status === RequestStatus.Pending && (
+            <div className="flex w-1/2 items-center justify-end gap-4">
+              <div className="w-auto">
+                <ButtonComponent
+                  color="#5C068C"
+                  borderColor="#5C068C"
+                  variant="outlined"
+                  type="button"
+                  title="Reject"
+                  customPaddingX="3rem"
+                  onClick={() => {
+                    openModal('confirmRejectRequest');
+                  }}
+                />
+              </div>
+              <div className="w-auto">
+                <ButtonComponent
+                  variant="contained"
+                  color="white"
+                  backgroundColor="#5C068C"
+                  hoverBackgroundColor="#2F0248"
+                  type="button"
+                  title="Approve"
+                  customPaddingX="3rem"
+                  onClick={() => {
+                    openModal('confirmApproveRequest');
+                  }}
+                />
+              </div>
             </div>
-            <div className="w-auto">
-              <ButtonComponent
-                variant="contained"
-                color="white"
-                backgroundColor="#5C068C"
-                hoverBackgroundColor="#2F0248"
-                type="button"
-                title="Approve"
-                customPaddingX="3rem"
-                onClick={() => {
-                  openModal('confirmApproveRequest');
-                }}
-              />
-            </div>
-          </div>
+          )}
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
           <div className="">

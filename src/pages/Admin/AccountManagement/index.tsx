@@ -23,6 +23,7 @@ import {
   enableAccount,
   getAccounts,
 } from 'config/actions/account-actions';
+import { SearchTypes } from 'utils/enums';
 
 const AccountManagement = () => {
   const printPdfRef = useRef(null);
@@ -60,7 +61,11 @@ const AccountManagement = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchAccount,
+      }));
+      refetch();
     },
   });
 
@@ -71,6 +76,7 @@ const AccountManagement = () => {
     sortBy: 'asc',
     sortOrder: 'desc',
     searchFilter: formik.values.searchAccount,
+    searchType: SearchTypes.SearchAccounts,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });

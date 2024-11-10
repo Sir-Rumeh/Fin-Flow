@@ -155,7 +155,6 @@ export interface QueryParams {
   requestType?: string | undefined;
   startDate?: string | undefined;
   endDate?: string | undefined;
-  actor?: string | undefined;
   roleName?: string | undefined;
 }
 

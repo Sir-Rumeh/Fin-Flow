@@ -15,6 +15,7 @@ import { useQuery } from '@tanstack/react-query';
 import { QueryParams } from 'utils/interfaces';
 import { getDateRange } from 'utils/helpers';
 import { getAuditTrails } from 'config/actions/audit-trail-actions';
+import { SearchTypes } from 'utils/enums';
 
 const AuditTrail = () => {
   const printPdfRef = useRef(null);
@@ -119,11 +120,12 @@ const AuditTrail = () => {
   const isSmallWidth = useMediaQuery('(max-width:370px)');
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
-    actor: formik.values.searchFilter,
     pageNo: paginationData.pageNumber,
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
+    searchFilter: formik.values.searchFilter,
+    searchType: SearchTypes.SearchAudits,
     startDate: formik.values.startDate,
     endDate: formik.values.endDate,
   });

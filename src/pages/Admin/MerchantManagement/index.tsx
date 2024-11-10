@@ -22,6 +22,7 @@ import {
   enableMerchant,
   getMerchants,
 } from 'config/actions/merchant-actions';
+import { SearchTypes } from 'utils/enums';
 
 const MerchantManagement = () => {
   const printPdfRef = useRef(null);
@@ -60,7 +61,11 @@ const MerchantManagement = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchMerchantName,
+      }));
+      refetch();
     },
   });
 
@@ -71,6 +76,7 @@ const MerchantManagement = () => {
     sortBy: 'asc',
     sortOrder: 'desc',
     searchFilter: formik.values.searchMerchantName,
+    searchType: SearchTypes.SearchMerchants,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });

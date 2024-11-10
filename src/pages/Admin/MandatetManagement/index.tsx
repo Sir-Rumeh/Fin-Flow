@@ -31,7 +31,7 @@ import {
 } from 'config/actions/dashboard-actions';
 import { capitalize } from 'utils/helpers';
 import { updateMandateSchema } from 'utils/formValidators';
-import { TransactionsTabsListTabNames } from 'utils/enums';
+import { SearchTypes, TransactionsTabsListTabNames } from 'utils/enums';
 
 const MandatetManagement = () => {
   const printPdfRef = useRef(null);
@@ -99,13 +99,16 @@ const MandatetManagement = () => {
   const formik = useFormik({
     initialValues: {
       searchMandate: '',
-      searchTransactionHistory: '',
       fromDateFilter: '',
       toDateFilter: '',
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchMandate,
+      }));
+      refetch();
     },
   });
 
@@ -127,6 +130,7 @@ const MandatetManagement = () => {
     sortBy: 'asc',
     sortOrder: 'desc',
     searchFilter: formik.values.searchMandate,
+    searchType: SearchTypes.SearchMandates,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });

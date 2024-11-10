@@ -35,6 +35,7 @@ import { updateMandateSchema } from 'utils/formValidators';
 import CustomInput from 'components/FormElements/CustomInput';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import CustomTabs from 'hoc/CustomTabs';
+import { SearchTypes } from 'utils/enums';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -79,18 +80,22 @@ const MandatetManagement = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchMandate,
+      }));
+      refetch();
     },
   });
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
-    mandateCode: '',
     status: formik.values.statusFilter,
     pageNo: paginationData.pageNumber,
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
     searchFilter: formik.values.searchMandate,
+    searchType: SearchTypes.SearchMandates,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });
@@ -345,7 +350,7 @@ const MandatetManagement = () => {
     },
   ];
 
-  const { data } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['mandates', queryParams],
     queryFn: ({ queryKey }) => getMandates(queryKey[1] as QueryParams),
     retry: 2,
