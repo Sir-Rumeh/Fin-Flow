@@ -68,6 +68,7 @@ import AddRole from 'pages/Admin/RolesPermission/AddRole';
 import AddRolePermission from 'pages/Admin/RolesPermission/AddRolePermission';
 import RoleDetails from 'pages/Admin/RolesPermission/RoleDetails';
 import RolePermissionDetails from 'pages/Admin/RolesPermission/RolePermissionDetails';
+import EnableRequestDetails from 'pages/Merchant/Requests/request-details/EnableRequestDetails';
 
 const adminRoutes: RoutesType[] = [
   {
@@ -380,6 +381,11 @@ const merchantRoutes: RoutesType[] = [
         name: 'Disable Request Details',
         path: 'mandates/disable-request-details/:id',
         component: <DisableRequestDetails />,
+      },
+      {
+        name: 'Enable Request Details',
+        path: 'mandates/enable-request-details/:id',
+        component: <EnableRequestDetails />,
       },
       {
         name: 'Deletion Request Details',

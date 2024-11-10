@@ -12,19 +12,19 @@ import ButtonComponent from 'components/FormElements/Button';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import appRoutes from 'utils/constants/routes';
+import { MandateRequestStatus } from 'utils/enums';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import CustomInput from 'components/FormElements/CustomInput';
+import { formatNumberDisplay } from 'utils/helpers';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   approveMandateRequest,
   getMandateRequestById,
   rejectMandateRequest,
 } from 'config/actions/dashboard-actions';
-import { MandateRequestStatus } from 'utils/enums';
-import { useFormik } from 'formik';
-import * as Yup from 'yup';
-import CustomInput from 'components/FormElements/CustomInput';
-import { formatNumberDisplay } from 'utils/helpers';
 
-const CreationRequestDetails = () => {
+const EnableRequestDetails = () => {
   const { id } = useParams();
 
   const [modals, setModals] = useState({
@@ -235,12 +235,13 @@ const CreationRequestDetails = () => {
         </div>
         <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
           <div className="flex items-center justify-between">
-            <p className="my-3 text-lg font-semibold">Creator Details</p>
+            <p className="my-3 text-lg font-semibold">Requested By</p>
           </div>
           <div className="h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
             <DetailsCard title="ID" content="12345678" />
-            <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
+            <DetailsCard title="Requested By" content="Vekee James Ventures" />
+            <DetailsCard title="Date Requested" content="15/11/2023 - 12:12:12" />
           </div>
         </div>
         {data?.responseData?.status === MandateRequestStatus.Approved && (
@@ -353,33 +354,4 @@ const CreationRequestDetails = () => {
   );
 };
 
-export default CreationRequestDetails;
-
-// {
-//   data?.responseData?.oldData && (
-//     <div className="mb-10 flex flex-col items-center justify-between gap-10 lg:flex-row">
-//       <div className="w-full rounded-[5px] border-[3px] border-grayPrimary px-6 py-4 lg:w-1/2">
-//         <div className="flex items-center justify-between">
-//           <p className="my-3 text-lg font-semibold">Old Details</p>
-//         </div>
-//         <div className="h-[2px] w-full bg-grayPrimary"></div>
-//         <div className="mt-4 flex flex-col justify-between gap-5 py-4 md:flex-row md:gap-0">
-//           <div className="flex w-[300px] flex-col gap-8">
-//             <DetailsCard title="Old Amount" content={data?.responseData?.oldData?.amount} />
-//           </div>
-//         </div>
-//       </div>
-//       <div className="w-full rounded-[5px] border-[3px] border-grayPrimary px-6 py-4 lg:w-1/2">
-//         <div className="flex items-center justify-between">
-//           <p className="my-3 text-lg font-semibold">New Details</p>
-//         </div>
-//         <div className="h-[2px] w-full bg-grayPrimary"></div>
-//         <div className="mt-4 flex flex-col justify-between gap-5 py-4 md:flex-row md:gap-0">
-//           <div className="flex w-[300px] flex-col gap-8">
-//             <DetailsCard title="New Amount" content={data?.responseData?.amount} />
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
+export default EnableRequestDetails;

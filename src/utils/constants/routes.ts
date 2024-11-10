@@ -118,6 +118,7 @@ export const appRoutes = {
       createRequestDetails: `${BASE_ROUTES.MERCHANT}/requests/mandates/creation-request-details`,
       updateRequestDetails: `${BASE_ROUTES.MERCHANT}/requests/mandates/update-request-details`,
       disableRequestDetails: `${BASE_ROUTES.MERCHANT}/requests/mandates/disable-request-details`,
+      enableRequestDetails: `${BASE_ROUTES.MERCHANT}/requests/mandates/enable-request-details`,
       deletionRequestDetails: `${BASE_ROUTES.MERCHANT}/requests/mandates/deletion-request-details`,
     },
     mandateManagement: {

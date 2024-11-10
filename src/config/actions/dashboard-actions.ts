@@ -198,3 +198,24 @@ export const getMandateStatistics = async () => {
     throw error;
   }
 };
+
+/* TRANSACTION HISTORY */
+export const getTransactions = async (queryParams?: QueryParams) => {
+  const params = new URLSearchParams();
+  appendParams(params, queryParams);
+  try {
+    const response = await AxiosClient.get(`/transactions`, { params });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getTransactionsById = async (requestId: string | undefined) => {
+  try {
+    const response = await AxiosClient.get(`/transactions/${requestId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
