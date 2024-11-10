@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 import {
   ArrowRightIcon,
+  CreationRequestIcon,
   DeleteRequestIcon,
   SuccessModalIcon,
   UpdateRequestIcon,
@@ -11,10 +12,20 @@ import ButtonComponent from 'components/FormElements/Button';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import appRoutes from 'utils/constants/routes';
-import { useTabContext } from '../../../../context/TabContext';
+import { useMutation, useQuery } from '@tanstack/react-query';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
+import {
+  approveMandateRequest,
+  getMandateRequestById,
+  rejectMandateRequest,
+} from 'config/actions/dashboard-actions';
+import { formatNumberDisplay } from 'utils/helpers';
+import CustomInput from 'components/FormElements/CustomInput';
+import { MandateRequestStatus } from 'utils/enums';
 
 const DeletionRequestDetails = () => {
-  const { tab } = useTabContext();
+  const { id } = useParams();
 
   const [modals, setModals] = useState({
     confirmApprove: false,
@@ -31,21 +42,61 @@ const DeletionRequestDetails = () => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
 
-  const RejectInfo = (
-    <>
-      <p>You are about to reject this request, would you want to proceed with this?</p>
-      <div className="mt-2 flex flex-col gap-2">
-        <label htmlFor="reason" className="text-left text-lg font-semibold">
-          Reason for Rejection
-        </label>
-        <input
-          className="w-full rounded-md border border-[#334335] px-2 py-3 text-lg"
-          type="text"
-          placeholder="Type here"
-        />
-      </div>
-    </>
-  );
+  const formik = useFormik({
+    initialValues: {
+      remark: '',
+    },
+    validationSchema: Yup.object({
+      remark: Yup.string()
+        .required('Reason for rejection is required')
+        .min(5, 'Reason must be at least 5 characters long'),
+    }),
+    onSubmit: (values) => {
+      console.log(values);
+    },
+  });
+
+  const { data, refetch } = useQuery({
+    queryKey: ['mandateRequests', id],
+    queryFn: ({ queryKey }) => getMandateRequestById(queryKey[1]),
+  });
+
+  const approveMandateRequestMutation = useMutation({
+    mutationFn: (requestId: string | undefined) => approveMandateRequest(requestId),
+    onSuccess: () => {
+      refetch();
+      closeModal('confirmApprove');
+      openModal('approveSuccess');
+    },
+    onError: (error) => {},
+  });
+
+  const rejectMandateRequestMutation = useMutation({
+    mutationFn: ({
+      requestId,
+      payload,
+    }: {
+      requestId: string | undefined;
+      payload: { remark: string };
+    }) => rejectMandateRequest(requestId, payload),
+    onSuccess: () => {
+      refetch();
+      closeModal('confirmReject');
+      openModal('rejectSuccess');
+    },
+    onError: (error) => {},
+  });
+
+  const handleProceed = () => {
+    if (formik.isValid && formik.dirty) {
+      rejectMandateRequestMutation.mutate({ requestId: id, payload: formik.values });
+      closeModal('confirmReject');
+    } else {
+      formik.setTouched({
+        remark: true,
+      });
+    }
+  };
 
   return (
     <div className="px-5 py-5">
@@ -60,8 +111,8 @@ const DeletionRequestDetails = () => {
         <span className="text-sm font-medium text-lightPurple">Request Details</span>
       </div>
       <div className="mt-4 flex items-center justify-between">
-        <h2 className="mt-3 text-xl font-semibold">Request ID : Req123456</h2>
-        {tab === 1 && (
+        <h2 className="mt-3 text-xl font-semibold">Request ID : {data?.responseData?.id}</h2>
+        {data?.responseData?.status === MandateRequestStatus.Pending && (
           <div className="flex items-center gap-4">
             <ButtonComponent
               onClick={() => openModal('confirmReject')}
@@ -77,23 +128,13 @@ const DeletionRequestDetails = () => {
               onClick={() => openModal('confirmApprove')}
               title="Approve"
               backgroundColor="#5C068C"
+              hoverBackgroundColor="#2F0248"
               color="white"
               width="150px"
               height="50px"
               fontSize="16px"
             />
           </div>
-        )}
-        {tab === 2 && (
-          <ButtonComponent
-            onClick={() => {}}
-            title="View Request Details"
-            backgroundColor="#5C068C"
-            color="white"
-            width="200px"
-            height="50px"
-            fontSize="16px"
-          />
         )}
       </div>
       <div className="mt-5 rounded-lg bg-white px-5 py-10">
@@ -110,21 +151,43 @@ const DeletionRequestDetails = () => {
           </div>
           <div className="h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
-            <DetailsCard title="Account ID" content="12345" />
-            <DetailsCard title="Merchant ID" content="12345" />
-            <DetailsCard title="Merchant Code" content="12345" />
-            <DetailsCard title="Date Created" content="12/12/2024 - 03:00pm" />
-            <DetailsCard title="Product ID" content="12345" />
-            <DetailsCard title="Amount" content="N 500,000" contentClassName="text-lightPurple" />
-            <DetailsCard title="Effective Date" content="12/12/2024" />
-            <DetailsCard title="End Date" content="12/12/2024" />
-            <DetailsCard title="Day to apply" content="10/12/2024" />
-            <DetailsCard title="Frequency" content="Monthly" />
-            <DetailsCard title="Service" content="Life Insurance" />
-            <DetailsCard title="Narration" content="Any narration can be here" />
-            <DetailsCard title="Account Number" content="1234567" />
-            <DetailsCard title="Account Name" content="Fair Money" />
-            <DetailsCard title="Bank Code" content="787878" />
+            <DetailsCard title="Account ID" content={data?.responseData?.accountId} />
+            <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
+            <DetailsCard title="Merchant Code" content={data?.responseData?.mandateCode} />
+            <DetailsCard
+              title="Date Created"
+              content={
+                data?.responseData?.dateCreated &&
+                new Date(data.responseData.dateCreated).toLocaleDateString()
+              }
+            />
+            <DetailsCard title="Product ID" content={data?.responseData?.productId} />
+            <DetailsCard
+              title="Amount"
+              content={formatNumberDisplay(data?.responseData?.amount)}
+              contentClassName="text-lightPurple"
+            />
+            <DetailsCard
+              title="Effective Date"
+              content={
+                data?.responseData?.startDate &&
+                new Date(data.responseData.startDate).toLocaleDateString()
+              }
+            />
+            <DetailsCard
+              title="End Date"
+              content={
+                data?.responseData?.endDate &&
+                new Date(data.responseData.endDate).toLocaleDateString()
+              }
+            />
+            <DetailsCard title="Day to apply" content={data?.responseData?.dayToApply} />
+            <DetailsCard title="Frequency" content={data?.responseData?.frequency} />
+            <DetailsCard title="Service" content={data?.responseData?.service} />
+            <DetailsCard title="Narration" content={data?.responseData?.narration} />
+            <DetailsCard title="Account Number" content={data?.responseData?.accountNumber} />
+            <DetailsCard title="Account Name" content={data?.responseData?.accountName} />
+            <DetailsCard title="Bank Code" content={data?.responseData?.bankCode} />
           </div>
         </div>
         <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
@@ -133,22 +196,22 @@ const DeletionRequestDetails = () => {
           </div>
           <div className="h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
-            <DetailsCard title="Payer Name" content="Vekee James Ventures" />
-            <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
-            <DetailsCard title="Email Address" content="vekee@gmail.com" />
-            <DetailsCard title="Phone Number" content="09028272009" />
+            <DetailsCard title="Payer Name" content={data?.responseData?.payerName} />
+            <DetailsCard title="Address" content={data?.responseData?.payerAddress} />
+            <DetailsCard title="Email Address" content={data?.responseData?.payerEmailAddress} />
+            <DetailsCard title="Phone Number" content={data?.responseData?.payerPhoneNumber} />
           </div>
         </div>
         <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
           <div className="">
             <p className="my-3 text-lg font-semibold">Payee Details</p>
           </div>
-          <div className="h-[2px] w-full bg-grayPrimary"></div>
+          <div className="h-[2px] w-full bg-grayPrimary"></div>]{' '}
           <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
-            <DetailsCard title="Payer Name" content="Vekee James Ventures" />
-            <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
-            <DetailsCard title="Email Address" content="vekee@gmail.com" />
-            <DetailsCard title="Phone Number" content="09028272009" />
+            <DetailsCard title="Payee Name" content={data?.responseData?.payeeName} />
+            <DetailsCard title="Address" content={data?.responseData?.payeeAddress} />
+            <DetailsCard title="Email Address" content={data?.responseData?.payeeEmailAddress} />
+            <DetailsCard title="Phone Number" content={data?.responseData?.payeePhoneNumber} />
           </div>
         </div>
         <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
@@ -161,10 +224,13 @@ const DeletionRequestDetails = () => {
           </div>
           <div className="h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
-            <DetailsCard title="Biller Account Number" content="12345678" />
+            <DetailsCard
+              title="Biller Account Number"
+              content={data?.responseData?.billerAccountNumber}
+            />
             <DetailsCard title="Bank Name" content="Access Bank" />
             <DetailsCard title="Account Name" content="Vekee James Ventures" />
-            <DetailsCard title="Bank Code" content="09028272009" />
+            <DetailsCard title="Bank Code" content={data?.responseData?.bankCode} />
           </div>
         </div>
         <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
@@ -178,7 +244,24 @@ const DeletionRequestDetails = () => {
             <DetailsCard title="Date Requested" content="15/11/2023 - 12:12:12" />
           </div>
         </div>
-        {tab === 3 && (
+        {data?.responseData?.status === MandateRequestStatus.Approved && (
+          <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+            <div className="flex items-center justify-between">
+              <p className="my-3 text-lg font-semibold">Account Approval Details</p>
+              <div className="flex items-center gap-2">
+                <CreationRequestIcon />
+                <p className="text-greenPrimary">Approved</p>
+              </div>
+            </div>
+            <div className="h-[2px] w-full bg-grayPrimary"></div>
+            <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
+              <DetailsCard title="ID" content="12345678" />
+              <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
+              <DetailsCard title="Date Approved" content={data?.responseData?.dateApproved} />
+            </div>
+          </div>
+        )}
+        {data?.responseData?.status === MandateRequestStatus.Declined && (
           <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
             <div className="flex items-center justify-between">
               <p className="my-3 text-lg font-semibold">Rejected By</p>
@@ -190,12 +273,15 @@ const DeletionRequestDetails = () => {
             <div className="h-[2px] w-full bg-grayPrimary"></div>
             <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
               <DetailsCard title="ID" content="12345678" />
+              <DetailsCard title="Rejected By" content={data?.responseData?.rejectedBy} />
               <DetailsCard
-                title="Reason for Rejection"
-                content="Any reason for rejection can be here"
+                title="Date Rejected"
+                content={
+                  data?.responseData?.dateRejected &&
+                  new Date(data.responseData.dateRejected).toLocaleDateString()
+                }
               />
-              <DetailsCard title="Rejected By" content="Vekee James Ventures" />
-              <DetailsCard title="Date Rejected" content="15/11/2023 - 12:12:12" />
+              <DetailsCard title="Reason for Rejection" content={data?.responseData?.remark} />
             </div>
           </div>
         )}
@@ -205,12 +291,26 @@ const DeletionRequestDetails = () => {
           isOpen={modals.confirmReject}
           setIsOpen={() => closeModal('confirmReject')}
           title={'Reject Request?'}
-          info={RejectInfo}
+          info={
+            <>
+              <p>You are about to reject this request, would you want to proceed with this?</p>
+              <div className="mt-10 flex flex-col gap-2">
+                <CustomInput
+                  labelFor="remark"
+                  label="Reason for Rejection"
+                  containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
+                  inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
+                  inputType="text"
+                  placeholder="Type here"
+                  formik={formik}
+                />
+              </div>
+            </>
+          }
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            closeModal('confirmReject');
-            openModal('rejectSuccess');
+            handleProceed();
           }}
         />
       )}
@@ -223,8 +323,8 @@ const DeletionRequestDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
+            approveMandateRequestMutation.mutate(id);
             closeModal('confirmApprove');
-            openModal('approveSuccess');
           }}
         />
       )}

@@ -131,7 +131,7 @@ const MandateRequests = () => {
           params.row.requestType === RequestType.Creation
             ? appRoutes.merchantDashboard.requests.createRequestDetails
             : params.row.requestType === RequestType.Enable
-              ? appRoutes.merchantDashboard.requests.createRequestDetails
+              ? appRoutes.merchantDashboard.requests.enableRequestDetails
               : params.row.requestType === RequestType.Update
                 ? appRoutes.merchantDashboard.requests.updateRequestDetails
                 : params.row.requestType === RequestType.Disable
@@ -144,7 +144,7 @@ const MandateRequests = () => {
 
         return (
           <Link
-            to={`/${appRoutes.merchantDashboard.requests.createRequestDetails}/${params.id}`}
+            to={`/${route}/${params.id}`}
             className="cursor-pointer font-semibold text-lightPurple"
           >
             View Details
