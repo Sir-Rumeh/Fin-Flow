@@ -54,19 +54,21 @@ const Sidebar = (props: { open: boolean; onClose: any; userRole: string }) => {
       try {
         const isAdmin = isAdminAuthData(user);
         const isMerchant = isMerchantAuthData(user);
-        const logoutResponse = isAdmin
+        isAdmin
           ? await logoutStaff({ email: userEmail, refreshToken: userRefreshToken })
           : isMerchant
             ? await logoutMerchant({ email: userEmail, refreshToken: userRefreshToken })
             : null;
-        if (logoutResponse && logoutResponse.responseCode === 200) {
-          localStorage.clear();
-          navigate('/');
-        }
+        localStorage.clear();
+        navigate('/');
       } catch (error) {
         localStorage.clear();
+        navigate('/');
         console.error(error);
       }
+    } else {
+      localStorage.clear();
+      navigate('/');
     }
   };
 

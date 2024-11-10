@@ -111,7 +111,7 @@ AxiosClient.interceptors.response.use(
                   try {
                     const isAdmin = isAdminAuthData(user);
                     const isMerchant = isMerchantAuthData(user);
-                    const logoutResponse = isAdmin
+                    isAdmin
                       ? await logoutStaff({
                           email: user.userData.email,
                           refreshToken: user.refreshToken,
@@ -122,14 +122,12 @@ AxiosClient.interceptors.response.use(
                             refreshToken: user.refreshToken,
                           })
                         : null;
-                    if (logoutResponse && logoutResponse.responseCode === 200) {
-                      dispatch(uiStopLoading());
-                      notifyError('Session expired. Please log in again.');
-                      localStorage.clear();
-                      setTimeout(() => {
-                        window.location.href = '/';
-                      }, 1500);
-                    }
+                    dispatch(uiStopLoading());
+                    notifyError('Session expired. Please log in again.');
+                    localStorage.clear();
+                    setTimeout(() => {
+                      window.location.href = '/';
+                    }, 1500);
                   } catch (error) {
                     console.error(error);
                     dispatch(uiStopLoading());

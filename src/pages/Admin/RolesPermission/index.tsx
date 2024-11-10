@@ -10,7 +10,7 @@ const RolesPermission = () => {
 
   const roleType = {
     roles: 'Roles',
-    permission: 'Role Permission',
+    permission: 'Role Permissions',
   };
 
   const [activeTab, setActiveTab] = useState(roleType.roles);
