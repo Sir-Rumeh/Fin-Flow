@@ -377,7 +377,7 @@ const MandateDetails = () => {
                     <div className="flex items-center justify-end gap-2">
                       <p className="text-sm text-darkgray">Biller Code:</p>
                       <p className="mb-[1px] font-semibold text-lightPurple">
-                        {data?.responseData?.billerId}
+                        {data?.responseData?.billerCode}
                       </p>
                     </div>
                   </>
