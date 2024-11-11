@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import TableFilter from 'components/TableFilter';
 import { QueryParams, TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
-import { TabsListTabNames } from 'utils/enums';
+import { SearchTypes, TabsListTabNames } from 'utils/enums';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
@@ -37,7 +37,11 @@ const ProfileRequests = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchProfile,
+      }));
+      refetch();
     },
   });
 
@@ -49,6 +53,7 @@ const ProfileRequests = () => {
     sortBy: 'asc',
     sortOrder: 'desc',
     searchFilter: formik.values.searchProfile,
+    searchType: SearchTypes.SearchProfiles,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });
@@ -158,7 +163,7 @@ const ProfileRequests = () => {
     },
   ];
 
-  const { data } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['profileRequests', queryParams],
     queryFn: ({ queryKey }) => getProfileRequests(queryKey[1] as QueryParams),
   });

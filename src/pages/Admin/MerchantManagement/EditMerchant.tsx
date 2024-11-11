@@ -166,7 +166,9 @@ const EditMerchant = () => {
           }
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={updateMerchantRequestMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmEdit');
             updateMerchantRequestMutation.mutate(merchantId);
           }}
         />

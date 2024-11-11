@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import TableFilter from 'components/TableFilter';
 import { QueryParams, TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
-import { TabsListTabNames } from 'utils/enums';
+import { SearchTypes, TabsListTabNames } from 'utils/enums';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { createSearchParams, Link } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
@@ -35,17 +35,23 @@ const MandateRequests = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchMandate,
+      }));
+      refetch();
     },
   });
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
     status: activeTab,
+    requestType: '',
     pageNo: paginationData.pageNumber,
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
     searchFilter: formik.values.searchMandate,
+    searchType: SearchTypes.SearchMandates,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });
@@ -54,6 +60,7 @@ const MandateRequests = () => {
     setQueryParams((prev) => ({
       ...prev,
       status: activeTab,
+      requestType: formik.values.statusFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
       searchFilter: formik.values.searchMandate,
@@ -65,7 +72,7 @@ const MandateRequests = () => {
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
       ...prev,
-      status: formik.values.statusFilter,
+      requestType: formik.values.statusFilter,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
@@ -214,7 +221,7 @@ const MandateRequests = () => {
                 <div className="">
                   <TableFilter
                     name={'searchMandate'}
-                    placeholder={'Search Mandate'}
+                    placeholder={'Search Mandate Code'}
                     label={'Search Mandate'}
                     value={searchTerm}
                     setSearch={setSearchTerm}

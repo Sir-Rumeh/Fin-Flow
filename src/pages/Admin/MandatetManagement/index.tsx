@@ -6,7 +6,6 @@ import appRoutes from 'utils/constants/routes';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
-import { transactionHistory } from 'utils/constants';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
 import { ModalWrapper } from 'hoc/ModalWrapper';
@@ -32,7 +31,7 @@ import {
 } from 'config/actions/dashboard-actions';
 import { capitalize } from 'utils/helpers';
 import { updateMandateSchema } from 'utils/formValidators';
-import { TransactionsTabsListTabNames } from 'utils/enums';
+import { SearchTypes, TransactionsTabsListTabNames } from 'utils/enums';
 
 const MandatetManagement = () => {
   const printPdfRef = useRef(null);
@@ -100,13 +99,16 @@ const MandatetManagement = () => {
   const formik = useFormik({
     initialValues: {
       searchMandate: '',
-      searchTransactionHistory: '',
       fromDateFilter: '',
       toDateFilter: '',
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchMandate,
+      }));
+      refetch();
     },
   });
 
@@ -128,6 +130,7 @@ const MandatetManagement = () => {
     sortBy: 'asc',
     sortOrder: 'desc',
     searchFilter: formik.values.searchMandate,
+    searchType: SearchTypes.SearchMandates,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });
@@ -512,7 +515,9 @@ const MandatetManagement = () => {
           info={'You are about to disable this mandate, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={disableMandateMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmDisable');
             disableMandateMutation.mutate(selectedMandate.id);
           }}
         />
@@ -540,7 +545,9 @@ const MandatetManagement = () => {
           info={'You are about to enable this mandate, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={enableMandateMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmEnable');
             enableMandateMutation.mutate(selectedMandate.id);
           }}
         />
@@ -567,7 +574,9 @@ const MandatetManagement = () => {
           info={'You are about to delete this mandate, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={deleteMandateMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmDelete');
             deleteMandateMutation.mutate(selectedMandate.id);
           }}
         />
@@ -654,7 +663,9 @@ const MandatetManagement = () => {
           }
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={updateMandateMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmEdit');
             updateMandateMutation.mutate(selectedMandate.id);
           }}
         />

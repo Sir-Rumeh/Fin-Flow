@@ -78,7 +78,7 @@ const RolePermission = () => {
       headerClassName: 'ag-thead',
       renderCell: (params: GridRenderCellParams) => {
         return (
-          <div className="w-full flex-wrap overflow-hidden whitespace-normal text-wrap break-words">
+          <div className="w-full flex-wrap whitespace-normal text-wrap break-words">
             {params.row.permissions?.map((permission: Permission, index: number) => {
               return (
                 <span className={`mr-2`} key={permission.module}>

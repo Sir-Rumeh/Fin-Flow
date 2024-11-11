@@ -245,7 +245,7 @@ const UpdateRequestDetails = () => {
             <p className="my-3 text-lg font-semibold">Biller Details</p>
             <div className="flex items-center gap-2">
               <p>Biller Code :</p>
-              <p>12344</p>
+              <p>{data?.responseData?.billerCode}</p>
             </div>
           </div>
           <div className="h-[2px] w-full bg-grayPrimary"></div>

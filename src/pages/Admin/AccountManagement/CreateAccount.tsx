@@ -167,6 +167,7 @@ function CreateAccount() {
           info={'You are about to add this account, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={addAccountRequestMutation.isPending}
           proceedAction={() => {
             closeModal('confirmCreate');
             addAccountRequestMutation.mutate(accountRequest);

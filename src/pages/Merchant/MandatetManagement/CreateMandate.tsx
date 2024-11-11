@@ -15,7 +15,12 @@ import dayjs from 'dayjs';
 import { useMutation } from '@tanstack/react-query';
 import { addBulkMandateRequest, addMandateRequest } from 'config/actions/dashboard-actions';
 import { MandateRequest } from 'utils/interfaces';
-import { convertExcelArrayToObjects, isFileSizeValid, notifyError } from 'utils/helpers';
+import {
+  convertExcelArrayToObjects,
+  isFileSizeValid,
+  matchesInterface,
+  notifyError,
+} from 'utils/helpers';
 import FormDatePicker from 'components/FormElements/FormDatePicker';
 import CustomFileUpload from 'components/FormElements/CustomFileUpload';
 import FormSelect from 'components/FormElements/FormSelect';
@@ -89,13 +94,53 @@ const CreateMandate = () => {
     setUploadedFiles(acceptedFiles);
   }, [acceptedFiles]);
 
+  const referenceObject: MandateRequest = {
+    mandateId: '',
+    merchantId: '',
+    accountId: '',
+    mandateCode: '',
+    productId: '',
+    amount: 0,
+    startDate: '',
+    endDate: '',
+    dayToApply: '',
+    mandateType: '',
+    frequency: '',
+    service: '',
+    accountName: '',
+    accountNumber: '',
+    bankCode: '',
+    supportingDocument: '',
+    narration: '',
+    payerName: '',
+    payeeName: '',
+    payerEmailAddress: '',
+    payerPhoneNumber: '',
+    payerAddress: '',
+    payeeEmailAddress: '',
+    payeePhoneNumber: '',
+    payeeAddress: '',
+    biller: '',
+    billerID: '',
+    billerAccountNumber: '',
+    billerCode: '',
+    bankName: '',
+  };
+
   useEffect(() => {
-    const newData = convertExcelArrayToObjects(
+    const newDataArray = convertExcelArrayToObjects(
       jsonData,
       ['mandateId', 'mandateCode', 'supportingDocument'],
       ['mandateId', 'mandateCode', 'supportingDocument'],
     );
-    setFormattedBulkData(newData as MandateRequest[]);
+    const dataMatch = newDataArray.some((obj) => matchesInterface(obj, referenceObject));
+    if (!dataMatch) {
+      notifyError('Incorrect data format');
+      clearFiles();
+      return;
+    } else {
+      setFormattedBulkData(newDataArray as MandateRequest[]);
+    }
   }, [jsonData]);
 
   const files = acceptedFiles.map((file, index) => (
@@ -154,6 +199,7 @@ const CreateMandate = () => {
       payeeAddress: '',
       biller: '',
       billerId: '',
+      billerCode: '',
       billerAccountNumber: '',
       billerAccountName: '',
       billerBankCode: '',
@@ -191,7 +237,9 @@ const CreateMandate = () => {
         payeeAddress: values.payeePhoneNumber,
         biller: values.biller,
         billerID: values.billerId,
+        billerCode: values.billerCode,
         billerAccountNumber: values.billerAccountNumber,
+        bankName: values.billerBankName,
       };
       setMandateRequest(payload);
       openModal('addMandate');

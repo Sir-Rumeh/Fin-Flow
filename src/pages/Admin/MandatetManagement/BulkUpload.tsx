@@ -10,7 +10,12 @@ import { useCallback, useEffect, useState } from 'react';
 import { FileWithPath, useDropzone } from 'react-dropzone';
 import { useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
-import { convertExcelArrayToObjects, isFileSizeValid, notifyError } from 'utils/helpers';
+import {
+  convertExcelArrayToObjects,
+  isFileSizeValid,
+  matchesInterface,
+  notifyError,
+} from 'utils/helpers';
 import { MandateRequest } from 'utils/interfaces';
 import * as XLSX from 'https://unpkg.com/xlsx/xlsx.mjs';
 
@@ -60,13 +65,53 @@ const BulkUpload = () => {
     setUploadedFiles(acceptedFiles);
   }, [acceptedFiles]);
 
+  const referenceObject: MandateRequest = {
+    mandateId: '',
+    merchantId: '',
+    accountId: '',
+    mandateCode: '',
+    productId: '',
+    amount: 0,
+    startDate: '',
+    endDate: '',
+    dayToApply: '',
+    mandateType: '',
+    frequency: '',
+    service: '',
+    accountName: '',
+    accountNumber: '',
+    bankCode: '',
+    supportingDocument: '',
+    narration: '',
+    payerName: '',
+    payeeName: '',
+    payerEmailAddress: '',
+    payerPhoneNumber: '',
+    payerAddress: '',
+    payeeEmailAddress: '',
+    payeePhoneNumber: '',
+    payeeAddress: '',
+    biller: '',
+    billerID: '',
+    billerAccountNumber: '',
+    billerCode: '',
+    bankName: '',
+  };
+
   useEffect(() => {
-    const newData = convertExcelArrayToObjects(
+    const newDataArray = convertExcelArrayToObjects(
       jsonData,
       ['mandateId', 'mandateCode', 'supportingDocument'],
       ['mandateId', 'mandateCode', 'supportingDocument'],
     );
-    setFormattedBulkData(newData as MandateRequest[]);
+    const dataMatch = newDataArray.some((obj) => matchesInterface(obj, referenceObject));
+    if (!dataMatch) {
+      notifyError('Incorrect data format');
+      clearFiles();
+      return;
+    } else {
+      setFormattedBulkData(newDataArray as MandateRequest[]);
+    }
   }, [jsonData]);
 
   const [modals, setModals] = useState({
@@ -183,9 +228,10 @@ const BulkUpload = () => {
           info={'You are about to add a new mandate, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={addBulkMandateMutation.isPending}
           proceedAction={() => {
-            addBulkMandateMutation.mutate(formattedBulkData);
             closeModal('confirmCreate');
+            addBulkMandateMutation.mutate(formattedBulkData);
           }}
         />
       )}

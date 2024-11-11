@@ -212,6 +212,7 @@ function EditUser() {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
+            closeModal('confirmEdit');
             updateStaffUserRequestMutation.mutate(staffUserId);
           }}
         />

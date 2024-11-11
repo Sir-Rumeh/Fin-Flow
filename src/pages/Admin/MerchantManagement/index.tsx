@@ -22,6 +22,7 @@ import {
   enableMerchant,
   getMerchants,
 } from 'config/actions/merchant-actions';
+import { SearchTypes } from 'utils/enums';
 
 const MerchantManagement = () => {
   const printPdfRef = useRef(null);
@@ -60,7 +61,11 @@ const MerchantManagement = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchMerchantName,
+      }));
+      refetch();
     },
   });
 
@@ -71,6 +76,7 @@ const MerchantManagement = () => {
     sortBy: 'asc',
     sortOrder: 'desc',
     searchFilter: formik.values.searchMerchantName,
+    searchType: SearchTypes.SearchMerchants,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });
@@ -359,7 +365,9 @@ const MerchantManagement = () => {
           info={'You are about to disable this merchant, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={disableMerchantMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmDisable');
             disableMerchantMutation.mutate(selectedMerchantId);
           }}
         />
@@ -386,7 +394,9 @@ const MerchantManagement = () => {
           info={'You are about to enable this merchant, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={enableMerchantMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmEnable');
             enableMerchantMutation.mutate(selectedMerchantId);
           }}
         />
@@ -413,7 +423,9 @@ const MerchantManagement = () => {
           info={'You are about to delete this merchant, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={deleteMerchantMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmDelete');
             deleteMerchantMutation.mutate(selectedMerchantId);
           }}
         />

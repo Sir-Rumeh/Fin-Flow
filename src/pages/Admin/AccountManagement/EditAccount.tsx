@@ -195,7 +195,9 @@ function EditAccount() {
           }
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={updateAccountMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmEdit');
             updateAccountMutation.mutate({ requestId: accountId, payload: accountRequest });
           }}
         />
