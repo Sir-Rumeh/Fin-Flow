@@ -354,32 +354,3 @@ const CreationRequestDetails = () => {
 };
 
 export default CreationRequestDetails;
-
-// {
-//   data?.responseData?.oldData && (
-//     <div className="mb-10 flex flex-col items-center justify-between gap-10 lg:flex-row">
-//       <div className="w-full rounded-[5px] border-[3px] border-grayPrimary px-6 py-4 lg:w-1/2">
-//         <div className="flex items-center justify-between">
-//           <p className="my-3 text-lg font-semibold">Old Details</p>
-//         </div>
-//         <div className="h-[2px] w-full bg-grayPrimary"></div>
-//         <div className="mt-4 flex flex-col justify-between gap-5 py-4 md:flex-row md:gap-0">
-//           <div className="flex w-[300px] flex-col gap-8">
-//             <DetailsCard title="Old Amount" content={data?.responseData?.oldData?.amount} />
-//           </div>
-//         </div>
-//       </div>
-//       <div className="w-full rounded-[5px] border-[3px] border-grayPrimary px-6 py-4 lg:w-1/2">
-//         <div className="flex items-center justify-between">
-//           <p className="my-3 text-lg font-semibold">New Details</p>
-//         </div>
-//         <div className="h-[2px] w-full bg-grayPrimary"></div>
-//         <div className="mt-4 flex flex-col justify-between gap-5 py-4 md:flex-row md:gap-0">
-//           <div className="flex w-[300px] flex-col gap-8">
-//             <DetailsCard title="New Amount" content={data?.responseData?.amount} />
-//           </div>
-//         </div>
-//       </div>
-//     </div>
-//   );
-// }
