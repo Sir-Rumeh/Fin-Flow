@@ -391,6 +391,7 @@ const StaffUserManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
+            closeModal('confirmDisable');
             disableStaffUserMutation.mutate(selectedUserId);
           }}
         />
@@ -419,6 +420,7 @@ const StaffUserManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
+            closeModal('confirmEnable');
             enableStaffUserMutation.mutate(selectedUserId);
           }}
         />
@@ -446,6 +448,7 @@ const StaffUserManagement = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
+            closeModal('confirmDelete');
             deleteStaffUserMutation.mutate(selectedUserId);
           }}
         />

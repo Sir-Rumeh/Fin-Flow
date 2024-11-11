@@ -703,6 +703,7 @@ const Reports = () => {
           info={'You are about to disable this mandate, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={disableMandateMutation.isPending}
           proceedAction={() => {
             disableMandateMutation.mutate(selectedMandate.id);
           }}
@@ -731,6 +732,7 @@ const Reports = () => {
           info={'You are about to enable this mandate, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={enableMandateMutation.isPending}
           proceedAction={() => {
             enableMandateMutation.mutate(selectedMandate.id);
           }}
@@ -758,6 +760,7 @@ const Reports = () => {
           info={'You are about to delete this mandate, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={deleteMandateMutation.isPending}
           proceedAction={() => {
             deleteMandateMutation.mutate(selectedMandate.id);
           }}
@@ -845,6 +848,7 @@ const Reports = () => {
           }
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={updateMandateMutation.isPending}
           proceedAction={() => {
             updateMandateMutation.mutate(selectedMandate.id);
           }}

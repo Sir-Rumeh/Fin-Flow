@@ -58,7 +58,6 @@ function AddUser() {
     onSubmit: (values) => {
       const payload = {
         staffId: values.staffId,
-        userName: `${values.firstName} ${values.lastName}`,
         firstName: values.firstName,
         lastName: values.lastName,
         email: values.email,
@@ -187,6 +186,7 @@ function AddUser() {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
+            closeModal('confirmCreate');
             addStaffUserRequestMutation.mutate(staffUserRequest);
           }}
         />

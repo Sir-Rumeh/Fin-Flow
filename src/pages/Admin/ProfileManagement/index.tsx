@@ -363,9 +363,10 @@ const ProfileManagement = () => {
           info={'You are about to disable this profile, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={disableProfileMutation.isPending}
           proceedAction={() => {
-            disableProfileMutation.mutate(selectedProfileId);
             closeModal('confirmDisable');
+            disableProfileMutation.mutate(selectedProfileId);
           }}
         />
       )}
@@ -390,9 +391,10 @@ const ProfileManagement = () => {
           info={'You are about to enable this profile, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={enableProfileMutation.isPending}
           proceedAction={() => {
-            enableProfileMutation.mutate(selectedProfileId);
             closeModal('confirmEnable');
+            enableProfileMutation.mutate(selectedProfileId);
           }}
         />
       )}
@@ -417,9 +419,10 @@ const ProfileManagement = () => {
           info={'You are about to delete this profile, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={deleteProfileMutation.isPending}
           proceedAction={() => {
-            deleteProfileMutation.mutate(selectedProfileId);
             closeModal('confirmDelete');
+            deleteProfileMutation.mutate(selectedProfileId);
           }}
         />
       )}

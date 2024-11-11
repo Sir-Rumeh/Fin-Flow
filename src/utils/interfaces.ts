@@ -114,6 +114,7 @@ export interface DataTableState {
 export interface MandateRequest {
   mandateId: string;
   mandateCode?: string | undefined;
+  mandateType: string | undefined;
   merchantId: string;
   accountId: string;
   productId: string;
@@ -138,7 +139,9 @@ export interface MandateRequest {
   payeeAddress: string;
   biller: string;
   billerID: string;
+  billerCode: string;
   billerAccountNumber: string;
+  bankName: string;
 }
 
 export interface QueryParams {
@@ -160,13 +163,13 @@ export interface QueryParams {
 
 export interface StaffUserRequest {
   staffId?: string | undefined;
-  userName: string | undefined;
   firstName: string | undefined;
   lastName: string | undefined;
   email: string | undefined;
   phoneNumber: string | undefined;
   branch: string | undefined;
   role: string | undefined;
+  address: string | undefined;
 }
 
 export interface ProfileRequest {

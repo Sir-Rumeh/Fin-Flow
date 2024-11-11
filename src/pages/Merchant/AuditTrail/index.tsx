@@ -15,6 +15,7 @@ import { QueryParams } from 'utils/interfaces';
 import { getAuditTrails } from 'config/actions/audit-trail-actions';
 import dayjs from 'dayjs';
 import * as Yup from 'yup';
+import { SearchTypes } from 'utils/enums';
 
 interface AuditTrailEntry {
   id: string;
@@ -139,8 +140,10 @@ const AuditTrail = () => {
         endDate: formattedEndDate,
         pageNo: paginationData.pageNumber,
         pageSize: paginationData.pageSize,
+        searchFilter: values.actor,
       }));
       setShowFilteredAudit(true);
+      refetch();
     },
   });
 
@@ -149,12 +152,14 @@ const AuditTrail = () => {
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
+    searchFilter: formik.values.actor,
+    searchType: SearchTypes.SearchAudits,
     startDate: formik.values.startDate,
     endDate: formik.values.endDate,
   });
 
-  const { data } = useQuery({
-    queryKey: ['mandates', queryParams],
+  const { data, refetch } = useQuery({
+    queryKey: ['audits', queryParams],
     queryFn: ({ queryKey }) => getAuditTrails(queryKey[1] as QueryParams),
   });
 

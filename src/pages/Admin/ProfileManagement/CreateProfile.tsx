@@ -216,6 +216,7 @@ function CreateProfile() {
           info={'You are about to add this profile, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={addProfileRequestMutation.isPending}
           proceedAction={() => {
             closeModal('confirmCreate');
             addProfileRequestMutation.mutate(profileRequest);

@@ -15,6 +15,8 @@ import { Permission, QueryParams, RolePermissionRequest } from 'utils/interfaces
 import { addRolePermissionRequest, getRoles } from 'config/actions/role-permission-actions';
 import { formatApiDataForDropdown } from 'utils/helpers';
 import { adminAccessRights, merchantAccessRights } from 'routes/appRoutes';
+import { Designation } from 'utils/enums';
+import TableLogo from 'assets/images/table_logo.png';
 
 const AddRolePermission = () => {
   const navigate = useNavigate();
@@ -130,9 +132,10 @@ const AddRolePermission = () => {
                 />
               </div>
             </div>
-            <div className="mt-10 grid grid-cols-2 gap-20 rounded-lg border p-2 md:grid-cols-4 md:p-3 2xl:p-4">
-              {selectedRole?.designation === 'StaffUser'
-                ? adminAccessRights.map((right) => (
+            <div className="mt-10 grid grid-cols-2 gap-20 rounded-lg border p-2 md:grid-cols-4 md:p-4 2xl:p-5">
+              {!selectedRole ? (
+                <>
+                  {adminAccessRights.map((right) => (
                     <ToggleSwitch
                       key={right.id}
                       id={right.id}
@@ -143,34 +146,47 @@ const AddRolePermission = () => {
                       )}
                       onChange={handleToggleChange(right.moduleValue)}
                     />
-                  ))
-                : selectedRole?.designation === 'Merchant'
-                  ? merchantAccessRights.map((right) => (
-                      <ToggleSwitch
-                        key={right.id}
-                        id={right.id}
-                        toggleLabel={right.module}
-                        checked={formik.values.permissions.some(
-                          (mod: Permission) =>
-                            mod.module.toLocaleLowerCase() ===
-                            right.moduleValue.toLocaleLowerCase(),
-                        )}
-                        onChange={handleToggleChange(right.moduleValue)}
-                      />
-                    ))
-                  : adminAccessRights.map((right) => (
-                      <ToggleSwitch
-                        key={right.id}
-                        id={right.id}
-                        toggleLabel={right.module}
-                        checked={formik.values.permissions.some(
-                          (mod: Permission) =>
-                            mod.module.toLocaleLowerCase() ===
-                            right.moduleValue.toLocaleLowerCase(),
-                        )}
-                        onChange={handleToggleChange(right.moduleValue)}
-                      />
-                    ))}
+                  ))}
+                </>
+              ) : selectedRole?.designation === Designation.StaffUser ? (
+                adminAccessRights.map((right) => (
+                  <ToggleSwitch
+                    key={right.id}
+                    id={right.id}
+                    toggleLabel={right.module}
+                    checked={formik.values.permissions.some(
+                      (mod: Permission) =>
+                        mod.module.toLocaleLowerCase() === right.moduleValue.toLocaleLowerCase(),
+                    )}
+                    onChange={handleToggleChange(right.moduleValue)}
+                  />
+                ))
+              ) : selectedRole?.designation === Designation.Merchant ? (
+                merchantAccessRights.map((right) => (
+                  <ToggleSwitch
+                    key={right.id}
+                    id={right.id}
+                    toggleLabel={right.module}
+                    checked={formik.values.permissions.some(
+                      (mod: Permission) =>
+                        mod.module.toLocaleLowerCase() === right.moduleValue.toLocaleLowerCase(),
+                    )}
+                    onChange={handleToggleChange(right.moduleValue)}
+                  />
+                ))
+              ) : selectedRole && !selectedRole?.designation ? (
+                <>
+                  <div className="slide-down col-span-4 mt-4 flex h-[30vh] w-full flex-col items-center justify-center p-4 pb-8">
+                    <div>
+                      <RedAlertIcon />
+                    </div>
+                    <h3 className="mt-8 text-center text-2xl font-bold md:w-[70%]">
+                      Oops! This role group is not designated to any user type, hence no permission
+                      exists to be assigned
+                    </h3>
+                  </div>
+                </>
+              ) : null}
             </div>
             <div className="">
               {formik?.touched.permissions && formik?.errors.permissions && (
@@ -221,6 +237,7 @@ const AddRolePermission = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
+            closeModal('confirmAddRolePermission');
             addRolePermissionRequestMutation.mutate(addPermissionRequest);
           }}
         />

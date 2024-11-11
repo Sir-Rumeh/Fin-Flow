@@ -297,3 +297,7 @@ export const convertExcelArrayToObjects = (
     return rowObject;
   });
 };
+
+export function matchesInterface<T extends object>(obj: any, reference: T): obj is T {
+  return Object.keys(reference).every((key) => key in obj);
+}

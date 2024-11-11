@@ -1,4 +1,4 @@
-import { TabsListTabNames } from 'utils/enums';
+import { Designation, TabsListTabNames } from 'utils/enums';
 import {
   MerchantDataRow,
   DashboardMerchantDataRow,
@@ -1481,12 +1481,12 @@ export const frequencyOptions = [
 export const designationOptions = [
   {
     id: 1,
-    value: 'StaffUser',
+    value: Designation.StaffUser,
     label: 'Staff User',
   },
   {
     id: 2,
-    value: 'Merchant',
+    value: Designation.Merchant,
     label: 'Merchant',
   },
 ];

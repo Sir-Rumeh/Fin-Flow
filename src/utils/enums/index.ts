@@ -69,3 +69,8 @@ export enum SearchTypes {
   SearchProfiles = 'SearchProfiles',
   SearchStaffUser = 'SearchStaffUser',
 }
+
+export enum Designation {
+  StaffUser = 'StaffUser',
+  Merchant = 'Merchant',
+}

@@ -188,7 +188,9 @@ const CreateMerchant = () => {
           info={'You are about to onboard this merchant, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={addMerchantRequestMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmOnboardMerchant');
             addMerchantRequestMutation.mutate(merchantRequest);
           }}
         />

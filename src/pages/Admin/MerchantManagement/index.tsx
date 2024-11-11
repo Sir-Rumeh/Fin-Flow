@@ -365,7 +365,9 @@ const MerchantManagement = () => {
           info={'You are about to disable this merchant, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={disableMerchantMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmDisable');
             disableMerchantMutation.mutate(selectedMerchantId);
           }}
         />
@@ -392,7 +394,9 @@ const MerchantManagement = () => {
           info={'You are about to enable this merchant, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={enableMerchantMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmEnable');
             enableMerchantMutation.mutate(selectedMerchantId);
           }}
         />
@@ -419,7 +423,9 @@ const MerchantManagement = () => {
           info={'You are about to delete this merchant, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={deleteMerchantMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmDelete');
             deleteMerchantMutation.mutate(selectedMerchantId);
           }}
         />

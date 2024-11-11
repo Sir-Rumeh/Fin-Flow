@@ -238,7 +238,9 @@ const AccountDetails = () => {
           info={'You are about to disable this account, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={disableAccountMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmDisable');
             disableAccountMutation.mutate(accountId);
           }}
         />
@@ -265,7 +267,9 @@ const AccountDetails = () => {
           info={'You are about to enable this account, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={enableAccountMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmEnable');
             enableAccountMutation.mutate(accountId);
           }}
         />
@@ -292,7 +296,9 @@ const AccountDetails = () => {
           info={'You are about to delete this account, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={deleteAccountMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmDelete');
             deleteAccountMutation.mutate(accountId);
           }}
         />
