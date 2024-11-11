@@ -52,7 +52,7 @@ export const generateHeader = () => {
     .replace(':', '')
     .substring(0, UTCTimestamps.length - 7);
   const shaOneEncrypt = CryptoJS.SHA512(
-    dateInToken + AppConfig.CLIENT_ID + AppConfig.XTOKEN_PASSWORD,
+    dateInToken + AppConfig.CLIENT_ID + AppConfig.CLIENT_PASSWORD,
   );
   const apiHeader = {
     'x-token': shaOneEncrypt.toString(CryptoJS.enc.Hex),
