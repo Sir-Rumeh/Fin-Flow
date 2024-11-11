@@ -124,11 +124,6 @@ export function removeFalsyValuesFromObj(obj: Record<string, any>): Record<strin
 export const appendParams = (params: URLSearchParams, queryParams: QueryParams | undefined) => {
   if (!queryParams) return;
   const formattedQueryParams: QueryParams = removeFalsyValuesFromObj(queryParams);
-
-  if (formattedQueryParams.username) params.append('UserName', formattedQueryParams.username);
-  if (formattedQueryParams.email) params.append('Email', formattedQueryParams.email);
-  if (formattedQueryParams.mandateCode)
-    params.append('MandateCode', formattedQueryParams.mandateCode);
   if (formattedQueryParams.status) params.append('Status', formattedQueryParams.status);
   if (formattedQueryParams.pageNo !== undefined)
     params.append('PageNo', formattedQueryParams.pageNo.toString());
@@ -140,16 +135,29 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
     if (formattedQueryParams.searchType === SearchTypes.SearchRoles) {
       params.append('Name', formattedQueryParams.searchFilter);
     }
-    params.append('searchFilter', formattedQueryParams.searchFilter);
-    params.append('UserName', formattedQueryParams.searchFilter);
-    params.append('AccountNumber', formattedQueryParams.searchFilter);
-    params.append('Cif', formattedQueryParams.searchFilter);
-    params.append('MandateCode', formattedQueryParams.searchFilter);
+    if (formattedQueryParams.searchType === SearchTypes.SearchAccounts) {
+      params.append('AccountNumber', formattedQueryParams.searchFilter);
+    }
+    if (formattedQueryParams.searchType === SearchTypes.SearchAudits) {
+      params.append('Actor', formattedQueryParams.searchFilter);
+    }
+    if (formattedQueryParams.searchType === SearchTypes.SearchMandates) {
+      params.append('MandateCode', formattedQueryParams.searchFilter);
+    }
+    if (formattedQueryParams.searchType === SearchTypes.SearchMerchants) {
+      params.append('Cif', formattedQueryParams.searchFilter);
+    }
+    if (
+      formattedQueryParams.searchType === SearchTypes.SearchProfiles ||
+      SearchTypes.SearchStaffUser
+    ) {
+      params.append('Email', formattedQueryParams.searchFilter);
+    }
   }
   if (formattedQueryParams.startDate) params.append('StartDate', formattedQueryParams.startDate);
   if (formattedQueryParams.endDate) params.append('EndDate', formattedQueryParams.endDate);
-  if (formattedQueryParams.actor) params.append('Actor', formattedQueryParams.actor);
-  if (formattedQueryParams.roleName) params.append('Name', formattedQueryParams.roleName);
+  if (formattedQueryParams.requestType)
+    params.append('RequestType', formattedQueryParams.requestType);
 };
 
 export const formatApiDataForDropdown = (dataArray: any[], dataKey: string, dataValue: string) => {
@@ -164,6 +172,7 @@ export const formatApiDataForDropdown = (dataArray: any[], dataKey: string, data
 
   return formattedArrayOptions;
 };
+
 export const displayUpdateRequestData = (
   oldData: Object,
   newData: Object,
@@ -288,3 +297,7 @@ export const convertExcelArrayToObjects = (
     return rowObject;
   });
 };
+
+export function matchesInterface<T extends object>(obj: any, reference: T): obj is T {
+  return Object.keys(reference).every((key) => key in obj);
+}

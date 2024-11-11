@@ -487,7 +487,9 @@ const AccountMandates = () => {
           info={'You are about to disable this mandate, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={disableMandateMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmDisable');
             disableMandateMutation.mutate(selectedMandate.id);
           }}
         />
@@ -515,7 +517,9 @@ const AccountMandates = () => {
           info={'You are about to enable this mandate, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={enableMandateMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmEnable');
             enableMandateMutation.mutate(selectedMandate.id);
           }}
         />
@@ -542,7 +546,9 @@ const AccountMandates = () => {
           info={'You are about to delete this mandate, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={deleteMandateMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmDelete');
             deleteMandateMutation.mutate(selectedMandate.id);
           }}
         />
@@ -629,7 +635,9 @@ const AccountMandates = () => {
           }
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={updateMandateMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmEdit');
             updateMandateMutation.mutate(selectedMandate.id);
           }}
         />

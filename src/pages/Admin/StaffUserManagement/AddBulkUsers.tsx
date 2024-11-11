@@ -9,7 +9,12 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
 import UploadIcon from 'assets/icons/UploadIcon';
 import { FileWithPath, useDropzone } from 'react-dropzone';
-import { convertExcelArrayToObjects, isFileSizeValid, notifyError } from 'utils/helpers';
+import {
+  convertExcelArrayToObjects,
+  isFileSizeValid,
+  matchesInterface,
+  notifyError,
+} from 'utils/helpers';
 import * as XLSX from 'https://unpkg.com/xlsx/xlsx.mjs';
 import { CloseIcon } from 'assets/icons';
 import { useMutation } from '@tanstack/react-query';
@@ -50,13 +55,6 @@ function AddUser() {
           }
           const reader = new FileReader();
           reader.onload = (e) => {
-            // const data = new Uint8Array(e.target?.result as ArrayBuffer);
-            // const workbook = XLSX.read(data, { type: 'array' });
-            // const sheetName = workbook.SheetNames[0];
-            // const sheet = workbook.Sheets[sheetName];
-            // const sheetJson = XLSX.utils.sheet_to_json(sheet, { header: 1 });
-            // setJsonData(sheetJson);
-
             const data = new Uint8Array(e.target?.result as ArrayBuffer);
             const workbook = XLSX.read(data, { type: 'array' });
             const worksheet = workbook.Sheets[workbook.SheetNames[0]];
@@ -90,11 +88,27 @@ function AddUser() {
     setUploadedFiles(acceptedFiles);
   }, [acceptedFiles]);
 
-  useEffect(() => {
-    const newData = convertExcelArrayToObjects(jsonData, ['userName'], ['firstName, lastName']);
-    console.log('new json dsta', newData);
+  const referenceObject: StaffUserRequest = {
+    email: '',
+    role: '',
+    firstName: '',
+    lastName: '',
+    staffId: '',
+    address: '',
+    phoneNumber: '',
+    branch: '',
+  };
 
-    setFormattedBulkData(newData as StaffUserRequest[]);
+  useEffect(() => {
+    const newDataArray = convertExcelArrayToObjects(jsonData);
+    const dataMatch = newDataArray.some((obj) => matchesInterface(obj, referenceObject));
+    if (!dataMatch) {
+      notifyError('Incorrect data format');
+      clearFiles();
+      return;
+    } else {
+      setFormattedBulkData(newDataArray as StaffUserRequest[]);
+    }
   }, [jsonData]);
 
   const addBulkStaffUserMutation = useMutation({
@@ -213,6 +227,7 @@ function AddUser() {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
+            closeModal('confirmCreate');
             addBulkStaffUserMutation.mutate(formattedBulkData);
           }}
         />

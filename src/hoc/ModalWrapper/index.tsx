@@ -14,6 +14,7 @@ interface PopupProps {
   proceedAction?: () => void;
   proceedBackgroundColor?: string;
   hoverBackgroundColor?: string;
+  loading?: boolean;
 }
 
 export const ModalWrapper = ({
@@ -28,6 +29,7 @@ export const ModalWrapper = ({
   proceedAction,
   proceedBackgroundColor,
   hoverBackgroundColor,
+  loading,
 }: PopupProps) => {
   return (
     <>
@@ -51,6 +53,7 @@ export const ModalWrapper = ({
                   onClick={() => setIsOpen(false)}
                   title="No, Cancel"
                   fontWeight={900}
+                  disabled={loading}
                 />
                 <ButtonComponent
                   color="white"
@@ -62,6 +65,7 @@ export const ModalWrapper = ({
                   onClick={proceedAction}
                   title="Yes, Proceed"
                   fontWeight={900}
+                  disabled={loading}
                 />
               </div>
             )}

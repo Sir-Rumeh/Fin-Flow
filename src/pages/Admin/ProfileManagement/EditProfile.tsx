@@ -248,6 +248,7 @@ function EditProfile() {
           }
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={updateProfileMutation.isPending}
           proceedAction={() => {
             closeModal('confirmEdit');
             updateProfileMutation.mutate({ requestId: profileId, payload: profileRequest });

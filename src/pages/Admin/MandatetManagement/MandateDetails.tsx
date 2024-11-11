@@ -377,7 +377,7 @@ const MandateDetails = () => {
                     <div className="flex items-center justify-end gap-2">
                       <p className="text-sm text-darkgray">Biller Code:</p>
                       <p className="mb-[1px] font-semibold text-lightPurple">
-                        {data?.responseData?.billerId}
+                        {data?.responseData?.billerCode}
                       </p>
                     </div>
                   </>
@@ -433,7 +433,9 @@ const MandateDetails = () => {
           info={'You are about to disable this mandate, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={disableMandateMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmDisable');
             disableMandateMutation.mutate(data?.responseData?.id);
           }}
         />
@@ -460,7 +462,9 @@ const MandateDetails = () => {
           info={'You are about to enable this mandate, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={enableMandateMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmEnable');
             enableMandateMutation.mutate(data?.responseData?.id);
           }}
         />
@@ -487,7 +491,9 @@ const MandateDetails = () => {
           info={'You are about to delete this mandate, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={deleteMandateMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmDelete');
             deleteMandateMutation.mutate(data?.responseData?.id);
           }}
         />
@@ -577,7 +583,9 @@ const MandateDetails = () => {
           }
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={updateMandateMutation.isPending}
           proceedAction={() => {
+            closeModal('confirmEdit');
             updateMandateMutation.mutate(data?.responseData?.id);
           }}
         />

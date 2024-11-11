@@ -38,7 +38,7 @@ const RoleDetails = () => {
             <ItemDetailsContainer title="Role Details">
               <DetailsCard title="Role Name" content={data?.responseData?.name} />
               <DetailsCard title="Role Description" content={data?.responseData?.description} />
-              <DetailsCard title="Designator" content={data?.responseData?.designation} />
+              <DetailsCard title="Designation" content={data?.responseData?.designation} />
               <DetailsCard
                 title="Date Created"
                 content={

@@ -22,6 +22,7 @@ import {
   enableProfile,
   getProfiles,
 } from 'config/actions/profile-actions';
+import { SearchTypes } from 'utils/enums';
 
 const ProfileManagement = () => {
   const queryClient = useQueryClient();
@@ -60,7 +61,11 @@ const ProfileManagement = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchProfile,
+      }));
+      refetch();
     },
   });
 
@@ -72,6 +77,7 @@ const ProfileManagement = () => {
     sortBy: 'asc',
     sortOrder: 'desc',
     searchFilter: formik.values.searchProfile,
+    searchType: SearchTypes.SearchProfiles,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });
@@ -313,7 +319,7 @@ const ProfileManagement = () => {
                 <div className="">
                   <TableFilter
                     name={'searchProfile'}
-                    placeholder={'Search Profile'}
+                    placeholder={'Search Profile Email'}
                     label={'Search Profile'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
@@ -357,9 +363,10 @@ const ProfileManagement = () => {
           info={'You are about to disable this profile, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={disableProfileMutation.isPending}
           proceedAction={() => {
-            disableProfileMutation.mutate(selectedProfileId);
             closeModal('confirmDisable');
+            disableProfileMutation.mutate(selectedProfileId);
           }}
         />
       )}
@@ -384,9 +391,10 @@ const ProfileManagement = () => {
           info={'You are about to enable this profile, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={enableProfileMutation.isPending}
           proceedAction={() => {
-            enableProfileMutation.mutate(selectedProfileId);
             closeModal('confirmEnable');
+            enableProfileMutation.mutate(selectedProfileId);
           }}
         />
       )}
@@ -411,9 +419,10 @@ const ProfileManagement = () => {
           info={'You are about to delete this profile, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={deleteProfileMutation.isPending}
           proceedAction={() => {
-            deleteProfileMutation.mutate(selectedProfileId);
             closeModal('confirmDelete');
+            deleteProfileMutation.mutate(selectedProfileId);
           }}
         />
       )}

@@ -62,4 +62,15 @@ export enum RequestStatus {
 
 export enum SearchTypes {
   SearchRoles = 'SearchRoles',
+  SearchAccounts = 'SearchAccounts',
+  SearchAudits = 'SearchAudits',
+  SearchMandates = 'SearchMandates',
+  SearchMerchants = 'SearchMerchants',
+  SearchProfiles = 'SearchProfiles',
+  SearchStaffUser = 'SearchStaffUser',
+}
+
+export enum Designation {
+  StaffUser = 'StaffUser',
+  Merchant = 'Merchant',
 }

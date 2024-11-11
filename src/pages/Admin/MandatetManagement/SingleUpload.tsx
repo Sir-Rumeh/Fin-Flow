@@ -6,16 +6,16 @@ import CustomInput from 'components/FormElements/CustomInput';
 import FormDatePicker from 'components/FormElements/FormDatePicker';
 import { useFormik } from 'formik';
 import { ModalWrapper } from 'hoc/ModalWrapper';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
 import CustomFileUpload from 'components/FormElements/CustomFileUpload';
 import { createMandateSchema } from 'utils/formValidators';
 import FormSelect from 'components/FormElements/FormSelect';
-import { MandateRequest } from 'utils/interfaces';
-import { useMutation } from '@tanstack/react-query';
+import { MandateRequest, QueryParams } from 'utils/interfaces';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { addMandateRequest } from 'config/actions/dashboard-actions';
-import { notifyError } from 'utils/helpers';
+import { formatApiDataForDropdown, notifyError } from 'utils/helpers';
 import dayjs from 'dayjs';
 import {
   dailyFrequencyOptions,
@@ -24,6 +24,8 @@ import {
   serviceOptions,
   weeklyFrequencyOptions,
 } from 'utils/constants';
+import { getAccounts, getAccountsByMerchantId } from 'config/actions/account-actions';
+import { getMerchants } from 'config/actions/merchant-actions';
 
 const SingleUpload = () => {
   const navigate = useNavigate();
@@ -79,6 +81,7 @@ const SingleUpload = () => {
       payeeAddress: '',
       biller: '',
       billerId: '',
+      billerCode: '',
       billerAccountNumber: '',
       billerAccountName: '',
       billerBankCode: '',
@@ -116,7 +119,9 @@ const SingleUpload = () => {
         payeeAddress: values.payeePhoneNumber,
         biller: values.biller,
         billerID: values.billerId,
+        billerCode: values.billerCode,
         billerAccountNumber: values.billerAccountNumber,
+        bankName: values.billerBankName,
       };
       setMandateRequest(payload);
       openModal('confirmCreate');
@@ -135,6 +140,28 @@ const SingleUpload = () => {
   };
 
   const dayToApplyOptions = getDayToApplyOptions();
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
+
+  const { data: merchantData } = useQuery({
+    queryKey: ['merchants', queryParams],
+    queryFn: ({ queryKey }) => getMerchants(queryKey[1] as QueryParams),
+  });
+
+  const { data: accountData, refetch: refetchAccountsOptions } = useQuery({
+    queryKey: ['accounts', queryParams],
+    queryFn: ({ queryKey }) =>
+      formik.values.merchantId
+        ? getAccountsByMerchantId(formik.values.merchantId)
+        : getAccounts(queryKey[1] as QueryParams),
+  });
+
+  useEffect(() => {
+    refetchAccountsOptions();
+  }, [formik.values.merchantId]);
 
   return (
     <>
@@ -186,13 +213,14 @@ const SingleUpload = () => {
               }
             >
               <div className="w-full md:col-span-1">
-                <CustomInput
+                <FormSelect
                   labelFor="merchantId"
                   label="Merchant ID"
-                  inputType="text"
-                  placeholder="Enter here"
-                  maxW="w-full"
                   formik={formik}
+                  useTouched
+                  options={formatApiDataForDropdown(merchantData?.responseData?.items, 'id', 'id')}
+                  scrollableOptions
+                  scrollableHeight="max-h-[15rem]"
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -258,37 +286,50 @@ const SingleUpload = () => {
                   label="Service"
                   formik={formik}
                   options={serviceOptions}
+                  scrollableOptions
+                  scrollableHeight="max-h-[15rem]"
                   useTouched
                 />
               </div>
               <div className="w-full md:col-span-1">
-                <CustomInput
+                <FormSelect
                   labelFor="accountName"
                   label="Account Name"
-                  inputType="text"
-                  placeholder="Enter here"
-                  maxW="w-full"
                   formik={formik}
+                  useTouched
+                  options={formatApiDataForDropdown(
+                    accountData?.responseData?.items,
+                    'accountName',
+                    'accountName',
+                  )}
+                  scrollableOptions
+                  scrollableHeight="max-h-[15rem]"
                 />
               </div>
               <div className="w-full md:col-span-1">
-                <CustomInput
+                <FormSelect
                   labelFor="accountNumber"
                   label="Account Number"
-                  inputType="text"
-                  placeholder="Enter here"
-                  maxW="w-full"
                   formik={formik}
+                  useTouched
+                  options={formatApiDataForDropdown(
+                    accountData?.responseData?.items,
+                    'accountNumber',
+                    'accountNumber',
+                  )}
+                  scrollableOptions
+                  scrollableHeight="max-h-[15rem]"
                 />
               </div>
               <div className="w-full md:col-span-1">
-                <CustomInput
+                <FormSelect
                   labelFor="accountId"
-                  label="Account ID"
-                  inputType="text"
-                  placeholder="Enter here"
-                  maxW="w-full"
+                  label="Account Id"
                   formik={formik}
+                  useTouched
+                  options={formatApiDataForDropdown(accountData?.responseData?.items, 'id', 'id')}
+                  scrollableOptions
+                  scrollableHeight="max-h-[15rem]"
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -432,6 +473,16 @@ const SingleUpload = () => {
               </div>
               <div className="w-full md:col-span-1">
                 <CustomInput
+                  labelFor="billerCode"
+                  label="Biller Code"
+                  inputType="text"
+                  placeholder="Enter here"
+                  maxW="w-full"
+                  formik={formik}
+                />
+              </div>
+              <div className="w-full md:col-span-1">
+                <CustomInput
                   labelFor="billerAccountNumber"
                   label="Biller Account Number"
                   inputType="text"
@@ -512,9 +563,10 @@ const SingleUpload = () => {
           info={'You are about to add a new mandate, would you want to proceed with this?'}
           icon={<RedAlertIcon />}
           type={'confirmation'}
+          loading={addMandateRequestMutation.isPending}
           proceedAction={() => {
-            addMandateRequestMutation.mutate(mandateRequest);
             closeModal('confirmCreate');
+            addMandateRequestMutation.mutate(mandateRequest);
           }}
         />
       )}

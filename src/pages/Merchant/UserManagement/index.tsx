@@ -9,6 +9,7 @@ import { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { QueryParams } from 'utils/interfaces';
 import { getProfiles } from 'config/actions/profile-actions';
+import { SearchTypes } from 'utils/enums';
 
 const UserManagement = () => {
   const printPdfRef = useRef(null);
@@ -20,24 +21,28 @@ const UserManagement = () => {
 
   const formik = useFormik({
     initialValues: {
-      searchMandate: '',
+      searchUser: '',
       fromDateFilter: '',
       toDateFilter: '',
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchUser,
+      }));
+      refetch();
     },
   });
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
-    mandateCode: '',
     status: formik.values.statusFilter,
     pageNo: paginationData.pageNumber,
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
-    searchFilter: formik.values.searchMandate,
+    searchFilter: formik.values.searchUser,
+    searchType: SearchTypes.SearchProfiles,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });
@@ -127,7 +132,7 @@ const UserManagement = () => {
     },
   ];
 
-  const { data } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['profiles', queryParams],
     queryFn: ({ queryKey }) => getProfiles(queryKey[1] as QueryParams),
   });
@@ -140,9 +145,9 @@ const UserManagement = () => {
           <div className="flex items-center justify-between">
             <div className="">
               <TableFilter
-                name={'searchMerchantName'}
-                placeholder={'Search '}
-                label={'Search Merchant'}
+                name={'searchUser'}
+                placeholder={'Search User'}
+                label={'Search User Email'}
                 value={searchTerm}
                 setSearch={setSearchTerm}
                 handleOptionsFilter={() => {}}

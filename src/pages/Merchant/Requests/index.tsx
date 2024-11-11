@@ -8,7 +8,7 @@ import {
   UpdateRequestIcon,
 } from 'assets/icons';
 import appRoutes from 'utils/constants/routes';
-import { RequestType, TabsListTabNames } from 'utils/enums';
+import { RequestType, SearchTypes, TabsListTabNames } from 'utils/enums';
 import CustomTable from 'components/CustomTable';
 import TableFilter from 'components/TableFilter';
 import { useFormik } from 'formik';
@@ -40,18 +40,22 @@ const MandateRequests = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchMandate,
+      }));
+      refetch();
     },
   });
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
-    mandateCode: '',
     status: activeTab,
     pageNo: paginationData.pageNumber,
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
     searchFilter: formik.values.searchMandate,
+    searchType: SearchTypes.SearchMandates,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });

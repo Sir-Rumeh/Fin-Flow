@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import TableFilter from 'components/TableFilter';
 import { QueryParams, TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
-import { TabsListTabNames } from 'utils/enums';
+import { SearchTypes, TabsListTabNames } from 'utils/enums';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { createSearchParams, Link } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
@@ -35,7 +35,11 @@ const AccountRequests = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchAccountNumber,
+      }));
+      refetch();
     },
   });
 
@@ -46,6 +50,7 @@ const AccountRequests = () => {
     sortBy: 'asc',
     sortOrder: 'desc',
     searchFilter: formik.values.searchAccountNumber,
+    searchType: SearchTypes.SearchAccounts,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });
