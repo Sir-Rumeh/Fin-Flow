@@ -1,0 +1,71 @@
+name: Deploy to EKS
+on:
+  push:
+    branches: [ "development" ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: eu-west-1
+
+    - name: Checkout code
+      uses: actions/checkout@v3
+      with:
+        ref: 'development'
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: Build, tag, and push docker image to Amazon ECR
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: fcmb-stg-tco0001-ddi-portal
+        IMAGE_TAG: ddi-portal
+      run: |
+        docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+      
+    # Hello from AWS: WhoAmII
+    - name: Sts GetCallerIdentity
+      run: |
+        aws sts get-caller-identity
+     
+  
+  security-approval:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: dev
+      url: 'https://app.snyk.io/org/kobyq/project/79e44a72-a07a-4556-a11d-afb0a1ab9a5e'
+    steps:
+      - name: 'Approved'
+        shell: bash
+        run: echo "Deployment was approved by security"
+    
+    # - name: Install Helm
+    #   run: |
+    #     curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+    #     chmod +x get_helm.sh
+    #     ./get_helm.sh
+
+    # - name: Check and Install External Secrets Operator
+    #   run: |
+    #    if ! helm list -n external-secrets | grep -q external-secrets; then
+    #      helm repo add external-secrets https://external-secrets.github.io/external-secrets/
+    #      helm repo update
+    #       helm install external-secrets external-secrets/external-secrets --namespace external-secrets --create-namespace
+    #     else
+    #       echo "External Secrets Operator is already installed."
+    #     fi
+
+    # - name: Deploy the Metrics Server
+    #   run: |
+    #     kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
