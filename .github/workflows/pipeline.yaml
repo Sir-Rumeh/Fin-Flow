@@ -27,7 +27,7 @@ jobs:
     - name: Build, tag, and push docker image to Amazon ECR
       env:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-        REPOSITORY: fcmb-stg-tco0001-ddi-portal
+        REPOSITORY: fcmb-dev-tco0001-ddi-portal
         IMAGE_TAG: ddi-portal
       run: |
         docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
