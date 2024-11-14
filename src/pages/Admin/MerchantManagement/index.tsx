@@ -55,7 +55,7 @@ const MerchantManagement = () => {
 
   const formik = useFormik({
     initialValues: {
-      searchMerchantName: '',
+      searchMerchantCif: '',
       fromDateFilter: '',
       toDateFilter: '',
       statusFilter: '',
@@ -63,7 +63,7 @@ const MerchantManagement = () => {
     onSubmit: (values) => {
       setQueryParams((prev) => ({
         ...prev,
-        searchFilter: formik.values.searchMerchantName,
+        searchFilter: formik.values.searchMerchantCif,
       }));
       refetch();
     },
@@ -75,7 +75,7 @@ const MerchantManagement = () => {
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
-    searchFilter: formik.values.searchMerchantName,
+    searchFilter: formik.values.searchMerchantCif,
     searchType: SearchTypes.SearchMerchants,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
@@ -87,7 +87,7 @@ const MerchantManagement = () => {
       status: formik.values.statusFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchMerchantName,
+      searchFilter: formik.values.searchMerchantCif,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
@@ -320,8 +320,8 @@ const MerchantManagement = () => {
               <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-start">
                 <div className="">
                   <TableFilter
-                    name={'searchMerchantName'}
-                    placeholder={'Search Merchant'}
+                    name={'searchMerchantCif'}
+                    placeholder={'Search Merchant CIF'}
                     label={'Search Merchant'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
