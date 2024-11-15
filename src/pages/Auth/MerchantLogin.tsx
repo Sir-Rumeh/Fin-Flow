@@ -26,10 +26,12 @@ const MerchantLogin = () => {
     },
     validationSchema: userLoginValidationSchema,
     onSubmit: (values) => {
+      console.log(values);
       const encryptedData = encrypt(values);
       const payload = {
         data: encryptedData,
       };
+      console.log(payload);
       loginMerchantMutation.mutate(payload);
     },
   });

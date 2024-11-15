@@ -23,12 +23,16 @@ const asciiToHex = (str: any) => {
 };
 
 export const encrypt = (value: any, token = defaultKey) => {
+  if (value == null) {
+    // Check if value is undefined or null
+    throw new Error('Cannot encrypt: value is undefined or null');
+  }
+
   if (typeof value === 'object') {
     value = JSON.stringify(value); // eslint-disable-line no-param-reassign
   }
 
   const key = CryptoJS.enc.Hex.parse(asciiToHex(clientIdToKey(token)));
-
   const initialVector = CryptoJS.enc.Hex.parse(asciiToHex(iv));
 
   const encrypted = CryptoJS.AES.encrypt(value, key, {
