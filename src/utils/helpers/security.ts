@@ -51,7 +51,7 @@ export const encrypt = (value: any) => {
     mode: CryptoJS.mode.CBC,
     padding: CryptoJS.pad.Pkcs7,
     keySize: 192,
-  }).toString();
+  }).ciphertext.toString();
   console.log('aes encrypt', encryptedData);
   return encryptedData;
 };
