@@ -22,15 +22,15 @@ const asciiToHex = (str: any) => {
   return arr1.join('');
 };
 
-export const encrypt = (value: any, token = defaultKey) => {
-  if (value == null) {
+export const encrypt = (value: any) => {
+  if (value === null) {
     // Check if value is undefined or null
     throw new Error('Cannot encrypt: value is undefined or null');
   }
 
   if (typeof value === 'object') {
     value = JSON.stringify(value); // eslint-disable-line no-param-reassign
-    const key = CryptoJS.enc.Hex.parse(asciiToHex(clientIdToKey(token)));
+    const key = CryptoJS.enc.Hex.parse(asciiToHex(clientIdToKey(defaultKey)));
     const initialVector = CryptoJS.enc.Hex.parse(asciiToHex(iv));
 
     const encrypted = CryptoJS.AES.encrypt(value, key, {
@@ -39,14 +39,14 @@ export const encrypt = (value: any, token = defaultKey) => {
       mode: CryptoJS.mode.CBC,
       keySize: 192,
     });
-
-    const transitMessage = encrypted.toString();
+    console.log('aes encrypt', encrypted);
+    const transitMessage = encrypted?.toString();
     return transitMessage;
   }
 };
 
-export const decrypt = (value: any, token = defaultKey) => {
-  const key = CryptoJS.enc.Hex.parse(asciiToHex(clientIdToKey(token)));
+export const decrypt = (value: any) => {
+  const key = CryptoJS.enc.Hex.parse(asciiToHex(clientIdToKey(defaultKey)));
 
   const initialVector = CryptoJS.enc.Hex.parse(asciiToHex(iv));
 
