@@ -22,6 +22,9 @@ const asciiToHex = (str) => {
   return arr1.join('');
 };
 
+console.log('defaultKey1', defaultKey);
+console.log('iv1', iv);
+
 export const encrypt = (value) => {
   console.log('gotten here now');
   console.log('value', value);
