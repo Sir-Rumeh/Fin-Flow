@@ -30,20 +30,19 @@ export const encrypt = (value: any, token = defaultKey) => {
 
   if (typeof value === 'object') {
     value = JSON.stringify(value); // eslint-disable-line no-param-reassign
+    const key = CryptoJS.enc.Hex.parse(asciiToHex(clientIdToKey(token)));
+    const initialVector = CryptoJS.enc.Hex.parse(asciiToHex(iv));
+
+    const encrypted = CryptoJS.AES.encrypt(value, key, {
+      iv: initialVector,
+      padding: CryptoJS.pad.Pkcs7,
+      mode: CryptoJS.mode.CBC,
+      keySize: 192,
+    });
+
+    const transitMessage = encrypted.toString();
+    return transitMessage;
   }
-
-  const key = CryptoJS.enc.Hex.parse(asciiToHex(clientIdToKey(token)));
-  const initialVector = CryptoJS.enc.Hex.parse(asciiToHex(iv));
-
-  const encrypted = CryptoJS.AES.encrypt(value, key, {
-    iv: initialVector,
-    padding: CryptoJS.pad.Pkcs7,
-    mode: CryptoJS.mode.CBC,
-    keySize: 192,
-  });
-
-  const transitMessage = encrypted.toString();
-  return transitMessage;
 };
 
 export const decrypt = (value: any, token = defaultKey) => {
