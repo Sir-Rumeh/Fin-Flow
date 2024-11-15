@@ -27,10 +27,9 @@ export const encrypt = (value) => {
   console.log('value', value);
 
   console.log('gotten here');
-
-  console.log('asciiToHex', asciiToHex(clientIdToKey(defaultKey)));
   console.log('defaultKey', defaultKey);
   console.log('iv', iv);
+  console.log('asciiToHex', asciiToHex(clientIdToKey(defaultKey)));
   console.log('CryptoJS:', CryptoJS);
   console.log('CryptoJS.AES:', CryptoJS.AES);
   console.log('gotten here again');
