@@ -25,41 +25,46 @@ const asciiToHex = (str: any) => {
 };
 
 export const encrypt = (value: any) => {
+  console.log('gotten here now');
   console.log('value', value);
+
+  console.log('gotten here');
+
   console.log('asciiToHex', asciiToHex(clientIdToKey(defaultKey)));
   console.log('defaultKey', defaultKey);
   console.log('iv', iv);
   console.log('CryptoJS:', CryptoJS);
   console.log('CryptoJS.AES:', CryptoJS.AES);
+  console.log('gotten here again');
+  return '';
+  // try {
+  //   if (value === null || undefined) {
+  //     // Check if value is undefined or null
+  //     throw new Error('Cannot encrypt: value is undefined or null');
+  //   }
+  //   if (typeof value === 'object') {
+  //     value = JSON.stringify(value);
+  //   }
 
-  try {
-    if (value === null || undefined) {
-      // Check if value is undefined or null
-      throw new Error('Cannot encrypt: value is undefined or null');
-    }
-    if (typeof value === 'object') {
-      value = JSON.stringify(value);
-    }
-
-    const key = CryptoJS.enc.Hex.parse(asciiToHex(clientIdToKey(defaultKey)));
-    const initialVector = CryptoJS.enc.Hex.parse(asciiToHex(iv));
-    console.log('key', key);
-    console.log('initialVector', initialVector);
-    const encrypted = CryptoJS.AES.encrypt(value, key, {
-      iv: initialVector,
-      padding: CryptoJS.pad.Pkcs7,
-      mode: CryptoJS.mode.CBC,
-      keySize: 192,
-    });
-    console.log('encrypt', encrypted);
-    if (encrypted) {
-      const transitMessage = encrypted?.toString();
-      console.log('aes encrypt', transitMessage);
-      return transitMessage;
-    }
-  } catch (error) {
-    console.log('error', error);
-  }
+  //   const key = CryptoJS.enc.Hex.parse(asciiToHex(clientIdToKey(defaultKey)));
+  //   const initialVector = CryptoJS.enc.Hex.parse(asciiToHex(iv));
+  //   console.log('key', key);
+  //   console.log('initialVector', initialVector);
+  //   const encrypted = CryptoJS.AES.encrypt(value, key, {
+  //     iv: initialVector,
+  //     padding: CryptoJS.pad.Pkcs7,
+  //     mode: CryptoJS.mode.CBC,
+  //     keySize: 192,
+  //   });
+  //   console.log('encrypt', encrypted);
+  //   if (encrypted) {
+  //     const transitMessage = encrypted?.toString();
+  //     console.log('aes encrypt', transitMessage);
+  //     return transitMessage;
+  //   }
+  // } catch (error) {
+  //   console.log('error', error);
+  // }
 };
 
 export const decrypt = (value: any) => {
