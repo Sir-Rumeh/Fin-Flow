@@ -23,12 +23,13 @@ import { useFormik } from 'formik';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import CustomTable from 'components/CustomTable';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { QueryParams, TabsProps } from 'utils/interfaces';
+import { MerchantAuthData, QueryParams, TabsProps } from 'utils/interfaces';
 import {
   deleteMandate,
   disableMandate,
   enableMandate,
   getMandates,
+  getMandatesByMerchantId,
   updateMandate,
 } from 'config/actions/dashboard-actions';
 import { updateMandateSchema } from 'utils/formValidators';
@@ -36,6 +37,7 @@ import CustomInput from 'components/FormElements/CustomInput';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import CustomTabs from 'hoc/CustomTabs';
 import { SearchTypes } from 'utils/enums';
+import { getUserFromLocalStorage } from 'utils/helpers';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -350,10 +352,13 @@ const MandatetManagement = () => {
     },
   ];
 
+  const user = getUserFromLocalStorage() as MerchantAuthData;
+  const loggedInMerchantId = user?.profileData?.merchantID;
+
   const { data, refetch } = useQuery({
     queryKey: ['mandates', queryParams],
-    queryFn: ({ queryKey }) => getMandates(queryKey[1] as QueryParams),
-    retry: 2,
+    queryFn: ({ queryKey }) =>
+      getMandatesByMerchantId(loggedInMerchantId, queryKey[1] as QueryParams),
   });
 
   const updateMandateMutation = useMutation({

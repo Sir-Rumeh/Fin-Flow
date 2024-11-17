@@ -1,10 +1,14 @@
 import DashboardCard from 'components/common/DashboardCards/DashboardCard';
 import { useQuery } from '@tanstack/react-query';
-import { getMandateRequests, getMandateStatistics } from 'config/actions/dashboard-actions';
+import {
+  getMandateRequests,
+  getMandateRequestsByMerchantId,
+  getMandateRequestsStatistics,
+} from 'config/actions/dashboard-actions';
 import { Skeleton } from '@mui/material';
 import appRoutes from 'utils/constants/routes';
 import { useEffect, useState } from 'react';
-import { QueryParams } from 'utils/interfaces';
+import { MerchantAuthData, QueryParams } from 'utils/interfaces';
 import { Link } from 'react-router-dom';
 import { MandateRequestStatus, RequestType } from 'utils/enums';
 import {
@@ -15,6 +19,7 @@ import {
 } from 'assets/icons';
 import { GridColDef } from '@mui/x-data-grid';
 import CustomTable from 'components/CustomTable';
+import { getUserFromLocalStorage } from 'utils/helpers';
 
 const Dashboard = () => {
   const [paginationData, setPaginationData] = useState({
@@ -32,13 +37,13 @@ const Dashboard = () => {
   });
 
   const MandateTableColumn: GridColDef[] = [
-    // {
-    //   field: 'accountId',
-    //   headerName: 'Account ID',
-    //   width: screen.width < 1000 ? 200 : undefined,
-    //   flex: screen.width >= 1000 ? 1 : undefined,
-    //   headerClassName: 'ag-thead',
-    // },
+    {
+      field: 'accountId',
+      headerName: 'Account ID',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
     {
       field: 'merchantId',
       headerName: 'Merchant ID',
@@ -130,14 +135,18 @@ const Dashboard = () => {
     },
   ];
 
-  const { data } = useQuery({
+  const user = getUserFromLocalStorage() as MerchantAuthData;
+  const loggedInMerchantId = user?.profileData?.merchantID;
+
+  const { data, refetch } = useQuery({
     queryKey: ['mandateRequests', queryParams],
-    queryFn: ({ queryKey }) => getMandateRequests(queryKey[1] as QueryParams),
+    queryFn: ({ queryKey }) =>
+      getMandateRequestsByMerchantId(loggedInMerchantId, queryKey[1] as QueryParams),
   });
 
   const { isLoading: isStatisticsDataLoading, data: statistics } = useQuery({
     queryKey: ['mandateStatistics'],
-    queryFn: () => getMandateStatistics(),
+    queryFn: () => getMandateRequestsStatistics(),
   });
 
   useEffect(() => {
@@ -181,17 +190,17 @@ const Dashboard = () => {
               <>
                 <DashboardCard
                   title="Approved Mandate"
-                  numberOfRequest={statistics?.responseData?.totalApproved}
+                  numberOfRequest={statistics?.responseData?.totalApproved ?? 0}
                   route={`/${appRoutes.merchantDashboard.requests.index}?status=${MandateRequestStatus.Approved}`}
                 />
                 <DashboardCard
                   title="Pending Requests"
-                  numberOfRequest={statistics?.responseData?.totalPending}
+                  numberOfRequest={statistics?.responseData?.totalPending ?? 0}
                   route={`/${appRoutes.merchantDashboard.requests.index}?status=${MandateRequestStatus.Pending}`}
                 />
                 <DashboardCard
                   title="Declined Requests"
-                  numberOfRequest={statistics?.responseData?.totalRejected}
+                  numberOfRequest={statistics?.responseData?.totalRejected ?? 0}
                   route={`/${appRoutes.merchantDashboard.requests.index}?status=${MandateRequestStatus.Declined}`}
                 />
               </>

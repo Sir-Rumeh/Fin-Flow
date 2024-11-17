@@ -13,10 +13,15 @@ import CustomTable from 'components/CustomTable';
 import TableFilter from 'components/TableFilter';
 import { useFormik } from 'formik';
 import { useQuery } from '@tanstack/react-query';
-import { getMandateRequests, getMandateStatistics } from 'config/actions/dashboard-actions';
-import { QueryParams, TabsProps } from 'utils/interfaces';
+import {
+  getMandateRequests,
+  getMandateRequestsByMerchantId,
+  getMandateRequestsStatistics,
+} from 'config/actions/dashboard-actions';
+import { MerchantAuthData, QueryParams, TabsProps } from 'utils/interfaces';
 import { useMediaQuery } from '@mui/material';
 import CustomTabs from 'hoc/CustomTabs';
+import { getUserFromLocalStorage } from 'utils/helpers';
 
 const MandateRequests = () => {
   const location = useLocation();
@@ -158,14 +163,18 @@ const MandateRequests = () => {
     },
   ];
 
+  const user = getUserFromLocalStorage() as MerchantAuthData;
+  const loggedInMerchantId = user?.profileData?.merchantID;
+
   const { data, refetch } = useQuery({
     queryKey: ['mandateRequests', queryParams],
-    queryFn: ({ queryKey }) => getMandateRequests(queryKey[1] as QueryParams),
+    queryFn: ({ queryKey }) =>
+      getMandateRequestsByMerchantId(loggedInMerchantId, queryKey[1] as QueryParams),
   });
 
   const { data: statistics } = useQuery({
     queryKey: ['mandateStatistics', queryParams],
-    queryFn: () => getMandateStatistics(),
+    queryFn: () => getMandateRequestsStatistics(),
   });
 
   const tabsList: TabsProps[] = [

@@ -24,7 +24,13 @@ import {
 import FormDatePicker from 'components/FormElements/FormDatePicker';
 import CustomFileUpload from 'components/FormElements/CustomFileUpload';
 import FormSelect from 'components/FormElements/FormSelect';
-import { serviceOptions } from 'utils/constants';
+import {
+  dailyFrequencyOptions,
+  frequencyOptions,
+  monthlyFrequencyOptions,
+  serviceOptions,
+  weeklyFrequencyOptions,
+} from 'utils/constants';
 import * as XLSX from 'https://unpkg.com/xlsx/xlsx.mjs';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 
@@ -246,12 +252,18 @@ const CreateMandate = () => {
     },
   });
 
-  const dayToApplyOptions = [
-    { value: 'daily', label: 'Daily' },
-    { value: 'weekly', label: 'Weekly' },
-    { value: 'monthly', label: 'Monthy' },
-    { value: 'yearly', label: 'Yearly' },
-  ];
+  const getDayToApplyOptions = () => {
+    if (formik.values.frequency === 'Daily') {
+      return dailyFrequencyOptions;
+    } else if (formik.values.frequency === 'Weekly') {
+      return weeklyFrequencyOptions;
+    } else if (formik.values.frequency === 'Monthly') {
+      return monthlyFrequencyOptions;
+    }
+    return dailyFrequencyOptions;
+  };
+
+  const dayToApplyOptions = getDayToApplyOptions();
 
   return (
     <>
@@ -380,17 +392,19 @@ const CreateMandate = () => {
                   </div>
                   <div className="mt-10 grid grid-cols-1 gap-20 lg:grid-cols-3 lg:gap-10">
                     <FormSelect
+                      labelFor="frequency"
+                      label="Frequency"
+                      formik={formik}
+                      options={frequencyOptions}
+                    />
+
+                    <FormSelect
                       labelFor="dayToApply"
                       label="Day to Apply"
                       formik={formik}
                       options={dayToApplyOptions}
                     />
-                    <FormSelect
-                      labelFor="frequency"
-                      label="Frequency"
-                      formik={formik}
-                      options={dayToApplyOptions}
-                    />
+
                     <FormSelect
                       labelFor="service"
                       label="Service"

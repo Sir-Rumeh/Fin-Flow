@@ -155,6 +155,7 @@ const MandatetManagement = () => {
       endDate: formik.values.toDateFilter,
     }));
   }, [paginationData]);
+
   useEffect(() => {
     setTransactionsQueryParams((prev) => ({
       ...prev,
@@ -182,6 +183,13 @@ const MandatetManagement = () => {
   ];
 
   const columns: GridColDef[] = [
+    {
+      field: 'accountId',
+      headerName: 'Account ID',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
     {
       field: 'merchantId',
       headerName: 'Merchant ID',

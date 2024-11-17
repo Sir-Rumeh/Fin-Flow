@@ -32,6 +32,87 @@ export const getMandateRequests = async (queryParams?: QueryParams) => {
   }
 };
 
+export const getMandates = async (queryParams?: QueryParams) => {
+  const params = new URLSearchParams();
+  appendParams(params, queryParams);
+  try {
+    const response = await AxiosClient.get(`/mandates`, { params });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getMandateById = async (requestId: string | undefined) => {
+  try {
+    const response = await AxiosClient.get(`/mandates/${requestId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getMandatesByMerchantId = async (
+  merchantId: string | undefined,
+  queryParams?: QueryParams,
+) => {
+  const params = new URLSearchParams();
+  appendParams(params, queryParams);
+  try {
+    const response = await AxiosClient.get(`/mandates/merchant/${merchantId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getMandateRequestsByMerchantId = async (
+  merchantId: string | undefined,
+  queryParams?: QueryParams,
+) => {
+  const params = new URLSearchParams();
+  appendParams(params, queryParams);
+  try {
+    const response = await AxiosClient.get(`/mandaterequests/merchant/${merchantId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getMandatesByAccountId = async (
+  accountId: string | undefined,
+  queryParams?: QueryParams,
+) => {
+  const params = new URLSearchParams();
+  appendParams(params, queryParams);
+  try {
+    const response = await AxiosClient.get(`/mandates/account/${accountId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getMandateTransactions = async (queryParams?: QueryParams) => {
+  const params = new URLSearchParams();
+  appendParams(params, queryParams);
+  try {
+    const response = await AxiosClient.get(`/transactions`, { params });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const getMandateTransactionById = async (requestId: string | undefined) => {
+  try {
+    const response = await AxiosClient.get(`/transactions/${requestId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
 export const getMandateRequestsStatistics = async () => {
   try {
     const response = await AxiosClient.get(`/mandaterequests/statistics`);
@@ -83,73 +164,6 @@ export const updateMandateRequest = async (
   }
 };
 
-/* MANDATE MANAGEMENT ACTIONS */
-export const getMandates = async (queryParams?: QueryParams) => {
-  const params = new URLSearchParams();
-  appendParams(params, queryParams);
-  try {
-    const response = await AxiosClient.get(`/mandates`, { params });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const getMandateById = async (requestId: string | undefined) => {
-  try {
-    const response = await AxiosClient.get(`/mandates/${requestId}`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const getMandatesByMerchantId = async (
-  merchantId: string | undefined,
-  queryParams?: QueryParams,
-) => {
-  const params = new URLSearchParams();
-  appendParams(params, queryParams);
-  try {
-    const response = await AxiosClient.get(`/mandates/merchant/${merchantId}`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-export const getMandatesByAccountId = async (
-  accountId: string | undefined,
-  queryParams?: QueryParams,
-) => {
-  const params = new URLSearchParams();
-  appendParams(params, queryParams);
-  try {
-    const response = await AxiosClient.get(`/mandates/account/${accountId}`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-export const getMandateTransactions = async (queryParams?: QueryParams) => {
-  const params = new URLSearchParams();
-  appendParams(params, queryParams);
-  try {
-    const response = await AxiosClient.get(`/transactions`, { params });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-export const getMandateTransactionById = async (requestId: string | undefined) => {
-  try {
-    const response = await AxiosClient.get(`/transactions/${requestId}`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
 export const deleteMandate = async (requestId: string | undefined) => {
   try {
     const response = await AxiosClient.delete(`/mandates/${requestId}`);
@@ -183,16 +197,6 @@ export const updateMandate = async (
 ) => {
   try {
     const response = await AxiosClient.put(`/mandates/update/${requestId}`, payload);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
-/* DASHBOARD STATISTICS */
-export const getMandateStatistics = async () => {
-  try {
-    const response = await AxiosClient.get(`/mandaterequests/statistics`);
     return response.data;
   } catch (error) {
     throw error;
