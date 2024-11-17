@@ -345,7 +345,7 @@ const MerchantMandates = () => {
   ];
 
   const { data, refetch } = useQuery({
-    queryKey: ['accounts', queryParams],
+    queryKey: ['mandates', queryParams],
     queryFn: ({ queryKey }) => getMandatesByMerchantId(merchantId, queryKey[1] as QueryParams),
   });
 

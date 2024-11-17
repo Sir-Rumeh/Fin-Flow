@@ -7,9 +7,10 @@ import TableFilter from 'components/TableFilter';
 import { useFormik } from 'formik';
 import { useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { QueryParams } from 'utils/interfaces';
-import { getProfiles } from 'config/actions/profile-actions';
+import { MerchantAuthData, QueryParams } from 'utils/interfaces';
+import { getProfiles, getProfilesByMerchantId } from 'config/actions/profile-actions';
 import { SearchTypes } from 'utils/enums';
+import { capitalize, getUserFromLocalStorage } from 'utils/helpers';
 
 const UserManagement = () => {
   const printPdfRef = useRef(null);
@@ -61,9 +62,11 @@ const UserManagement = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
-      renderCell: (params: GridRenderCellParams) => (
-        <div>{`${params.row.firstName} ${params.row.lastName}`}</div>
-      ),
+      renderCell: (params: GridRenderCellParams) => {
+        return (
+          <span>{`${capitalize(params?.row?.firstName)} ${capitalize(params?.row?.lastName)}`}</span>
+        );
+      },
     },
     {
       field: 'email',
@@ -135,9 +138,13 @@ const UserManagement = () => {
     },
   ];
 
+  const user = getUserFromLocalStorage() as MerchantAuthData;
+  const loggedInMerchantId = user?.profileData?.merchantID;
+
   const { data, refetch } = useQuery({
     queryKey: ['profiles', queryParams],
-    queryFn: ({ queryKey }) => getProfiles(queryKey[1] as QueryParams),
+    queryFn: ({ queryKey }) =>
+      getProfilesByMerchantId(loggedInMerchantId, queryKey[1] as QueryParams),
   });
 
   return (

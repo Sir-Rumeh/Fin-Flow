@@ -1,41 +1,26 @@
 import { useRef, useState } from 'react';
 import { GridColDef, GridRenderCellParams, GridTreeNodeWithRender } from '@mui/x-data-grid';
-import {
-  mandateList,
-  mandateRequestsList,
-  transactionHistory,
-  transactionReports,
-} from 'utils/constants';
-import TableLogo from 'assets/images/table_logo.png';
+import { transactionHistory } from 'utils/constants';
 import CustomTable from 'components/CustomTable';
-import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import ButtonComponent from 'components/FormElements/Button';
-import { Box, createTheme, Modal, Typography, useMediaQuery } from '@mui/material';
-import DetailsCard from 'components/common/DashboardCards/DetailsCard';
-import Tab from 'components/Tabs';
-import { ReportsType, RequestType } from 'utils/enums';
+import { Box, Modal, Typography, useMediaQuery } from '@mui/material';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
 import appRoutes from 'utils/constants/routes';
-import { createSearchParams, Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {
   CloseIcon,
   CreationRequestIcon,
-  DarkArrowDown,
   DeleteRequestIcon,
-  DisableRequestIcon,
   DownloadIcon,
   SuccessModalIcon,
-  UpdateRequestIcon,
 } from 'assets/icons';
-import CustomSelect from 'components/FormElements/CustomSelect';
-import { useTabContext } from '../../../context/TabContext';
+
 import ExportBUtton from 'components/FormElements/ExportButton';
 import TableFilter from 'components/TableFilter';
 import { useFormik } from 'formik';
-import { QueryParams, TabsProps } from 'utils/interfaces';
+import { MerchantAuthData, QueryParams, TabsProps } from 'utils/interfaces';
 import { ModalWrapper } from 'hoc/ModalWrapper';
-import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import CustomInput from 'components/FormElements/CustomInput';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
@@ -48,12 +33,14 @@ import {
   disableMandate,
   enableMandate,
   getMandates,
+  getMandatesByMerchantId,
   getTransactions,
   updateMandate,
 } from 'config/actions/dashboard-actions';
 import * as Yup from 'yup';
 import dayjs from 'dayjs';
 import { updateMandateSchema } from 'utils/formValidators';
+import { getUserFromLocalStorage } from 'utils/helpers';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -221,13 +208,13 @@ const Reports = () => {
   ];
 
   const MandateTableColumn: GridColDef[] = [
-    // {
-    //   field: 'accountId',
-    //   headerName: 'Account ID',
-    //   width: screen.width < 1000 ? 200 : undefined,
-    //   flex: screen.width >= 1000 ? 1 : undefined,
-    //   headerClassName: 'ag-thead',
-    // },
+    {
+      field: 'accountId',
+      headerName: 'Account ID',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
     {
       field: 'merchantId',
       headerName: 'Merchant ID',
@@ -424,9 +411,13 @@ const Reports = () => {
   const isSmallWidth = useMediaQuery('(max-width:370px)');
   const isLargeWidth = useMediaQuery('(min-width:1320px)');
 
+  const user = getUserFromLocalStorage() as MerchantAuthData;
+  const loggedInMerchantId = user?.profileData?.merchantID;
+
   const { data } = useQuery({
     queryKey: ['mandates', queryParams],
-    queryFn: ({ queryKey }) => getMandates(queryKey[1] as QueryParams),
+    queryFn: ({ queryKey }) =>
+      getMandatesByMerchantId(loggedInMerchantId, queryKey[1] as QueryParams),
     enabled: reportType === reportTypes[0].value,
     retry: 2,
   });

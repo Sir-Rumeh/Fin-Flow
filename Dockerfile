@@ -14,7 +14,7 @@ RUN npm install
 COPY . .
 
 # Copy the .env file into the container (optional, if you're not using environment variables differently)
-COPY .env .env
+COPY .env /app/.env
 
 # Build the application (runs TypeScript compiler and then Vite build)
 RUN npm run build

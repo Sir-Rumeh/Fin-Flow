@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
   ArrowRightIcon,
@@ -16,16 +16,19 @@ import { MandateRequestStatus } from 'utils/enums';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import CustomInput from 'components/FormElements/CustomInput';
-import { formatNumberDisplay } from 'utils/helpers';
+import { displayUpdateRequestData, formatNumberDisplay } from 'utils/helpers';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import {
   approveMandateRequest,
   getMandateRequestById,
   rejectMandateRequest,
 } from 'config/actions/dashboard-actions';
+import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
+import { UpdateRequestDisplay } from 'utils/interfaces';
 
 const UpdateRequestDetails = () => {
   const { id } = useParams();
+  const [updateDataList, setUpdateDataList] = useState<UpdateRequestDisplay[]>();
 
   const [modals, setModals] = useState({
     confirmApprove: false,
@@ -60,6 +63,16 @@ const UpdateRequestDetails = () => {
     queryKey: ['mandateRequests', id],
     queryFn: ({ queryKey }) => getMandateRequestById(queryKey[1]),
   });
+
+  useEffect(() => {
+    const updatedDataList = displayUpdateRequestData(
+      data?.responseData?.oldData,
+      data?.responseData,
+    );
+    if (updatedDataList) {
+      setUpdateDataList(updatedDataList);
+    }
+  }, [data]);
 
   const approveMandateRequestMutation = useMutation({
     mutationFn: (requestId: string | undefined) => approveMandateRequest(requestId),
@@ -138,32 +151,45 @@ const UpdateRequestDetails = () => {
         )}
       </div>
       <div className="mt-5 rounded-lg bg-white px-5 py-10">
-        {data?.responseData?.oldData && (
-          <div className="mb-10 flex flex-col items-center justify-between gap-10 lg:flex-row">
-            <div className="w-full rounded-[5px] border-[3px] border-grayPrimary px-6 py-4 lg:w-1/2">
-              <div className="flex items-center justify-between">
-                <p className="my-3 text-lg font-semibold">Old Details</p>
-              </div>
-              <div className="h-[2px] w-full bg-grayPrimary"></div>
-              <div className="mt-4 flex flex-col justify-between gap-5 py-4 md:flex-row md:gap-0">
-                <div className="flex w-[300px] flex-col gap-8">
-                  <DetailsCard title="Old Amount" content={data?.responseData?.oldData?.amount} />
-                </div>
-              </div>
-            </div>
-            <div className="w-full rounded-[5px] border-[3px] border-grayPrimary px-6 py-4 lg:w-1/2">
-              <div className="flex items-center justify-between">
-                <p className="my-3 text-lg font-semibold">New Details</p>
-              </div>
-              <div className="h-[2px] w-full bg-grayPrimary"></div>
-              <div className="mt-4 flex flex-col justify-between gap-5 py-4 md:flex-row md:gap-0">
-                <div className="flex w-[300px] flex-col gap-8">
-                  <DetailsCard title="New Amount" content={data?.responseData?.amount} />
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        <div className="">
+          <ItemDetailsContainer title="Old Information">
+            {updateDataList?.map((updatedData, index) => {
+              return (
+                <DetailsCard
+                  key={index}
+                  title={`Old ${updatedData.name}`}
+                  content={
+                    typeof updatedData.oldValue === 'number' && updatedData.name === 'Amount'
+                      ? formatNumberDisplay(updatedData.oldValue)
+                      : typeof updatedData.oldValue === 'string' && updatedData.name === 'Amount'
+                        ? formatNumberDisplay(parseInt(updatedData.oldValue))
+                        : updatedData.oldValue
+                  }
+                />
+              );
+            })}
+          </ItemDetailsContainer>
+        </div>
+        <div className="mt-10">
+          <ItemDetailsContainer title="New Information">
+            {updateDataList?.map((updatedData, index) => {
+              return (
+                <DetailsCard
+                  key={index}
+                  title={`New ${updatedData.name}`}
+                  content={
+                    typeof updatedData.newValue === 'number' && updatedData.name === 'Amount'
+                      ? formatNumberDisplay(updatedData.newValue)
+                      : typeof updatedData.newValue === 'string' && updatedData.name === 'Amount'
+                        ? formatNumberDisplay(parseInt(updatedData.newValue))
+                        : updatedData.newValue
+                  }
+                />
+              );
+            })}
+          </ItemDetailsContainer>
+        </div>
+
         <div className="mt-10 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
           <div className="flex items-center justify-between">
             <p className="my-3 text-lg font-semibold">Request Details</p>

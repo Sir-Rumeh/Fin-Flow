@@ -264,21 +264,15 @@ export const convertExcelArrayToObjects = (
   if (data.length < 2) return [];
   const headers = data[0].map(convertTCamelCase);
   const rows = data.slice(1);
-  const numericFields = ['amount'];
   return rows.map((row) => {
     const rowObject = headers.reduce(
       (obj, header, index) => {
         const value = row[index];
-        const numberValue = Number(value);
-        if (typeof numberValue === 'number') {
-          obj[header] = numberValue;
+        if (header.toLocaleLowerCase().includes('date')) {
+          const formattedDateIsoDate = new Date(value).toISOString().split('T')[0] + 'T00:00:00';
+          obj[header] = formattedDateIsoDate;
         } else {
-          if (header === 'startDate' || 'endDate') {
-            const formattedDate = dayjs(value).toISOString();
-            obj[header] = formattedDate;
-          } else {
-            obj[header] = String(value || '');
-          }
+          obj[header] = String(value) || '';
         }
         return obj;
       },
