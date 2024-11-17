@@ -39,6 +39,7 @@ const CreateMerchant = () => {
       accountNumber: '',
       rcNumber: '',
       address: '',
+      merchantFee: '',
       merchantCifValidated,
     },
     validationSchema: onboardMerchantSchema,
@@ -49,6 +50,7 @@ const CreateMerchant = () => {
         accountNumber: values.accountNumber,
         rcNumber: values.rcNumber,
         address: values.address,
+        InternalChargeFee: parseFloat(values.merchantFee),
         cif: validatedMerchantCif,
       };
       setMerchantRequest(payload);
@@ -57,12 +59,12 @@ const CreateMerchant = () => {
   });
 
   const validateCifStatus = async () => {
-    const res = await validateMerchantCif(formik.values.merchantCIF);
-    if (res.responseData?.accountNumber && res.responseData?.rcNumber) {
+    const res = await validateMerchantCif(formik.values.accountNumber);
+    if (res.responseData) {
       setMerchantCifValidated(true);
-      setValidatedMerchantCif(formik.values.merchantCIF);
-      formik.setFieldValue('accountNumber', res.responseData?.accountNumber || '');
+      setValidatedMerchantCif(res.responseData?.cif);
       formik.setFieldValue('rcNumber', res.responseData?.rcNumber || '');
+      formik.setFieldValue('merchantCIF', res.responseData?.cif || '');
     }
   };
 
@@ -99,8 +101,8 @@ const CreateMerchant = () => {
               <div className="mt-6 flex flex-col items-end gap-x-8 gap-y-4 md:flex-row md:items-center md:justify-between">
                 <div className="w-full md:w-[80%]">
                   <CustomInput
-                    labelFor="merchantCIF"
-                    label="Enter Merchant CIF"
+                    labelFor="accountNumber"
+                    label="Enter Merchant Account Number"
                     inputType="text"
                     placeholder="Enter here"
                     maxW="w-full"
@@ -138,8 +140,8 @@ const CreateMerchant = () => {
                       formik={formik}
                     />
                     <CustomInput
-                      labelFor="accountNumber"
-                      label="Account Number"
+                      labelFor="merchantCIF"
+                      label="Merchant CIF"
                       inputType="text"
                       placeholder="Enter here"
                       maxW="w-full"
@@ -154,13 +156,23 @@ const CreateMerchant = () => {
                       formik={formik}
                     />
                     <CustomInput
-                      labelFor="address"
-                      label="Address"
+                      labelFor="merchantFee"
+                      label="Merchant Fee"
                       inputType="text"
                       placeholder="Enter here"
                       maxW="w-full"
                       formik={formik}
                     />
+                    <div className="col-span-2">
+                      <CustomInput
+                        labelFor="address"
+                        label="Address"
+                        inputType="text"
+                        placeholder="Enter here"
+                        maxW="w-full"
+                        formik={formik}
+                      />
+                    </div>
                   </div>
                   <div className="mt-6 flex items-center justify-end">
                     <ButtonComponent

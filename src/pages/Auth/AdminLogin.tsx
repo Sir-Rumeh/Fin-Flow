@@ -26,12 +26,10 @@ const AdminLogin = () => {
     },
     validationSchema: userLoginValidationSchema,
     onSubmit: (values) => {
-      console.log('initial values', values);
       const encryptedData = encrypt(values);
       const payload = {
         data: encryptedData,
       };
-      console.log('encrypted values', payload);
       loginStaffMutation.mutate(payload);
     },
   });

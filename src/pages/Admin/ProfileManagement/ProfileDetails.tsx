@@ -94,7 +94,9 @@ const ProfileDetails = () => {
         </div>
         <div className="slide-down mt-3 flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold md:text-2xl">Profile ID : Req123456</h2>
+            <h2 className="text-lg font-semibold md:text-2xl">
+              Profile ID : {data?.responseData?.id}
+            </h2>
           </div>
           <div className="w-auto">
             <CustomPopover
@@ -147,16 +149,16 @@ const ProfileDetails = () => {
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
           <div className="">
             <ItemDetailsContainer title="Profile Details">
-              <DetailsCard title="Account Name" content="Fair Money" />
-              <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
+              <DetailsCard title="Account Name" content={data?.responseData?.accountName} />
+              <DetailsCard title="Merchant ID" content={data?.responseData?.merchantID} />
               <DetailsCard
                 title="Full Name"
                 content={`${data?.responseData?.firstName} ${data?.responseData?.lastName}` || ''}
               />
-              <DetailsCard title="Merchant Name" content={data?.responseData?.userName} />
+              <DetailsCard title="Merchant Name" content={data?.responseData?.merchantName} />
               <DetailsCard title="Account Id" content={data?.responseData?.accountID} />
               <DetailsCard title="Email" content={data?.responseData?.email} />
-              <DetailsCard title="CIF Number" content="12345" />
+              <DetailsCard title="CIF Number" content={data?.responseData?.merchantCIF} />
               <DetailsCard title="Role" content={data?.responseData?.role} />
               <DetailsCard
                 title="Date Requested"
@@ -170,14 +172,20 @@ const ProfileDetails = () => {
           <div className="mt-10">
             <ItemDetailsContainer title="Creator Details">
               <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
-              <DetailsCard title="Date Created" content="12/12/2024 : 03:00pm" />
-              <DetailsCard title="ID" content="9344243" />
-              <DetailsCard title="Address" content="Ozumba Mbadiwe Avenue, Lagos State" />
+              <DetailsCard
+                title="Date Created"
+                content={
+                  data?.responseData?.createdAt &&
+                  new Date(data.responseData.createdAt).toLocaleDateString()
+                }
+              />
+              <DetailsCard title="ID" content={data.responseData.createdBy} />
+              <DetailsCard title="Address" content={data.responseData.address} />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
-              <DetailsCard title="ID" content="9344243" />
+              <DetailsCard title="ID" content={data.responseData.approvedBy} />
               <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
               <DetailsCard
                 title="Date Approved"
