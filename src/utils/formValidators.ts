@@ -32,6 +32,10 @@ export const onboardMerchantSchema = Yup.object().shape({
     if (merchantCIF) return Yup.string().required('Address is required');
     return schema;
   }),
+  merchantFee: Yup.number()
+    .required('Merchant Fee is required')
+    .positive('Merchant Fee must be a positive number')
+    .typeError('Merchant Fee must be a number'),
 });
 
 export const editMerchantSchema = Yup.object().shape({

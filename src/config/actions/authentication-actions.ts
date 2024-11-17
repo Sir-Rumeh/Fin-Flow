@@ -1,4 +1,4 @@
-import AxiosClient from 'config/Axios';
+import AxiosClient from 'config/AuthAxios';
 
 /* AUTHENTICATION ACTIONS */
 export const loginStaff = async (payload: any | undefined) => {

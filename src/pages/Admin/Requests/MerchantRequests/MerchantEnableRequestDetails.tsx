@@ -58,6 +58,7 @@ const MerchantEnableRequestDetails = () => {
     queryKey: ['merchantRequests', merchantId],
     queryFn: ({ queryKey }) => getMerchantRequestById(queryKey[1]),
   });
+
   const { data: detailsStatistics } = useQuery({
     queryKey: ['merchants-details', merchantId],
     queryFn: ({ queryKey }) => getMerchantDetailsStatistics(queryKey[1]),

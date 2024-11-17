@@ -2,11 +2,25 @@ import NotificationIcon from 'assets/icons/NotificationIcon';
 import dayjs from 'dayjs';
 import LocalizedTime from 'dayjs/plugin/localizedFormat';
 import Hamburger from 'assets/icons/Hamburger';
+import { getUserFromLocalStorage, isAdminAuthData, isMerchantAuthData } from 'utils/helpers';
+import { useEffect, useState } from 'react';
 
 const Navbar = (props: { onOpenSidenav: () => void }) => {
+  const [username, setUsername] = useState('');
   dayjs.extend(LocalizedTime);
 
   const { onOpenSidenav } = props;
+  const user = getUserFromLocalStorage();
+
+  useEffect(() => {
+    if (isAdminAuthData(user)) {
+      const { userData } = user;
+      setUsername(`${userData.firstName} ${userData.lastName}`);
+    } else if (isMerchantAuthData(user)) {
+      const { profileData } = user;
+      setUsername(`${profileData.firstName} ${profileData.lastName}`);
+    }
+  }, []);
 
   return (
     <header className="shadow-bottom z-40 bg-white px-2 py-3 xl:px-3">
@@ -19,7 +33,7 @@ const Navbar = (props: { onOpenSidenav: () => void }) => {
         </span>
         <div className="flex items-center justify-between">
           <div className="flex flex-col items-start text-sm font-semibold">
-            <p className="text-lightPurple">First name, Last Name (1209)</p>
+            <p className="text-lightPurple">{`${username}`}</p>
 
             <p className="hidden flex-1 justify-start text-[#78350F] md:flex lg:mr-32">
               {dayjs()

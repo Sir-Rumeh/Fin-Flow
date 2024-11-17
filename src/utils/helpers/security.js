@@ -22,20 +22,7 @@ const asciiToHex = (str) => {
   return arr1.join('');
 };
 
-console.log('defaultKey1', defaultKey);
-console.log('iv1', iv);
-
 export const encrypt = (value) => {
-  console.log('gotten here now');
-  console.log('value', value);
-
-  console.log('gotten here');
-  console.log('defaultKey', defaultKey);
-  console.log('iv', iv);
-  console.log('asciiToHex', asciiToHex(clientIdToKey(defaultKey)));
-  console.log('CryptoJS:', CryptoJS);
-  console.log('CryptoJS.AES:', CryptoJS.AES);
-  console.log('gotten here again');
   try {
     if (value === null || undefined) {
       // Check if value is undefined or null

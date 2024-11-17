@@ -236,12 +236,14 @@ export const getUserFromLocalStorage = (): AdminAuthData | MerchantAuthData | nu
   return storedUser ? JSON.parse(storedUser) : null;
 };
 
-export function isAdminAuthData(user: AdminAuthData | MerchantAuthData): user is AdminAuthData {
+export function isAdminAuthData(
+  user: AdminAuthData | MerchantAuthData | null,
+): user is AdminAuthData {
   return (user as AdminAuthData).userData !== undefined;
 }
 
 export function isMerchantAuthData(
-  user: AdminAuthData | MerchantAuthData,
+  user: AdminAuthData | MerchantAuthData | null,
 ): user is MerchantAuthData {
   return (user as MerchantAuthData).profileData !== undefined;
 }
