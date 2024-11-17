@@ -105,7 +105,7 @@ const BulkUpload = () => {
       ['mandateId', 'mandateCode', 'supportingDocument'],
     );
     const dataMatch = newDataArray.some((obj) => matchesInterface(obj, referenceObject));
-    if (!dataMatch) {
+    if (jsonData.length > 0 && !dataMatch) {
       notifyError('Incorrect data format');
       clearFiles();
       return;
@@ -208,10 +208,16 @@ const BulkUpload = () => {
                   backgroundColor="#5C068C"
                   hoverBackgroundColor="#2F0248"
                   type="button"
-                  title="Add Mandate"
+                  title="Upload Bulk Mandates"
                   customPaddingX="1.5rem"
                   width="10rem"
                   onClick={() => {
+                    if (!(jsonData.length > 0)) {
+                      notifyError(
+                        'Kindly upload excel file with the right data format to continue',
+                      );
+                      return;
+                    }
                     openModal('confirmCreate');
                   }}
                 />

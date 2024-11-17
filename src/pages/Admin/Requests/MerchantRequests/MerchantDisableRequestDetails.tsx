@@ -1,4 +1,4 @@
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { createSearchParams, Link, useNavigate, useSearchParams } from 'react-router-dom';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
@@ -18,6 +18,7 @@ import CustomInput from 'components/FormElements/CustomInput';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import {
   approveMerchantRequest,
+  getMerchantDetailsStatistics,
   getMerchantRequestById,
   rejectMerchantRequest,
 } from 'config/actions/merchant-actions';
@@ -56,6 +57,11 @@ const MerchantDisableRequestDetails = () => {
   const { data } = useQuery({
     queryKey: ['merchantRequests', merchantId],
     queryFn: ({ queryKey }) => getMerchantRequestById(queryKey[1]),
+  });
+
+  const { data: detailsStatistics } = useQuery({
+    queryKey: ['merchants-details', merchantId],
+    queryFn: ({ queryKey }) => getMerchantDetailsStatistics(queryKey[1]),
   });
 
   const approveMerchantRequestMutation = useMutation({
@@ -131,30 +137,36 @@ const MerchantDisableRequestDetails = () => {
             <div className="mt-4 flex flex-col items-center justify-between gap-6 gap-x-4 md:flex-row">
               <DashboardCard
                 title="Total Accounts"
-                numberOfRequest={1200}
+                numberOfRequest={detailsStatistics?.responseData?.totalAccounts}
                 backgroundColor="bg-white"
                 textColor="text-purplePrimary"
                 icon={<SubTitleIconGreen />}
-                route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
-                // navigate to MerchantAccounts which will import table from Account Management
+                route={{
+                  pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantAccounts}`,
+                  search: `?${createSearchParams({ id: merchantId })}`,
+                }}
               />
               <DashboardCard
                 title="Total Profiles"
-                numberOfRequest={1200}
+                numberOfRequest={detailsStatistics?.responseData?.totalProfiles}
                 backgroundColor="bg-white"
                 textColor="text-purplePrimary"
                 icon={<SubTitleIconYellow />}
-                route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
-                // navigate to MerchantProfiles which will import table from Profile Management
+                route={{
+                  pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantProfiles}`,
+                  search: `?${createSearchParams({ id: merchantId })}`,
+                }}
               />
               <DashboardCard
                 title="Total Mandates"
-                numberOfRequest={1200}
+                numberOfRequest={detailsStatistics?.responseData?.totalMandates}
                 backgroundColor="bg-white"
                 textColor="text-purplePrimary"
                 icon={<SubTitleIconYellow />}
-                route={`/${appRoutes.adminDashboard.merchantManagement.index}`}
-                // navigate to MerchantMandates  which will import table from Mandate  Management
+                route={{
+                  pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantMandates}`,
+                  search: `?${createSearchParams({ id: merchantId })}`,
+                }}
               />
             </div>
           </div>
@@ -164,6 +176,7 @@ const MerchantDisableRequestDetails = () => {
               <DetailsCard title="Merchant Name" content={data?.responseData?.name} />
               <DetailsCard title="Merchant Code" content={data?.responseData?.merchantCode} />
               <DetailsCard title="CIF Number" content={data?.responseData?.cif} />
+              <DetailsCard title="Merchant Fee" content={data?.responseData?.internalChargeFee} />
               <DetailsCard
                 title="Date Created"
                 content={
