@@ -134,7 +134,7 @@ const CreateMandate = () => {
       ['mandateId', 'mandateCode', 'supportingDocument'],
     );
     const dataMatch = newDataArray.some((obj) => matchesInterface(obj, referenceObject));
-    if (!dataMatch) {
+    if (jsonData.length > 0 && !dataMatch) {
       notifyError('Incorrect data format');
       clearFiles();
       return;
@@ -684,8 +684,16 @@ const CreateMandate = () => {
                   fontWeight={600}
                 />
                 <ButtonComponent
-                  onClick={() => openModal('addMandate')}
-                  title="Add Mandate"
+                  onClick={() => {
+                    if (!(jsonData.length > 0)) {
+                      notifyError(
+                        'Kindly upload excel file with the right data format to continue',
+                      );
+                      return;
+                    }
+                    openModal('addMandate');
+                  }}
+                  title="Upload Bulk Mandates"
                   backgroundColor="#5C068C"
                   hoverBackgroundColor="#5C067C"
                   color="white"

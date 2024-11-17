@@ -102,7 +102,7 @@ function AddUser() {
   useEffect(() => {
     const newDataArray = convertExcelArrayToObjects(jsonData);
     const dataMatch = newDataArray.some((obj) => matchesInterface(obj, referenceObject));
-    if (!dataMatch) {
+    if (jsonData.length > 0 && !dataMatch) {
       notifyError('Incorrect data format');
       clearFiles();
       return;
@@ -205,10 +205,16 @@ function AddUser() {
                     backgroundColor="#5C068C"
                     hoverBackgroundColor="#2F0248"
                     type="button"
-                    title="Upload"
+                    title="Upload Bulk Users"
                     customPaddingX="1.5rem"
                     width="10rem"
                     onClick={() => {
+                      if (!(jsonData.length > 0)) {
+                        notifyError(
+                          'Kindly upload excel file with the right data format to continue',
+                        );
+                        return;
+                      }
                       openModal('confirmCreate');
                     }}
                   />
