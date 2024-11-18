@@ -190,7 +190,7 @@ export interface MerchantRequest {
   accountNumber: string | undefined;
   rcNumber: string | undefined;
   address: string | undefined;
-  InternalChargeFee: number | undefined;
+  InternalChargeFee?: number | undefined;
   cif?: string | undefined;
 }
 
