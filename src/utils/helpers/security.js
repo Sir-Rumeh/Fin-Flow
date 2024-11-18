@@ -34,15 +34,12 @@ export const encrypt = (value) => {
 
     const key = CryptoJS.enc.Hex.parse(asciiToHex(clientIdToKey(defaultKey)));
     const initialVector = CryptoJS.enc.Hex.parse(asciiToHex(iv));
-    console.log('key', key);
-    console.log('initialVector', initialVector);
     const encrypted = CryptoJS.AES.encrypt(value, key, {
       iv: initialVector,
       padding: CryptoJS.pad.Pkcs7,
       mode: CryptoJS.mode.CBC,
       keySize: 192,
     });
-    console.log('encrypt', encrypted);
     if (encrypted) {
       const transitMessage = encrypted?.toString();
       console.log('aes encrypt', transitMessage);
