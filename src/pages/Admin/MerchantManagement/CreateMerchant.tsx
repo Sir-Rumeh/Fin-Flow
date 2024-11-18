@@ -44,6 +44,8 @@ const CreateMerchant = () => {
     },
     validationSchema: onboardMerchantSchema,
     onSubmit: (values) => {
+      console.log(values.merchantCIF);
+
       const payload = {
         merchantId: '',
         name: values.merchantName,
@@ -63,7 +65,8 @@ const CreateMerchant = () => {
     if (res.responseData) {
       setMerchantCifValidated(true);
       setValidatedMerchantCif(res.responseData?.cif);
-      formik.setFieldValue('rcNumber', res.responseData?.rcNumber || '');
+      formik.setFieldValue('rcNumber', res.responseData?.rcNo || '');
+      formik.setFieldValue('rcNumber', res.responseData?.rcNo || '');
       formik.setFieldValue('merchantCIF', res.responseData?.cif || '');
     }
   };
@@ -109,7 +112,7 @@ const CreateMerchant = () => {
                     formik={formik}
                     useTouched={false}
                     verticalMargin={false}
-                    disabled={merchantCifValidated && validatedMerchantCif.length > 0}
+                    // disabled={merchantCifValidated && validatedMerchantCif.length > 0}
                   />
                 </div>
                 <ButtonComponent
@@ -121,7 +124,7 @@ const CreateMerchant = () => {
                   title="Continue"
                   customPaddingX="2rem"
                   onClick={() => {
-                    if (!formik.values.merchantCIF)
+                    if (!formik.values.accountNumber)
                       return formik.setFieldError('merchantCIF', 'Merchant CIF is required');
                     validateCifStatus();
                   }}
@@ -203,7 +206,8 @@ const CreateMerchant = () => {
           loading={addMerchantRequestMutation.isPending}
           proceedAction={() => {
             closeModal('confirmOnboardMerchant');
-            addMerchantRequestMutation.mutate(merchantRequest);
+            // addMerchantRequestMutation.mutate(merchantRequest);
+            console.log(merchantRequest);
           }}
         />
       )}

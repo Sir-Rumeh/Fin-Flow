@@ -42,7 +42,6 @@ export const encrypt = (value) => {
     });
     if (encrypted) {
       const transitMessage = encrypted?.toString();
-      console.log('aes encrypt', transitMessage);
       return transitMessage;
     }
   } catch (error) {

@@ -12,11 +12,12 @@ import { FileWithPath, useDropzone } from 'react-dropzone';
 import { useFormik } from 'formik';
 import { createMandateSchema } from 'utils/formValidators';
 import dayjs from 'dayjs';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { addBulkMandateRequest, addMandateRequest } from 'config/actions/dashboard-actions';
-import { MandateRequest } from 'utils/interfaces';
+import { MandateRequest, QueryParams } from 'utils/interfaces';
 import {
   convertExcelArrayToObjects,
+  formatApiDataForDropdown,
   isFileSizeValid,
   matchesInterface,
   notifyError,
@@ -33,6 +34,8 @@ import {
 } from 'utils/constants';
 import * as XLSX from 'https://unpkg.com/xlsx/xlsx.mjs';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
+import { getMerchants } from 'config/actions/merchant-actions';
+import { getAccounts, getAccountsByMerchantId } from 'config/actions/account-actions';
 
 const CreateMandate = () => {
   const { tab, setTab } = useTabContext();
@@ -155,28 +158,6 @@ const CreateMandate = () => {
     </li>
   ));
 
-  const addMandateRequestMutation = useMutation({
-    mutationFn: (payload: MandateRequest | undefined) => addMandateRequest(payload),
-    onSuccess: () => {
-      closeModal('addMandate');
-      openModal('confirmAddMandate');
-    },
-    onError: (error) => {
-      closeModal('addMandate');
-    },
-  });
-
-  const addBulkMandateMutation = useMutation({
-    mutationFn: (payload: MandateRequest[] | undefined) => addBulkMandateRequest(payload),
-    onSuccess: () => {
-      closeModal('addBulkMandate');
-      openModal('confirmAddBulkMandate');
-    },
-    onError: (error) => {
-      closeModal('addBulkMandate');
-    },
-  });
-
   const formik = useFormik({
     initialValues: {
       variableType: '',
@@ -265,6 +246,50 @@ const CreateMandate = () => {
 
   const dayToApplyOptions = getDayToApplyOptions();
 
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
+
+  const { data: merchantData } = useQuery({
+    queryKey: ['merchants', queryParams],
+    queryFn: ({ queryKey }) => getMerchants(queryKey[1] as QueryParams),
+  });
+
+  const { data: accountData, refetch: refetchAccountsOptions } = useQuery({
+    queryKey: ['accounts', queryParams],
+    queryFn: ({ queryKey }) =>
+      formik.values.merchantId
+        ? getAccountsByMerchantId(formik.values.merchantId)
+        : getAccounts(queryKey[1] as QueryParams),
+  });
+
+  const addMandateRequestMutation = useMutation({
+    mutationFn: (payload: MandateRequest | undefined) => addMandateRequest(payload),
+    onSuccess: () => {
+      closeModal('addMandate');
+      openModal('confirmAddMandate');
+    },
+    onError: (error) => {
+      closeModal('addMandate');
+    },
+  });
+
+  const addBulkMandateMutation = useMutation({
+    mutationFn: (payload: MandateRequest[] | undefined) => addBulkMandateRequest(payload),
+    onSuccess: () => {
+      closeModal('addBulkMandate');
+      openModal('confirmAddBulkMandate');
+    },
+    onError: (error) => {
+      closeModal('addBulkMandate');
+    },
+  });
+
+  useEffect(() => {
+    refetchAccountsOptions();
+  }, [formik.values.merchantId]);
+
   return (
     <>
       <div className="px-5 py-5">
@@ -337,14 +362,18 @@ const CreateMandate = () => {
                 <div className="mt-2 h-[2px] w-full bg-grayPrimary"></div>
                 <div className="mt-5 pb-10">
                   <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-3">
-                    <CustomInput
+                    <FormSelect
                       labelFor="merchantId"
                       label="Merchant ID"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
-                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
-                      inputType="text"
-                      placeholder="Enter here"
                       formik={formik}
+                      useTouched
+                      options={formatApiDataForDropdown(
+                        merchantData?.responseData?.items,
+                        'id',
+                        'id',
+                      )}
+                      scrollableOptions
+                      scrollableHeight="max-h-[15rem]"
                     />
                     <CustomInput
                       labelFor="bankCode"
@@ -413,31 +442,44 @@ const CreateMandate = () => {
                     />
                   </div>
                   <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-3">
-                    <CustomInput
+                    <FormSelect
                       labelFor="accountName"
                       label="Account Name"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
-                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
-                      inputType="text"
-                      placeholder="Enter here"
                       formik={formik}
+                      useTouched
+                      options={formatApiDataForDropdown(
+                        accountData?.responseData?.items,
+                        'accountName',
+                        'accountName',
+                      )}
+                      scrollableOptions
+                      scrollableHeight="max-h-[15rem]"
                     />
-                    <CustomInput
+                    <FormSelect
                       labelFor="accountNumber"
                       label="Account Number"
-                      containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
-                      inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
-                      inputType="text"
-                      placeholder="Enter here"
                       formik={formik}
+                      useTouched
+                      options={formatApiDataForDropdown(
+                        accountData?.responseData?.items,
+                        'accountNumber',
+                        'accountNumber',
+                      )}
+                      scrollableOptions
+                      scrollableHeight="max-h-[15rem]"
                     />
-                    <CustomInput
+                    <FormSelect
                       labelFor="accountId"
-                      label="Account ID"
-                      inputType="text"
-                      placeholder="Enter here"
-                      maxW="w-full"
+                      label="Account Id"
                       formik={formik}
+                      useTouched
+                      options={formatApiDataForDropdown(
+                        accountData?.responseData?.items,
+                        'id',
+                        'id',
+                      )}
+                      scrollableOptions
+                      scrollableHeight="max-h-[15rem]"
                     />
                   </div>
                   <div className="mt-10 grid grid-cols-1 gap-10 lg:grid-cols-3">
