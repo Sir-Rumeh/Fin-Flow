@@ -1,4 +1,4 @@
-import AxiosClient from 'config/Axios';
+import AxiosClient from 'config/AccountManagementAxios';
 import { appendParams } from 'utils/helpers';
 import { AccountRequest, QueryParams } from 'utils/interfaces';
 
