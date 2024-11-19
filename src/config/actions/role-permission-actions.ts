@@ -1,4 +1,4 @@
-import AxiosClient from 'config/Axios';
+import AxiosClient from 'config/UserManagementAxios';
 import { appendParams } from 'utils/helpers';
 import { QueryParams, RolePermissionRequest, RoleRequest } from 'utils/interfaces';
 
