@@ -1,4 +1,4 @@
-import AxiosClient from 'config/Axios';
+import AxiosClient from 'config/MerchantManagementAxios';
 import { appendParams } from 'utils/helpers';
 import { MerchantRequest, QueryParams } from 'utils/interfaces';
 

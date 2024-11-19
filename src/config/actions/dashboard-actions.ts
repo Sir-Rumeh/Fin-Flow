@@ -1,4 +1,4 @@
-import AxiosClient from 'config/Axios';
+import AxiosClient from 'config/MandateManagementAxios';
 import { appendParams } from 'utils/helpers';
 import { MandateRequest, QueryParams } from 'utils/interfaces';
 
