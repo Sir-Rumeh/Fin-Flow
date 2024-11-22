@@ -63,6 +63,7 @@ const MerchantRequests = () => {
     setQueryParams((prev) => ({
       ...prev,
       status: activeTab,
+      requestType: formik.values.statusFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
       searchFilter: formik.values.searchMerchantCif,
@@ -74,7 +75,7 @@ const MerchantRequests = () => {
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
       ...prev,
-      status: formik.values.statusFilter,
+      requestType: formik.values.statusFilter,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
@@ -163,7 +164,7 @@ const MerchantRequests = () => {
               className="w-full text-start font-semibold text-lightPurple"
               to={{
                 pathname: route,
-                search: `?${createSearchParams({ id: params?.row.id })}`,
+                search: `?${createSearchParams({ id: params?.row.id, merchantId: params?.row.merchantId })}`,
               }}
             >
               View Details

@@ -26,7 +26,8 @@ import { RequestStatus } from 'utils/enums';
 const MerchantUpdateRequestDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const merchantId = searchParams?.get('id') || '';
+  const requestId = searchParams?.get('id') || '';
+  const merchantId = searchParams?.get('merchantId') || '';
   const queryClient = useQueryClient();
   const [updateDataList, setUpdateDataList] = useState<UpdateRequestDisplay[]>();
   const [modals, setModals] = useState({
@@ -49,12 +50,12 @@ const MerchantUpdateRequestDetails = () => {
     },
     validationSchema: reasonForRejectionSchema,
     onSubmit: () => {
-      rejectMerchantRequestMutation.mutate(merchantId);
+      rejectMerchantRequestMutation.mutate(requestId);
     },
   });
 
   const { data } = useQuery({
-    queryKey: ['merchantRequests', merchantId],
+    queryKey: ['merchantRequests', requestId],
     queryFn: ({ queryKey }) => getMerchantRequestById(queryKey[1]),
   });
 
@@ -258,7 +259,7 @@ const MerchantUpdateRequestDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            approveMerchantRequestMutation.mutate(merchantId);
+            approveMerchantRequestMutation.mutate(requestId);
           }}
         />
       )}

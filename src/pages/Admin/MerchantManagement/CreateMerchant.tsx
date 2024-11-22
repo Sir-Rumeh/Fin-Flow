@@ -53,7 +53,8 @@ const CreateMerchant = () => {
         rcNumber: values.rcNumber,
         address: values.address,
         InternalChargeFee: parseFloat(values.merchantFee),
-        cif: validatedMerchantCif,
+        cif: values.merchantCIF,
+        // cif: validatedMerchantCif,
       };
       setMerchantRequest(payload);
       openModal('confirmOnboardMerchant');
@@ -206,7 +207,7 @@ const CreateMerchant = () => {
           loading={addMerchantRequestMutation.isPending}
           proceedAction={() => {
             closeModal('confirmOnboardMerchant');
-            // addMerchantRequestMutation.mutate(merchantRequest);
+            addMerchantRequestMutation.mutate(merchantRequest);
             console.log(merchantRequest);
           }}
         />

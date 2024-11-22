@@ -43,7 +43,7 @@ const MerchantLogin = () => {
       navigate(`/${appRoutes.merchantDashboard.dashboard.index}`);
     },
     onError: (error) => {
-      notifyError(error.message);
+      console.log(error);
     },
   });
 

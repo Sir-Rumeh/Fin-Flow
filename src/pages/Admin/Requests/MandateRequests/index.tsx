@@ -72,6 +72,7 @@ const MandateRequests = () => {
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
       ...prev,
+      // pageNo: paginationData.pageNumber,
       requestType: formik.values.statusFilter,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
@@ -177,6 +178,7 @@ const MandateRequests = () => {
     queryKey: ['mandateRequests', queryParams],
     queryFn: ({ queryKey }) => getMandateRequests(queryKey[1] as QueryParams),
   });
+
   const { data: statisticsData } = useQuery({
     queryKey: ['mandateRequests'],
     queryFn: ({ queryKey }) => getMandateRequestsStatistics(),
