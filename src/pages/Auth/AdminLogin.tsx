@@ -43,7 +43,7 @@ const AdminLogin = () => {
       navigate(`/${appRoutes.adminDashboard.dashboard.index}`);
     },
     onError: (error) => {
-      notifyError(error.message);
+      console.log(error);
     },
   });
 

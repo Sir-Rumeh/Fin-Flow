@@ -28,7 +28,8 @@ import { RequestStatus } from 'utils/enums';
 const MerchantEnableRequestDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const merchantId = searchParams?.get('id') || '';
+  const requestId = searchParams?.get('id') || '';
+  const merchantId = searchParams?.get('merchantId') || '';
   const queryClient = useQueryClient();
   const [modals, setModals] = useState({
     confirmApproveRequest: false,
@@ -50,12 +51,12 @@ const MerchantEnableRequestDetails = () => {
     },
     validationSchema: reasonForRejectionSchema,
     onSubmit: () => {
-      rejectMerchantRequestMutation.mutate(merchantId);
+      rejectMerchantRequestMutation.mutate(requestId);
     },
   });
 
   const { data } = useQuery({
-    queryKey: ['merchantRequests', merchantId],
+    queryKey: ['merchantRequests', requestId],
     queryFn: ({ queryKey }) => getMerchantRequestById(queryKey[1]),
   });
 
@@ -143,7 +144,7 @@ const MerchantEnableRequestDetails = () => {
                 icon={<SubTitleIconGreen />}
                 route={{
                   pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantAccounts}`,
-                  search: `?${createSearchParams({ id: merchantId })}`,
+                  search: `?${createSearchParams({ id: requestId })}`,
                 }}
               />
               <DashboardCard
@@ -154,7 +155,7 @@ const MerchantEnableRequestDetails = () => {
                 icon={<SubTitleIconYellow />}
                 route={{
                   pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantProfiles}`,
-                  search: `?${createSearchParams({ id: merchantId })}`,
+                  search: `?${createSearchParams({ id: requestId })}`,
                 }}
               />
               <DashboardCard
@@ -165,7 +166,7 @@ const MerchantEnableRequestDetails = () => {
                 icon={<SubTitleIconYellow />}
                 route={{
                   pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantMandates}`,
-                  search: `?${createSearchParams({ id: merchantId })}`,
+                  search: `?${createSearchParams({ id: requestId })}`,
                 }}
               />
             </div>
@@ -254,7 +255,7 @@ const MerchantEnableRequestDetails = () => {
           icon={<RedAlertIcon />}
           type={'confirmation'}
           proceedAction={() => {
-            approveMerchantRequestMutation.mutate(merchantId);
+            approveMerchantRequestMutation.mutate(requestId);
           }}
         />
       )}

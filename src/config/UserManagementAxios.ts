@@ -170,7 +170,7 @@ AxiosClient.interceptors.response.use(
       notifyError(error?.response?.data?.responseMessage);
       return Promise.reject(error);
     } else if (error?.response?.status === 404) {
-      notifyError('Resource not found');
+      notifyError(error?.response?.data?.responseMessage);
       return Promise.reject(error);
     } else if (error?.response?.status === 500) {
       notifyError('Something went wrong');
