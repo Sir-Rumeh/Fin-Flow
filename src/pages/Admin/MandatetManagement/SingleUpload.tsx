@@ -107,7 +107,8 @@ const SingleUpload = () => {
         accountName: values.accountName,
         accountNumber: values.accountNumber,
         bankCode: values.bankCode,
-        supportingDocument: values.supportingDocument,
+        // supportingDocument: values.supportingDocument,
+        supportingDocument: 'suporting doc.pdf',
         narration: values.narration,
         payerName: values.payerName,
         payeeName: values.payeeName,
@@ -123,6 +124,17 @@ const SingleUpload = () => {
         billerAccountNumber: values.billerAccountNumber,
         bankName: values.billerBankName,
       };
+      console.log(payload);
+
+      // Convert the payload to a JSON string
+      const jsonString = JSON.stringify(payload);
+
+      // Use TextEncoder to calculate the byte size of the JSON string
+      const encoder = new TextEncoder();
+      const byteSize = encoder.encode(jsonString).length;
+
+      console.log(`Payload size: ${byteSize} bytes`);
+
       setMandateRequest(payload);
       openModal('confirmCreate');
     },

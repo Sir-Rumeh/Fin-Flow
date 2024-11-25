@@ -11,12 +11,17 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import FormSelect from 'components/FormElements/FormSelect';
 import ToggleSwitch from 'components/FormElements/ToggleSwitch';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { Permission, QueryParams, RolePermissionRequest } from 'utils/interfaces';
+import {
+  PermissionInterface,
+  PermissionAccess,
+  QueryParams,
+  RolePermissionRequest,
+} from 'utils/interfaces';
 import { addRolePermissionRequest, getRoles } from 'config/actions/role-permission-actions';
-import { formatApiDataForDropdown } from 'utils/helpers';
+import { formatApiDataForDropdown, notifyError } from 'utils/helpers';
 import { adminAccessRights, merchantAccessRights } from 'routes/appRoutes';
 import { Designation } from 'utils/enums';
-import TableLogo from 'assets/images/table_logo.png';
+import { Checkbox } from '@mui/material';
 
 const AddRolePermission = () => {
   const navigate = useNavigate();
@@ -41,7 +46,7 @@ const AddRolePermission = () => {
   const formik = useFormik({
     initialValues: {
       groupId: '',
-      permissions: [] as Permission[],
+      permissions: [] as PermissionInterface[],
     },
     validationSchema: addRolePermissionSchema,
     onSubmit: (values) => {
@@ -53,26 +58,6 @@ const AddRolePermission = () => {
       openModal('confirmAddRolePermission');
     },
   });
-
-  const handleToggleChange = (module: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newPermission: Permission = {
-      module: module,
-      canList: true,
-      canListAll: true,
-      canDelete: true,
-      canRead: true,
-      canCreate: true,
-      canUpdate: true,
-    };
-    if (event.target.checked) {
-      formik.setFieldValue('permissions', [...(formik.values.permissions || []), newPermission]);
-    } else {
-      formik.setFieldValue(
-        'permissions',
-        formik.values.permissions.filter((mod: Permission) => mod.module !== module),
-      );
-    }
-  };
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
     sortBy: 'asc',
@@ -89,6 +74,7 @@ const AddRolePermission = () => {
       (role: any) => role.id === formik.values.groupId,
     )[0];
     setSelectedRole(role);
+    formik.setFieldValue('permissions', []);
   }, [formik.values.groupId]);
 
   const addRolePermissionRequestMutation = useMutation({
@@ -101,6 +87,144 @@ const AddRolePermission = () => {
       closeModal('confirmAddRolePermission');
     },
   });
+
+  const adminPermissionsAccess: PermissionAccess[] = [
+    {
+      id: 1,
+      accessName: 'Can List',
+      accessTag: 'canList',
+    },
+    {
+      id: 2,
+      accessName: 'Can List All',
+      accessTag: 'canListAll',
+    },
+    {
+      id: 3,
+      accessName: 'Can Delete',
+      accessTag: 'canDelete',
+    },
+    {
+      id: 4,
+      accessName: 'Can Read',
+      accessTag: 'canRead',
+    },
+    {
+      id: 5,
+      accessName: 'Can Create',
+      accessTag: 'canCreate',
+    },
+    {
+      id: 6,
+      accessName: 'Can Update',
+      accessTag: 'canUpdate',
+    },
+    {
+      id: 7,
+      accessName: 'Can Enable',
+      accessTag: 'canEnable',
+    },
+    {
+      id: 8,
+      accessName: 'Can Disable',
+      accessTag: 'canDisable',
+    },
+    {
+      id: 9,
+      accessName: 'Can Approve',
+      accessTag: 'canApprove',
+    },
+  ];
+  const merchantPermissionsAccess: PermissionAccess[] = [
+    {
+      id: 1,
+      accessName: 'Can List',
+      accessTag: 'canList',
+    },
+    {
+      id: 2,
+      accessName: 'Can Delete',
+      accessTag: 'canDelete',
+    },
+    {
+      id: 3,
+      accessName: 'Can Read',
+      accessTag: 'canRead',
+    },
+    {
+      id: 4,
+      accessName: 'Can Create',
+      accessTag: 'canCreate',
+    },
+    {
+      id: 5,
+      accessName: 'Can Update',
+      accessTag: 'canUpdate',
+    },
+    {
+      id: 6,
+      accessName: 'Can Enable',
+      accessTag: 'canEnable',
+    },
+    {
+      id: 7,
+      accessName: 'Can Disable',
+      accessTag: 'canDisable',
+    },
+    {
+      id: 8,
+      accessName: 'Can Approve',
+      accessTag: 'canApprove',
+    },
+  ];
+
+  const handleChecked =
+    (module: string, accessTag: keyof PermissionInterface) =>
+    (event: React.ChangeEvent<HTMLInputElement>) => {
+      const permissionToAssignAccess = formik.values.permissions.find(
+        (permission: PermissionInterface) =>
+          permission.module.toLocaleLowerCase() === module.toLocaleLowerCase(),
+      );
+      if (
+        !formik.values.permissions.some(
+          (permission: PermissionInterface) =>
+            permission.module.toLocaleLowerCase() === module.toLocaleLowerCase(),
+        )
+      ) {
+        notifyError('Select module before checking box');
+        return;
+      } else {
+        if (permissionToAssignAccess) {
+          (permissionToAssignAccess[accessTag as keyof PermissionInterface] as boolean) =
+            event.target.checked;
+        }
+      }
+    };
+
+  const handleToggleChange = (module: string) => (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newPermission: PermissionInterface = {
+      module: module,
+      canList: false,
+      canListAll: false,
+      canDelete: false,
+      canRead: false,
+      canCreate: false,
+      canUpdate: false,
+      canEnable: false,
+      canDisable: false,
+      canApprove: false,
+    };
+    if (event.target.checked) {
+      formik.setFieldValue('permissions', [...(formik.values.permissions || []), newPermission]);
+    } else {
+      formik.setFieldValue(
+        'permissions',
+        formik.values.permissions.filter(
+          (permission: PermissionInterface) => permission.module !== module,
+        ),
+      );
+    }
+  };
 
   return (
     <>
@@ -119,11 +243,11 @@ const AddRolePermission = () => {
         </div>
         <div className="slide-down mt-5 rounded-lg bg-white px-2 py-10 sm:px-4 md:px-10">
           <form onSubmit={formik.handleSubmit} noValidate className="relative w-full">
-            <div className="grid grid-cols-2 gap-10">
-              <div className="w-full">
+            <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 xl:grid-cols-5">
+              <div className="w-full xl:col-span-2">
                 <FormSelect
                   labelFor="groupId"
-                  label="Group Name"
+                  label="Role Name"
                   formik={formik}
                   options={formatApiDataForDropdown(data?.responseData?.items, 'name', 'id')}
                   scrollableOptions
@@ -132,48 +256,162 @@ const AddRolePermission = () => {
                 />
               </div>
             </div>
-            <div className="mt-10 grid grid-cols-2 gap-20 rounded-lg border p-2 md:grid-cols-4 md:p-4 2xl:p-5">
+
+            <div className="mt-4 font-semibold">
+              {selectedRole ? (
+                <h3>{selectedRole?.designation} Permissions</h3>
+              ) : (
+                <h3>Admin Permissions</h3>
+              )}
+            </div>
+            <div className="mt-2 grid grid-cols-2 gap-20 rounded-lg border p-2 md:grid-cols-3 xl:grid-cols-4 xl:p-4 2xl:p-5">
               {!selectedRole ? (
                 <>
                   {adminAccessRights.map((right) => (
-                    <ToggleSwitch
-                      key={right.id}
-                      id={right.id}
-                      toggleLabel={right.module}
-                      checked={formik.values.permissions.some(
-                        (mod: Permission) =>
-                          mod.module.toLocaleLowerCase() === right.moduleValue.toLocaleLowerCase(),
-                      )}
-                      onChange={handleToggleChange(right.moduleValue)}
-                    />
+                    <div key={right.id} className="flex flex-col gap-2">
+                      <ToggleSwitch
+                        key={right.id}
+                        id={right.id}
+                        toggleLabel={right.module}
+                        checked={formik.values.permissions.some(
+                          (mod: PermissionInterface) =>
+                            mod.module.toLocaleLowerCase() ===
+                            right.moduleValue.toLocaleLowerCase(),
+                        )}
+                        onChange={handleToggleChange(right.moduleValue)}
+                      />
+                      {adminPermissionsAccess.map((access) => {
+                        return (
+                          <div
+                            className="gap- flex w-[90%] items-center justify-between text-xs"
+                            key={access.id}
+                          >
+                            <span>{access.accessName}</span>
+                            <Checkbox
+                              onChange={handleChecked(
+                                right.moduleValue,
+                                access.accessTag as keyof PermissionInterface,
+                              )}
+                              disabled={
+                                !formik.values.permissions.some(
+                                  (permission: PermissionInterface) =>
+                                    permission.module === right.moduleValue,
+                                )
+                              }
+                              inputProps={{ 'aria-label': 'controlled checkbox' }}
+                              sx={{
+                                color: '#5C068C',
+                                '&.Mui-checked': { color: '#5C068C' },
+                                p: 0.3,
+                                '& .MuiSvgIcon-root': {
+                                  fontSize: 16,
+                                },
+                              }}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
                   ))}
                 </>
               ) : selectedRole?.designation === Designation.StaffUser ? (
-                adminAccessRights.map((right) => (
-                  <ToggleSwitch
-                    key={right.id}
-                    id={right.id}
-                    toggleLabel={right.module}
-                    checked={formik.values.permissions.some(
-                      (mod: Permission) =>
-                        mod.module.toLocaleLowerCase() === right.moduleValue.toLocaleLowerCase(),
-                    )}
-                    onChange={handleToggleChange(right.moduleValue)}
-                  />
-                ))
+                <>
+                  {adminAccessRights.map((right) => (
+                    <div key={right.id} className="flex flex-col gap-2">
+                      <ToggleSwitch
+                        key={right.id}
+                        id={right.id}
+                        toggleLabel={right.module}
+                        checked={formik.values.permissions.some(
+                          (mod: PermissionInterface) =>
+                            mod.module.toLocaleLowerCase() ===
+                            right.moduleValue.toLocaleLowerCase(),
+                        )}
+                        onChange={handleToggleChange(right.moduleValue)}
+                      />
+                      {adminPermissionsAccess.map((access) => {
+                        return (
+                          <div
+                            className="gap- flex w-[90%] items-center justify-between text-xs"
+                            key={access.id}
+                          >
+                            <span>{access.accessName}</span>
+                            <Checkbox
+                              onChange={handleChecked(
+                                right.moduleValue,
+                                access.accessTag as keyof PermissionInterface,
+                              )}
+                              disabled={
+                                !formik.values.permissions.some(
+                                  (permission: PermissionInterface) =>
+                                    permission.module === right.moduleValue,
+                                )
+                              }
+                              inputProps={{ 'aria-label': 'controlled checkbox' }}
+                              sx={{
+                                color: '#5C068C',
+                                '&.Mui-checked': { color: '#5C068C' },
+                                p: 0.3,
+                                '& .MuiSvgIcon-root': {
+                                  fontSize: 16,
+                                },
+                              }}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ))}
+                </>
               ) : selectedRole?.designation === Designation.Merchant ? (
-                merchantAccessRights.map((right) => (
-                  <ToggleSwitch
-                    key={right.id}
-                    id={right.id}
-                    toggleLabel={right.module}
-                    checked={formik.values.permissions.some(
-                      (mod: Permission) =>
-                        mod.module.toLocaleLowerCase() === right.moduleValue.toLocaleLowerCase(),
-                    )}
-                    onChange={handleToggleChange(right.moduleValue)}
-                  />
-                ))
+                <>
+                  {merchantAccessRights.map((right) => (
+                    <div key={right.id} className="flex flex-col gap-2">
+                      <ToggleSwitch
+                        key={right.id}
+                        id={right.id}
+                        toggleLabel={right.module}
+                        checked={formik.values.permissions.some(
+                          (mod: PermissionInterface) =>
+                            mod.module.toLocaleLowerCase() ===
+                            right.moduleValue.toLocaleLowerCase(),
+                        )}
+                        onChange={handleToggleChange(right.moduleValue)}
+                      />
+                      {merchantPermissionsAccess.map((access) => {
+                        return (
+                          <div
+                            className="gap- flex w-[90%] items-center justify-between text-xs"
+                            key={access.id}
+                          >
+                            <span>{access.accessName}</span>
+                            <Checkbox
+                              onChange={handleChecked(
+                                right.moduleValue,
+                                access.accessTag as keyof PermissionInterface,
+                              )}
+                              disabled={
+                                !formik.values.permissions.some(
+                                  (permission: PermissionInterface) =>
+                                    permission.module === right.moduleValue,
+                                )
+                              }
+                              inputProps={{ 'aria-label': 'controlled checkbox' }}
+                              sx={{
+                                color: '#5C068C',
+                                '&.Mui-checked': { color: '#5C068C' },
+                                p: 0.3,
+                                '& .MuiSvgIcon-root': {
+                                  fontSize: 16,
+                                },
+                              }}
+                            />
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ))}
+                </>
               ) : selectedRole && !selectedRole?.designation ? (
                 <>
                   <div className="slide-down col-span-4 mt-4 flex h-[30vh] w-full flex-col items-center justify-center p-4 pb-8">

@@ -23,6 +23,7 @@ const ProfileDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const profileId = searchParams?.get('id') || '';
+  console.log(profileId);
 
   const [modals, setModals] = useState({
     confirmDisable: false,
@@ -164,7 +165,7 @@ const ProfileDetails = () => {
                 title="Date Requested"
                 content={
                   data?.responseData?.createdAt &&
-                  new Date(data.responseData.createdAt).toLocaleDateString()
+                  new Date(data?.responseData?.createdAt).toLocaleDateString()
                 }
               />
             </ItemDetailsContainer>
@@ -176,16 +177,16 @@ const ProfileDetails = () => {
                 title="Date Created"
                 content={
                   data?.responseData?.createdAt &&
-                  new Date(data.responseData.createdAt).toLocaleDateString()
+                  new Date(data?.responseData?.createdAt).toLocaleDateString()
                 }
               />
-              <DetailsCard title="ID" content={data.responseData.createdBy} />
-              <DetailsCard title="Address" content={data.responseData.address} />
+              {/* <DetailsCard title="ID" content={data.responseData.createdBy} /> */}
+              <DetailsCard title="Address" content={data?.responseData?.address} />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
-              <DetailsCard title="ID" content={data.responseData.approvedBy} />
+              <DetailsCard title="ID" content={data?.responseData?.approvedBy} />
               <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
               <DetailsCard
                 title="Date Approved"

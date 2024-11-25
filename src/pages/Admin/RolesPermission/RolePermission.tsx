@@ -9,7 +9,7 @@ import CustomPopover from 'hoc/PopOverWrapper';
 import { useEffect, useState } from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
-import { Permission, QueryParams } from 'utils/interfaces';
+import { PermissionInterface, QueryParams } from 'utils/interfaces';
 
 const RolePermission = () => {
   const navigate = useNavigate();
@@ -41,10 +41,6 @@ const RolePermission = () => {
     }));
   }, [paginationData]);
 
-  const getRoleGroupName = (roleId: string) => {
-    return allRoles?.find((role) => role.id === roleId)?.name;
-  };
-
   const { data: roles } = useQuery({
     queryKey: ['roles', roleQueryParams],
     queryFn: ({ queryKey }) => getRoles(queryKey[1] as QueryParams),
@@ -58,6 +54,10 @@ const RolePermission = () => {
   useEffect(() => {
     setAllRoles(roles?.responseData?.items);
   }, [roles]);
+
+  const getRoleGroupName = (roleId: string) => {
+    return allRoles?.find((role) => role.id === roleId)?.name;
+  };
 
   const rolePermissionColumns: GridColDef[] = [
     {
@@ -79,7 +79,7 @@ const RolePermission = () => {
       renderCell: (params: GridRenderCellParams) => {
         return (
           <div className="w-full flex-wrap whitespace-normal text-wrap break-words">
-            {params.row.permissions?.map((permission: Permission, index: number) => {
+            {params.row.permissions?.map((permission: PermissionInterface, index: number) => {
               return (
                 <span className={`mr-2`} key={permission.module}>
                   {permission.module}

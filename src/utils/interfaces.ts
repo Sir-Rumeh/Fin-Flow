@@ -221,21 +221,29 @@ export interface RoleRequest {
   designation: string | undefined;
 }
 
-export interface Permission {
+export interface PermissionInterface {
   module: string;
   canList: boolean;
-  canListAll: boolean;
+  canListAll?: boolean;
   canDelete: boolean;
   canRead: boolean;
   canCreate: boolean;
   canUpdate: boolean;
+  canEnable: boolean;
+  canDisable: boolean;
+  canApprove: boolean;
+}
+
+export interface PermissionAccess {
+  id: number;
+  accessName: string;
+  accessTag: string;
 }
 
 export interface RolePermissionRequest {
   roleId: string | undefined;
-  permissions: Permission[] | undefined;
+  permissions: PermissionInterface[] | undefined;
 }
-
 export interface AdminUserData {
   id: string;
   userName: string | null;
@@ -282,4 +290,17 @@ export interface MerchantAuthData {
   refreshToken: string;
   token: string;
   timeStamp: string;
+}
+
+export interface Role {
+  id: string;
+  name: string;
+  description: string;
+  designation: string;
+  createdBy: string;
+  createdAt: string;
+  updatedBy: string;
+  updatedAt: string;
+  isDeleted: boolean;
+  isActive: boolean;
 }
