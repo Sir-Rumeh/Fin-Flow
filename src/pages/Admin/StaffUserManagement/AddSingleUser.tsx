@@ -3,20 +3,23 @@ import appRoutes from 'utils/constants/routes';
 import ChevronRight from 'assets/icons/ChevronRight';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
 import FormSelect from 'components/FormElements/FormSelect';
-import { StaffUserRequest } from 'utils/interfaces';
-import { useMutation } from '@tanstack/react-query';
+import { QueryParams, Role, StaffUserRequest } from 'utils/interfaces';
+import { useMutation, useQuery } from '@tanstack/react-query';
 import { addStaffUserRequest } from 'config/actions/staff-user-actions';
 import { createStaffUserSchema } from 'utils/formValidators';
-import { roles, userLevel } from 'utils/constants';
+import { getRoles } from 'config/actions/role-permission-actions';
+import { formatApiDataForDropdown } from 'utils/helpers';
+import { Designation } from 'utils/enums';
 
 function AddUser() {
   const navigate = useNavigate();
+  const [adminRoles, setAdminRoles] = useState<Role[]>([]);
   const [staffUserRequest, setStaffUserRequest] = useState<StaffUserRequest>();
   const [modals, setModals] = useState({
     confirmCreate: false,
@@ -70,6 +73,23 @@ function AddUser() {
       openModal('confirmCreate');
     },
   });
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
+
+  const { data: roles } = useQuery({
+    queryKey: ['roles', queryParams],
+    queryFn: ({ queryKey }) => getRoles(queryKey[1] as QueryParams),
+  });
+
+  useEffect(() => {
+    const filteredRoles = roles?.responseData?.items?.filter(
+      (role: Role) => role.designation === Designation.StaffUser,
+    );
+    setAdminRoles(filteredRoles);
+  }, [roles]);
 
   return (
     <>
@@ -155,8 +175,10 @@ function AddUser() {
                       labelFor="role"
                       label="Assign Role"
                       formik={formik}
-                      options={roles}
+                      options={formatApiDataForDropdown(adminRoles, 'name', 'id')}
                       useTouched
+                      scrollableOptions
+                      scrollableHeight="max-h-[15rem]"
                     />
                   </div>
                 </div>

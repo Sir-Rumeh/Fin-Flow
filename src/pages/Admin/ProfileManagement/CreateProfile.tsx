@@ -3,23 +3,25 @@ import appRoutes from 'utils/constants/routes';
 import ChevronRight from 'assets/icons/ChevronRight';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
 import FormSelect from 'components/FormElements/FormSelect';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { ProfileRequest, QueryParams } from 'utils/interfaces';
+import { ProfileRequest, QueryParams, Role } from 'utils/interfaces';
 import { getMerchants } from 'config/actions/merchant-actions';
 import { formatApiDataForDropdown } from 'utils/helpers';
 import { getAccounts } from 'config/actions/account-actions';
-import { userLevel } from 'utils/constants';
 import { createProfileSchema } from 'utils/formValidators';
 import { addProfileRequest } from 'config/actions/profile-actions';
+import { getRoles } from 'config/actions/role-permission-actions';
+import { Designation } from 'utils/enums';
 
 function CreateProfile() {
   const navigate = useNavigate();
+  const [merchantRoles, setMerchantRoles] = useState<Role[]>([]);
   const [profileRequest, setProfileRequest] = useState<ProfileRequest>();
   const [modals, setModals] = useState({
     confirmCreate: false,
@@ -79,6 +81,11 @@ function CreateProfile() {
     queryFn: ({ queryKey }) => getAccounts(queryKey[1] as QueryParams),
   });
 
+  const { data: roles } = useQuery({
+    queryKey: ['roles', queryParams],
+    queryFn: ({ queryKey }) => getRoles(queryKey[1] as QueryParams),
+  });
+
   const addProfileRequestMutation = useMutation({
     mutationFn: (payload: ProfileRequest | undefined) => addProfileRequest(payload),
     onSuccess: () => {
@@ -88,6 +95,13 @@ function CreateProfile() {
       closeModal('confirmCreate');
     },
   });
+
+  useEffect(() => {
+    const filteredRoles = roles?.responseData?.items?.filter(
+      (role: Role) => role.designation === Designation.Merchant,
+    );
+    setMerchantRoles(filteredRoles);
+  }, [roles]);
 
   return (
     <>
@@ -188,7 +202,9 @@ function CreateProfile() {
                       label="Assign Role"
                       formik={formik}
                       useTouched
-                      options={userLevel}
+                      options={formatApiDataForDropdown(merchantRoles, 'name', 'id')}
+                      scrollableOptions
+                      scrollableHeight="max-h-[15rem]"
                     />
                   </div>
                 </div>

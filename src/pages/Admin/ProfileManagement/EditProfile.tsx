@@ -11,15 +11,17 @@ import { useFormik } from 'formik';
 import FormSelect from 'components/FormElements/FormSelect';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getMerchants } from 'config/actions/merchant-actions';
-import { ProfileRequest, QueryParams } from 'utils/interfaces';
+import { ProfileRequest, QueryParams, Role } from 'utils/interfaces';
 import { getAccounts } from 'config/actions/account-actions';
 import { formatApiDataForDropdown } from 'utils/helpers';
-import { userLevel } from 'utils/constants';
 import { getProfileById, updateProfile } from 'config/actions/profile-actions';
 import { createProfileSchema } from 'utils/formValidators';
+import { getRoles } from 'config/actions/role-permission-actions';
+import { Designation } from 'utils/enums';
 
 function EditProfile() {
   const navigate = useNavigate();
+  const [merchantRoles, setMerchantRoles] = useState<Role[]>([]);
   const queryClient = useQueryClient();
   const [searchParams] = useSearchParams();
   const profileId = searchParams?.get('id') || undefined;
@@ -102,6 +104,11 @@ function EditProfile() {
     queryFn: ({ queryKey }) => getAccounts(queryKey[1] as QueryParams),
   });
 
+  const { data: roles } = useQuery({
+    queryKey: ['roles', queryParams],
+    queryFn: ({ queryKey }) => getRoles(queryKey[1] as QueryParams),
+  });
+
   const updateProfileMutation = useMutation({
     mutationFn: ({
       requestId,
@@ -118,6 +125,13 @@ function EditProfile() {
       closeModal('editSuccessful');
     },
   });
+
+  useEffect(() => {
+    const filteredRoles = roles?.responseData?.items?.filter(
+      (role: Role) => role.designation === Designation.Merchant,
+    );
+    setMerchantRoles(filteredRoles);
+  }, [roles]);
 
   return (
     <>
@@ -218,7 +232,9 @@ function EditProfile() {
                       label="Assign Role"
                       formik={formik}
                       useTouched
-                      options={userLevel}
+                      options={formatApiDataForDropdown(merchantRoles, 'name', 'id')}
+                      scrollableOptions
+                      scrollableHeight="max-h-[15rem]"
                     />
                   </div>
                 </div>

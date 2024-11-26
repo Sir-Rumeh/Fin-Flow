@@ -5,7 +5,7 @@ import ChevronRight from 'assets/icons/ChevronRight';
 import appRoutes from 'utils/constants/routes';
 import { useQuery } from '@tanstack/react-query';
 import { getRolePermissionByRoleId } from 'config/actions/role-permission-actions';
-import { Permission } from 'utils/interfaces';
+import { PermissionInterface } from 'utils/interfaces';
 
 const RolePermissionDetails = () => {
   const [searchParams] = useSearchParams();
@@ -15,6 +15,20 @@ const RolePermissionDetails = () => {
     queryKey: ['permission-details', permissionRoleId],
     queryFn: ({ queryKey }) => getRolePermissionByRoleId(queryKey[1]),
   });
+
+  type PermissionKeys = Exclude<keyof PermissionInterface, 'module'>;
+
+  const permissionKeys: PermissionKeys[] = [
+    'canList',
+    'canListAll',
+    'canDelete',
+    'canRead',
+    'canCreate',
+    'canUpdate',
+    'canEnable',
+    'canDisable',
+    'canApprove',
+  ];
 
   return (
     <>
@@ -48,12 +62,24 @@ const RolePermissionDetails = () => {
               <div className="col-span-3 w-full">
                 <div className="w-full rounded-xl bg-lilacPurple px-6 py-4 pb-6">
                   <h3 className="w-full text-base font-semibold md:text-lg">Permissions</h3>
-                  <div className="mt-6 grid grid-cols-1 gap-x-[20px] gap-y-5 rounded-lg bg-white p-2 sm:grid-cols-2 md:grid-cols-3 md:gap-x-[50px] md:gap-y-8 md:px-4 md:pb-6 md:pt-6">
-                    {data?.responseData?.map((permission: Permission) => {
+                  <div className="mt-6 grid grid-cols-2 gap-x-[20px] gap-y-5 rounded-lg bg-white p-2 md:grid-cols-3 md:gap-x-[50px] md:gap-y-8 md:px-4 md:pb-6 md:pt-6 xl:grid-cols-4 xl:p-4 2xl:p-5">
+                    {data?.responseData?.map((permission: PermissionInterface) => {
+                      const filteredProperties = permissionKeys.map((key) => ({
+                        key,
+                        value: permission[key as keyof typeof permission],
+                      }));
                       return (
-                        <p key={permission.module} className="font-semibold">
-                          {permission.module}
-                        </p>
+                        <div key={permission.module} className="flex flex-col gap-1">
+                          <p className="font-semibold">{permission.module}</p>
+                          {filteredProperties?.map((access: any) => {
+                            return (
+                              <div className="text-sx flex items-center gap-x-1 font-extralight">
+                                <p>{`${access.key} : `}</p>
+                                <p className="text-lightPurple">{` ${access.value}`}</p>
+                              </div>
+                            );
+                          })}
+                        </div>
                       );
                     })}
                   </div>

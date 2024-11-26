@@ -9,15 +9,17 @@ import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { useFormik } from 'formik';
 import FormSelect from 'components/FormElements/FormSelect';
-import { StaffUserRequest } from 'utils/interfaces';
+import { QueryParams, Role, StaffUserRequest } from 'utils/interfaces';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getStaffUserById, updateStaffUserRequest } from 'config/actions/staff-user-actions';
-import { notifyError } from 'utils/helpers';
 import { createStaffUserSchema } from 'utils/formValidators';
-import { roles, userLevel } from 'utils/constants';
+import { formatApiDataForDropdown } from 'utils/helpers';
+import { getRoles } from 'config/actions/role-permission-actions';
+import { Designation } from 'utils/enums';
 
 function EditUser() {
   const navigate = useNavigate();
+  const [adminRoles, setAdminRoles] = useState<Role[]>([]);
   const [searchParams] = useSearchParams();
   const staffUserId = searchParams?.get('id') || '';
   const [staffUserRequest, setStaffUserRequest] = useState<StaffUserRequest>();
@@ -76,24 +78,41 @@ function EditUser() {
     },
   });
 
-  const { data, refetch } = useQuery({
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
+
+  const { data: userData, refetch } = useQuery({
     queryKey: ['users', staffUserId],
     queryFn: ({ queryKey }) => getStaffUserById(queryKey[1]),
   });
 
+  const { data: roles } = useQuery({
+    queryKey: ['roles', queryParams],
+    queryFn: ({ queryKey }) => getRoles(queryKey[1] as QueryParams),
+  });
+
+  useEffect(() => {
+    const filteredRoles = roles?.responseData?.items?.filter(
+      (role: Role) => role.designation === Designation.StaffUser,
+    );
+    setAdminRoles(filteredRoles);
+  }, [roles]);
+
   useEffect(() => {
     formik.setValues({
-      userName: data?.responseData?.userName || '',
-      firstName: data?.responseData?.firstName || '',
-      lastName: data?.responseData?.lastName || '',
-      staffId: data?.responseData?.staffId || '',
-      email: data?.responseData?.email || '',
-      phoneNumber: data?.responseData?.phoneNumber || '',
-      branch: data?.responseData?.branch || '',
-      role: data?.responseData?.role || '',
-      address: data?.responseData?.address || '',
+      userName: userData?.responseData?.userName || '',
+      firstName: userData?.responseData?.firstName || '',
+      lastName: userData?.responseData?.lastName || '',
+      staffId: userData?.responseData?.staffId || '',
+      email: userData?.responseData?.email || '',
+      phoneNumber: userData?.responseData?.phoneNumber || '',
+      branch: userData?.responseData?.branch || '',
+      role: userData?.responseData?.role || '',
+      address: userData?.responseData?.address || '',
     });
-  }, [data]);
+  }, [userData]);
 
   return (
     <>
@@ -179,8 +198,10 @@ function EditUser() {
                       labelFor="role"
                       label="Assign Role"
                       formik={formik}
-                      options={roles}
+                      options={formatApiDataForDropdown(adminRoles, 'name', 'id')}
                       useTouched
+                      scrollableOptions
+                      scrollableHeight="max-h-[15rem]"
                     />
                   </div>
                 </div>
