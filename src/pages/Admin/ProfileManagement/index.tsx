@@ -92,7 +92,7 @@ const ProfileManagement = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [paginationData]);
+  }, [paginationData, formik.values.searchProfile]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
@@ -125,6 +125,9 @@ const ProfileManagement = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      renderCell: (params: GridRenderCellParams) => {
+        return <div>{`${params.row.firstName} ${params.row.lastName}`}</div>;
+      },
     },
     {
       field: 'email',

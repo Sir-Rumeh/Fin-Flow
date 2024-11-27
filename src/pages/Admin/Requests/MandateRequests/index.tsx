@@ -67,7 +67,7 @@ const MandateRequests = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [activeTab, paginationData]);
+  }, [activeTab, paginationData, formik.values.searchMandate]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({

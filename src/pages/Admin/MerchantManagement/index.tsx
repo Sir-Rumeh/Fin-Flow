@@ -91,7 +91,7 @@ const MerchantManagement = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [paginationData]);
+  }, [paginationData, formik.values.searchMerchantCif]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({

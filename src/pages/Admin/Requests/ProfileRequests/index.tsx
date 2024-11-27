@@ -69,7 +69,7 @@ const ProfileRequests = () => {
 
   const columns: GridColDef[] = [
     {
-      field: 'accountId',
+      field: 'accountID',
       headerName: 'Account ID',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -82,6 +82,9 @@ const ProfileRequests = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      renderCell: (params: GridRenderCellParams) => {
+        return <div>{`${params.row.firstName} ${params.row.lastName}`}</div>;
+      },
     },
     {
       field: 'email',
