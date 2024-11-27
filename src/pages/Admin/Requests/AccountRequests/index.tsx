@@ -65,7 +65,7 @@ const AccountRequests = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [activeTab, paginationData]);
+  }, [activeTab, paginationData, formik.values.searchAccountNumber]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({

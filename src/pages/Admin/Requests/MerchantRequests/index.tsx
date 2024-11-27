@@ -70,7 +70,7 @@ const MerchantRequests = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [activeTab, paginationData]);
+  }, [activeTab, paginationData, formik.values.searchMerchantCif]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({

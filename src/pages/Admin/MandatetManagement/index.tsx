@@ -154,7 +154,7 @@ const MandatetManagement = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [paginationData]);
+  }, [paginationData, formik.values.searchMandate]);
 
   useEffect(() => {
     setTransactionsQueryParams((prev) => ({
