@@ -216,7 +216,7 @@ const UpdateRequestDetails = () => {
             <DetailsCard title="Product ID" content={data?.responseData?.productId} />
             <DetailsCard
               title="Amount"
-              content={formatNumberDisplay(data?.responseData?.amount)}
+              content={`\u20A6${formatNumberDisplay(data?.responseData?.amount)}`}
               contentClassName="text-lightPurple"
             />
             <DetailsCard

@@ -30,6 +30,7 @@ import {
 } from 'config/actions/merchant-actions';
 import RejectedIcon from 'assets/icons/RejectedIcon';
 import { RequestStatus } from 'utils/enums';
+import { formatNumberDisplay } from 'utils/helpers';
 
 const MerchantDeletionRequestDetails = () => {
   const navigate = useNavigate();
@@ -182,7 +183,11 @@ const MerchantDeletionRequestDetails = () => {
               <DetailsCard title="Merchant Name" content={data?.responseData?.name} />
               <DetailsCard title="Merchant Code" content={data?.responseData?.merchantCode} />
               <DetailsCard title="CIF Number" content={data?.responseData?.cif} />
-              <DetailsCard title="Merchant Fee" content={data?.responseData?.internalChargeFee} />
+              <DetailsCard
+                title="Merchant Fee"
+                content={`\u20A6${formatNumberDisplay(data?.responseData?.internalChargeFee)}`}
+                contentClassName="text-lightPurple"
+              />
               <DetailsCard
                 title="Date Created"
                 content={
