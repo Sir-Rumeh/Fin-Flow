@@ -31,7 +31,7 @@ import {
 import { updateMandateSchema } from 'utils/formValidators';
 import { useFormik } from 'formik';
 import CustomInput from 'components/FormElements/CustomInput';
-import { notifyError } from 'utils/helpers';
+import { formatNumberDisplay, notifyError } from 'utils/helpers';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import CustomTabs from 'hoc/CustomTabs';
 import TableFilter from 'components/TableFilter';
@@ -294,7 +294,7 @@ const MandateDetails = () => {
               <DetailsCard title="Product ID" content={data?.responseData?.productId} />
               <DetailsCard
                 title="Amount"
-                content={data?.responseData?.amount}
+                content={`\u20A6${formatNumberDisplay(data?.responseData?.amount)}`}
                 contentClassName="text-lightPurple"
               />
               <DetailsCard

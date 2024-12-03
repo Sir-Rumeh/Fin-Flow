@@ -320,7 +320,7 @@ const MandateDetails = () => {
                 <DetailsCard title="Product ID" content={data?.responseData?.productId} />
                 <DetailsCard
                   title="Amount"
-                  content={formatNumberDisplay(data?.responseData?.amount)}
+                  content={`\u20A6${formatNumberDisplay(data?.responseData?.amount)}`}
                   contentClassName="text-lightPurple"
                 />
                 <DetailsCard
@@ -395,7 +395,7 @@ const MandateDetails = () => {
 
             <div className="mt-10">
               <ItemDetailsContainer title="Creator Details">
-                <DetailsCard title="ID" content={data?.responseData?.creatorId} />
+                <DetailsCard title="ID" content={data?.responseData?.createdBy} />
                 <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
                 <DetailsCard
                   title="Date Created"

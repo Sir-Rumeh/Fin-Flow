@@ -11,7 +11,7 @@ import ChevronRight from 'assets/icons/ChevronRight';
 import ItemDetailsContainer from 'components/common/ItemDetailsContainer';
 import appRoutes from 'utils/constants/routes';
 import DashboardCard from 'components/common/DashboardCards/DashboardCard';
-import { checkRoute } from 'utils/helpers';
+import { checkRoute, formatNumberDisplay } from 'utils/helpers';
 import SubTitleIconGreen from 'assets/icons/SubTitleIconGreen';
 import SubTitleIconYellow from 'assets/icons/SubTitleIconYellow';
 import ApprovedIcon from 'assets/icons/ApprovedIcon';
@@ -238,7 +238,11 @@ const MerchantDetails = () => {
               <DetailsCard title="Merchant Name" content={data?.responseData?.name} />
               <DetailsCard title="Merchant Code" content={data?.responseData?.merchantCode} />
               <DetailsCard title="CIF Number" content={data?.responseData?.cif} />
-              <DetailsCard title="Merchant Fee" content={data?.responseData?.internalChargeFee} />
+              <DetailsCard
+                title="Merchant Fee"
+                content={`\u20A6${formatNumberDisplay(data?.responseData?.internalChargeFee)}`}
+                contentClassName="text-lightPurple"
+              />
               <DetailsCard
                 title="Date Created"
                 content={
