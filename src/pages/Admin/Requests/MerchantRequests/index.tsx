@@ -218,7 +218,7 @@ const MerchantRequests = () => {
               <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10 lg:w-[50%]">
                 <CustomTabs tabs={tabsList} activeTab={activeTab} setActiveTab={setActiveTab} />
               </div>
-              <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-end">
+              <div className="slide-down flex items-center lg:w-[50%] lg:justify-end">
                 <div className="">
                   <TableFilter
                     name={'searchMerchantCif'}

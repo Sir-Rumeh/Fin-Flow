@@ -31,6 +31,7 @@ import {
 import RejectedIcon from 'assets/icons/RejectedIcon';
 import { RequestStatus } from 'utils/enums';
 import { formatNumberDisplay } from 'utils/helpers';
+import { getStaffUserById } from 'config/actions/staff-user-actions';
 
 const MerchantDeletionRequestDetails = () => {
   const navigate = useNavigate();
@@ -89,6 +90,11 @@ const MerchantDeletionRequestDetails = () => {
       queryClient.invalidateQueries({ queryKey: ['merchantRequests'] });
     },
     onError: (error) => console.log(error.message),
+  });
+
+  const { data: ApproverDetails } = useQuery({
+    queryKey: ['users', data?.responseData?.approvedBy],
+    queryFn: ({ queryKey }) => getStaffUserById(queryKey[1]),
   });
 
   return (
@@ -185,7 +191,7 @@ const MerchantDeletionRequestDetails = () => {
               <DetailsCard title="CIF Number" content={data?.responseData?.cif} />
               <DetailsCard
                 title="Merchant Fee"
-                content={`\u20A6${formatNumberDisplay(data?.responseData?.internalChargeFee)}`}
+                content={`\u20A6${data?.responseData?.internalChargeFee ? formatNumberDisplay(data?.responseData?.internalChargeFee) : ''}`}
                 contentClassName="text-lightPurple"
               />
               <DetailsCard
@@ -214,8 +220,15 @@ const MerchantDeletionRequestDetails = () => {
           <div className="mt-10">
             {data?.responseData?.status === 'Approved' && (
               <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
-                <DetailsCard title="ID" content={data?.responseData?.approverId} />
-                <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
+                <DetailsCard title="ID" content={data?.responseData?.approvedBy} />
+                <DetailsCard
+                  title="Approved By"
+                  content={
+                    ApproverDetails?.responseData
+                      ? `${ApproverDetails?.responseData?.firstName} ${ApproverDetails?.responseData?.lastName}`
+                      : ''
+                  }
+                />
                 <DetailsCard
                   title="Date Approved"
                   content={
