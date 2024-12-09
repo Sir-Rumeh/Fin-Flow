@@ -25,6 +25,7 @@ import { capitalize, displayUpdateRequestData, formatNumberDisplay } from 'utils
 import RejectedIcon from 'assets/icons/RejectedIcon';
 import { UpdateRequestDisplay } from 'utils/interfaces';
 import { RequestStatus } from 'utils/enums';
+import { getStaffUserById } from 'config/actions/staff-user-actions';
 
 const MandateUpdateRequestDetails = () => {
   const navigate = useNavigate();
@@ -90,6 +91,16 @@ const MandateUpdateRequestDetails = () => {
       queryClient.invalidateQueries({ queryKey: ['mandateRequests'] });
     },
     onError: (error) => console.log(error.message),
+  });
+
+  const { data: ApproverDetails } = useQuery({
+    queryKey: ['users', data?.responseData?.approvedBy],
+    queryFn: ({ queryKey }) => getStaffUserById(queryKey[1]),
+  });
+
+  const { data: CreatedByDetails } = useQuery({
+    queryKey: ['users', data?.responseData?.createdBy],
+    queryFn: ({ queryKey }) => getStaffUserById(queryKey[1]),
   });
 
   return (
@@ -210,7 +221,7 @@ const MandateUpdateRequestDetails = () => {
                 <DetailsCard title="Product ID" content={data?.responseData?.productId} />
                 <DetailsCard
                   title="Amount"
-                  content={`\u20A6${formatNumberDisplay(data?.responseData?.amount)}`}
+                  content={`\u20A6${data?.responseData?.amount ? formatNumberDisplay(data?.responseData?.amount) : ''}`}
                   contentClassName="text-lightPurple"
                 />
                 <DetailsCard
@@ -285,8 +296,15 @@ const MandateUpdateRequestDetails = () => {
 
             <div className="mt-10">
               <ItemDetailsContainer title="Creator Details">
-                <DetailsCard title="ID" content={data?.responseData?.creatorId} />
-                <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
+                <DetailsCard title="ID" content={data?.responseData?.createdBy} />
+                <DetailsCard
+                  title="Created By"
+                  content={
+                    CreatedByDetails?.responseData
+                      ? `${CreatedByDetails?.responseData?.firstName} ${CreatedByDetails?.responseData?.lastName}`
+                      : ''
+                  }
+                />
                 <DetailsCard
                   title="Date Created"
                   content={
@@ -300,8 +318,15 @@ const MandateUpdateRequestDetails = () => {
             <div className="mt-10">
               {data?.responseData?.status === 'Approved' && (
                 <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
-                  <DetailsCard title="ID" content={data?.responseData?.approverId} />
-                  <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
+                  <DetailsCard title="ID" content={data?.responseData?.approvedBy} />
+                  <DetailsCard
+                    title="Approved By"
+                    content={
+                      ApproverDetails?.responseData
+                        ? `${ApproverDetails?.responseData?.firstName} ${ApproverDetails?.responseData?.lastName}`
+                        : ''
+                    }
+                  />
                   <DetailsCard
                     title="Date Approved"
                     content={

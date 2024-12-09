@@ -56,6 +56,7 @@ const UserDetails = () => {
       closeModal('confirmEnable');
     },
   });
+
   const disableStaffUserMutation = useMutation({
     mutationFn: (requestId: string | undefined) => disableStaffUser(requestId),
     onSuccess: () => {
