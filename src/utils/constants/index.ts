@@ -1680,3 +1680,6 @@ export const serviceOptions = [
   { value: 'Insurance', label: 'Insurance' },
   { value: 'Taxes', label: 'Taxes' },
 ];
+
+export const timeout = 1000 * 60 * 5;
+export const debounce = 500;
