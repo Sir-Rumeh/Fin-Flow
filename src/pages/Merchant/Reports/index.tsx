@@ -138,12 +138,12 @@ const Reports = () => {
       const { startDate, endDate } = values;
       const formattedStartDate = startDate ? dayjs(startDate).format('YYYY-MM-DD') : '';
       const formattedEndDate = endDate ? dayjs(endDate).format('YYYY-MM-DD') : '';
+      setReportType(values.reportType);
+      // if (values.reportType === reportTypes[0].value) {
+      //   setReportType(values.reportType);
+      // } else if (values.reportType === reportTypes[1].value) {
 
-      if (values.reportType === reportTypes[0].value) {
-        setReportType(values.reportType);
-      } else if (values.reportType === reportTypes[1].value) {
-        setReportType(values.reportType);
-      }
+      // }
 
       setQueryParams((prev) => ({
         ...prev,

@@ -36,12 +36,13 @@
 		"@mui/x-date-pickers": "^7.15.0",
 		"@reduxjs/toolkit": "^2.2.7",
 		"@tanstack/react-query": "^5.56.2",
-		"axios": "^1.7.7",
+		"axios": "^1.7.9",
 		"classnames": "^2.5.1",
 		"crypto-js": "^4.2.0",
 		"dayjs": "^1.11.12",
 		"formik": "^2.4.6",
 		"jwt-decode": "^4.0.0",
+		"nanoid": "^5.0.9",
 		"react": "^18.3.1",
 		"react-csv": "^2.2.2",
 		"react-dom": "^18.3.1",
@@ -52,7 +53,7 @@
 		"react-to-print": "^2.15.1",
 		"react-toastify": "^10.0.5",
 		"redux-persist": "^6.0.0",
-		"styled-components": "^6.1.12",
+		"styled-components": "^6.1.14",
 		"yup": "^1.4.0"
 	},
 	"devDependencies": {

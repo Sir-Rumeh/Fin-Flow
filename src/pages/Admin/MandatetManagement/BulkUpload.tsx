@@ -62,7 +62,7 @@ const BulkUpload = () => {
   };
 
   useEffect(() => {
-    setUploadedFiles(acceptedFiles);
+    setUploadedFiles(acceptedFiles as any);
   }, [acceptedFiles]);
 
   const referenceObject: MandateRequest = {

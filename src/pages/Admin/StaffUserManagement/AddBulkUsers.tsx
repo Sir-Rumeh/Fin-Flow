@@ -85,7 +85,7 @@ function AddUser() {
   };
 
   useEffect(() => {
-    setUploadedFiles(acceptedFiles);
+    setUploadedFiles(acceptedFiles as any);
   }, [acceptedFiles]);
 
   const referenceObject: StaffUserRequest = {

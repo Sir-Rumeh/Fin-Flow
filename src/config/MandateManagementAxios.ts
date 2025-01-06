@@ -166,10 +166,7 @@ AxiosClient.interceptors.response.use(
           }, 1500);
         }
       }
-    } else if (error?.response?.status === 400) {
-      notifyError(error?.response?.data?.responseMessage);
-      return Promise.reject(error);
-    } else if (error?.response?.status === 404) {
+    } else if (error?.response?.status === 400 || 404) {
       notifyError(error?.response?.data?.responseMessage);
       return Promise.reject(error);
     } else if (error?.response?.status === 500) {
