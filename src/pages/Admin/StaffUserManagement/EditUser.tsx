@@ -170,7 +170,7 @@ function EditUser() {
                   <CustomInput
                     labelFor="phoneNumber"
                     label="Enter Phone Number"
-                    inputType="text"
+                    inputType="number"
                     placeholder="Enter phone number"
                     maxW="w-full"
                     formik={formik}

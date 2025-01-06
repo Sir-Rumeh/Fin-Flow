@@ -8,6 +8,15 @@ export const userLoginValidationSchema = Yup.object().shape({
     'Invalid password format, please follow the password requirements',
   ),
 });
+export const OTPValidationSchema = Yup.object().shape({
+  otp: Yup.number()
+    .test(
+      'numbers',
+      'Must be exactly 6 digits',
+      (value) => !value || /^[0-9]{6}$/.test(value as any),
+    )
+    .required('OTP is required'),
+});
 
 export const reasonForRejectionSchema = Yup.object().shape({
   remark: Yup.string().required('Please enter reason for rejecting'),
@@ -21,7 +30,11 @@ export const onboardMerchantSchema = Yup.object().shape({
     return schema;
   }),
   accountNumber: Yup.mixed().when('merchantCIF', ([merchantCIF], schema) => {
-    if (merchantCIF) return Yup.string().required('Account Number is required');
+    if (merchantCIF)
+      return Yup.string()
+        .min(10, 'Invalid Account Number')
+        .max(10, 'Invalid Account Number')
+        .required('Account Number is required');
     return schema;
   }),
   rcNumber: Yup.mixed().when('merchantCIF', ([merchantCIF], schema) => {
@@ -40,7 +53,10 @@ export const onboardMerchantSchema = Yup.object().shape({
 
 export const editMerchantSchema = Yup.object().shape({
   merchantName: Yup.string().required('Merchant Name is required'),
-  accountNumber: Yup.string().required('Account Number is required'),
+  accountNumber: Yup.string()
+    .min(10, 'Invalid Account Number')
+    .max(10, 'Invalid Account Number')
+    .required('Account Number is required'),
   rcNumber: Yup.string().required('RC Number is required'),
   address: Yup.string().required('Address is required'),
 });
@@ -64,7 +80,10 @@ export const createMandateSchema = Yup.object().shape({
   frequency: Yup.string().required('Frequency is required'),
   service: Yup.string().required('Service is required'),
   accountName: Yup.string().required('Account name is required'),
-  accountNumber: Yup.string().required('Account number is required'),
+  accountNumber: Yup.string()
+    .min(10, 'Invalid Account Number')
+    .max(10, 'Invalid Account Number')
+    .required('Account number is required'),
   accountId: Yup.string().required('Account ID is required'),
   bankCode: Yup.string().required('Bank code is required'),
   supportingDocument: Yup.string().required('File is required'),
@@ -81,7 +100,10 @@ export const createMandateSchema = Yup.object().shape({
   payeeAddress: Yup.string().required('Payee address is required'),
   biller: Yup.string().required('Biller is required'),
   billerId: Yup.string().required('Biller id is required'),
-  billerAccountNumber: Yup.string().required('Biller account number id is required'),
+  billerAccountNumber: Yup.string()
+    .min(10, 'Invalid Account Number')
+    .max(10, 'Invalid Account Number')
+    .required('Biller account number id is required'),
   billerAccountName: Yup.string().required('Biller account name id is required'),
   billerBankCode: Yup.string().required('Biller bank code id is required'),
   billerBankName: Yup.string().required('Biller bank name id is required'),
@@ -111,7 +133,10 @@ export const createProfileSchema = Yup.object().shape({
   merchantID: Yup.string().required('Merchant ID is required'),
   merchantName: Yup.string().required('Merchant name is required'),
   accountID: Yup.string().required('Account ID is required'),
-  accountNumber: Yup.string().required('Account number is required'),
+  accountNumber: Yup.string()
+    .min(10, 'Invalid Account Number')
+    .max(10, 'Invalid Account Number')
+    .required('Account number is required'),
   firstName: Yup.string().required('First name is required'),
   lastName: Yup.string().required('Last name is required'),
   email: Yup.string().email('Please enter a valid email address').required('Email is required'),
@@ -122,7 +147,10 @@ export const createAccountSchema = Yup.object().shape({
   merchantId: Yup.string().required('Merchant ID is required'),
   merchantName: Yup.string().required('Merchant name is required'),
   accountName: Yup.string().required('Account name is required'),
-  accountNumber: Yup.string().required('Account number is required'),
+  accountNumber: Yup.string()
+    .min(10, 'Invalid Account Number')
+    .max(10, 'Invalid Account Number')
+    .required('Account number is required'),
   cif: Yup.string().required('CIF number is required'),
 });
 

@@ -22,6 +22,7 @@ import {
   getMerchants,
 } from 'config/actions/merchant-actions';
 import { useFormik } from 'formik';
+import { getUserFromLocalStorage, isAdminAuthData, isMerchantAuthData } from 'utils/helpers';
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -35,6 +36,18 @@ const Dashboard = () => {
   const [chartData, setChartData] = useState<number[] | undefined>([
     0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
   ]);
+  const user = getUserFromLocalStorage();
+
+  const [username, setUsername] = useState('');
+  useEffect(() => {
+    if (isAdminAuthData(user)) {
+      const { userData } = user;
+      setUsername(`${userData.firstName}`);
+    } else if (isMerchantAuthData(user)) {
+      const { profileData } = user;
+      setUsername(`${profileData.firstName}`);
+    }
+  }, []);
 
   const [modals, setModals] = useState({
     confirmDisable: false,
@@ -288,7 +301,7 @@ const Dashboard = () => {
       <section className="p-2 md:p-4">
         <div className="fade-in-down my-2 flex items-center justify-between">
           <div>
-            <h1 className="text-lg font-semibold md:text-2xl">Welcome Back, Anita!</h1>
+            <h1 className="text-lg font-semibold md:text-2xl">{`Welcome Back, ${username}!`}</h1>
           </div>
         </div>
         <div className="mt-5 grid grid-cols-1 gap-4 lg:grid-cols-[300px_1fr] 2xl:grid-cols-[320px_1fr]">

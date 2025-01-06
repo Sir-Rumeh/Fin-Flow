@@ -107,8 +107,7 @@ const SingleUpload = () => {
         accountName: values.accountName,
         accountNumber: values.accountNumber,
         bankCode: values.bankCode,
-        // supportingDocument: values.supportingDocument,
-        supportingDocument: 'suporting doc.pdf',
+        supportingDocument: values.supportingDocument,
         narration: values.narration,
         payerName: values.payerName,
         payeeName: values.payeeName,
@@ -249,7 +248,7 @@ const SingleUpload = () => {
                 <CustomInput
                   labelFor="amount"
                   label="Amount"
-                  inputType="text"
+                  inputType="number"
                   placeholder="Enter here"
                   maxW="w-full"
                   formik={formik}
@@ -399,7 +398,7 @@ const SingleUpload = () => {
                 <CustomInput
                   labelFor="payerPhoneNumber"
                   label="Payer Phone Number"
-                  inputType="text"
+                  inputType="number"
                   placeholder="Enter here"
                   maxW="w-full"
                   formik={formik}
@@ -443,7 +442,7 @@ const SingleUpload = () => {
                 <CustomInput
                   labelFor="payeePhoneNumber"
                   label="Payee Phone Number"
-                  inputType="text"
+                  inputType="number"
                   placeholder="Enter here"
                   maxW="w-full"
                   formik={formik}
@@ -483,7 +482,7 @@ const SingleUpload = () => {
                   formik={formik}
                 />
               </div>
-              <div className="w-full md:col-span-1">
+              {/* <div className="w-full md:col-span-1">
                 <CustomInput
                   labelFor="billerCode"
                   label="Biller Code"
@@ -492,12 +491,12 @@ const SingleUpload = () => {
                   maxW="w-full"
                   formik={formik}
                 />
-              </div>
+              </div> */}
               <div className="w-full md:col-span-1">
                 <CustomInput
                   labelFor="billerAccountNumber"
                   label="Biller Account Number"
-                  inputType="text"
+                  inputType="number"
                   placeholder="Enter here"
                   maxW="w-full"
                   formik={formik}

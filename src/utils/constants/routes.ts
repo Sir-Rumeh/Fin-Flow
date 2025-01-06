@@ -9,7 +9,9 @@ export const BASE_ROUTES = {
 export const appRoutes = {
   login: BASE_ROUTES.LOGIN,
   adminLogin: BASE_ROUTES.ADMINLOGIN,
+  adminLoginOTP: `${BASE_ROUTES.ADMINLOGIN}/otp`,
   merchantLogin: BASE_ROUTES.MERCHANTLOGIN,
+  merchantLoginOTP: `${BASE_ROUTES.MERCHANTLOGIN}/otp`,
   adminDashboard: {
     dashboard: {
       index: `${BASE_ROUTES.ADMIN}`,

@@ -10,10 +10,12 @@ import { encrypt } from 'utils/helpers/security';
 import { useMutation } from '@tanstack/react-query';
 import { loginStaff } from 'config/actions/authentication-actions';
 import { notifyError, notifySuccess } from 'utils/helpers';
+import { UserLoginRoles } from 'utils/enums';
 
 const AdminLogin = () => {
   const navigate = useNavigate();
   const [inputTypeState, setInputTypeState] = useState(false);
+  const [enccryptedData, setEncryptedData] = useState(false);
 
   const onHandleInputType = () => {
     setInputTypeState(!inputTypeState);
@@ -27,8 +29,11 @@ const AdminLogin = () => {
     validationSchema: userLoginValidationSchema,
     onSubmit: (values) => {
       const encryptedData = encrypt(values);
+      setEncryptedData(encryptedData);
       const payload = {
         data: encryptedData,
+        otp: '',
+        step: 'credential-validation',
       };
       loginStaffMutation.mutate(payload);
     },
@@ -37,10 +42,11 @@ const AdminLogin = () => {
   const loginStaffMutation = useMutation({
     mutationFn: (payload: { data: string } | undefined) => loginStaff(payload),
     onSuccess: (data) => {
-      localStorage.setItem('user', JSON.stringify(data?.responseData));
-      notifySuccess('Login Successful');
+      notifySuccess('OTP Sent Successfully');
       formik.resetForm();
-      navigate(`/${appRoutes.adminDashboard.dashboard.index}`);
+      navigate(`/${appRoutes.adminLoginOTP}`, {
+        state: { data: enccryptedData, origin: UserLoginRoles.Admin },
+      });
     },
     onError: (error) => {
       console.log(error);

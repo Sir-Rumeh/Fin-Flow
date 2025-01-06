@@ -1,33 +1,25 @@
 import ButtonComponent from 'components/FormElements/Button';
 import FcmbLogo from 'assets/icons/FcmbIcon';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import appRoutes, { BASE_ROUTES } from 'utils/constants/routes';
-import { userLoginValidationSchema } from 'utils/formValidators';
+import { OTPValidationSchema, userLoginValidationSchema } from 'utils/formValidators';
 import CustomInput from 'components/FormElements/CustomInput';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { encrypt } from 'utils/helpers/security';
 import { useMutation } from '@tanstack/react-query';
-import { loginStaff } from 'config/actions/authentication-actions';
+import { loginMerchant, loginStaff } from 'config/actions/authentication-actions';
 import { notifyError, notifySuccess } from 'utils/helpers';
+import { UserLoginRoles } from 'utils/enums';
 
 const OTP = () => {
   const navigate = useNavigate();
+  const { state } = useLocation();
   const [inputTypeState, setInputTypeState] = useState(false);
-  //   const { dispatch } = store;
-  //   const { state } = useLocation();
 
   const [OTPbtnDisabledState, setOTPbtnDisabledState] = useState(true);
   const [time, setTime] = useState({ seconds: 0, minutes: 5 });
   const timerRef = useRef<any>(null);
-
-  const validateLoginOTP = async (otp: string) => {
-    // const res = await login(state?.encryptedValues, otp, 'validate-otp');
-    // if (res.data) {
-    // } else {
-    //     notifyError('Something went wrong');
-    // }
-  };
 
   const onHandleInputType = () => {
     setInputTypeState(!inputTypeState);
@@ -37,28 +29,65 @@ const OTP = () => {
     initialValues: {
       otp: '',
     },
-    validationSchema: userLoginValidationSchema,
+    validationSchema: OTPValidationSchema,
     onSubmit: (values) => {
-      // const encryptedData = encrypt(values);
       const payload = {
+        data: state?.data,
         otp: values.otp,
+        step: 'otp-validation',
       };
-      // loginStaffMutation.mutate(payload);
+      state?.origin === UserLoginRoles.Admin
+        ? staffOTPMutation.mutate(payload)
+        : merchantOTPMutation.mutate(payload);
     },
   });
 
-  const loginStaffMutation = useMutation({
+  const staffOTPMutation = useMutation({
     mutationFn: (payload: { data: string } | undefined) => loginStaff(payload),
     onSuccess: (data) => {
-      // localStorage.setItem('user', JSON.stringify(data?.responseData));
-      // notifySuccess('Login Successful');
-      // formik.resetForm();
-      // navigate(`/${appRoutes.adminDashboard.dashboard.index}`);
+      localStorage.setItem('user', JSON.stringify(data?.responseData));
+      notifySuccess('Login Successful');
+      formik.resetForm();
+      navigate(`/${appRoutes.adminDashboard.dashboard.index}`);
     },
     onError: (error) => {
       console.log(error);
     },
   });
+
+  const merchantOTPMutation = useMutation({
+    mutationFn: (payload: { data: string } | undefined) => loginMerchant(payload),
+    onSuccess: (data) => {
+      localStorage.setItem('user', JSON.stringify(data?.responseData));
+      notifySuccess('Login Successful');
+      formik.resetForm();
+      navigate(`/${appRoutes.merchantDashboard.dashboard.index}`);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const onHandleResetOTP = async (data: boolean) => {
+    if (data) {
+      const res =
+        state?.origin === UserLoginRoles.Admin
+          ? await loginStaff({
+              data: state?.data,
+              otp: '',
+              step: 'credential-validation',
+            })
+          : await loginMerchant({
+              data: state?.data,
+              otp: '',
+              step: 'credential-validation',
+            });
+      if (res) {
+        notifySuccess('OTP Sent Successfully');
+        reset();
+      }
+    }
+  };
 
   useEffect(() => {
     // Clear the interval when the component unmounts
@@ -109,18 +138,6 @@ const OTP = () => {
     ),
     [time],
   );
-
-  const onHandleResetOTP = async (data: boolean) => {
-    if (data) {
-      // console.log(data);
-      //   await GET OTP AGAIN
-      //  const res = await login(state?.encryptedValues, null, 'validate-credentials');
-      //  if (res) {
-      //      notifySuccess(res.description);
-      //      reset();
-      //  }
-    }
-  };
 
   const handleOTPBTN = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
