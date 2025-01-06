@@ -6,12 +6,12 @@ import { getUserFromLocalStorage, isAdminAuthData, isMerchantAuthData } from 'ut
 import { useEffect, useState } from 'react';
 
 const Navbar = (props: { onOpenSidenav: () => void }) => {
-  const [username, setUsername] = useState('');
   dayjs.extend(LocalizedTime);
 
   const { onOpenSidenav } = props;
   const user = getUserFromLocalStorage();
 
+  const [username, setUsername] = useState('');
   useEffect(() => {
     if (isAdminAuthData(user)) {
       const { userData } = user;

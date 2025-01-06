@@ -10,10 +10,12 @@ import { useMutation } from '@tanstack/react-query';
 import { loginMerchant } from 'config/actions/authentication-actions';
 import { notifyError, notifySuccess } from 'utils/helpers';
 import { encrypt } from 'utils/helpers/security';
+import { UserLoginRoles } from 'utils/enums';
 
 const MerchantLogin = () => {
   const navigate = useNavigate();
   const [inputTypeState, setInputTypeState] = useState(false);
+  const [enccryptedData, setEncryptedData] = useState(false);
 
   const onHandleInputType = () => {
     setInputTypeState(!inputTypeState);
@@ -27,8 +29,11 @@ const MerchantLogin = () => {
     validationSchema: userLoginValidationSchema,
     onSubmit: (values) => {
       const encryptedData = encrypt(values);
+      setEncryptedData(encryptedData);
       const payload = {
         data: encryptedData,
+        otp: '',
+        step: 'credential-validation',
       };
       loginMerchantMutation.mutate(payload);
     },
@@ -37,10 +42,11 @@ const MerchantLogin = () => {
   const loginMerchantMutation = useMutation({
     mutationFn: (payload: { data: string } | undefined) => loginMerchant(payload),
     onSuccess: (data) => {
-      localStorage.setItem('user', JSON.stringify(data?.responseData));
-      notifySuccess('Login Successful');
+      notifySuccess('OTP Sent Successfully');
       formik.resetForm();
-      navigate(`/${appRoutes.merchantDashboard.dashboard.index}`);
+      navigate(`/${appRoutes.merchantLoginOTP}`, {
+        state: { data: enccryptedData, origin: UserLoginRoles.Merchant },
+      });
     },
     onError: (error) => {
       console.log(error);

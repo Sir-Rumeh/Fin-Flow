@@ -107,7 +107,7 @@ const CreateMerchant = () => {
                   <CustomInput
                     labelFor="accountNumber"
                     label="Enter Merchant Account Number"
-                    inputType="text"
+                    inputType="number"
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}

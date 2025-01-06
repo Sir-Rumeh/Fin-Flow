@@ -19,13 +19,26 @@ import {
 } from 'assets/icons';
 import { GridColDef } from '@mui/x-data-grid';
 import CustomTable from 'components/CustomTable';
-import { getUserFromLocalStorage } from 'utils/helpers';
+import { getUserFromLocalStorage, isAdminAuthData, isMerchantAuthData } from 'utils/helpers';
 
 const Dashboard = () => {
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
     pageSize: 10,
   });
+
+  const user = getUserFromLocalStorage() as MerchantAuthData;
+
+  const [username, setUsername] = useState('');
+  useEffect(() => {
+    if (isAdminAuthData(user)) {
+      const { userData } = user;
+      setUsername(`${userData.firstName}`);
+    } else if (isMerchantAuthData(user)) {
+      const { profileData } = user;
+      setUsername(`${profileData.firstName}`);
+    }
+  }, []);
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
     mandateCode: '',
@@ -135,7 +148,6 @@ const Dashboard = () => {
     },
   ];
 
-  const user = getUserFromLocalStorage() as MerchantAuthData;
   const loggedInMerchantId = user?.profileData?.merchantID;
 
   const { data, refetch } = useQuery({
@@ -160,7 +172,7 @@ const Dashboard = () => {
   return (
     <>
       <div className="px-5 py-5">
-        <h2 className="text-2xl font-semibold">Welcome Back, Anita!</h2>
+        <h2 className="text-2xl font-semibold">{`Welcome Back, ${username}!`}</h2>
         <div className="mt-5 rounded-lg bg-white px-5 py-5">
           <p className="my-3 text-lg font-semibold">Onboarded Merchants</p>
           <div className="h-[2px] w-full bg-grayPrimary"></div>
