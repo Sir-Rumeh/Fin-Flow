@@ -9,7 +9,7 @@ const iv = import.meta.env.VITE_REACT_APP_ENCRYPTION_IV;
 const clientIdToKey = (clientId) => {
   let clientKey = clientId.toString();
   while (clientKey.length < 32) {
-    clientKey = clientKey + '0'; // Pad with '0' at the end
+    clientKey = '0' + clientKey; // Pad with '0' at the end
   }
   return clientKey.slice(0, 32); // Ensure the key is exactly 32 bytes
 };
@@ -39,6 +39,7 @@ export const encrypt = (value) => {
     const encrypted = CryptoJS.AES.encrypt(value, key, {
       iv: initialVector,
       padding: CryptoJS.pad.Pkcs7,
+      // padding: CryptoJS.pad.,
       mode: CryptoJS.mode.CBC,
     });
 
