@@ -100,7 +100,7 @@ const CreateMandate = () => {
   };
 
   useEffect(() => {
-    setUploadedFiles(acceptedFiles);
+    setUploadedFiles(acceptedFiles as any);
   }, [acceptedFiles]);
 
   const referenceObject: MandateRequest = {
