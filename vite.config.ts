@@ -6,10 +6,23 @@ import react from "@vitejs/plugin-react";
 import path from "path";
 
 export default defineConfig({
-	plugins: [react()],
+	plugins: [react(), 
+		{
+			name: 'validate-imports',
+			enforce: 'pre',
+			resolveId(source) {
+			if (source.includes('?import&raw') && source.startsWith('/restricted-folder')) {
+				throw new Error('Access to restricted files via ?import&raw is not allowed.');
+			}
+			},
+		},
+	],
 	server: {
 		host: true,
 		port: 3000, 
+		fs: {
+			deny: ['restricted-folder', '/absolute/path/to/deny'],
+		},
 	},
 	resolve: {
 		alias: {
