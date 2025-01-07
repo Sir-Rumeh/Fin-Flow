@@ -145,7 +145,7 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
       params.append('MandateCode', formattedQueryParams.searchFilter);
     }
     if (formattedQueryParams.searchType === SearchTypes.SearchMerchants) {
-      params.append('Cif', formattedQueryParams.searchFilter);
+      params.append('AccountNumber', formattedQueryParams.searchFilter);
     }
     if (
       formattedQueryParams.searchType === SearchTypes.SearchProfiles ||

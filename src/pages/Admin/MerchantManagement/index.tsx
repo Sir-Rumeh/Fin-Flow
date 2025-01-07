@@ -134,6 +134,14 @@ const MerchantManagement = () => {
       sortable: false,
     },
     {
+      field: 'accountNumber',
+      headerName: 'Account Number',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+      sortable: false,
+    },
+    {
       field: 'status',
       headerName: 'Status',
       width: screen.width < 1000 ? 200 : undefined,
@@ -321,7 +329,7 @@ const MerchantManagement = () => {
                 <div className="">
                   <TableFilter
                     name={'searchMerchantCif'}
-                    placeholder={'Search Merchant CIF'}
+                    placeholder={'Search Merchant Account'}
                     label={'Search Merchant'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
