@@ -17,7 +17,7 @@ import {
   notifyError,
 } from 'utils/helpers';
 import { MandateRequest } from 'utils/interfaces';
-import * as XLSX from 'xlsx/xlsx.mjs';
+import * as XLSX from 'utils/libs/xlsx.mjs';
 
 const BulkUpload = () => {
   const navigate = useNavigate();

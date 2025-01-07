@@ -19,7 +19,7 @@ import { CloseIcon } from 'assets/icons';
 import { useMutation } from '@tanstack/react-query';
 import { StaffUserRequest } from 'utils/interfaces';
 import { addBulkStaffUserRequest } from 'config/actions/staff-user-actions';
-import * as XLSX from 'xlsx/xlsx.mjs';
+import * as XLSX from 'utils/libs/xlsx.mjs';
 
 function AddUser() {
   const navigate = useNavigate();

@@ -35,7 +35,7 @@ import {
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { getMerchants } from 'config/actions/merchant-actions';
 import { getAccounts, getAccountsByMerchantId } from 'config/actions/account-actions';
-import * as XLSX from 'xlsx/xlsx.mjs';
+import * as XLSX from 'utils/libs/xlsx.mjs';
 
 const CreateMandate = () => {
   const { tab, setTab } = useTabContext();
