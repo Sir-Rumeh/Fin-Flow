@@ -149,7 +149,7 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
     }
     if (
       formattedQueryParams.searchType === SearchTypes.SearchProfiles ||
-      SearchTypes.SearchStaffUser
+      formattedQueryParams.searchType === SearchTypes.SearchStaffUser
     ) {
       params.append('Email', formattedQueryParams.searchFilter);
     }
