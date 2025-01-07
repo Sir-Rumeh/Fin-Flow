@@ -15,11 +15,11 @@ import {
   matchesInterface,
   notifyError,
 } from 'utils/helpers';
-import * as XLSX from 'https://unpkg.com/xlsx/xlsx.mjs';
 import { CloseIcon } from 'assets/icons';
 import { useMutation } from '@tanstack/react-query';
 import { StaffUserRequest } from 'utils/interfaces';
 import { addBulkStaffUserRequest } from 'config/actions/staff-user-actions';
+import * as XLSX from 'xlsx/xlsx.mjs';
 
 function AddUser() {
   const navigate = useNavigate();
@@ -207,7 +207,7 @@ function AddUser() {
                     type="button"
                     title="Upload Bulk Users"
                     customPaddingX="1.5rem"
-                    width="10rem"
+                    width="11rem"
                     onClick={() => {
                       if (!(jsonData.length > 0)) {
                         notifyError(
