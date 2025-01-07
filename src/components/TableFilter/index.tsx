@@ -49,9 +49,9 @@ const TableFilter = ({
   const isMediumWidth = useMediaQuery('(min-width:1024px) and (max-width:1280px)');
 
   const clearFilter = () => {
+    formik.setFieldValue(selectName, null);
     formik.setFieldValue(fromDateName, null);
     formik.setFieldValue(toDateName, null);
-    formik.setFieldValue(selectName, null);
   };
 
   useEffect(() => {

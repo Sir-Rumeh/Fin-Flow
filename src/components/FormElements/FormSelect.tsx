@@ -41,7 +41,9 @@ const FormSelect = ({
   useEffect(() => {
     // if (formik.values[labelFor] && formik.values[labelFor] !== '') {
     const selectedOptionLabel = getTextToDisplay(formik.values[labelFor]);
-    if (selectedOptionLabel) {
+    if (!formik.values[labelFor]) {
+      setSelectedOption('Select here');
+    } else if (selectedOptionLabel) {
       setSelectedOption(selectedOptionLabel);
     }
   }, [formik.values[labelFor]]);

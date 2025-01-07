@@ -230,7 +230,7 @@ const ProfileRequests = () => {
                 <div className="">
                   <TableFilter
                     name={'searchProfile'}
-                    placeholder={'Search Profile'}
+                    placeholder={'Search Profile Email'}
                     label={'Search Profile'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
