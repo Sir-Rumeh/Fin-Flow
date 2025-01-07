@@ -6,7 +6,7 @@ import CustomInput from 'components/FormElements/CustomInput';
 import FormDatePicker from 'components/FormElements/FormDatePicker';
 import { useFormik } from 'formik';
 import { ModalWrapper } from 'hoc/ModalWrapper';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
 import CustomFileUpload from 'components/FormElements/CustomFileUpload';
@@ -123,7 +123,7 @@ const SingleUpload = () => {
         billerAccountNumber: values.billerAccountNumber,
         bankName: values.billerBankName,
       };
-      console.log(payload);
+      // console.log('encoded document', values.supportingDocument);
 
       // Convert the payload to a JSON string
       const jsonString = JSON.stringify(payload);
@@ -170,8 +170,15 @@ const SingleUpload = () => {
         : getAccounts(queryKey[1] as QueryParams),
   });
 
+  const refetchAccountRef = useRef(false);
+
   useEffect(() => {
-    refetchAccountsOptions();
+    if (!refetchAccountRef.current) {
+      refetchAccountRef.current = true;
+      return;
+    } else {
+      refetchAccountsOptions();
+    }
   }, [formik.values.merchantId]);
 
   return (

@@ -6,6 +6,8 @@ import AdminLogin from 'pages/Auth/AdminLogin';
 import MerchantLogin from 'pages/Auth/MerchantLogin';
 import MerchantRoutes from 'routes/MerchantRoutes';
 import OTP from 'pages/Auth/OTP';
+import AdminProtectedRoute from 'routes/ProtectedRoutes/AdminProtectedRoutes';
+import MerchantProtectedRoute from './ProtectedRoutes/MerchantProtectedRoutes';
 
 export default function Routing() {
   return (
@@ -15,10 +17,21 @@ export default function Routing() {
       <Route path={`${appRoutes.adminLoginOTP}`} element={<OTP />} />
       <Route path={`${appRoutes.merchantLogin}`} element={<MerchantLogin />} />
       <Route path={`${appRoutes.merchantLoginOTP}`} element={<OTP />} />
-      <Route path={`${appRoutes.adminDashboard.dashboard.index}/*`} element={<AdminRoutes />} />
+      <Route
+        path={`${appRoutes.adminDashboard.dashboard.index}/*`}
+        element={
+          <AdminProtectedRoute>
+            <AdminRoutes />
+          </AdminProtectedRoute>
+        }
+      />
       <Route
         path={`${appRoutes.merchantDashboard.dashboard.index}/*`}
-        element={<MerchantRoutes />}
+        element={
+          <MerchantProtectedRoute>
+            <MerchantRoutes />
+          </MerchantProtectedRoute>
+        }
       />
     </Routes>
   );
