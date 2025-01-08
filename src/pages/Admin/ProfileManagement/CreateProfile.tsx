@@ -3,7 +3,7 @@ import appRoutes from 'utils/constants/routes';
 import ChevronRight from 'assets/icons/ChevronRight';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
@@ -12,8 +12,8 @@ import FormSelect from 'components/FormElements/FormSelect';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { ProfileRequest, QueryParams, Role } from 'utils/interfaces';
 import { getMerchants } from 'config/actions/merchant-actions';
-import { formatApiDataForDropdown } from 'utils/helpers';
-import { getAccounts } from 'config/actions/account-actions';
+import { filterSelectedOption, formatApiDataForDropdown } from 'utils/helpers';
+import { getAccounts, getAccountsByMerchantId } from 'config/actions/account-actions';
 import { createProfileSchema } from 'utils/formValidators';
 import { addProfileRequest } from 'config/actions/profile-actions';
 import { getRoles } from 'config/actions/role-permission-actions';
@@ -76,9 +76,12 @@ function CreateProfile() {
     queryFn: ({ queryKey }) => getMerchants(queryKey[1] as QueryParams),
   });
 
-  const { data: accountData } = useQuery({
+  const { data: accountData, refetch: refetchAccountsOptions } = useQuery({
     queryKey: ['accounts', queryParams],
-    queryFn: ({ queryKey }) => getAccounts(queryKey[1] as QueryParams),
+    queryFn: ({ queryKey }) =>
+      formik.values.merchantID
+        ? getAccountsByMerchantId(formik.values.merchantID)
+        : getAccounts(queryKey[1] as QueryParams),
   });
 
   const { data: roles } = useQuery({
@@ -102,6 +105,17 @@ function CreateProfile() {
     );
     setMerchantRoles(filteredRoles);
   }, [roles]);
+
+  const refetchAccountRef = useRef(false);
+
+  useEffect(() => {
+    if (!refetchAccountRef.current) {
+      refetchAccountRef.current = true;
+      return;
+    } else {
+      refetchAccountsOptions();
+    }
+  }, [formik.values.merchantID]);
 
   return (
     <>
@@ -138,7 +152,19 @@ function CreateProfile() {
                     label="Merchant Name"
                     formik={formik}
                     useTouched
-                    options={formatApiDataForDropdown(data?.responseData?.items, 'name', 'name')}
+                    options={
+                      formik.values.merchantID?.length > 0
+                        ? formatApiDataForDropdown(
+                            filterSelectedOption(
+                              formik.values.merchantID,
+                              'id',
+                              data?.responseData?.items,
+                            ),
+                            'name',
+                            'name',
+                          )
+                        : formatApiDataForDropdown(data?.responseData?.items, 'name', 'name')
+                    }
                     scrollableOptions
                     scrollableHeight="max-h-[15rem]"
                   />
@@ -156,11 +182,23 @@ function CreateProfile() {
                     label="Account Number"
                     formik={formik}
                     useTouched
-                    options={formatApiDataForDropdown(
-                      accountData?.responseData?.items,
-                      'accountNumber',
-                      'accountNumber',
-                    )}
+                    options={
+                      formik.values.accountID?.length > 0
+                        ? formatApiDataForDropdown(
+                            filterSelectedOption(
+                              formik.values.accountID,
+                              'id',
+                              accountData?.responseData?.items,
+                            ),
+                            'accountNumber',
+                            'accountNumber',
+                          )
+                        : formatApiDataForDropdown(
+                            accountData?.responseData?.items,
+                            'accountNumber',
+                            'accountNumber',
+                          )
+                    }
                     scrollableOptions
                     scrollableHeight="max-h-[15rem]"
                   />

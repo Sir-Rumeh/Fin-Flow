@@ -15,7 +15,7 @@ import FormSelect from 'components/FormElements/FormSelect';
 import { MandateRequest, QueryParams } from 'utils/interfaces';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { addMandateRequest } from 'config/actions/dashboard-actions';
-import { formatApiDataForDropdown, notifyError } from 'utils/helpers';
+import { filterSelectedOption, formatApiDataForDropdown, notifyError } from 'utils/helpers';
 import dayjs from 'dayjs';
 import {
   dailyFrequencyOptions,
@@ -330,11 +330,23 @@ const SingleUpload = () => {
                   label="Account Number"
                   formik={formik}
                   useTouched
-                  options={formatApiDataForDropdown(
-                    accountData?.responseData?.items,
-                    'accountNumber',
-                    'accountNumber',
-                  )}
+                  options={
+                    formik.values.accountName?.length > 0
+                      ? formatApiDataForDropdown(
+                          filterSelectedOption(
+                            formik.values.accountName,
+                            'accountName',
+                            accountData?.responseData?.items,
+                          ),
+                          'accountNumber',
+                          'accountNumber',
+                        )
+                      : formatApiDataForDropdown(
+                          accountData?.responseData?.items,
+                          'accountNumber',
+                          'accountNumber',
+                        )
+                  }
                   scrollableOptions
                   scrollableHeight="max-h-[15rem]"
                 />
@@ -345,7 +357,19 @@ const SingleUpload = () => {
                   label="Account Id"
                   formik={formik}
                   useTouched
-                  options={formatApiDataForDropdown(accountData?.responseData?.items, 'id', 'id')}
+                  options={
+                    formik.values.accountName?.length > 0
+                      ? formatApiDataForDropdown(
+                          filterSelectedOption(
+                            formik.values.accountName,
+                            'accountName',
+                            accountData?.responseData?.items,
+                          ),
+                          'id',
+                          'id',
+                        )
+                      : formatApiDataForDropdown(accountData?.responseData?.items, 'id', 'id')
+                  }
                   scrollableOptions
                   scrollableHeight="max-h-[15rem]"
                 />
