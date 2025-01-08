@@ -23,8 +23,11 @@ import {
 } from 'config/actions/merchant-actions';
 import { useFormik } from 'formik';
 import { getUserFromLocalStorage, isAdminAuthData, isMerchantAuthData } from 'utils/helpers';
+import dayjs from 'dayjs';
+import LocalizedTime from 'dayjs/plugin/localizedFormat';
 
 const Dashboard = () => {
+  dayjs.extend(LocalizedTime);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [paginationData, setPaginationData] = useState({
@@ -308,6 +311,9 @@ const Dashboard = () => {
           <div className="slide-down w-full rounded-md border bg-white p-4 sm:w-[300px] 2xl:w-[320px]">
             <div className="border-b pb-2">
               <h3 className="text-md font-semibold md:text-lg">Onboarded Merchant</h3>
+              <h3 className="text-md font-semibold md:text-lg">
+                ( Jan {dayjs().format('YYYY')} - Dec {dayjs().format('YYYY')})
+              </h3>
             </div>
             <div className="mt-6 flex items-center justify-start gap-x-4 border-b pb-2">
               <p className="text-md font-semibold md:text-lg">Filter:</p>
@@ -361,7 +367,10 @@ const Dashboard = () => {
           </div>
           <div className="slide-down relative overflow-x-scroll rounded-md border bg-white p-4 lg:overflow-hidden">
             <div className="mb-2 border-b pb-1">
-              <h3 className="text-md font-semibold md:text-lg">Merchant Onboarding Analytics</h3>
+              <h3 className="text-md font-semibold md:text-lg">
+                Merchant Onboarding Analytics ( Jan {dayjs().format('YYYY')} - Dec{' '}
+                {dayjs().format('YYYY')})
+              </h3>
             </div>
             <BarChart
               grid={{ horizontal: true }}

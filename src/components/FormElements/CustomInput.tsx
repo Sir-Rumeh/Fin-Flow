@@ -1,5 +1,6 @@
 import EyeIcon from 'assets/icons/EyeIcon';
 import EyeSlashIcon from 'assets/icons/EyeSlashIcon';
+import { useEffect, useRef } from 'react';
 
 type CustomInputProps = {
   labelFor: string;
@@ -40,8 +41,32 @@ const CustomInput = ({
   handleInputType = () => {},
   disabled,
 }: CustomInputProps) => {
+  const inputRef = useRef<HTMLInputElement | null>(null);
+
+  useEffect(() => {
+    const handleKeyExceptions = (event: KeyboardEvent) => {
+      if (event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-') {
+        event.preventDefault();
+      }
+    };
+
+    const inputElement = inputRef.current;
+    if (inputElement) {
+      inputElement.addEventListener('keydown', handleKeyExceptions);
+    }
+
+    return () => {
+      if (inputElement) {
+        inputElement.removeEventListener('keydown', handleKeyExceptions);
+      }
+    };
+  }, []);
+
   return (
-    <div className={`relative ${verticalMargin && 'mb-4 mt-6'} flex h-auto flex-col gap-2`}>
+    <div
+      ref={inputRef}
+      className={`relative ${verticalMargin && 'mb-4 mt-6'} flex h-auto flex-col gap-2`}
+    >
       <label htmlFor={labelFor} className="absolute bottom-16 font-semibold">
         {label}
       </label>
