@@ -39,7 +39,6 @@ const FormSelect = ({
   };
 
   useEffect(() => {
-    // if (formik.values[labelFor] && formik.values[labelFor] !== '') {
     const selectedOptionLabel = getTextToDisplay(formik.values[labelFor]);
     if (!formik.values[labelFor]) {
       setSelectedOption('Select here');
@@ -66,8 +65,8 @@ const FormSelect = ({
 
   const handleChange = (option: DropdownOption) => {
     setSelectedOption(option.label);
-    setIsOpen(false);
     formik.setFieldValue(labelFor, option.value);
+    setIsOpen(false);
   };
 
   return (

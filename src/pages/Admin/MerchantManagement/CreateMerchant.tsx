@@ -29,8 +29,8 @@ const CreateMerchant = () => {
   const closeModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
-  const [merchantCifValidated, setMerchantCifValidated] = useState(false);
-  const [validatedMerchantCif, setValidatedMerchantCif] = useState('');
+  const [merchantAccountValidated, setMerchantAccountValidated] = useState(false);
+  const [validatedMerchantAccount, setValidatedMerchantAccount] = useState('');
 
   const formik = useFormik({
     initialValues: {
@@ -40,7 +40,7 @@ const CreateMerchant = () => {
       rcNumber: '',
       address: '',
       merchantFee: '',
-      merchantCifValidated,
+      merchantAccountValidated,
     },
     validationSchema: onboardMerchantSchema,
     onSubmit: (values) => {
@@ -49,12 +49,11 @@ const CreateMerchant = () => {
       const payload = {
         merchantId: '',
         name: values.merchantName,
-        accountNumber: values.accountNumber,
+        accountNumber: `${values.accountNumber}`,
         rcNumber: values.rcNumber,
         address: values.address,
-        InternalChargeFee: parseFloat(values.merchantFee),
+        internalChargeFee: parseFloat(values.merchantFee),
         cif: values.merchantCIF,
-        // cif: validatedMerchantCif,
       };
       setMerchantRequest(payload);
       openModal('confirmOnboardMerchant');
@@ -64,11 +63,11 @@ const CreateMerchant = () => {
   const validateCifStatus = async () => {
     const res = await validateMerchantCif(formik.values.accountNumber);
     if (res.responseData) {
-      setMerchantCifValidated(true);
-      setValidatedMerchantCif(res.responseData?.cif);
+      setMerchantAccountValidated(true);
+      setValidatedMerchantAccount(formik.values.accountNumber);
       formik.setFieldValue('rcNumber', res.responseData?.rcNo || '');
-      formik.setFieldValue('rcNumber', res.responseData?.rcNo || '');
-      formik.setFieldValue('merchantCIF', res.responseData?.cif || '');
+      formik.setFieldValue('merchantName', res.responseData?.businessName || '');
+      formik.setFieldValue('address', res.responseData?.businessAddress || '');
     }
   };
 
@@ -113,7 +112,7 @@ const CreateMerchant = () => {
                     formik={formik}
                     useTouched={false}
                     verticalMargin={false}
-                    // disabled={merchantCifValidated && validatedMerchantCif.length > 0}
+                    disabled={merchantAccountValidated && validatedMerchantAccount.length > 0}
                   />
                 </div>
                 <ButtonComponent
@@ -129,10 +128,10 @@ const CreateMerchant = () => {
                       return formik.setFieldError('merchantCIF', 'Merchant CIF is required');
                     validateCifStatus();
                   }}
-                  disabled={merchantCifValidated}
+                  disabled={merchantAccountValidated}
                 />
               </div>
-              {merchantCifValidated && (
+              {merchantAccountValidated && (
                 <div className="slide-down mt-12">
                   <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 md:grid-cols-2">
                     <CustomInput
@@ -162,7 +161,7 @@ const CreateMerchant = () => {
                     <CustomInput
                       labelFor="merchantFee"
                       label="Merchant Fee"
-                      inputType="text"
+                      inputType="number"
                       placeholder="Enter here"
                       maxW="w-full"
                       formik={formik}
