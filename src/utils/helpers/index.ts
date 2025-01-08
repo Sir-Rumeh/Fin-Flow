@@ -297,3 +297,7 @@ export const convertExcelArrayToObjects = (
 export function matchesInterface<T extends object>(obj: any, reference: T): obj is T {
   return Object.keys(reference).every((key) => key in obj);
 }
+
+export const filterSelectedOption = (filter: any, filterId: any, options: any) => {
+  return options.filter((opt: any) => opt[filterId] === filter);
+};

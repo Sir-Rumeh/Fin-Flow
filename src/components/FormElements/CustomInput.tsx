@@ -51,15 +51,20 @@ const CustomInput = ({
     };
 
     const inputElement = inputRef.current;
-    if (inputElement) {
-      inputElement.addEventListener('keydown', handleKeyExceptions);
-    }
+    console.log('inputElement', inputElement);
+    if (inputElement && inputElement.querySelector('input[type="number"]')) {
+      const numberInput = inputElement.querySelector('input[type="number"]') as HTMLInputElement;
 
-    return () => {
-      if (inputElement) {
-        inputElement.removeEventListener('keydown', handleKeyExceptions);
+      if (numberInput) {
+        numberInput.addEventListener('keydown', handleKeyExceptions);
       }
-    };
+
+      return () => {
+        if (numberInput) {
+          numberInput.removeEventListener('keydown', handleKeyExceptions);
+        }
+      };
+    }
   }, []);
 
   return (
