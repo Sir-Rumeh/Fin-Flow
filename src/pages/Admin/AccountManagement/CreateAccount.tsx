@@ -11,7 +11,7 @@ import { useFormik } from 'formik';
 import { AccountRequest, QueryParams } from 'utils/interfaces';
 import { createAccountSchema } from 'utils/formValidators';
 import FormSelect from 'components/FormElements/FormSelect';
-import { formatApiDataForDropdown } from 'utils/helpers';
+import { filterSelectedOption, formatApiDataForDropdown } from 'utils/helpers';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { getMerchants } from 'config/actions/merchant-actions';
 import { addAccountRequest, getAccounts } from 'config/actions/account-actions';
@@ -110,7 +110,19 @@ function CreateAccount() {
                     label="Merchant Name"
                     formik={formik}
                     useTouched
-                    options={formatApiDataForDropdown(data?.responseData?.items, 'name', 'name')}
+                    options={
+                      formik.values.merchantId?.length > 0
+                        ? formatApiDataForDropdown(
+                            filterSelectedOption(
+                              formik.values.merchantId,
+                              'id',
+                              data?.responseData?.items,
+                            ),
+                            'name',
+                            'name',
+                          )
+                        : formatApiDataForDropdown(data?.responseData?.items, 'name', 'name')
+                    }
                     scrollableOptions
                     scrollableHeight="max-h-[15rem]"
                   />
@@ -119,7 +131,19 @@ function CreateAccount() {
                     label="CIF"
                     formik={formik}
                     useTouched
-                    options={formatApiDataForDropdown(data?.responseData?.items, 'cif', 'cif')}
+                    options={
+                      formik.values.merchantId?.length > 0
+                        ? formatApiDataForDropdown(
+                            filterSelectedOption(
+                              formik.values.merchantId,
+                              'id',
+                              data?.responseData?.items,
+                            ),
+                            'cif',
+                            'cif',
+                          )
+                        : formatApiDataForDropdown(data?.responseData?.items, 'cif', 'cif')
+                    }
                     scrollableOptions
                     scrollableHeight="max-h-[15rem]"
                   />

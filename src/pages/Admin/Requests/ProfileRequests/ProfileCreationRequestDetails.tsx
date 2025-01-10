@@ -151,10 +151,7 @@ const ProfileCreationRequestDetails = () => {
                 title="Full Name"
                 content={`${data?.responseData?.firstName || ''} ${data?.responseData?.lastName || ''}`}
               />
-              <DetailsCard
-                title="Merchant Name"
-                content={`${data?.responseData?.firstName || ''} ${data?.responseData?.lastName || ''}`}
-              />
+              <DetailsCard title="Merchant Name" content={data?.responseData?.merchantName || ''} />
               <DetailsCard title="Account Id" content={data?.responseData?.accountID || ''} />
               <DetailsCard title="Email" content={data?.responseData?.email || ''} />
               <DetailsCard title="CIF Number" content="12345" />

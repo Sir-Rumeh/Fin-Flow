@@ -78,6 +78,7 @@ AxiosClient.interceptors.response.use(
     dispatch(uiStopLoading());
     const originalRequest = error.config;
     if (error?.response?.status === 401) {
+      console.log('error', error);
       if (isRequestRetried) {
         return Promise.reject(error);
       } else {

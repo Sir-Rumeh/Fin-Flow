@@ -104,6 +104,7 @@ const ProfileManagement = () => {
   };
 
   const excelHeaders = [
+    { label: 'Merchant Name', key: 'merchantName' },
     { label: 'Account ID', key: 'accountId' },
     { label: 'User Name', key: 'userName' },
     { label: 'Email', key: 'email' },
@@ -112,6 +113,13 @@ const ProfileManagement = () => {
   ];
 
   const columns: GridColDef[] = [
+    {
+      field: 'merchantName',
+      headerName: 'Merchant Name',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
     {
       field: 'accountID',
       headerName: 'Account ID',
