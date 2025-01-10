@@ -261,11 +261,11 @@ const AddRolePermission = () => {
               {selectedRole ? (
                 <h3>{selectedRole?.designation} Permissions</h3>
               ) : (
-                <h3>Admin Permissions</h3>
+                <h3>{`${Designation.StaffUser} Permissions`}</h3>
               )}
             </div>
             <div className="mt-2 grid grid-cols-2 gap-20 rounded-lg border p-2 md:grid-cols-3 xl:grid-cols-4 xl:p-4 2xl:p-5">
-              {!selectedRole ? (
+              {!selectedRole && (
                 <>
                   {adminAccessRights.map((right) => (
                     <div key={right.id} className="flex flex-col gap-2">
@@ -314,7 +314,9 @@ const AddRolePermission = () => {
                     </div>
                   ))}
                 </>
-              ) : selectedRole?.designation === Designation.StaffUser ? (
+              )}
+
+              {selectedRole && selectedRole?.designation === Designation.StaffUser && (
                 <>
                   {adminAccessRights.map((right) => (
                     <div key={right.id} className="flex flex-col gap-2">
@@ -363,7 +365,9 @@ const AddRolePermission = () => {
                     </div>
                   ))}
                 </>
-              ) : selectedRole?.designation === Designation.Merchant ? (
+              )}
+
+              {selectedRole && selectedRole?.designation === Designation.Merchant && (
                 <>
                   {merchantAccessRights.map((right) => (
                     <div key={right.id} className="flex flex-col gap-2">
@@ -412,7 +416,9 @@ const AddRolePermission = () => {
                     </div>
                   ))}
                 </>
-              ) : selectedRole && !selectedRole?.designation ? (
+              )}
+
+              {selectedRole && !selectedRole?.designation ? (
                 <>
                   <div className="slide-down col-span-4 mt-4 flex h-[30vh] w-full flex-col items-center justify-center p-4 pb-8">
                     <div>
