@@ -32,7 +32,7 @@ const Navbar = (props: { onOpenSidenav: () => void }) => {
           <Hamburger className="" />
         </span>
         <div className="flex items-center justify-between">
-          <div className="flex flex-col items-start text-sm font-semibold">
+          <div className="flex flex-col items-start justify-between text-sm font-semibold">
             <p className="text-lightPurple">{`${username}`}</p>
 
             <p className="hidden flex-1 justify-start text-[#78350F] md:flex lg:mr-32">
@@ -44,8 +44,16 @@ const Navbar = (props: { onOpenSidenav: () => void }) => {
           </div>
         </div>
 
-        <div className="flex flex-shrink-0 items-center space-x-6">
-          <div className="flex">
+        <div className="flex items-center justify-between">
+          <div className="flex flex-col items-start justify-between text-sm font-semibold">
+            <p className="flex flex-1 justify-start md:flex">User Role:</p>
+            <p className="flex flex-1 justify-start text-[#78350F] md:flex">{user?.roleName}</p>
+          </div>
+        </div>
+
+        {/* <div className="flex flex-shrink-0 items-center space-x-6">
+          <div className="flex h-full justify-start bg-green-400">
+            <p className="flex flex-1 justify-start text-[#78350F] md:flex">{user?.roleName}</p>
             <div className="relative flex items-center justify-center p-1">
               <NotificationIcon />
               <span className="absolute -right-2 -top-2 hidden w-8 scale-75 rounded-3xl bg-lightRed p-1 text-center font-semibold text-red-400">
@@ -53,7 +61,7 @@ const Navbar = (props: { onOpenSidenav: () => void }) => {
               </span>
             </div>
           </div>
-        </div>
+        </div> */}
       </div>
     </header>
   );

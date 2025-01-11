@@ -1,7 +1,7 @@
 export default function ErrorCheckMark() {
   return (
     <svg
-      className="scale-[200%] transform"
+      className="scale-[220%] transform"
       fill="red"
       xmlns="http://www.w3.org/2000/svg"
       width="24"

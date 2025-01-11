@@ -1,7 +1,7 @@
 export default function GoodCheckMark() {
   return (
     <svg
-      className="scale-[200%] transform"
+      className="scale-[220%] transform"
       xmlns="http://www.w3.org/2000/svg"
       fill="green"
       width="24"
