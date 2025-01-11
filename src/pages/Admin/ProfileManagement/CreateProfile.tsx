@@ -23,6 +23,11 @@ function CreateProfile() {
   const navigate = useNavigate();
   const [merchantRoles, setMerchantRoles] = useState<Role[]>([]);
   const [profileRequest, setProfileRequest] = useState<ProfileRequest>();
+  const [inputTypeState, setInputTypeState] = useState(false);
+
+  const onHandleInputType = () => {
+    setInputTypeState(!inputTypeState);
+  };
   const [modals, setModals] = useState({
     confirmCreate: false,
     creationSuccessful: false,
@@ -229,10 +234,13 @@ function CreateProfile() {
                   <CustomInput
                     labelFor="password"
                     label="Password"
-                    inputType="password"
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
+                    passwordInput
+                    inputType={inputTypeState ? 'text' : 'password'}
+                    iconState={inputTypeState}
+                    handleInputType={onHandleInputType}
                   />
                   <div className="">
                     <FormSelect

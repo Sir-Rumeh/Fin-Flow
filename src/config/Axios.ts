@@ -104,7 +104,6 @@ AxiosClient.interceptors.response.use(
           } catch (error) {
             console.error(error);
             dispatch(uiStopLoading());
-            notifyError('Session expired. Please log in again.');
             localStorage.clear();
             setTimeout(() => {
               window.location.href = '/';
@@ -122,7 +121,7 @@ AxiosClient.interceptors.response.use(
       console.log('error', error);
       if (isRequestRetried) {
         logoutUser();
-        return Promise.reject(error);
+        // return Promise.reject(error);
         // return Promise.reject(new Error('Token refresh failed. User logged out.'));
       } else {
         isRequestRetried = true;
