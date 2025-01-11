@@ -4,34 +4,44 @@ import { TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
 import RoleList from './RoleList';
 import RolePermission from './RolePermission';
+import AssignRoleToAdmin from './AssignRoleToAdmin';
 
 const RolesPermission = () => {
   const navigate = useNavigate();
 
-  const roleType = {
+  const roleSettingsType = {
     roles: 'Roles',
     permission: 'Role Permissions',
+    assignRole: 'Assign Role To Admin',
   };
 
-  const [activeTab, setActiveTab] = useState(roleType.roles);
+  const [activeTab, setActiveTab] = useState(roleSettingsType.roles);
 
   const tabsList: TabsProps[] = [
     {
       tabIndex: 1,
-      tabName: roleType.roles,
+      tabName: roleSettingsType.roles,
     },
     {
       tabIndex: 2,
-      tabName: roleType.permission,
+      tabName: roleSettingsType.permission,
+    },
+    {
+      tabIndex: 3,
+      tabName: roleSettingsType.assignRole,
     },
   ];
 
   const pageDisplay = () => {
     switch (activeTab) {
-      case roleType.roles:
+      case roleSettingsType.roles:
         return <RoleList />;
-      case roleType.permission:
+      case roleSettingsType.permission:
         return <RolePermission />;
+      case roleSettingsType.assignRole:
+        return (
+          <AssignRoleToAdmin actionnCompleteCallBack={() => setActiveTab(roleSettingsType.roles)} />
+        );
       default:
         return null;
     }

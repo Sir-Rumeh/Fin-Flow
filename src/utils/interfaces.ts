@@ -220,6 +220,10 @@ export interface RoleRequest {
   description: string | undefined;
   designation: string | undefined;
 }
+export interface AssignRoleRequest {
+  userId: string | undefined;
+  roleId: string | undefined;
+}
 
 export interface PermissionInterface {
   module: string;
@@ -264,6 +268,7 @@ export interface AdminUserData {
 export interface AdminAuthData {
   userData: AdminUserData;
   refreshToken: string;
+  roleName: string;
   token: string;
   timeStamp: string;
 }
@@ -288,6 +293,7 @@ export interface MerchantUserData {
 export interface MerchantAuthData {
   profileData: MerchantUserData;
   refreshToken: string;
+  roleName: string;
   token: string;
   timeStamp: string;
 }

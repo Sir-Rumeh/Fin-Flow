@@ -51,7 +51,6 @@ const CustomInput = ({
     };
 
     const inputElement = inputRef.current;
-    console.log('inputElement', inputElement);
     if (inputElement && inputElement.querySelector('input[type="number"]')) {
       const numberInput = inputElement.querySelector('input[type="number"]') as HTMLInputElement;
 

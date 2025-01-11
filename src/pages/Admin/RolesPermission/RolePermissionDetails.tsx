@@ -6,6 +6,8 @@ import appRoutes from 'utils/constants/routes';
 import { useQuery } from '@tanstack/react-query';
 import { getRolePermissionByRoleId } from 'config/actions/role-permission-actions';
 import { PermissionInterface } from 'utils/interfaces';
+import GoodCheckMark from 'assets/icons/GoodCheckMark';
+import ErrorCheckMark from 'assets/icons/ErrorCheckMark';
 
 const RolePermissionDetails = () => {
   const [searchParams] = useSearchParams();
@@ -74,8 +76,12 @@ const RolePermissionDetails = () => {
                           {filteredProperties?.map((access: any) => {
                             return (
                               <div className="text-sx flex items-center gap-x-1 font-extralight">
-                                <p>{`${access.key} : `}</p>
-                                <p className="text-lightPurple">{` ${access.value}`}</p>
+                                <span className="flex items-center gap-0">
+                                  <p className="">{`${access.key} : `}</p>
+                                  <p className="scale-[20%] transform">
+                                    {access.value ? <GoodCheckMark /> : <ErrorCheckMark />}
+                                  </p>
+                                </span>
                               </div>
                             );
                           })}

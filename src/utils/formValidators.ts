@@ -144,12 +144,12 @@ export const createProfileSchema = Yup.object().shape({
     .required('Password is required')
     .min(8, 'Password must be at least 8 characters')
     .max(16, 'Password must not exceed 16 characters')
-    .matches(
-      /^(?=.*[A-Z])(?=.*[a-zA-Z])(?=.*\d)[A-Za-z\d]{8,16}$/,
-      'Password must be alphanumeric and include at least one uppercase letter',
-    ),
+    .matches(/[A-Z]/, 'Password must include at least one uppercase letter')
+    .matches(/^(?=.*[a-zA-Z])(?=.*\d).+$/, 'Password must be alphanumeric')
+    .matches(/[\W_]/, 'Password must include at least one special character'),
   role: Yup.string().required('User role is required'),
 });
+
 export const createAccountSchema = Yup.object().shape({
   merchantId: Yup.string().required('Merchant ID is required'),
   merchantName: Yup.string().required('Merchant name is required'),
@@ -165,6 +165,11 @@ export const addRoleSchema = Yup.object().shape({
   roleName: Yup.string().required('Role name is required'),
   roleDescription: Yup.string().required('Role Description is required'),
   designation: Yup.string().required('Designation is required'),
+});
+
+export const assignRoleSchema = Yup.object().shape({
+  userId: Yup.string().required('User is required'),
+  roleId: Yup.string().required('Role is required'),
 });
 
 export const addRolePermissionSchema = Yup.object().shape({
