@@ -1,6 +1,11 @@
 import AxiosClient from 'config/UserManagementAxios';
 import { appendParams } from 'utils/helpers';
-import { QueryParams, RolePermissionRequest, RoleRequest } from 'utils/interfaces';
+import {
+  AssignRoleRequest,
+  QueryParams,
+  RolePermissionRequest,
+  RoleRequest,
+} from 'utils/interfaces';
 
 export const getRoles = async (queryParams?: QueryParams) => {
   const params = new URLSearchParams();
@@ -45,6 +50,14 @@ export const getRolePermissionByRoleId = async (requestId: string | undefined) =
 export const addRoleRequest = async (payload: RoleRequest | undefined) => {
   try {
     const response = await AxiosClient.post('/roles/add', payload);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+export const assignRoleRequest = async (payload: AssignRoleRequest | undefined) => {
+  try {
+    const response = await AxiosClient.post('/userroles/add', payload);
     return response.data;
   } catch (error) {
     throw error;

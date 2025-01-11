@@ -150,6 +150,7 @@ export const createProfileSchema = Yup.object().shape({
     ),
   role: Yup.string().required('User role is required'),
 });
+
 export const createAccountSchema = Yup.object().shape({
   merchantId: Yup.string().required('Merchant ID is required'),
   merchantName: Yup.string().required('Merchant name is required'),
@@ -165,6 +166,11 @@ export const addRoleSchema = Yup.object().shape({
   roleName: Yup.string().required('Role name is required'),
   roleDescription: Yup.string().required('Role Description is required'),
   designation: Yup.string().required('Designation is required'),
+});
+
+export const assignRoleSchema = Yup.object().shape({
+  userId: Yup.string().required('User is required'),
+  roleId: Yup.string().required('Role is required'),
 });
 
 export const addRolePermissionSchema = Yup.object().shape({

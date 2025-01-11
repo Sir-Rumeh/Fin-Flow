@@ -78,12 +78,54 @@ AxiosClient.interceptors.response.use(
     dispatch(uiStopLoading());
     const originalRequest = error.config;
     if (error?.response?.status === 401) {
+      const user = getUserFromLocalStorage();
+      const logoutUser = async () => {
+        if (user) {
+          try {
+            const isAdmin = isAdminAuthData(user);
+            const isMerchant = isMerchantAuthData(user);
+            isAdmin
+              ? await logoutStaff({
+                  email: user.userData.email,
+                  refreshToken: user.refreshToken,
+                })
+              : isMerchant
+                ? await logoutMerchant({
+                    email: user.profileData.email,
+                    refreshToken: user.refreshToken,
+                  })
+                : null;
+            dispatch(uiStopLoading());
+            notifyError('Session expired. Please log in again.');
+            localStorage.clear();
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 1500);
+          } catch (error) {
+            console.error(error);
+            dispatch(uiStopLoading());
+            notifyError('Session expired. Please log in again.');
+            localStorage.clear();
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 1500);
+          }
+        } else {
+          dispatch(uiStopLoading());
+          notifyError('Session expired. Please log in again.');
+          localStorage.clear();
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 1500);
+        }
+      };
       console.log('error', error);
       if (isRequestRetried) {
+        logoutUser();
         return Promise.reject(error);
+        // return Promise.reject(new Error('Token refresh failed. User logged out.'));
       } else {
         isRequestRetried = true;
-        const user = getUserFromLocalStorage();
         if (user) {
           try {
             let newToken;
@@ -107,46 +149,6 @@ AxiosClient.interceptors.response.use(
               }
             } else {
               dispatch(uiStopLoading());
-              const logoutUser = async () => {
-                if (user) {
-                  try {
-                    const isAdmin = isAdminAuthData(user);
-                    const isMerchant = isMerchantAuthData(user);
-                    isAdmin
-                      ? await logoutStaff({
-                          email: user.userData.email,
-                          refreshToken: user.refreshToken,
-                        })
-                      : isMerchant
-                        ? await logoutMerchant({
-                            email: user.profileData.email,
-                            refreshToken: user.refreshToken,
-                          })
-                        : null;
-                    dispatch(uiStopLoading());
-                    notifyError('Session expired. Please log in again.');
-                    localStorage.clear();
-                    setTimeout(() => {
-                      window.location.href = '/';
-                    }, 1500);
-                  } catch (error) {
-                    console.error(error);
-                    dispatch(uiStopLoading());
-                    notifyError('Session expired. Please log in again.');
-                    localStorage.clear();
-                    setTimeout(() => {
-                      window.location.href = '/';
-                    }, 1500);
-                  }
-                } else {
-                  dispatch(uiStopLoading());
-                  notifyError('Session expired. Please log in again.');
-                  localStorage.clear();
-                  setTimeout(() => {
-                    window.location.href = '/';
-                  }, 1500);
-                }
-              };
               logoutUser();
               return Promise.reject(new Error('Token refresh failed. User logged out.'));
             }

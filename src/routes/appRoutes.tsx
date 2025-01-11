@@ -69,6 +69,7 @@ import AddRolePermission from 'pages/Admin/RolesPermission/AddRolePermission';
 import RoleDetails from 'pages/Admin/RolesPermission/RoleDetails';
 import RolePermissionDetails from 'pages/Admin/RolesPermission/RolePermissionDetails';
 import EnableRequestDetails from 'pages/Merchant/Requests/request-details/EnableRequestDetails';
+import AssignRoleToAdmin from 'pages/Admin/RolesPermission/AssignRoleToAdmin';
 
 const adminRoutes: RoutesType[] = [
   {

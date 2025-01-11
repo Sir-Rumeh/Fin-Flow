@@ -220,6 +220,10 @@ export interface RoleRequest {
   description: string | undefined;
   designation: string | undefined;
 }
+export interface AssignRoleRequest {
+  userId: string | undefined;
+  roleId: string | undefined;
+}
 
 export interface PermissionInterface {
   module: string;
