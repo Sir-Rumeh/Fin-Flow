@@ -46,7 +46,7 @@ const Navbar = (props: { onOpenSidenav: () => void }) => {
 
         <div className="flex items-center justify-between">
           <div className="flex flex-col items-start justify-between text-sm font-semibold">
-            <p className="flex flex-1 justify-start md:flex">User Role:</p>
+            <p className="flex flex-1 justify-start md:flex">User Role</p>
             <p className="flex flex-1 justify-start text-[#78350F] md:flex">{user?.roleName}</p>
           </div>
         </div>
