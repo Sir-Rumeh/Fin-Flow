@@ -11,11 +11,12 @@ import { useFormik } from 'formik';
 import FormDatePicker from 'components/FormElements/FormDatePicker';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import { useQuery } from '@tanstack/react-query';
-import { QueryParams } from 'utils/interfaces';
-import { getAuditTrails } from 'config/actions/audit-trail-actions';
+import { MerchantAuthData, QueryParams } from 'utils/interfaces';
+import { getAuditTrailByMerchantId, getAuditTrails } from 'config/actions/audit-trail-actions';
 import dayjs from 'dayjs';
 import * as Yup from 'yup';
 import { SearchTypes } from 'utils/enums';
+import { getUserFromLocalStorage } from 'utils/helpers';
 
 interface AuditTrailEntry {
   id: string;
@@ -33,6 +34,8 @@ const AuditTrail = () => {
   const printPdfRef = useRef(null);
   const isSmallWidth = useMediaQuery('(max-width:370px)');
   const [showFilteredAudit, setShowFilteredAudit] = useState(false);
+  const [searchedTerm, setSearchedTerm] = useState('');
+  const [auditRecords, setAuditRecords] = useState<any>();
   const [selectedRowData, setSelectedRowData] = useState<AuditTrailEntry>();
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
@@ -124,27 +127,13 @@ const AuditTrail = () => {
 
   const formik = useFormik({
     initialValues: {
-      actor: '',
+      statusFilter: '',
+      searchFilter: '',
       startDate: '',
       endDate: '',
     },
     validationSchema: validationSchema,
-    onSubmit: (values) => {
-      const { startDate, endDate } = values;
-      const formattedStartDate = startDate ? dayjs(startDate).format('YYYY-MM-DD') : '';
-      const formattedEndDate = endDate ? dayjs(endDate).format('YYYY-MM-DD') : '';
-
-      setQueryParams((prev) => ({
-        ...prev,
-        startDate: formattedStartDate,
-        endDate: formattedEndDate,
-        pageNo: paginationData.pageNumber,
-        pageSize: paginationData.pageSize,
-        searchFilter: values.actor,
-      }));
-      setShowFilteredAudit(true);
-      refetch();
-    },
+    onSubmit: (values) => {},
   });
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
@@ -152,24 +141,40 @@ const AuditTrail = () => {
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
-    searchFilter: formik.values.actor,
+    searchFilter: formik.values.searchFilter,
     searchType: SearchTypes.SearchAudits,
     startDate: formik.values.startDate,
     endDate: formik.values.endDate,
   });
 
-  const { data, refetch } = useQuery({
-    queryKey: ['audits', queryParams],
-    queryFn: ({ queryKey }) => getAuditTrails(queryKey[1] as QueryParams),
-  });
+  const user = getUserFromLocalStorage() as MerchantAuthData;
+  const loggedInMerchantId = user?.profileData?.merchantID;
+
+  const getAuditTrailRecords = async () => {
+    setSearchedTerm(formik.values.searchFilter);
+    const res = await getAuditTrailByMerchantId(loggedInMerchantId, queryParams as QueryParams);
+    if (res.responseData) {
+      setAuditRecords(res.responseData);
+      setShowFilteredAudit(true);
+    }
+  };
 
   useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
+      searchFilter: formik.values.searchFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
+      startDate: formik.values.startDate,
+      endDate: formik.values.endDate,
     }));
-  }, [paginationData]);
+  }, [paginationData, formik.values.searchFilter]);
+
+  useEffect(() => {
+    if (queryParams.pageNo) {
+      getAuditTrailRecords();
+    }
+  }, [queryParams.pageNo]);
 
   return (
     <>
@@ -179,7 +184,7 @@ const AuditTrail = () => {
           <div className="mt-6 flex w-full flex-col gap-4 py-1 md:flex-row md:items-center">
             <div className="w-full">
               <CustomInput
-                labelFor="actor"
+                labelFor="searchFilter"
                 label="Username/Staff ID"
                 inputType="text"
                 placeholder="Enter here"
@@ -220,28 +225,32 @@ const AuditTrail = () => {
                 customPaddingX="2rem"
                 width={isSmallWidth ? '10rem' : undefined}
                 height="3rem"
-                onClick={formik.handleSubmit}
+                onClick={() => {
+                  getAuditTrailRecords();
+                }}
               />
             </div>
           </div>
         </div>
-        {showFilteredAudit && (
+        {showFilteredAudit && auditRecords.items && (
           <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
             <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
-              <h2 className="text-xl font-bold text-lightPurple">
-                Staff Name: {formik.values.actor}
-              </h2>
-              <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
+              {searchedTerm?.length > 0 ? (
+                <h2 className="text-xl font-bold text-lightPurple">{`Staff Name: ${searchedTerm.toLocaleUpperCase()}`}</h2>
+              ) : null}
+              <div
+                className={`flex w-full items-center ${searchedTerm?.length > 0 ? 'lg:w-[50%]' : 'lg:w-full'} lg:justify-end`}
+              >
                 <ExportBUtton
-                  data={data?.responseData?.items}
+                  data={auditRecords.items}
                   printPdfRef={printPdfRef}
                   headers={excelHeaders}
-                  fileName="Mandates.csv"
+                  fileName="Audits.csv"
                 />
               </div>
             </div>
             <h3 className="mt-2 w-full rounded-tl-xl rounded-tr-xl border px-3 py-4 text-lg font-semibold">
-              Activities between{' '}
+              Activities between:{' '}
               {formik.values.startDate
                 ? dayjs(formik.values.startDate).format('D MMMM')
                 : 'Start Date'}{' '}
@@ -252,9 +261,9 @@ const AuditTrail = () => {
             </h3>
             <div ref={printPdfRef} className="w-full">
               <CustomTable
-                tableData={data?.responseData?.items}
+                tableData={auditRecords?.items}
                 columns={AuditTableColumn}
-                rowCount={data?.responseData?.totalCount}
+                rowCount={auditRecords?.totalCount}
                 paginationData={paginationData}
                 setPaginationData={setPaginationData}
               />
