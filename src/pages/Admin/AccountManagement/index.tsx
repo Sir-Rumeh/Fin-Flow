@@ -343,7 +343,6 @@ const AccountManagement = () => {
                 />
               </div>
             </div>
-
             <div className="mt-6 w-full">
               <div ref={printPdfRef} className="w-full">
                 <CustomTable
@@ -378,7 +377,7 @@ const AccountManagement = () => {
           isOpen={modals.disableSuccessful}
           setIsOpen={() => closeModal('disableSuccessful')}
           title={'Success!!'}
-          info={'You have successfully disabled this account'}
+          info={'You have successfully disabled this account and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -407,7 +406,7 @@ const AccountManagement = () => {
           isOpen={modals.enableSuccessful}
           setIsOpen={() => closeModal('enableSuccessful')}
           title={'Success!!'}
-          info={'You have successfully enabled this account'}
+          info={'You have successfully enabled this account and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -436,7 +435,7 @@ const AccountManagement = () => {
           isOpen={modals.deleteSuccessful}
           setIsOpen={() => closeModal('deleteSuccessful')}
           title={'Success!!'}
-          info={'You have successfully deleted this account'}
+          info={'You have successfully deleted this account and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {

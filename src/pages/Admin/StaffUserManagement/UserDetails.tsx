@@ -42,7 +42,7 @@ const UserDetails = () => {
   };
 
   const { data, refetch } = useQuery({
-    queryKey: ['users', staffUserId],
+    queryKey: ['user-details', staffUserId],
     queryFn: ({ queryKey }) => getStaffUserById(queryKey[1]),
   });
 
@@ -209,7 +209,7 @@ const UserDetails = () => {
           isOpen={modals.disableSuccessful}
           setIsOpen={() => closeModal('disableSuccessful')}
           title={'Success!!'}
-          info={'You have successfully disabled this user'}
+          info={'You have successfully disabled this user and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -237,7 +237,7 @@ const UserDetails = () => {
           isOpen={modals.enableSuccessful}
           setIsOpen={() => closeModal('enableSuccessful')}
           title={'Success!!'}
-          info={'You have successfully enabled this user'}
+          info={'You have successfully enabled this user and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -265,7 +265,7 @@ const UserDetails = () => {
           isOpen={modals.deleteSuccessful}
           setIsOpen={() => closeModal('deleteSuccessful')}
           title={'Success!!'}
-          info={'You have successfully deleted this user'}
+          info={'You have successfully deleted this user and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {

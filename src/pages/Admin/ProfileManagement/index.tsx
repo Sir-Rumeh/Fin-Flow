@@ -386,7 +386,7 @@ const ProfileManagement = () => {
           isOpen={modals.disableSuccessful}
           setIsOpen={() => closeModal('disableSuccessful')}
           title={'Success!!'}
-          info={'You have successfully disabled this profile'}
+          info={'You have successfully disabled this profile and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -414,7 +414,7 @@ const ProfileManagement = () => {
           isOpen={modals.enableSuccessful}
           setIsOpen={() => closeModal('enableSuccessful')}
           title={'Success!!'}
-          info={'You have successfully enabled this profile'}
+          info={'You have successfully enabled this profile and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -442,7 +442,7 @@ const ProfileManagement = () => {
           isOpen={modals.deleteSuccessful}
           setIsOpen={() => closeModal('deleteSuccessful')}
           title={'Success!!'}
-          info={'You have successfully deleted this profile'}
+          info={'You have successfully deleted this profile and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {

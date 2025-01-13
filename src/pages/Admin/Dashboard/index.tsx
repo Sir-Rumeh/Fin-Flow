@@ -312,7 +312,7 @@ const Dashboard = () => {
             <div className="border-b pb-2">
               <h3 className="text-md font-semibold md:text-lg">Onboarded Merchant</h3>
               <h3 className="text-md font-semibold md:text-lg">
-                ( Jan {dayjs().format('YYYY')} - Dec {dayjs().format('YYYY')})
+                ( Jan {dayjs().format('YYYY')} - Dec {dayjs().format('YYYY')} )
               </h3>
             </div>
             <div className="mt-6 flex items-center justify-start gap-x-4 border-b pb-2">
@@ -369,7 +369,7 @@ const Dashboard = () => {
             <div className="mb-2 border-b pb-1">
               <h3 className="text-md font-semibold md:text-lg">
                 Merchant Onboarding Analytics ( Jan {dayjs().format('YYYY')} - Dec{' '}
-                {dayjs().format('YYYY')})
+                {dayjs().format('YYYY')} )
               </h3>
             </div>
             <BarChart
@@ -425,7 +425,7 @@ const Dashboard = () => {
           isOpen={modals.disableSuccessful}
           setIsOpen={() => closeModal('disableSuccessful')}
           title={'Success!!'}
-          info={'You have successfully disabled this merchant'}
+          info={'You have successfully disabled this merchant and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -454,7 +454,7 @@ const Dashboard = () => {
           isOpen={modals.enableSuccessful}
           setIsOpen={() => closeModal('enableSuccessful')}
           title={'Success!!'}
-          info={'You have successfully enabled this merchant'}
+          info={'You have successfully enabled this merchant and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -483,7 +483,7 @@ const Dashboard = () => {
           isOpen={modals.deleteSuccessful}
           setIsOpen={() => closeModal('deleteSuccessful')}
           title={'Success!!'}
-          info={'You have successfully deleted this merchant'}
+          info={'You have successfully deleted this merchant and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {

@@ -179,7 +179,7 @@ const EditMerchant = () => {
           isOpen={modals.editSuccessful}
           setIsOpen={() => closeModal('editSuccessful')}
           title={'Success!!'}
-          info={'You have successfully saved new changes'}
+          info={'You have successfully saved new changes and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {

@@ -76,7 +76,7 @@ const AssignRoleToAdmin = ({
   }, [roles]);
   useEffect(() => {
     const filteredStaffs = staffUsersList?.responseData?.items?.filter(
-      (staff: any) => staff.role.length > 0,
+      (staff: any) => !(staff.role.length > 0),
     );
     setStaffUsers(filteredStaffs);
   }, [staffUsers]);
@@ -103,7 +103,7 @@ const AssignRoleToAdmin = ({
             <div className="">
               <FormSelect
                 labelFor="userId"
-                label="Select Staff User"
+                label="Staff Users Without Role"
                 formik={formik}
                 options={formatApiDataForDropdown(staffUsers, 'email', 'id')}
                 useTouched

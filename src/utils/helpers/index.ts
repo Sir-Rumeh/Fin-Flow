@@ -139,6 +139,7 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
       params.append('AccountNumber', formattedQueryParams.searchFilter);
     }
     if (formattedQueryParams.searchType === SearchTypes.SearchAudits) {
+      console.log('queryParams', formattedQueryParams);
       params.append('Actor', formattedQueryParams.searchFilter);
     }
     if (formattedQueryParams.searchType === SearchTypes.SearchMandates) {

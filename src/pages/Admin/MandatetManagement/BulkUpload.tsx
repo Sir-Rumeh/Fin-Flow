@@ -210,7 +210,7 @@ const BulkUpload = () => {
                   type="button"
                   title="Upload Bulk Mandates"
                   customPaddingX="1.5rem"
-                  width="10rem"
+                  width="11rem"
                   onClick={() => {
                     if (!(jsonData.length > 0)) {
                       notifyError(
@@ -247,7 +247,7 @@ const BulkUpload = () => {
           isOpen={modals.creationSuccessful}
           setIsOpen={() => closeModal('creationSuccessful')}
           title={'Success!!'}
-          info={'You have successfully added a new mandate'}
+          info={'You have successfully added a new mandate and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {

@@ -618,7 +618,7 @@ const SingleUpload = () => {
           isOpen={modals.creationSuccessful}
           setIsOpen={() => closeModal('creationSuccessful')}
           title={'Success!!'}
-          info={'You have successfully added a new mandate'}
+          info={'You have successfully added a new mandate and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {

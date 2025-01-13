@@ -16,6 +16,7 @@ import { QueryParams } from 'utils/interfaces';
 import { getDateRange } from 'utils/helpers';
 import { getAuditTrails } from 'config/actions/audit-trail-actions';
 import { SearchTypes } from 'utils/enums';
+import dayjs from 'dayjs';
 
 const AuditTrail = () => {
   const printPdfRef = useRef(null);
@@ -25,8 +26,8 @@ const AuditTrail = () => {
 
   const [selectedAudit, setSelectedAudit] = useState<any>();
   const [showFilteredAudit, setShowFilteredAudit] = useState(false);
+  const [searchedTerm, setSearchedTerm] = useState('');
   const [auditRecords, setAuditRecords] = useState<any>();
-
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
     pageSize: 10,
@@ -131,6 +132,7 @@ const AuditTrail = () => {
   });
 
   const getAuditTrailRecords = async () => {
+    setSearchedTerm(formik.values.searchFilter);
     const res = await getAuditTrails(queryParams as QueryParams);
     if (res.responseData) {
       setAuditRecords(res.responseData);
@@ -141,13 +143,13 @@ const AuditTrail = () => {
   useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
-      actor: formik.values.searchFilter,
+      searchFilter: formik.values.searchFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
       startDate: formik.values.startDate,
       endDate: formik.values.endDate,
     }));
-  }, [paginationData.pageNumber]);
+  }, [paginationData, formik.values.searchFilter]);
 
   useEffect(() => {
     if (queryParams.pageNo) {
@@ -169,7 +171,7 @@ const AuditTrail = () => {
               <div className="w-full">
                 <CustomInput
                   labelFor="searchFilter"
-                  label="Account Number/Username/CIF/Staff ID"
+                  label="Username/Staff ID"
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
@@ -220,11 +222,11 @@ const AuditTrail = () => {
           {showFilteredAudit && auditRecords.items && (
             <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
               <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
-                {formik.values.searchFilter ? (
-                  <h2 className="text-xl font-bold text-lightPurple">{`Staff Name: ${auditRecords.items[0].actor}`}</h2>
+                {searchedTerm?.length > 0 ? (
+                  <h2 className="text-xl font-bold text-lightPurple">{`Staff Name: ${searchedTerm.toLocaleUpperCase()}`}</h2>
                 ) : null}
                 <div
-                  className={`flex w-full items-center ${formik.values.searchFilter ? 'lg:w-[50%]' : 'lg:w-full'} lg:justify-end`}
+                  className={`flex w-full items-center ${searchedTerm?.length > 0 ? 'lg:w-[50%]' : 'lg:w-full'} lg:justify-end`}
                 >
                   <ExportBUtton
                     data={auditRecords.items}
@@ -235,7 +237,14 @@ const AuditTrail = () => {
                 </div>
               </div>
               <h3 className="mt-2 w-full rounded-tl-xl rounded-tr-xl border px-3 py-4 text-lg font-semibold">
-                {` Activities between ${getDateRange(auditRecords.items)}`}
+                Activities between:{' '}
+                {formik.values.startDate
+                  ? dayjs(formik.values.startDate).format('D MMMM')
+                  : 'Start Date'}{' '}
+                to{' '}
+                {formik.values.endDate
+                  ? dayjs(formik.values.endDate).format('D MMMM, YYYY')
+                  : 'End Date'}
               </h3>
               <div className="w-full">
                 <div ref={printPdfRef} className="w-full">

@@ -401,7 +401,7 @@ const StaffUserManagement = () => {
           isOpen={modals.disableSuccessful}
           setIsOpen={() => closeModal('disableSuccessful')}
           title={'Success!!'}
-          info={'You have successfully disabled this user'}
+          info={'You have successfully disabled this user and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -430,7 +430,7 @@ const StaffUserManagement = () => {
           isOpen={modals.enableSuccessful}
           setIsOpen={() => closeModal('enableSuccessful')}
           title={'Success!!'}
-          info={'You have successfully enabled this user'}
+          info={'You have successfully enabled this user and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -458,7 +458,7 @@ const StaffUserManagement = () => {
           isOpen={modals.deleteSuccessful}
           setIsOpen={() => closeModal('deleteSuccessful')}
           title={'Success!!'}
-          info={'You have successfully deleted this user'}
+          info={'You have successfully deleted this user and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {

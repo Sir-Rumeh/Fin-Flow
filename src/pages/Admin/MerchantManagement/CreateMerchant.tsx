@@ -217,7 +217,9 @@ const CreateMerchant = () => {
           isOpen={modals.onboardingSuccessful}
           setIsOpen={() => closeModal('onboardingSuccessful')}
           title={'Success!!'}
-          info={'You have successfully onboarded this merchant'}
+          info={
+            'You have successfully onboarded this merchant and your request is pending approval'
+          }
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
