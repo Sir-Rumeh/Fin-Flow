@@ -445,7 +445,7 @@ const MandateDetails = () => {
           isOpen={modals.disableSuccessful}
           setIsOpen={() => closeModal('disableSuccessful')}
           title={'Success!!'}
-          info={'You have successfully disabled this mandate'}
+          info={'You have successfully disabled this mandate and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -474,7 +474,7 @@ const MandateDetails = () => {
           isOpen={modals.enableSuccessful}
           setIsOpen={() => closeModal('enableSuccessful')}
           title={'Success!!'}
-          info={'You have successfully enabled this mandate'}
+          info={'You have successfully enabled this mandate and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -503,7 +503,7 @@ const MandateDetails = () => {
           isOpen={modals.deleteSuccessful}
           setIsOpen={() => closeModal('deleteSuccessful')}
           title={'Success!!'}
-          info={'You have successfully deleted this mandate'}
+          info={'You have successfully deleted this mandate and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -595,7 +595,7 @@ const MandateDetails = () => {
           isOpen={modals.editSuccessful}
           setIsOpen={() => closeModal('editSuccessful')}
           title={'Success!!'}
-          info={'You have successfully saved new changes'}
+          info={'You have successfully saved new changes and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {

@@ -781,7 +781,7 @@ const CreateMandate = () => {
           isOpen={modals.confirmAddMandate}
           setIsOpen={() => closeModal('confirmAddMandate')}
           title={'Success!!'}
-          info={'You have successfully added this mandate'}
+          info={'You have successfully added this mandate and your request is pending approval'}
           icon={<SuccessModalIcon />}
           type={'completed'}
           proceedAction={() => {
@@ -811,7 +811,7 @@ const CreateMandate = () => {
           isOpen={modals.confirmAddBulkMandate}
           setIsOpen={() => closeModal('confirmAddBulkMandate')}
           title={'Success!!'}
-          info={'You have successfully added a new mandate'}
+          info={'You have successfully added a new mandate and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {

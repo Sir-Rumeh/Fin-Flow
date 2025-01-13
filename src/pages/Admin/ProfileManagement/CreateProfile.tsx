@@ -291,7 +291,7 @@ function CreateProfile() {
           isOpen={modals.creationSuccessful}
           setIsOpen={() => closeModal('creationSuccessful')}
           title={'Success!!'}
-          info={'You have successfully added this profile'}
+          info={'You have successfully added this profile and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {

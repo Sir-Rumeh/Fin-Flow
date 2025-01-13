@@ -156,7 +156,7 @@ const MerchantDeletionRequestDetails = () => {
                 icon={<SubTitleIconGreen />}
                 route={{
                   pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantAccounts}`,
-                  search: `?${createSearchParams({ id: requestId })}`,
+                  search: `?${createSearchParams({ id: merchantId })}`,
                 }}
               />
               <DashboardCard
@@ -167,7 +167,7 @@ const MerchantDeletionRequestDetails = () => {
                 icon={<SubTitleIconYellow />}
                 route={{
                   pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantProfiles}`,
-                  search: `?${createSearchParams({ id: requestId })}`,
+                  search: `?${createSearchParams({ id: merchantId })}`,
                 }}
               />
               <DashboardCard
@@ -178,7 +178,7 @@ const MerchantDeletionRequestDetails = () => {
                 icon={<SubTitleIconYellow />}
                 route={{
                   pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantMandates}`,
-                  search: `?${createSearchParams({ id: requestId })}`,
+                  search: `?${createSearchParams({ id: merchantId })}`,
                 }}
               />
             </div>

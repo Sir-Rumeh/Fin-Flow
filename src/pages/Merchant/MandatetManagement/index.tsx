@@ -600,7 +600,7 @@ const MandatetManagement = () => {
           isOpen={modals.saveModifyMandate}
           setIsOpen={() => closeModal('saveModifyMandate')}
           title={'Success!!'}
-          info={'You have successfully saved new changes'}
+          info={'You have successfully saved new changes and your request is pending approval'}
           icon={<SuccessModalIcon />}
           type={'completed'}
           proceedAction={() => closeModal('saveModifyMandate')}
@@ -625,7 +625,7 @@ const MandatetManagement = () => {
           isOpen={modals.confirmEnableMandate}
           setIsOpen={() => closeModal('confirmEnableMandate')}
           title={'Success!!'}
-          info={'You have successfully enabled this mandate'}
+          info={'You have successfully enabled this mandate and your request is pending approval'}
           icon={<SuccessModalIcon />}
           type={'completed'}
           proceedAction={() => closeModal('confirmEnableMandate')}
@@ -650,7 +650,7 @@ const MandatetManagement = () => {
           isOpen={modals.confirmDisableMandate}
           setIsOpen={() => closeModal('confirmDisableMandate')}
           title={'Success!!'}
-          info={'You have successfully disabled this mandate'}
+          info={'You have successfully disabled this mandate and your request is pending approval'}
           icon={<SuccessModalIcon />}
           type={'completed'}
           proceedAction={() => closeModal('confirmDisableMandate')}
@@ -675,7 +675,7 @@ const MandatetManagement = () => {
           isOpen={modals.confirmDeleteProfile}
           setIsOpen={() => closeModal('confirmDeleteProfile')}
           title={'Success!!'}
-          info={'You have successfully deleted this mandate'}
+          info={'You have successfully deleted this mandate and your request is pending approval'}
           icon={<SuccessModalIcon />}
           type={'completed'}
           proceedAction={() => closeModal('confirmDeleteProfile')}

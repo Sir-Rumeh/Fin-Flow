@@ -88,7 +88,7 @@ const MerchantEnableRequestDetails = () => {
   });
 
   const { data: ApproverDetails } = useQuery({
-    queryKey: ['users', data?.responseData?.approvedBy],
+    queryKey: ['user-details', data?.responseData?.approvedBy],
     queryFn: ({ queryKey }) => getStaffUserById(queryKey[1]),
   });
 
@@ -151,7 +151,7 @@ const MerchantEnableRequestDetails = () => {
                 icon={<SubTitleIconGreen />}
                 route={{
                   pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantAccounts}`,
-                  search: `?${createSearchParams({ id: requestId })}`,
+                  search: `?${createSearchParams({ id: merchantId })}`,
                 }}
               />
               <DashboardCard
@@ -162,7 +162,7 @@ const MerchantEnableRequestDetails = () => {
                 icon={<SubTitleIconYellow />}
                 route={{
                   pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantProfiles}`,
-                  search: `?${createSearchParams({ id: requestId })}`,
+                  search: `?${createSearchParams({ id: merchantId })}`,
                 }}
               />
               <DashboardCard
@@ -173,7 +173,7 @@ const MerchantEnableRequestDetails = () => {
                 icon={<SubTitleIconYellow />}
                 route={{
                   pathname: `/${appRoutes.adminDashboard.merchantManagement.merchantMandates}`,
-                  search: `?${createSearchParams({ id: requestId })}`,
+                  search: `?${createSearchParams({ id: merchantId })}`,
                 }}
               />
             </div>

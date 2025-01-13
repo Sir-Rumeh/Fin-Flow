@@ -204,7 +204,7 @@ function CreateAccount() {
           isOpen={modals.creationSuccessful}
           setIsOpen={() => closeModal('creationSuccessful')}
           title={'Success!!'}
-          info={'You have successfully added this account'}
+          info={'You have successfully added this account and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {

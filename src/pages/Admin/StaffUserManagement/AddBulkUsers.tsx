@@ -244,7 +244,7 @@ function AddUser() {
           isOpen={modals.creationSuccessful}
           setIsOpen={() => closeModal('creationSuccessful')}
           title={'Success!!'}
-          info={'You have successfully added new users'}
+          info={'You have successfully added new users and your request is pending approval'}
           icon={<ActionSuccessIcon />}
           type={'completed'}
           proceedAction={() => {
