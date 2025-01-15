@@ -38,7 +38,6 @@ AxiosClient.interceptors.request.use(
   (axiosConfig) => {
     if (!navigator.onLine) {
       const networkError = new Error(networkErrorMessage);
-      notifyError(networkError.message);
       throw networkError;
     }
     dispatch(uiStartLoading());
@@ -104,15 +103,24 @@ AxiosClient.interceptors.response.use(
             dispatch(uiStopLoading());
             notifyError('Session expired. Please log in again.');
             localStorage.clear();
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 1500);
           } catch (error) {
             console.error(error);
             dispatch(uiStopLoading());
             localStorage.clear();
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 1500);
           }
         } else {
           dispatch(uiStopLoading());
           notifyError('Session expired. Please log in again.');
           localStorage.clear();
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 1500);
         }
       };
       if (isRequestRetried) {
@@ -152,12 +160,17 @@ AxiosClient.interceptors.response.use(
             notifyError('Session expired. Please log in again.');
             dispatch(uiStopLoading());
             localStorage.clear();
-            return Promise.reject(err);
+            setTimeout(() => {
+              window.location.href = '/';
+            }, 1500);
           }
         } else {
           notifyError('User is not authenticated');
           dispatch(uiStopLoading());
           localStorage.clear();
+          setTimeout(() => {
+            window.location.href = '/';
+          }, 1500);
         }
       }
     } else if (error?.response?.status === 400 || 404) {
