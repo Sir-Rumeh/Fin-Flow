@@ -105,26 +105,25 @@ const SingleUpload = () => {
         frequency: values.frequency,
         service: values.service,
         accountName: values.accountName,
-        accountNumber: values.accountNumber,
+        accountNumber: `${values.accountNumber}`,
         bankCode: values.bankCode,
         supportingDocument: values.supportingDocument,
         narration: values.narration,
         payerName: values.payerName,
         payeeName: values.payeeName,
         payerEmailAddress: values.payerEmailAddress,
-        payerPhoneNumber: values.payerPhoneNumber,
+        payerPhoneNumber: `${values.payerPhoneNumber}`,
         payerAddress: values.payerAddress,
         payeeEmailAddress: values.payeeEmailAddress,
-        payeePhoneNumber: values.payeePhoneNumber,
-        payeeAddress: values.payeePhoneNumber,
+        payeePhoneNumber: `${values.payeePhoneNumber}`,
+        payeeAddress: values.payeeAddress,
         biller: values.biller,
         billerID: values.billerId,
         billerCode: values.billerCode,
-        billerAccountNumber: values.billerAccountNumber,
+        billerAccountNumber: `${values.billerAccountNumber}`,
         bankName: values.billerBankName,
       };
       // console.log('encoded document', values.supportingDocument);
-
       // Convert the payload to a JSON string
       const jsonString = JSON.stringify(payload);
 
