@@ -216,7 +216,19 @@ const StaffUserRequests = () => {
           <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-4">
             <div className="flex w-full flex-col justify-between gap-y-4 border-b pb-3 2xl:flex-row 2xl:items-center">
               <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10 lg:w-[50%]">
-                <CustomTabs tabs={tabsList} activeTab={activeTab} setActiveTab={setActiveTab} />
+                <CustomTabs
+                  tabs={tabsList}
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
+                  performExtraAction={() =>
+                    setPaginationData((prev) => {
+                      return {
+                        ...prev,
+                        pageNumber: 1,
+                      };
+                    })
+                  }
+                />
               </div>
               <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
                 <div className="">

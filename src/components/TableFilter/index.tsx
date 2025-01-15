@@ -142,7 +142,10 @@ const TableFilter = ({
                       borderColor="#5C068C"
                       border={0.5}
                       height="3rem"
-                      onClick={() => setCloseFilterCard(true)}
+                      onClick={() => {
+                        clearFilter();
+                        setCloseFilterCard(!closeFilterCard);
+                      }}
                       title="Cancel"
                       fontWeight={500}
                     />

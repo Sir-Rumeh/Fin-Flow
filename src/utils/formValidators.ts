@@ -23,7 +23,7 @@ export const reasonForRejectionSchema = Yup.object().shape({
 });
 
 export const onboardMerchantSchema = Yup.object().shape({
-  merchantCIF: Yup.string().required('Merchant CIF is required'),
+  // merchantCIF: Yup.string().required('Merchant CIF is required'),
   merchantAccountValidated: Yup.boolean().required('Merchant Account needs to be validated'),
   merchantName: Yup.mixed().when('merchantCIF', ([merchantCIF], schema) => {
     if (merchantCIF) return Yup.string().required('Merchant Name is required');

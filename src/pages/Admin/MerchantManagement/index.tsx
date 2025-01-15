@@ -55,7 +55,7 @@ const MerchantManagement = () => {
 
   const formik = useFormik({
     initialValues: {
-      searchMerchantCif: '',
+      searchMerchantAccount: '',
       fromDateFilter: '',
       toDateFilter: '',
       statusFilter: '',
@@ -63,7 +63,7 @@ const MerchantManagement = () => {
     onSubmit: (values) => {
       setQueryParams((prev) => ({
         ...prev,
-        searchFilter: formik.values.searchMerchantCif,
+        searchFilter: formik.values.searchMerchantAccount,
       }));
       refetch();
     },
@@ -75,7 +75,7 @@ const MerchantManagement = () => {
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
-    searchFilter: formik.values.searchMerchantCif,
+    searchFilter: formik.values.searchMerchantAccount,
     searchType: SearchTypes.SearchMerchants,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
@@ -87,11 +87,11 @@ const MerchantManagement = () => {
       status: formik.values.statusFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchMerchantCif,
+      searchFilter: formik.values.searchMerchantAccount,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [paginationData, formik.values.searchMerchantCif]);
+  }, [paginationData, formik.values.searchMerchantAccount]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
@@ -105,7 +105,7 @@ const MerchantManagement = () => {
   const excelHeaders = [
     { label: 'Merchant ID', key: 'id' },
     { label: 'Merchant Name', key: 'name' },
-    { label: 'CIF Number', key: 'cif' },
+    { label: 'Account Number', key: 'accountNumber' },
     { label: 'Active Status', key: 'isActive' },
     { label: 'Date Requested', key: 'dateCreated' },
   ];
@@ -125,14 +125,14 @@ const MerchantManagement = () => {
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
     },
-    {
-      field: 'cif',
-      headerName: 'CIF Number',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-      sortable: false,
-    },
+    // {
+    //   field: 'cif',
+    //   headerName: 'CIF Number',
+    //   width: screen.width < 1000 ? 200 : undefined,
+    //   flex: screen.width >= 1000 ? 1 : undefined,
+    //   headerClassName: 'ag-thead',
+    //   sortable: false,
+    // },
     {
       field: 'accountNumber',
       headerName: 'Account Number',
@@ -328,7 +328,7 @@ const MerchantManagement = () => {
               <div className="slide-down flex w-full items-center lg:w-[50%] lg:justify-start">
                 <div className="">
                   <TableFilter
-                    name={'searchMerchantCif'}
+                    name={'searchMerchantAccount'}
                     placeholder={'Search Merchant Account'}
                     label={'Search Merchant'}
                     value={searchTerm}

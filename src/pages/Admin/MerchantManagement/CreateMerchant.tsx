@@ -34,7 +34,7 @@ const CreateMerchant = () => {
 
   const formik = useFormik({
     initialValues: {
-      merchantCIF: '',
+      // merchantCIF: '',
       merchantName: '',
       accountNumber: '',
       rcNumber: '',
@@ -44,8 +44,7 @@ const CreateMerchant = () => {
     },
     validationSchema: onboardMerchantSchema,
     onSubmit: (values) => {
-      console.log(values.merchantCIF);
-
+      // console.log(values.merchantCIF);
       const payload = {
         merchantId: '',
         name: values.merchantName,
@@ -53,7 +52,7 @@ const CreateMerchant = () => {
         rcNumber: values.rcNumber,
         address: values.address,
         internalChargeFee: parseFloat(values.merchantFee),
-        cif: values.merchantCIF,
+        // cif: values.merchantCIF,
       };
       setMerchantRequest(payload);
       openModal('confirmOnboardMerchant');
@@ -125,7 +124,7 @@ const CreateMerchant = () => {
                   customPaddingX="2rem"
                   onClick={() => {
                     if (!formik.values.accountNumber)
-                      return formik.setFieldError('merchantCIF', 'Merchant CIF is required');
+                      return formik.setFieldError('accountNumber', 'Account Number is required');
                     validateCifStatus();
                   }}
                   disabled={merchantAccountValidated}
@@ -142,14 +141,14 @@ const CreateMerchant = () => {
                       maxW="w-full"
                       formik={formik}
                     />
-                    <CustomInput
+                    {/* <CustomInput
                       labelFor="merchantCIF"
                       label="Merchant CIF"
                       inputType="text"
                       placeholder="Enter here"
                       maxW="w-full"
                       formik={formik}
-                    />
+                    /> */}
                     <CustomInput
                       labelFor="rcNumber"
                       label="RC Number"

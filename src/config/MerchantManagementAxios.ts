@@ -37,7 +37,8 @@ let isRequestRetried = false;
 AxiosClient.interceptors.request.use(
   (axiosConfig) => {
     if (!navigator.onLine) {
-      throw new Error(networkErrorMessage);
+      const networkError = new Error(networkErrorMessage);
+      throw networkError;
     }
     dispatch(uiStartLoading());
 
@@ -60,10 +61,14 @@ AxiosClient.interceptors.request.use(
   },
   (error) => {
     dispatch(uiStopLoading());
-    notifyError(error?.message);
+    if (error.message === networkErrorMessage) {
+      notifyError(error.message);
+    }
     return Promise.reject(error);
   },
 );
+
+let abortController = new AbortController();
 
 AxiosClient.interceptors.response.use(
   (response: AxiosResponse | any) => {
@@ -118,11 +123,11 @@ AxiosClient.interceptors.response.use(
           }, 1500);
         }
       };
-      console.log('error', error);
       if (isRequestRetried) {
+        abortController.abort();
+        abortController = new AbortController();
         logoutUser();
-        // return Promise.reject(error);
-        // return Promise.reject(new Error('Token refresh failed. User logged out.'));
+        return Promise.reject(new Error('Token refresh failed. User logged out.'));
       } else {
         isRequestRetried = true;
         if (user) {
@@ -152,17 +157,17 @@ AxiosClient.interceptors.response.use(
               return Promise.reject(new Error('Token refresh failed. User logged out.'));
             }
           } catch (err) {
-            console.error('Token refresh error:', err);
-            dispatch(uiStopLoading());
             notifyError('Session expired. Please log in again.');
+            dispatch(uiStopLoading());
+            localStorage.clear();
             setTimeout(() => {
               window.location.href = '/';
             }, 1500);
-            return Promise.reject(err);
           }
         } else {
           notifyError('User is not authenticated');
           dispatch(uiStopLoading());
+          localStorage.clear();
           setTimeout(() => {
             window.location.href = '/';
           }, 1500);
@@ -181,5 +186,10 @@ AxiosClient.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+AxiosClient.interceptors.request.use((config) => {
+  config.signal = abortController.signal;
+  return config;
+});
 
 export default AxiosClient;
