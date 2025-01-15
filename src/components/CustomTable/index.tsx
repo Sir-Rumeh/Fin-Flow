@@ -122,7 +122,7 @@ function CustomTable({
                 <ChevronLeft />
               </button>
 
-              {paginationCountArray[0] >= 11 && (
+              {paginationData && paginationCountArray[0] >= paginationData?.pageSize + 1 && (
                 <div className="relative flex scale-[85%] items-center justify-evenly gap-x-5 2xl:scale-100">
                   <button
                     className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData?.pageNumber === 1 ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}

@@ -37,7 +37,9 @@ let isRequestRetried = false;
 AxiosClient.interceptors.request.use(
   (axiosConfig) => {
     if (!navigator.onLine) {
-      throw new Error(networkErrorMessage);
+      const networkError = new Error(networkErrorMessage);
+      notifyError(networkError.message);
+      throw networkError;
     }
     dispatch(uiStartLoading());
 
@@ -60,10 +62,14 @@ AxiosClient.interceptors.request.use(
   },
   (error) => {
     dispatch(uiStopLoading());
-    notifyError(error?.message);
+    if (error.message === networkErrorMessage) {
+      notifyError(error.message);
+    }
     return Promise.reject(error);
   },
 );
+
+let abortController = new AbortController();
 
 AxiosClient.interceptors.response.use(
   (response: AxiosResponse | any) => {
@@ -98,31 +104,22 @@ AxiosClient.interceptors.response.use(
             dispatch(uiStopLoading());
             notifyError('Session expired. Please log in again.');
             localStorage.clear();
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 1500);
           } catch (error) {
             console.error(error);
             dispatch(uiStopLoading());
             localStorage.clear();
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 1500);
           }
         } else {
           dispatch(uiStopLoading());
           notifyError('Session expired. Please log in again.');
           localStorage.clear();
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 1500);
         }
       };
-      console.log('error', error);
       if (isRequestRetried) {
+        abortController.abort();
+        abortController = new AbortController();
         logoutUser();
-        // return Promise.reject(error);
-        // return Promise.reject(new Error('Token refresh failed. User logged out.'));
+        return Promise.reject(new Error('Token refresh failed. User logged out.'));
       } else {
         isRequestRetried = true;
         if (user) {
@@ -152,20 +149,15 @@ AxiosClient.interceptors.response.use(
               return Promise.reject(new Error('Token refresh failed. User logged out.'));
             }
           } catch (err) {
-            console.error('Token refresh error:', err);
-            dispatch(uiStopLoading());
             notifyError('Session expired. Please log in again.');
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 1500);
+            dispatch(uiStopLoading());
+            localStorage.clear();
             return Promise.reject(err);
           }
         } else {
           notifyError('User is not authenticated');
           dispatch(uiStopLoading());
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 1500);
+          localStorage.clear();
         }
       }
     } else if (error?.response?.status === 400 || 404) {
@@ -181,5 +173,10 @@ AxiosClient.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+
+AxiosClient.interceptors.request.use((config) => {
+  config.signal = abortController.signal;
+  return config;
+});
 
 export default AxiosClient;

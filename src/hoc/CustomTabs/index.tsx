@@ -12,6 +12,7 @@ interface CustomTabProps {
   >;
   backgroundColor?: string;
   showTabTotal?: boolean;
+  performExtraAction?: () => void;
 }
 
 const CustomTabs = ({
@@ -21,6 +22,7 @@ const CustomTabs = ({
   width,
   backgroundColor,
   showTabTotal = true,
+  performExtraAction,
 }: CustomTabProps) => {
   return (
     <>
@@ -33,6 +35,7 @@ const CustomTabs = ({
             <ButtonComponent
               onClick={() => {
                 if (!(activeTab === tab.tabName)) {
+                  performExtraAction?.();
                   setActiveTab(tab.tabName);
                 }
               }}

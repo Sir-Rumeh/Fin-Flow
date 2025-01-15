@@ -33,7 +33,7 @@ const MerchantRequests = () => {
 
   const formik = useFormik({
     initialValues: {
-      searchMerchantCif: '',
+      searchMerchantAccount: '',
       fromDateFilter: '',
       toDateFilter: '',
       statusFilter: '',
@@ -41,7 +41,7 @@ const MerchantRequests = () => {
     onSubmit: (values) => {
       setQueryParams((prev) => ({
         ...prev,
-        searchFilter: formik.values.searchMerchantCif,
+        searchFilter: formik.values.searchMerchantAccount,
       }));
       refetch();
     },
@@ -53,7 +53,7 @@ const MerchantRequests = () => {
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
-    searchFilter: formik.values.searchMerchantCif,
+    searchFilter: formik.values.searchMerchantAccount,
     searchType: SearchTypes.SearchMerchants,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
@@ -66,11 +66,11 @@ const MerchantRequests = () => {
       requestType: formik.values.statusFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchMerchantCif,
+      searchFilter: formik.values.searchMerchantAccount,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [activeTab, paginationData, formik.values.searchMerchantCif]);
+  }, [activeTab, paginationData, formik.values.searchMerchantAccount]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
@@ -96,14 +96,14 @@ const MerchantRequests = () => {
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
     },
-    {
-      field: 'cif',
-      headerName: 'CIF Number',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-      sortable: false,
-    },
+    // {
+    //   field: 'cif',
+    //   headerName: 'CIF Number',
+    //   width: screen.width < 1000 ? 200 : undefined,
+    //   flex: screen.width >= 1000 ? 1 : undefined,
+    //   headerClassName: 'ag-thead',
+    //   sortable: false,
+    // },
     {
       field: 'accountNumber',
       headerName: 'Account Number',
@@ -224,12 +224,24 @@ const MerchantRequests = () => {
           <div className="slide-down relative mt-5 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-4">
             <div className="flex w-full flex-col justify-between gap-y-4 border-b pb-3 2xl:flex-row 2xl:items-center">
               <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10 lg:w-[50%]">
-                <CustomTabs tabs={tabsList} activeTab={activeTab} setActiveTab={setActiveTab} />
+                <CustomTabs
+                  tabs={tabsList}
+                  activeTab={activeTab}
+                  setActiveTab={setActiveTab}
+                  performExtraAction={() =>
+                    setPaginationData((prev) => {
+                      return {
+                        ...prev,
+                        pageNumber: 1,
+                      };
+                    })
+                  }
+                />
               </div>
               <div className="slide-down flex items-center lg:w-[50%] lg:justify-end">
                 <div className="">
                   <TableFilter
-                    name={'searchMerchantCif'}
+                    name={'searchMerchantAccount'}
                     placeholder={'Search Merchant Account'}
                     label={'Search Merchant'}
                     value={searchTerm}
