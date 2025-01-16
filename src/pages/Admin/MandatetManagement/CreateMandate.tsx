@@ -10,7 +10,7 @@ import ChevronRight from 'assets/icons/ChevronRight';
 const CreateMandate = () => {
   const navigate = useNavigate();
   const uploadType = {
-    single: 'Signle Upload',
+    single: 'Single Upload',
     bulk: 'Bulk Upload',
   };
   const [activeTab, setActiveTab] = useState(uploadType.single);

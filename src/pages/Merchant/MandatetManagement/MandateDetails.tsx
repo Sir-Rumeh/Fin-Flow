@@ -26,17 +26,19 @@ import {
   disableMandate,
   enableMandate,
   getMandateById,
+  getTransactionsByMerchantId,
   updateMandate,
 } from 'config/actions/dashboard-actions';
 import { updateMandateSchema } from 'utils/formValidators';
 import { useFormik } from 'formik';
 import CustomInput from 'components/FormElements/CustomInput';
-import { formatNumberDisplay, notifyError } from 'utils/helpers';
+import { formatNumberDisplay, getUserFromLocalStorage, notifyError } from 'utils/helpers';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import CustomTabs from 'hoc/CustomTabs';
 import TableFilter from 'components/TableFilter';
 import CustomTable from 'components/CustomTable';
-import { TabsProps } from 'utils/interfaces';
+import { MerchantAuthData, QueryParams, TabsProps } from 'utils/interfaces';
+import { SearchTypes, TransactionsTabsListTabNames } from 'utils/enums';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -56,18 +58,29 @@ const MandateDetails = () => {
   const { id: mandateId } = useParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
+  const user = getUserFromLocalStorage() as MerchantAuthData;
+  const loggedInMerchantId = user?.profileData?.merchantID;
+  const [transactionPaginationData, setTransactionPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
 
   const total = 20;
 
   const tabsList: TabsProps[] = [
     {
       tabIndex: 1,
-      tabName: 'Successful',
+      tabName: TransactionsTabsListTabNames.Successful,
       tabTotal: total,
     },
     {
       tabIndex: 2,
-      tabName: 'Failed',
+      tabName: TransactionsTabsListTabNames.Pending,
+      tabTotal: total,
+    },
+    {
+      tabIndex: 3,
+      tabName: TransactionsTabsListTabNames.Failed,
       tabTotal: total,
     },
   ];
@@ -94,9 +107,16 @@ const MandateDetails = () => {
   };
 
   const transactionsTableColumn: GridColDef[] = [
+    // {
+    //   field: 'accountId',
+    //   headerName: 'Account ID',
+    //   width: screen.width < 1000 ? 200 : undefined,
+    //   flex: screen.width >= 1000 ? 1 : undefined,
+    //   headerClassName: 'ag-thead',
+    // },
     {
-      field: 'accountId',
-      headerName: 'Account ID',
+      field: 'mandateCode',
+      headerName: 'Mandate Code',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
@@ -109,12 +129,19 @@ const MandateDetails = () => {
       headerClassName: 'ag-thead',
     },
     {
-      field: 'date',
+      field: 'effectiveDate',
       headerName: 'Date',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       valueGetter: (params: any) => new Date(params).toLocaleDateString(),
+    },
+    {
+      field: 'billingStatus',
+      headerName: 'Billing Status',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
     },
     {
       field: 'actions',
@@ -160,6 +187,7 @@ const MandateDetails = () => {
   const formik = useFormik({
     initialValues: {
       searchMerchantName: '',
+      searchTransactionHistory: '',
       fromDateFilter: '',
       toDateFilter: '',
       statusFilter: '',
@@ -169,9 +197,26 @@ const MandateDetails = () => {
     },
   });
 
-  const { isLoading, data } = useQuery({
-    queryKey: ['mandates', mandateId],
+  const { data, isLoading } = useQuery({
+    queryKey: ['mandate-details', mandateId],
     queryFn: ({ queryKey }) => getMandateById(queryKey[1]),
+  });
+
+  const [transactionsQueryParams, setTransactionsQueryParams] = useState<QueryParams>({
+    mandateCode: data?.responseData?.mandateCode,
+    status: activeTransactionTab,
+    pageNo: transactionPaginationData.pageNumber,
+    pageSize: transactionPaginationData.pageSize,
+    searchFilter: formik.values.searchTransactionHistory,
+    searchType: SearchTypes.SearchTransactions,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
+
+  const { data: transactionsData, refetch: refetchTransactions } = useQuery({
+    queryKey: ['transactions', transactionsQueryParams],
+    queryFn: ({ queryKey }) =>
+      getTransactionsByMerchantId(loggedInMerchantId, queryKey[1] as QueryParams),
   });
 
   let buttonTitle = data?.responseData?.isActive ? 'Disable' : 'Enable';
@@ -283,7 +328,7 @@ const MandateDetails = () => {
             <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
               <DetailsCard title="Account ID" content={data?.responseData?.accountId} />
               <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
-              <DetailsCard title="Merchant Code" content={data?.responseData?.mandateCode} />
+              <DetailsCard title="Mandate Code" content={data?.responseData?.mandateCode} />
               <DetailsCard
                 title="Date Created"
                 content={
@@ -425,7 +470,7 @@ const MandateDetails = () => {
                 <div className="flex items-center justify-end">
                   <TableFilter
                     name={'searchTransactionHistory'}
-                    placeholder={'Search Transactions'}
+                    placeholder={'Search By Account Number'}
                     label={'Search Transactions'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
@@ -441,9 +486,11 @@ const MandateDetails = () => {
               <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
               <div className="slide-down mt-6">
                 <CustomTable
-                  tableData={transactionHistory}
                   columns={transactionsTableColumn}
-                  rowCount={73}
+                  tableData={transactionsData?.responseData?.items}
+                  rowCount={transactionsData?.responseData?.totalCount}
+                  paginationData={transactionPaginationData}
+                  setPaginationData={setTransactionPaginationData}
                 />
               </div>
             </div>

@@ -65,6 +65,7 @@ export enum SearchTypes {
   SearchAccounts = 'SearchAccounts',
   SearchAudits = 'SearchAudits',
   SearchMandates = 'SearchMandates',
+  SearchTransactions = 'SearchTransactions',
   SearchMerchants = 'SearchMerchants',
   SearchProfiles = 'SearchProfiles',
   SearchStaffUser = 'SearchStaffUser',

@@ -143,8 +143,8 @@ const TableFilter = ({
                       border={0.5}
                       height="3rem"
                       onClick={() => {
-                        clearFilter();
                         setCloseFilterCard(!closeFilterCard);
+                        clearFilter();
                       }}
                       title="Cancel"
                       fontWeight={500}
@@ -159,7 +159,7 @@ const TableFilter = ({
                       variant="contained"
                       onClick={() => {
                         handleOptionsFilter();
-                        setCloseFilterCard(true);
+                        setCloseFilterCard(!closeFilterCard);
                       }}
                       title="Filter"
                       fontWeight={500}

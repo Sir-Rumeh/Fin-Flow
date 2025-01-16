@@ -145,6 +145,9 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
     if (formattedQueryParams.searchType === SearchTypes.SearchMandates) {
       params.append('MandateCode', formattedQueryParams.searchFilter);
     }
+    if (formattedQueryParams.searchType === SearchTypes.SearchTransactions) {
+      params.append('AccountNumber', formattedQueryParams.searchFilter);
+    }
     if (formattedQueryParams.searchType === SearchTypes.SearchMerchants) {
       params.append('AccountNumber', formattedQueryParams.searchFilter);
     }
@@ -300,5 +303,5 @@ export function matchesInterface<T extends object>(obj: any, reference: T): obj 
 }
 
 export const filterSelectedOption = (filter: any, filterId: any, options: any) => {
-  return options.filter((opt: any) => opt[filterId] === filter);
+  return options?.filter((opt: any) => opt[filterId] === filter);
 };

@@ -38,6 +38,7 @@ AxiosClient.interceptors.request.use(
   (axiosConfig) => {
     if (!navigator.onLine) {
       const networkError = new Error(networkErrorMessage);
+      notifyError(networkError.message);
       throw networkError;
     }
     dispatch(uiStartLoading());
@@ -61,9 +62,6 @@ AxiosClient.interceptors.request.use(
   },
   (error) => {
     dispatch(uiStopLoading());
-    if (error.message === networkErrorMessage) {
-      notifyError(error.message);
-    }
     return Promise.reject(error);
   },
 );
@@ -127,7 +125,7 @@ AxiosClient.interceptors.response.use(
         abortController.abort();
         abortController = new AbortController();
         logoutUser();
-        return Promise.reject(new Error('Token refresh failed. User logged out.'));
+        // return Promise.reject(new Error('Token refresh failed. User logged out.'));
       } else {
         isRequestRetried = true;
         if (user) {

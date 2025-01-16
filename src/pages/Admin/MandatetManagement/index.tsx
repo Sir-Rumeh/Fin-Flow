@@ -26,7 +26,7 @@ import {
   disableMandate,
   enableMandate,
   getMandates,
-  getMandateTransactions,
+  getTransactions,
   updateMandate,
 } from 'config/actions/dashboard-actions';
 import { capitalize } from 'utils/helpers';
@@ -396,7 +396,7 @@ const MandatetManagement = () => {
 
   const { data: transactions, refetch: refetchTransactions } = useQuery({
     queryKey: ['transactions', transactionsQueryParams],
-    queryFn: ({ queryKey }) => getMandateTransactions(queryKey[1] as QueryParams),
+    queryFn: ({ queryKey }) => getTransactions(queryKey[1] as QueryParams),
   });
 
   const updateMandateMutation = useMutation({

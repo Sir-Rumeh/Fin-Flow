@@ -172,10 +172,43 @@ export const assignRoleSchema = Yup.object().shape({
   roleId: Yup.string().required('Role is required'),
 });
 
+// export const addRolePermissionSchema = Yup.object().shape({
+//   groupId: Yup.string().required('Group name is required'),
+//   permissions: Yup.array()
+//     .min(1, 'Please select permissions for this group')
+//     .nullable()
+//     .required('User permission is required'),
+// });
+
 export const addRolePermissionSchema = Yup.object().shape({
   groupId: Yup.string().required('Group name is required'),
   permissions: Yup.array()
+    .of(
+      Yup.object().shape({
+        module: Yup.string().required('Module is required'),
+        canList: Yup.boolean(),
+        canListAll: Yup.boolean(),
+        canDelete: Yup.boolean(),
+        canRead: Yup.boolean(),
+        canCreate: Yup.boolean(),
+        canUpdate: Yup.boolean(),
+        canEnable: Yup.boolean(),
+        canDisable: Yup.boolean(),
+        canApprove: Yup.boolean(),
+      }),
+    )
     .min(1, 'Please select permissions for this group')
     .nullable()
-    .required('User permission is required'),
+    .required('User permission is required')
+    .test(
+      'at-least-one-true',
+      'Each permission Module must have at least one action enabled (checked).',
+      (permissions) =>
+        permissions &&
+        permissions.every((permission) =>
+          Object.entries(permission)
+            .filter(([key]) => key.startsWith('can'))
+            .some(([, value]) => value === true),
+        ),
+    ),
 });
