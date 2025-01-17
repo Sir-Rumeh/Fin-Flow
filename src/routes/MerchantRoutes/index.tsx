@@ -13,15 +13,14 @@ import { useEffect, useRef } from 'react';
 function MerchantRoutes() {
   const user = getUserFromLocalStorage();
   const userDetails = decodeToken(user?.token);
-  const documentLoaderRef = useRef(false);
-  useEffect(() => {
-    documentLoaderRef.current = true;
-  }, []);
-  const getMerchantRoutes = (adminRoutes: RoutesType[]) => {
-    if (!userDetails?.permission && documentLoaderRef.current) {
-      notifyError('You do not have this module permission. Please contact an admin');
+  const getMerchantRoutes = (routes: RoutesType[]) => {
+    const hasMatchingModuleValue = routes.some((route) =>
+      userDetails?.permission?.some((string: any) => string.includes(route.moduleValue)),
+    );
+    if (!userDetails?.permission || !hasMatchingModuleValue) {
+      return <Route path="*" element={<NotFoundPage />} key={'*'} />;
     }
-    return adminRoutes.map((route) => {
+    return routes.map((route) => {
       const isAccessAllowed = hasAccessToModule(userDetails?.permission, route.moduleValue);
       if (!isAccessAllowed) return null;
       if (route.layout === '/merchant') {
