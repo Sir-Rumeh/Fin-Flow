@@ -2,12 +2,25 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import AdminDashboardLayout from 'layouts/AdminLayout';
 import { adminRoutes } from 'routes/appRoutes';
 import NotFoundPage from 'pages/NotFoundPage';
-import { decodeToken, getUserFromLocalStorage, hasAccessToModule } from 'utils/helpers';
+import {
+  decodeToken,
+  getUserFromLocalStorage,
+  hasAccessToModule,
+  notifyError,
+} from 'utils/helpers';
+import { useEffect, useRef } from 'react';
 
 function AdminRoutes() {
   const user = getUserFromLocalStorage();
   const userDetails = decodeToken(user?.token);
   const getAdminRoutes = (adminRoutes: RoutesType[]) => {
+    const hasMatchingModuleValue = adminRoutes.some((route) =>
+      userDetails?.permission?.some((string: any) => string.includes(route.moduleValue)),
+    );
+    if (!userDetails?.permission || !hasMatchingModuleValue) {
+      return <Route path="*" element={<NotFoundPage />} key={'*'} />;
+    }
+
     return adminRoutes.map((route) => {
       const isAccessAllowed = hasAccessToModule(userDetails?.permission, route.moduleValue);
       if (!isAccessAllowed) return null;

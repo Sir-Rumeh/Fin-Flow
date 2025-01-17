@@ -148,6 +148,16 @@ const SingleUpload = () => {
     }
     return dailyFrequencyOptions;
   };
+  const getDayToApplyFieldName = () => {
+    if (formik.values.frequency === 'Daily') {
+      return 'Day to Apply';
+    } else if (formik.values.frequency === 'Weekly') {
+      return 'Week to Apply';
+    } else if (formik.values.frequency === 'Monthly') {
+      return 'Month to Apply';
+    }
+    return 'Day to Apply';
+  };
 
   const dayToApplyOptions = getDayToApplyOptions();
 
@@ -290,7 +300,7 @@ const SingleUpload = () => {
               <div className="md:col-span-1">
                 <FormSelect
                   labelFor="dayToApply"
-                  label="Day to Apply"
+                  label={getDayToApplyFieldName()}
                   formik={formik}
                   options={dayToApplyOptions}
                   useTouched
@@ -527,6 +537,7 @@ const SingleUpload = () => {
                   labelFor="billerAccountNumber"
                   label="Biller Account Number"
                   inputType="number"
+                  useTouched={false}
                   placeholder="Enter here"
                   maxW="w-full"
                   formik={formik}

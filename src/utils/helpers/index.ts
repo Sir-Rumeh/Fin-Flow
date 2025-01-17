@@ -312,7 +312,7 @@ export const filterSelectedOption = (filter: any, filterId: any, options: any) =
 
 export const hasAccessToModule = (permissions: string[], module: string): boolean => {
   // Check if the array contains any entry starting with the module name followed by a dot (.)
-  return permissions.some((permission) => permission.startsWith(`${module}.`));
+  return permissions?.some((permission) => permission.startsWith(`${module}.`));
 };
 
 export const decodeToken = (token?: string) => {
@@ -322,3 +322,34 @@ export const decodeToken = (token?: string) => {
     return userData as any;
   }
 };
+
+export function getSlashCount(url: string): number {
+  const baseUrl = window.location.origin;
+  const relativePath = url.replace(baseUrl, '');
+  const cleanedPath = relativePath.startsWith('/') ? relativePath.slice(1) : relativePath;
+  return cleanedPath.split('/').filter(Boolean).length;
+}
+
+export function getFirstSegmentFromHref(href: string): string | null {
+  const url = new URL(href);
+  const relativePath = url.pathname.startsWith('/') ? url.pathname.slice(1) : url.pathname;
+  const segments = relativePath.split('/').filter(Boolean);
+  return segments.length > 0 ? segments[0] : null;
+}
+
+export function getSecondSegmentFormatted(href: string): string | null {
+  const url = new URL(href);
+  const relativePath = url.pathname.startsWith('/') ? url.pathname.slice(1) : url.pathname;
+  const segments = relativePath.split('/').filter(Boolean);
+  if (segments.length < 2) return null;
+  // Format the second segment
+  const secondSegment = segments[1];
+  return secondSegment
+    .split('-')
+    .map((part, index) =>
+      index === 0
+        ? part.charAt(0).toUpperCase() + part.slice(1)
+        : part.charAt(0).toUpperCase() + part.slice(1).toLowerCase(),
+    )
+    .join('');
+}
