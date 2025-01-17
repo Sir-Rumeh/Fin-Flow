@@ -17,6 +17,7 @@ const RoleDetails = () => {
   const [searchParams] = useSearchParams();
   const roleId = searchParams?.get('id') || '';
   const navigate = useNavigate();
+
   const { data } = useQuery({
     queryKey: ['roles-details', roleId],
     queryFn: ({ queryKey }) => getRoleById(queryKey[1]),
@@ -62,6 +63,7 @@ const RoleDetails = () => {
         <div className="slide-down mt-5 rounded-lg bg-white px-5 py-8">
           <div className="">
             <ItemDetailsContainer title="Role Details">
+              <DetailsCard title="Role ID" content={data?.responseData?.id} />
               <DetailsCard title="Role Name" content={data?.responseData?.name} />
               <DetailsCard title="Role Description" content={data?.responseData?.description} />
               <DetailsCard title="Designation" content={data?.responseData?.designation} />
