@@ -2,10 +2,15 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import MerchantDashboardLayout from 'layouts/MerchantLayout';
 import { merchantRoutes } from 'routes/appRoutes';
 import NotFoundPage from 'pages/NotFoundPage';
+import { decodeToken, getUserFromLocalStorage, hasAccessToModule } from 'utils/helpers';
 
 function MerchantRoutes() {
+  const user = getUserFromLocalStorage();
+  const userDetails = decodeToken(user?.token);
   const getMerchantRoutes = (adminRoutes: RoutesType[]) => {
     return adminRoutes.map((route) => {
+      const isAccessAllowed = hasAccessToModule(userDetails?.permission, route.moduleValue);
+      if (!isAccessAllowed) return null;
       if (route.layout === '/merchant') {
         if (route.children && route.children.length > 0) {
           return (
@@ -55,10 +60,13 @@ function MerchantRoutes() {
       }
     });
   };
+  const isDashboardAccessAllowed = hasAccessToModule(userDetails?.permission, 'Dashboard');
   return (
     <Routes>
       <Route element={<MerchantDashboardLayout />}>
-        <Route path="/" element={<Navigate to="/merchant/dashboard" replace />} />
+        {isDashboardAccessAllowed && (
+          <Route path="/" element={<Navigate to="/merchant/dashboard" replace />} />
+        )}
         {getMerchantRoutes(merchantRoutes)}
         <Route path="*" element={<NotFoundPage />} />
       </Route>

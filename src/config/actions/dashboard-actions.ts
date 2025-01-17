@@ -94,25 +94,6 @@ export const getMandatesByAccountId = async (
   }
 };
 
-export const getMandateTransactions = async (queryParams?: QueryParams) => {
-  const params = new URLSearchParams();
-  appendParams(params, queryParams);
-  try {
-    const response = await AxiosClient.get(`/transactions`, { params });
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-export const getMandateTransactionById = async (requestId: string | undefined) => {
-  try {
-    const response = await AxiosClient.get(`/transactions/${requestId}`);
-    return response.data;
-  } catch (error) {
-    throw error;
-  }
-};
-
 export const getMandateRequestsStatistics = async () => {
   try {
     const response = await AxiosClient.get(`/mandaterequests/statistics`);
@@ -215,9 +196,23 @@ export const getTransactions = async (queryParams?: QueryParams) => {
   }
 };
 
-export const getTransactionsById = async (requestId: string | undefined) => {
+export const getTransactionById = async (requestId: string | undefined) => {
   try {
     const response = await AxiosClient.get(`/transactions/${requestId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getTransactionsByMerchantId = async (
+  merchantId: string | undefined,
+  queryParams?: QueryParams,
+) => {
+  const params = new URLSearchParams();
+  appendParams(params, queryParams);
+  try {
+    const response = await AxiosClient.get(`/transactions/merchant/${merchantId}`);
     return response.data;
   } catch (error) {
     throw error;

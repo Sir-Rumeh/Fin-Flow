@@ -12,6 +12,7 @@ import { DropdownOption } from 'components/FormElements/FormSelect';
 import { canBeUpdated } from 'utils/constants';
 import { SearchTypes } from 'utils/enums';
 import dayjs from 'dayjs';
+import { jwtDecode } from 'jwt-decode';
 
 export const checkRoute = (pathname: string, pathToCheck: string) => {
   if (pathname.includes(pathToCheck)) {
@@ -145,6 +146,12 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
     if (formattedQueryParams.searchType === SearchTypes.SearchMandates) {
       params.append('MandateCode', formattedQueryParams.searchFilter);
     }
+    if (formattedQueryParams.searchType === SearchTypes.SearchMandateRequests) {
+      params.append('AccountNumber', formattedQueryParams.searchFilter);
+    }
+    if (formattedQueryParams.searchType === SearchTypes.SearchTransactions) {
+      params.append('AccountNumber', formattedQueryParams.searchFilter);
+    }
     if (formattedQueryParams.searchType === SearchTypes.SearchMerchants) {
       params.append('AccountNumber', formattedQueryParams.searchFilter);
     }
@@ -209,9 +216,9 @@ export const formatNumberDisplay = (number: number | string) => {
 };
 
 export const getDateRange = (dataArray: any[]) => {
-  if (dataArray.length === 0) return 'No data available';
+  if (dataArray?.length === 0) return 'No data available';
 
-  const sortedData = [...dataArray].sort(
+  const sortedData = [...dataArray]?.sort(
     (a, b) => new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime(),
   );
 
@@ -226,7 +233,7 @@ export const getDateRange = (dataArray: any[]) => {
   if (firstYear === lastYear && firstMonth === lastMonth) {
     return `${firstMonth}, ${firstYear}`;
   } else if (firstYear === lastYear) {
-    return `${firstMonth} to ${lastMonth}, ${firstYear}`;
+    return `${firstMonth}, ${firstYear} to ${lastMonth}, ${firstYear}`;
   } else {
     return `${firstMonth}, ${firstYear} to ${lastMonth}, ${lastYear}`;
   }
@@ -300,5 +307,18 @@ export function matchesInterface<T extends object>(obj: any, reference: T): obj 
 }
 
 export const filterSelectedOption = (filter: any, filterId: any, options: any) => {
-  return options.filter((opt: any) => opt[filterId] === filter);
+  return options?.filter((opt: any) => opt[filterId] === filter);
+};
+
+export const hasAccessToModule = (permissions: string[], module: string): boolean => {
+  // Check if the array contains any entry starting with the module name followed by a dot (.)
+  return permissions.some((permission) => permission.startsWith(`${module}.`));
+};
+
+export const decodeToken = (token?: string) => {
+  if (!token) return null;
+  if (token) {
+    const userData = jwtDecode(token) as any;
+    return userData as any;
+  }
 };

@@ -31,10 +31,12 @@ import {
   getMandatesByMerchantId,
   getMandates,
   updateMandate,
+  getTransactions,
+  getTransactionsByMerchantId,
 } from 'config/actions/dashboard-actions';
 import { formatApiDataForDropdown, getDateRange } from 'utils/helpers';
 import { getMerchants } from 'config/actions/merchant-actions';
-import { TransactionsTabsListTabNames } from 'utils/enums';
+import { SearchTypes, TransactionsTabsListTabNames } from 'utils/enums';
 
 const Reports = () => {
   const printPdfRef = useRef(null);
@@ -42,10 +44,26 @@ const Reports = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isFirstRender, setIsFirstRender] = useState(true);
   const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
+  const [selectedMandateCode, setSelectedMandateCode] = useState('');
   const [mandateRecords, setMandateRecords] = useState<any>();
+  const [transactionRecords, setTransactionRecords] = useState<any>();
   const [selectedMandate, setSelectedMandate] = useState({
     id: '',
     mandateType: '',
+  });
+
+  const [paginationData, setPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
+  const [mandateTransactionsPaginationData, setMandateTransactionsPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
+  });
+
+  const [transactionPaginationData, setTransactionPaginationData] = useState({
+    pageNumber: 1,
+    pageSize: 10,
   });
   const [modals, setModals] = useState({
     confirmDisable: false,
@@ -61,11 +79,6 @@ const Reports = () => {
   });
 
   const [showFilteredReport, setShowFilteredReport] = useState(false);
-
-  const [paginationData, setPaginationData] = useState({
-    pageNumber: 1,
-    pageSize: 10,
-  });
 
   const openModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: true }));
@@ -84,9 +97,44 @@ const Reports = () => {
       reportType: '',
       merchant: '',
       status: '',
+      searchTransactionHistory: '',
+      searchMandateTransaction: '',
+      transacStatusFilter: '',
+      transacFromDateFilter: '',
+      transacToDateFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setQueryParams((prev) => ({
+        ...prev,
+        startDate: values.fromDateFilter,
+        endDate: values.toDateFilter,
+        pageNo: paginationData.pageNumber,
+        pageSize: paginationData.pageSize,
+        searchFilter: values.searchMandate,
+      }));
+      setTransactionsQueryParams((prev) => ({
+        ...prev,
+        status: formik.values.transacStatusFilter
+          ? formik.values.transacStatusFilter
+          : activeTransactionTab,
+        startDate: values.transacFromDateFilter,
+        endDate: values.transacToDateFilter,
+        pageNo: transactionPaginationData.pageNumber,
+        pageSize: transactionPaginationData.pageSize,
+        searchFilter: values.searchTransactionHistory,
+      }));
+      setMandateTransactionsQueryParams((prev) => ({
+        ...prev,
+        startDate: values.transacFromDateFilter,
+        endDate: values.transacToDateFilter,
+        pageNo: transactionPaginationData.pageNumber,
+        pageSize: transactionPaginationData.pageSize,
+        searchFilter: values.searchTransactionHistory,
+      }));
+
+      getMandateReports();
+      getTransactionsReport();
+      refecthMandateTransactions();
     },
   });
 
@@ -135,12 +183,41 @@ const Reports = () => {
     status: formik.values.statusFilter,
     pageNo: paginationData.pageNumber,
     pageSize: paginationData.pageSize,
-    sortBy: 'asc',
-    sortOrder: 'desc',
     searchFilter: formik.values.searchMandate,
+    searchType: SearchTypes.SearchMandates,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
+    sortBy: 'asc',
+    sortOrder: 'desc',
   });
+  const [transactionsQueryParams, setTransactionsQueryParams] = useState<QueryParams>({
+    status: formik.values.transacStatusFilter
+      ? formik.values.transacStatusFilter
+      : activeTransactionTab,
+    pageNo: transactionPaginationData.pageNumber,
+    pageSize: transactionPaginationData.pageSize,
+    searchFilter: formik.values.searchMandateTransaction,
+    searchType: SearchTypes.SearchTransactions,
+    startDate: formik.values.transacFromDateFilter,
+    endDate: formik.values.transacToDateFilter,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
+
+  const [mandateTransactionsQueryParams, setMandateTransactionsQueryParams] = useState<QueryParams>(
+    {
+      mandateCode: selectedMandateCode,
+      status: formik.values.transacStatusFilter,
+      pageNo: transactionPaginationData.pageNumber,
+      pageSize: transactionPaginationData.pageSize,
+      searchFilter: formik.values.searchMandateTransaction,
+      searchType: SearchTypes.SearchTransactions,
+      startDate: formik.values.transacFromDateFilter,
+      endDate: formik.values.transacToDateFilter,
+      sortBy: 'asc',
+      sortOrder: 'desc',
+    },
+  );
 
   const mandateExcelHeaders = [
     { label: 'Account ID', key: 'accountId' },
@@ -149,6 +226,13 @@ const Reports = () => {
     { label: 'Mandate Type', key: 'mandateType' },
     { label: 'Active Status', key: 'isActive' },
     { label: 'Date Requested', key: 'dateCreated' },
+  ];
+
+  const transactionHeaders = [
+    { label: 'Mandate Code', key: 'mandateCode' },
+    { label: 'Amount', key: 'amount' },
+    { label: 'Effective Date', key: 'effectiveDate' },
+    { label: 'Billing Status', key: 'billingStatus' },
   ];
 
   const mandateColumns: GridColDef[] = [
@@ -244,6 +328,7 @@ const Reports = () => {
                 </button>
                 <button
                   onClick={() => {
+                    setSelectedMandateCode(params.row.mandateCode);
                     openModal('openTransactionHistory');
                   }}
                   type="button"
@@ -317,9 +402,16 @@ const Reports = () => {
   ];
 
   const transactionsTableColumn: GridColDef[] = [
+    // {
+    //   field: 'accountId',
+    //   headerName: 'Account ID',
+    //   width: screen.width < 1000 ? 200 : undefined,
+    //   flex: screen.width >= 1000 ? 1 : undefined,
+    //   headerClassName: 'ag-thead',
+    // },
     {
-      field: 'accountId',
-      headerName: 'Account ID',
+      field: 'mandateCode',
+      headerName: 'Mandate Code',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
@@ -332,12 +424,19 @@ const Reports = () => {
       headerClassName: 'ag-thead',
     },
     {
-      field: 'date',
+      field: 'effectiveDate',
       headerName: 'Date',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       valueGetter: (params: any) => new Date(params).toLocaleDateString(),
+    },
+    {
+      field: 'billingStatus',
+      headerName: 'Billing Status',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
     },
     {
       field: 'actions',
@@ -357,16 +456,16 @@ const Reports = () => {
   ];
 
   const transactionsReportColumn: GridColDef[] = [
+    // {
+    //   field: 'accountId',
+    //   headerName: 'Account ID',
+    //   width: screen.width < 1000 ? 200 : undefined,
+    //   flex: screen.width >= 1000 ? 1 : undefined,
+    //   headerClassName: 'ag-thead',
+    // },
     {
-      field: 'accountId',
-      headerName: 'Account ID',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-    },
-    {
-      field: 'mandateId',
-      headerName: 'Mandate ID',
+      field: 'mandateCode',
+      headerName: 'Mandate Code',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
@@ -379,12 +478,19 @@ const Reports = () => {
       headerClassName: 'ag-thead',
     },
     {
-      field: 'date',
+      field: 'effectiveDate',
       headerName: 'Date',
       width: screen.width < 1000 ? 50 : 50,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       valueGetter: (params: any) => new Date(params).toLocaleDateString(),
+    },
+    {
+      field: 'billingStatus',
+      headerName: 'Billing Status',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
     },
     {
       field: 'actions',
@@ -408,9 +514,14 @@ const Reports = () => {
     sortOrder: 'desc',
   });
 
-  const { data } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['merchants', merchantQueryParams],
     queryFn: ({ queryKey }) => getMerchants(queryKey[1] as QueryParams),
+  });
+
+  const { data: mandateTransactionsData, refetch: refecthMandateTransactions } = useQuery({
+    queryKey: ['mandate-transactions', mandateTransactionsQueryParams],
+    queryFn: ({ queryKey }) => getTransactions(queryKey[1] as QueryParams),
   });
 
   const getMandateReports = async () => {
@@ -419,6 +530,18 @@ const Reports = () => {
       : await getMandates(queryParams as QueryParams);
     if (res) {
       setMandateRecords(res);
+      setShowFilteredReport(true);
+    }
+  };
+  const getTransactionsReport = async () => {
+    const res = formik.values.merchant
+      ? await getTransactionsByMerchantId(
+          formik.values.merchant,
+          transactionsQueryParams as QueryParams,
+        )
+      : await getTransactions(transactionsQueryParams as QueryParams);
+    if (res) {
+      setTransactionRecords(res);
       setShowFilteredReport(true);
     }
   };
@@ -443,6 +566,14 @@ const Reports = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
+    setTransactionsQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.transacStatusFilter
+        ? formik.values.transacStatusFilter
+        : activeTransactionTab,
+      startDate: formik.values.transacFromDateFilter,
+      endDate: formik.values.transacToDateFilter,
+    }));
   };
 
   useEffect(() => {
@@ -452,10 +583,25 @@ const Reports = () => {
   }, [
     queryParams.pageNo,
     queryParams.status,
-    queryParams.mandateCode,
     queryParams.startDate,
     queryParams.endDate,
     queryParams.searchFilter,
+    paginationData,
+    formik.values.statusFilter,
+  ]);
+  useEffect(() => {
+    if (transactionsQueryParams.pageNo && !isFirstRender) {
+      getTransactionsReport();
+    }
+  }, [
+    transactionsQueryParams.pageNo,
+    transactionsQueryParams.status,
+    transactionsQueryParams.startDate,
+    transactionsQueryParams.endDate,
+    transactionsQueryParams.searchFilter,
+    transactionPaginationData,
+    formik.values.transacStatusFilter,
+    activeTransactionTab,
   ]);
 
   const updateMandateMutation = useMutation({
@@ -584,7 +730,11 @@ const Reports = () => {
                 onClick={() => {
                   if (!formik.values.reportType)
                     return formik.setFieldError('reportType', 'Report Type is required');
-                  getMandateReports();
+                  if (formik.values.reportType === 'Mandate Status Reports') {
+                    getMandateReports();
+                  } else if (formik.values.reportType === 'Transaction Reports') {
+                    getTransactionsReport();
+                  }
                 }}
               />
             </div>
@@ -613,7 +763,7 @@ const Reports = () => {
                     <div>
                       <TableFilter
                         name={'searchMandateReport'}
-                        placeholder={'Search'}
+                        placeholder={'Search Account Number'}
                         label={'Search'}
                         value={searchTerm}
                         setSearch={setSearchTerm}
@@ -646,7 +796,7 @@ const Reports = () => {
             <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
               <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
                 <h2 className="text-xl font-bold">
-                  Mono Tech Transaction Report Details (June 2023 to August 2023)
+                  {`Transaction Report Details: ${getDateRange(transactionRecords?.responseData?.items)}`}
                 </h2>
                 <div className="flex w-full items-center lg:w-[20%] lg:justify-end">
                   <ExportBUtton />
@@ -665,15 +815,15 @@ const Reports = () => {
                     <div className="">
                       <TableFilter
                         name={'searchTransactionHistory'}
-                        placeholder={'Search'}
+                        placeholder={'Search Account Number'}
                         label={'Search Transactions'}
                         value={searchTerm}
                         setSearch={setSearchTerm}
-                        handleOptionsFilter={() => {}}
+                        handleOptionsFilter={handleOptionsFilter}
                         formik={formik}
-                        fromDateName={'fromDateFilter'}
-                        toDateName={'toDateFilter'}
-                        selectName={'statusFilter'}
+                        fromDateName={'transacFromDateFilter'}
+                        toDateName={'transacToDateFilter'}
+                        selectName={'transacStatusFilter'}
                         translationX={isLargeWidth ? 300 : undefined}
                       />
                     </div>
@@ -682,12 +832,12 @@ const Reports = () => {
 
                 <div className="mt-4 w-full">
                   <CustomTable
-                    tableData={transactionHistory}
+                    tableData={transactionRecords?.responseData.items}
                     columns={transactionsReportColumn}
-                    rowCount={73}
+                    rowCount={transactionRecords?.responseData.totalCount}
                     defaultAnimation={false}
-                    paginationData={paginationData}
-                    setPaginationData={setPaginationData}
+                    paginationData={transactionPaginationData}
+                    setPaginationData={setTransactionPaginationData}
                   />
                 </div>
               </div>
@@ -898,15 +1048,15 @@ const Reports = () => {
                 <div className="flexitems-center justify-end">
                   <TableFilter
                     name={'searchTransactionHistory'}
-                    placeholder={'Search Transactions'}
+                    placeholder={'Search By Account Number'}
                     label={'Search Transactions'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
-                    handleOptionsFilter={() => {}}
+                    handleOptionsFilter={() => handleOptionsFilter()}
                     formik={formik}
-                    fromDateName={'fromDateFilter'}
-                    toDateName={'toDateFilter'}
-                    selectName={'statusFilter'}
+                    fromDateName={'transacFromDateFilter'}
+                    toDateName={'transacToDateFilter'}
+                    selectName={'transacStatusFilter'}
                     showOptionsFilter={false}
                   />
                 </div>
@@ -914,9 +1064,12 @@ const Reports = () => {
               <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
               <div className="slide-down mt-6">
                 <CustomTable
-                  tableData={transactionHistory}
-                  columns={transactionsTableColumn}
-                  rowCount={73}
+                  tableData={mandateTransactionsData?.responseData.items}
+                  columns={transactionsReportColumn}
+                  rowCount={mandateTransactionsData?.responseData.totalCount}
+                  defaultAnimation={false}
+                  paginationData={mandateTransactionsPaginationData}
+                  setPaginationData={setMandateTransactionsPaginationData}
                 />
               </div>
             </div>

@@ -15,7 +15,7 @@ import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 import { Typography, useMediaQuery } from '@mui/material';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
-import { QueryParams, TabsProps } from 'utils/interfaces';
+import { MerchantAuthData, QueryParams, TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
 import CustomInput from 'components/FormElements/CustomInput';
 import CloseIcon from 'assets/icons/CloseIcon';
@@ -26,10 +26,10 @@ import {
   disableMandate,
   enableMandate,
   getMandates,
-  getMandateTransactions,
+  getTransactions,
   updateMandate,
 } from 'config/actions/dashboard-actions';
-import { capitalize } from 'utils/helpers';
+import { capitalize, getUserFromLocalStorage } from 'utils/helpers';
 import { updateMandateSchema } from 'utils/formValidators';
 import { SearchTypes, TransactionsTabsListTabNames } from 'utils/enums';
 
@@ -38,6 +38,9 @@ const MandatetManagement = () => {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [transactionsSearchTerm, setTransactionsSearchTerm] = useState('');
+  const user = getUserFromLocalStorage() as MerchantAuthData;
+  const loggedInMerchantId = user?.profileData?.merchantID;
+
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
     pageSize: 10,
@@ -99,6 +102,7 @@ const MandatetManagement = () => {
   const formik = useFormik({
     initialValues: {
       searchMandate: '',
+      searchTransactionHistory: '',
       fromDateFilter: '',
       toDateFilter: '',
       statusFilter: '',
@@ -108,7 +112,12 @@ const MandatetManagement = () => {
         ...prev,
         searchFilter: formik.values.searchMandate,
       }));
+      setTransactionsQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchTransactionHistory,
+      }));
       refetch();
+      refetchTransactions();
     },
   });
 
@@ -123,7 +132,6 @@ const MandatetManagement = () => {
   });
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
-    mandateCode: '',
     status: formik.values.statusFilter,
     pageNo: paginationData.pageNumber,
     pageSize: paginationData.pageSize,
@@ -140,6 +148,8 @@ const MandatetManagement = () => {
     status: activeTransactionTab,
     pageNo: transactionPaginationData.pageNumber,
     pageSize: transactionPaginationData.pageSize,
+    searchFilter: formik.values.searchTransactionHistory,
+    searchType: SearchTypes.SearchTransactions,
     sortBy: 'asc',
     sortOrder: 'desc',
   });
@@ -350,9 +360,16 @@ const MandatetManagement = () => {
   ];
 
   const transactionsTableColumn: GridColDef[] = [
+    // {
+    //   field: 'accountId',
+    //   headerName: 'Account ID',
+    //   width: screen.width < 1000 ? 200 : undefined,
+    //   flex: screen.width >= 1000 ? 1 : undefined,
+    //   headerClassName: 'ag-thead',
+    // },
     {
-      field: 'accountId',
-      headerName: 'Account ID',
+      field: 'mandateCode',
+      headerName: 'Mandate Code',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
@@ -371,6 +388,13 @@ const MandatetManagement = () => {
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       valueGetter: (params: any) => new Date(params).toLocaleDateString(),
+    },
+    {
+      field: 'billingStatus',
+      headerName: 'Billing Status',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
     },
     {
       field: 'actions',
@@ -394,9 +418,9 @@ const MandatetManagement = () => {
     queryFn: ({ queryKey }) => getMandates(queryKey[1] as QueryParams),
   });
 
-  const { data: transactions, refetch: refetchTransactions } = useQuery({
+  const { data: transactionsData, refetch: refetchTransactions } = useQuery({
     queryKey: ['transactions', transactionsQueryParams],
-    queryFn: ({ queryKey }) => getMandateTransactions(queryKey[1] as QueryParams),
+    queryFn: ({ queryKey }) => getTransactions(queryKey[1] as QueryParams),
   });
 
   const updateMandateMutation = useMutation({
@@ -722,11 +746,11 @@ const MandatetManagement = () => {
                 <div className="flex items-center justify-end">
                   <TableFilter
                     name={'searchTransactionHistory'}
-                    placeholder={'Search Transactions'}
+                    placeholder={'Search By Account Number'}
                     label={'Search Transactions'}
                     value={transactionsSearchTerm}
                     setSearch={setTransactionsSearchTerm}
-                    handleOptionsFilter={() => {}}
+                    handleOptionsFilter={() => handleOptionsFilter()}
                     formik={formik}
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}
@@ -738,9 +762,9 @@ const MandatetManagement = () => {
               <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
               <div className="slide-down mt-6">
                 <CustomTable
-                  tableData={transactions}
+                  tableData={transactionsData?.responseData?.totalCount}
                   columns={transactionsTableColumn}
-                  rowCount={transactions?.responseData?.totalCount}
+                  rowCount={transactionsData?.responseData?.totalCount}
                   paginationData={transactionPaginationData}
                   setPaginationData={setTransactionPaginationData}
                 />

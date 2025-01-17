@@ -14,10 +14,12 @@ import { createMandateSchema } from 'utils/formValidators';
 import dayjs from 'dayjs';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { addBulkMandateRequest, addMandateRequest } from 'config/actions/dashboard-actions';
-import { MandateRequest, QueryParams } from 'utils/interfaces';
+import { MandateRequest, MerchantAuthData, QueryParams } from 'utils/interfaces';
 import {
   convertExcelArrayToObjects,
+  filterSelectedOption,
   formatApiDataForDropdown,
+  getUserFromLocalStorage,
   isFileSizeValid,
   matchesInterface,
   notifyError,
@@ -246,6 +248,9 @@ const CreateMandate = () => {
 
   const dayToApplyOptions = getDayToApplyOptions();
 
+  const user = getUserFromLocalStorage() as MerchantAuthData;
+  const loggedInMerchantId = user?.profileData?.merchantID;
+
   const [queryParams, setQueryParams] = useState<QueryParams>({
     sortBy: 'asc',
     sortOrder: 'desc',
@@ -368,7 +373,11 @@ const CreateMandate = () => {
                       formik={formik}
                       useTouched
                       options={formatApiDataForDropdown(
-                        merchantData?.responseData?.items,
+                        filterSelectedOption(
+                          loggedInMerchantId,
+                          'id',
+                          merchantData?.responseData?.items,
+                        ),
                         'id',
                         'id',
                       )}

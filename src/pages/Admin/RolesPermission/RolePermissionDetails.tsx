@@ -4,7 +4,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import ChevronRight from 'assets/icons/ChevronRight';
 import appRoutes from 'utils/constants/routes';
 import { useQuery } from '@tanstack/react-query';
-import { getRolePermissionByRoleId } from 'config/actions/role-permission-actions';
+import { getRoleById, getRolePermissionByRoleId } from 'config/actions/role-permission-actions';
 import { PermissionInterface } from 'utils/interfaces';
 import GoodCheckMark from 'assets/icons/GoodCheckMark';
 import ErrorCheckMark from 'assets/icons/ErrorCheckMark';
@@ -12,6 +12,11 @@ import ErrorCheckMark from 'assets/icons/ErrorCheckMark';
 const RolePermissionDetails = () => {
   const [searchParams] = useSearchParams();
   const permissionRoleId = searchParams?.get('id') || '';
+
+  const { data: roleData } = useQuery({
+    queryKey: ['roles-details', permissionRoleId],
+    queryFn: ({ queryKey }) => getRoleById(queryKey[1]),
+  });
 
   const { data } = useQuery({
     queryKey: ['permission-details', permissionRoleId],
@@ -54,6 +59,9 @@ const RolePermissionDetails = () => {
           <div className="">
             <ItemDetailsContainer title="Role Permission Details">
               <DetailsCard title="Role / Group Id" content={permissionRoleId} />
+              <DetailsCard title="Role Name" content={roleData?.responseData?.name} />
+              <DetailsCard title="Role Description" content={roleData?.responseData?.description} />
+              <DetailsCard title="Designation" content={roleData?.responseData?.designation} />
               <DetailsCard
                 title="Date Created"
                 content={

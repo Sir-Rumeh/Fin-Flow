@@ -52,7 +52,6 @@ const CreateMerchant = () => {
         rcNumber: values.rcNumber,
         address: values.address,
         internalChargeFee: parseFloat(values.merchantFee),
-        // cif: values.merchantCIF,
       };
       setMerchantRequest(payload);
       openModal('confirmOnboardMerchant');
