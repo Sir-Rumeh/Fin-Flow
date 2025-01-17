@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Outlet } from 'react-router-dom';
 import Navbar from 'components/NavigationBar';
 import MerchantSidebar from 'components/SidebarComponent';
+import { UserLoginRoles } from 'utils/enums';
 
 export default function MerchantLayout() {
   const [open, setOpen] = useState(true);
@@ -17,11 +18,13 @@ export default function MerchantLayout() {
     };
   }, []);
 
-  const userRole = 'Merchant';
-
   return (
     <div className="font-circular-std flex h-screen w-full overflow-hidden">
-      <MerchantSidebar open={open} onClose={() => setOpen(false)} userRole={userRole} />
+      <MerchantSidebar
+        open={open}
+        onClose={() => setOpen(false)}
+        userRole={UserLoginRoles.Merchant}
+      />
       <div className="dark:!bg-navy-900 w-full overflow-y-scroll bg-backgroundColor xl:ml-[20vw]">
         <main className={`flex-none transition-all`}>
           <div className="overflow-hidden">

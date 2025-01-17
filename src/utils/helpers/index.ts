@@ -12,6 +12,7 @@ import { DropdownOption } from 'components/FormElements/FormSelect';
 import { canBeUpdated } from 'utils/constants';
 import { SearchTypes } from 'utils/enums';
 import dayjs from 'dayjs';
+import { jwtDecode } from 'jwt-decode';
 
 export const checkRoute = (pathname: string, pathToCheck: string) => {
   if (pathname.includes(pathToCheck)) {
@@ -312,4 +313,12 @@ export const filterSelectedOption = (filter: any, filterId: any, options: any) =
 export const hasAccessToModule = (permissions: string[], module: string): boolean => {
   // Check if the array contains any entry starting with the module name followed by a dot (.)
   return permissions.some((permission) => permission.startsWith(`${module}.`));
+};
+
+export const decodeToken = (token?: string) => {
+  if (!token) return null;
+  if (token) {
+    const userData = jwtDecode(token) as any;
+    return userData as any;
+  }
 };

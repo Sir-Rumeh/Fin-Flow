@@ -2,10 +2,15 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import AdminDashboardLayout from 'layouts/AdminLayout';
 import { adminRoutes } from 'routes/appRoutes';
 import NotFoundPage from 'pages/NotFoundPage';
+import { decodeToken, getUserFromLocalStorage, hasAccessToModule } from 'utils/helpers';
 
 function AdminRoutes() {
+  const user = getUserFromLocalStorage();
+  const userDetails = decodeToken(user?.token);
   const getAdminRoutes = (adminRoutes: RoutesType[]) => {
     return adminRoutes.map((route) => {
+      const isAccessAllowed = hasAccessToModule(userDetails?.permission, route.moduleValue);
+      if (!isAccessAllowed) return null;
       if (route.layout === '/admin') {
         if (route.children && route.children.length > 0) {
           return (
@@ -56,10 +61,13 @@ function AdminRoutes() {
       }
     });
   };
+  const isDashboardAccessAllowed = hasAccessToModule(userDetails?.permission, 'Dashboard');
   return (
     <Routes>
       <Route element={<AdminDashboardLayout />}>
-        <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
+        {isDashboardAccessAllowed && (
+          <Route path="/" element={<Navigate to="/admin/dashboard" replace />} />
+        )}
         {getAdminRoutes(adminRoutes)}
         <Route path="*" element={<NotFoundPage />} />
       </Route>

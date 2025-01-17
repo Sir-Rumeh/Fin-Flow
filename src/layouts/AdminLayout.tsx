@@ -8,6 +8,7 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { getUserFromLocalStorage, isAdminAuthData, isMerchantAuthData } from 'utils/helpers';
 import { logoutMerchant, logoutStaff } from 'config/actions/authentication-actions';
 import { AdminAuthData, MerchantAuthData } from 'utils/interfaces';
+import { UserLoginRoles } from 'utils/enums';
 
 export default function AdminLayout() {
   const navigate = useNavigate();
@@ -38,8 +39,6 @@ export default function AdminLayout() {
       );
     };
   }, []);
-
-  const userRole = 'Admin';
 
   const onIdle = async () => {
     openModal('isSessionTimedOut');
@@ -93,7 +92,7 @@ export default function AdminLayout() {
   return (
     <>
       <div className="font-circular-std flex h-screen w-full overflow-hidden">
-        <AdminSidebar open={open} onClose={() => setOpen(false)} userRole={userRole} />
+        <AdminSidebar open={open} onClose={() => setOpen(false)} userRole={UserLoginRoles.Admin} />
         <div className="dark:!bg-navy-900 w-full overflow-y-scroll bg-backgroundColor xl:ml-[20vw]">
           <main className={`flex-none transition-all`}>
             <div className="overflow-hidden">
