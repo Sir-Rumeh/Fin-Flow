@@ -51,7 +51,7 @@ const MandateRequests = () => {
     sortBy: 'asc',
     sortOrder: 'desc',
     searchFilter: formik.values.searchMandate,
-    searchType: SearchTypes.SearchMandates,
+    searchType: SearchTypes.SearchMandateRequests,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });
@@ -72,7 +72,6 @@ const MandateRequests = () => {
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
       ...prev,
-      // pageNo: paginationData.pageNumber,
       requestType: formik.values.statusFilter,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
@@ -89,13 +88,21 @@ const MandateRequests = () => {
       sortable: false,
     },
     {
-      field: 'mandateCode',
-      headerName: 'Mandate Code',
+      field: 'accountNumber',
+      headerName: 'Account Number',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       sortable: false,
     },
+    // {
+    //   field: 'mandateCode',
+    //   headerName: 'Mandate Code',
+    //   width: screen.width < 1000 ? 200 : undefined,
+    //   flex: screen.width >= 1000 ? 1 : undefined,
+    //   headerClassName: 'ag-thead',
+    //   sortable: false,
+    // },
     {
       field: 'mandateType',
       headerName: 'Mandate Type',
@@ -235,7 +242,7 @@ const MandateRequests = () => {
                 <div className="">
                   <TableFilter
                     name={'searchMandate'}
-                    placeholder={'Search Mandate Code'}
+                    placeholder={'Search By Account Number'}
                     label={'Search Mandate'}
                     value={searchTerm}
                     setSearch={setSearchTerm}

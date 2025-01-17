@@ -76,54 +76,6 @@ const MandatetManagement = () => {
     pageSize: 10,
   });
 
-  const excelHeaders = [
-    { label: 'Merchant ID', key: 'merchantId' },
-    { label: 'Mandate Code', key: 'mandateCode' },
-    { label: 'Mandate Type', key: 'mandateType' },
-    { label: 'Active Status', key: 'isActive' },
-    { label: 'Date Requested', key: 'dateCreated' },
-  ];
-
-  const formik = useFormik({
-    initialValues: {
-      searchMandate: '',
-      searchTransactionHistory: '',
-      fromDateFilter: '',
-      toDateFilter: '',
-      statusFilter: '',
-    },
-    onSubmit: (values) => {
-      setQueryParams((prev) => ({
-        ...prev,
-        searchFilter: formik.values.searchMandate,
-      }));
-      refetch();
-    },
-  });
-
-  const [queryParams, setQueryParams] = useState<QueryParams>({
-    status: formik.values.statusFilter,
-    pageNo: paginationData.pageNumber,
-    pageSize: paginationData.pageSize,
-    sortBy: 'asc',
-    sortOrder: 'desc',
-    searchFilter: formik.values.searchMandate,
-    searchType: SearchTypes.SearchTransactions,
-    startDate: formik.values.fromDateFilter,
-    endDate: formik.values.toDateFilter,
-  });
-
-  const [transactionsQueryParams, setTransactionsQueryParams] = useState<QueryParams>({
-    mandateCode: selectedMandateCode,
-    status: activeTransactionTab,
-    pageNo: transactionPaginationData.pageNumber,
-    pageSize: transactionPaginationData.pageSize,
-    searchFilter: formik.values.searchTransactionHistory,
-    searchType: SearchTypes.SearchMandates,
-    sortBy: 'asc',
-    sortOrder: 'desc',
-  });
-
   const [modals, setModals] = useState({
     openTransactionHistory: false,
     openModifyMandate: false,
@@ -145,6 +97,89 @@ const MandatetManagement = () => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
 
+  const excelHeaders = [
+    { label: 'Merchant ID', key: 'merchantId' },
+    { label: 'Mandate Code', key: 'mandateCode' },
+    { label: 'Mandate Type', key: 'mandateType' },
+    { label: 'Active Status', key: 'isActive' },
+    { label: 'Date Requested', key: 'dateCreated' },
+  ];
+
+  const formik = useFormik({
+    initialValues: {
+      searchMandate: '',
+      searchTransactionHistory: '',
+      fromDateFilter: '',
+      toDateFilter: '',
+      statusFilter: '',
+    },
+    onSubmit: (values) => {
+      setQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchMandate,
+      }));
+      setTransactionsQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchTransactionHistory,
+      }));
+      refetch();
+      refetchTransactions();
+    },
+  });
+
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    status: formik.values.statusFilter,
+    pageNo: paginationData.pageNumber,
+    pageSize: paginationData.pageSize,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+    searchFilter: formik.values.searchMandate,
+    searchType: SearchTypes.SearchMandates,
+    startDate: formik.values.fromDateFilter,
+    endDate: formik.values.toDateFilter,
+  });
+
+  const [transactionsQueryParams, setTransactionsQueryParams] = useState<QueryParams>({
+    mandateCode: selectedMandateCode,
+    status: activeTransactionTab,
+    pageNo: transactionPaginationData.pageNumber,
+    pageSize: transactionPaginationData.pageSize,
+    searchFilter: formik.values.searchTransactionHistory,
+    searchType: SearchTypes.SearchTransactions,
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
+
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
+      searchFilter: formik.values.searchMandate,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  }, [paginationData, formik.values.searchMandate]);
+
+  useEffect(() => {
+    setTransactionsQueryParams((prev) => ({
+      ...prev,
+      status: activeTransactionTab,
+      pageNo: transactionPaginationData.pageNumber,
+      pageSize: transactionPaginationData.pageSize,
+    }));
+  }, [transactionPaginationData]);
+
+  const handleOptionsFilter = () => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  };
+
   const modifyMandateValidation = useFormik({
     initialValues: {
       amount: 0,
@@ -155,15 +190,6 @@ const MandatetManagement = () => {
       closeModal('openModifyMandate');
     },
   });
-
-  const handleOptionsFilter = () => {
-    setQueryParams((prev) => ({
-      ...prev,
-      status: formik.values.statusFilter,
-      startDate: formik.values.fromDateFilter,
-      endDate: formik.values.toDateFilter,
-    }));
-  };
 
   const total = 20;
 
@@ -552,7 +578,7 @@ const MandatetManagement = () => {
                     label={'Search Transactions'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
-                    handleOptionsFilter={() => {}}
+                    handleOptionsFilter={() => handleOptionsFilter()}
                     formik={formik}
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}

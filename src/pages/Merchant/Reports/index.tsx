@@ -69,7 +69,7 @@ const Reports = () => {
     pageNumber: 1,
     pageSize: 10,
   });
-  const [mandatePaginationData, setMandatePaginationData] = useState({
+  const [mandateTransactionsPaginationData, setMandateTransactionsPaginationData] = useState({
     pageNumber: 1,
     pageSize: 10,
   });
@@ -104,10 +104,10 @@ const Reports = () => {
   ];
 
   const transactionHeaders = [
-    { label: 'Account ID', key: 'accountId' },
-    { label: 'Mandate ID', key: 'mandateId' },
+    { label: 'Mandate Code', key: 'mandateCode' },
     { label: 'Amount', key: 'amount' },
-    { label: 'Date', key: 'dateCreated' },
+    { label: 'Effective Date', key: 'effectiveDate' },
+    { label: 'Billing Status', key: 'billingStatus' },
   ];
 
   const openModal = (modalName: keyof typeof modals) => {
@@ -138,7 +138,34 @@ const Reports = () => {
       transacToDateFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setQueryParams((prev) => ({
+        ...prev,
+        startDate: values.fromDateFilter,
+        endDate: values.toDateFilter,
+        pageNo: paginationData.pageNumber,
+        pageSize: paginationData.pageSize,
+        searchFilter: values.searchMandate,
+      }));
+      setTransactionsQueryParams((prev) => ({
+        ...prev,
+        startDate: values.transacFromDateFilter,
+        endDate: values.transacToDateFilter,
+        pageNo: transactionPaginationData.pageNumber,
+        pageSize: transactionPaginationData.pageSize,
+        searchFilter: values.searchTransactionHistory,
+      }));
+      setMandateTransactionsQueryParams((prev) => ({
+        ...prev,
+        startDate: values.transacFromDateFilter,
+        endDate: values.transacToDateFilter,
+        pageNo: transactionPaginationData.pageNumber,
+        pageSize: transactionPaginationData.pageSize,
+        searchFilter: values.searchTransactionHistory,
+      }));
+
+      refetch();
+      refetchTransactions();
+      refecthMandateTransactions();
     },
   });
 
@@ -148,6 +175,11 @@ const Reports = () => {
       endDate: '',
       status: '',
       reportType: '',
+      searchTransactionHistory: '',
+      searchMandateTransaction: '',
+      transacStatusFilter: '',
+      transacFromDateFilter: '',
+      transacToDateFilter: '',
     },
     validationSchema: validationSchema,
     onSubmit: (values) => {
@@ -155,12 +187,6 @@ const Reports = () => {
       const formattedStartDate = startDate ? dayjs(startDate).format('YYYY-MM-DD') : '';
       const formattedEndDate = endDate ? dayjs(endDate).format('YYYY-MM-DD') : '';
       setReportType(values.reportType);
-      // if (values.reportType === reportTypes[0].value) {
-      //   setReportType(values.reportType);
-      // } else if (values.reportType === reportTypes[1].value) {
-
-      // }
-
       setQueryParams((prev) => ({
         ...prev,
         status: values.status,
@@ -183,6 +209,7 @@ const Reports = () => {
     sortBy: 'asc',
     sortOrder: 'desc',
     searchFilter: formikFilter.values.searchMandate,
+    searchType: SearchTypes.SearchMandates,
     startDate: formikFilter.values.fromDateFilter,
     endDate: formikFilter.values.toDateFilter,
   });
@@ -445,7 +472,7 @@ const Reports = () => {
   const user = getUserFromLocalStorage() as MerchantAuthData;
   const loggedInMerchantId = user?.profileData?.merchantID;
 
-  const { data } = useQuery({
+  const { data, refetch } = useQuery({
     queryKey: ['mandates', queryParams],
     queryFn: ({ queryKey }) =>
       getMandatesByMerchantId(loggedInMerchantId, queryKey[1] as QueryParams),
@@ -460,34 +487,34 @@ const Reports = () => {
     pageSize: transactionPaginationData.pageSize,
     searchFilter: formikFilter.values.searchTransactionHistory,
     searchType: SearchTypes.SearchTransactions,
-    startDate: formikFilter.values.fromDateFilter,
-    endDate: formikFilter.values.toDateFilter,
+    startDate: formikFilter.values.transacFromDateFilter,
+    endDate: formikFilter.values.transacToDateFilter,
     sortBy: 'asc',
     sortOrder: 'desc',
   });
-  const [mandateTransactionsQueryParams, setmandateTransactionsQueryParams] = useState<QueryParams>(
+  const [mandateTransactionsQueryParams, setMandateTransactionsQueryParams] = useState<QueryParams>(
     {
       mandateCode: selectedMandateCode,
       pageNo: transactionPaginationData.pageNumber,
       pageSize: transactionPaginationData.pageSize,
       searchFilter: formikFilter.values.searchMandateTransaction,
       searchType: SearchTypes.SearchTransactions,
-      startDate: formikFilter.values.fromDateFilter,
-      endDate: formikFilter.values.toDateFilter,
+      startDate: formikFilter.values.transacFromDateFilter,
+      endDate: formikFilter.values.transacToDateFilter,
       sortBy: 'asc',
       sortOrder: 'desc',
     },
   );
 
-  const { data: transactionsData } = useQuery({
+  const { data: transactionsData, refetch: refetchTransactions } = useQuery({
     queryKey: ['transactions', transactionsQueryParams],
     queryFn: ({ queryKey }) =>
       getTransactionsByMerchantId(loggedInMerchantId, queryKey[1] as QueryParams),
     enabled: reportType === reportTypes[1].value,
     retry: 2,
   });
-  const { data: mandateTransactionsData } = useQuery({
-    queryKey: ['transactions', mandateTransactionsQueryParams],
+  const { data: mandateTransactionsData, refetch: refecthMandateTransactions } = useQuery({
+    queryKey: ['mandate-transactions', mandateTransactionsQueryParams],
     queryFn: ({ queryKey }) =>
       getTransactionsByMerchantId(loggedInMerchantId, queryKey[1] as QueryParams),
   });
@@ -552,6 +579,12 @@ const Reports = () => {
       status: formikFilter.values.statusFilter,
       startDate: formikFilter.values.fromDateFilter,
       endDate: formikFilter.values.toDateFilter,
+    }));
+    setTransactionsQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.transacStatusFilter,
+      startDate: formik.values.transacFromDateFilter,
+      endDate: formik.values.transacToDateFilter,
     }));
   };
 
@@ -717,15 +750,15 @@ const Reports = () => {
                     <div className="">
                       <TableFilter
                         name={'searchTransactionHistory'}
-                        placeholder={'Search'}
+                        placeholder={'Search By Account Number'}
                         label={'Search Transactions'}
                         value={searchTerm}
                         setSearch={setSearchTerm}
                         handleOptionsFilter={() => handleOptionsFilter()}
                         formik={formikFilter}
-                        fromDateName={'fromDateFilter'}
-                        toDateName={'toDateFilter'}
-                        selectName={'statusFilter'}
+                        fromDateName={'transacFromDateFilter'}
+                        toDateName={'transacToDateFilter'}
+                        selectName={'transacStatusFilter'}
                         translationX={isLargeWidth ? 300 : undefined}
                       />
                     </div>
@@ -737,8 +770,8 @@ const Reports = () => {
                     tableData={transactionsData?.responseData?.items}
                     columns={transactionsReportColumn}
                     rowCount={transactionsData?.responseData?.totalCount}
-                    paginationData={paginationData}
-                    setPaginationData={setPaginationData}
+                    paginationData={transactionPaginationData}
+                    setPaginationData={setTransactionPaginationData}
                   />
                 </div>
               </div>
@@ -794,8 +827,8 @@ const Reports = () => {
                   columns={transactionsReportColumn}
                   tableData={mandateTransactionsData?.responseData?.items}
                   rowCount={mandateTransactionsData?.responseData?.totalCount}
-                  paginationData={mandatePaginationData}
-                  setPaginationData={setMandatePaginationData}
+                  paginationData={mandateTransactionsPaginationData}
+                  setPaginationData={setMandateTransactionsPaginationData}
                 />
               </div>
             </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
   ArrowRightIcon,
@@ -193,7 +193,11 @@ const MandateDetails = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setTransactionsQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchTransactionHistory,
+      }));
+      refetchTransactions();
     },
   });
 
@@ -212,6 +216,24 @@ const MandateDetails = () => {
     sortBy: 'asc',
     sortOrder: 'desc',
   });
+
+  useEffect(() => {
+    setTransactionsQueryParams((prev) => ({
+      ...prev,
+      status: activeTransactionTab,
+      pageNo: transactionPaginationData.pageNumber,
+      pageSize: transactionPaginationData.pageSize,
+    }));
+  }, [transactionPaginationData]);
+
+  const handleOptionsFilter = () => {
+    setTransactionsQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  };
 
   const { data: transactionsData, refetch: refetchTransactions } = useQuery({
     queryKey: ['transactions', transactionsQueryParams],
@@ -474,7 +496,7 @@ const MandateDetails = () => {
                     label={'Search Transactions'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
-                    handleOptionsFilter={() => {}}
+                    handleOptionsFilter={() => handleOptionsFilter()}
                     formik={formik}
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}

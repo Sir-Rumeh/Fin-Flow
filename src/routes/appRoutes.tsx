@@ -74,6 +74,7 @@ import AssignRoleToAdmin from 'pages/Admin/RolesPermission/AssignRoleToAdmin';
 const adminRoutes: RoutesType[] = [
   {
     name: 'Dashboard',
+    moduleValue: 'Dashboard',
     layout: `/${BASE_ROUTES.ADMIN}`,
     path: 'dashboard',
     icon: <DashboardIcon />,
@@ -95,6 +96,7 @@ const adminRoutes: RoutesType[] = [
   },
   {
     name: 'Requests',
+    moduleValue: 'Requests',
     layout: `/${BASE_ROUTES.ADMIN}`,
     path: 'requests',
     icon: <RequestIcon />,
@@ -126,6 +128,7 @@ const adminRoutes: RoutesType[] = [
   },
   {
     name: 'Merchant Management',
+    moduleValue: 'Merchant',
     layout: `/${BASE_ROUTES.ADMIN}`,
     path: 'merchant-management',
     icon: <MerchantIcon />,
@@ -152,6 +155,7 @@ const adminRoutes: RoutesType[] = [
   },
   {
     name: 'Mandate Management',
+    moduleValue: 'Mandate',
     layout: `/${BASE_ROUTES.ADMIN}`,
     path: 'mandate-management',
     icon: <MandateIcon />,
@@ -174,6 +178,7 @@ const adminRoutes: RoutesType[] = [
   },
   {
     name: 'Profile Management',
+    moduleValue: 'Profile',
     layout: `/${BASE_ROUTES.ADMIN}`,
     path: 'profile-management',
     icon: <ProfileIcon />,
@@ -200,6 +205,7 @@ const adminRoutes: RoutesType[] = [
   },
   {
     name: 'Account Management',
+    moduleValue: 'Account',
     layout: `/${BASE_ROUTES.ADMIN}`,
     path: 'account-management',
     icon: <AccountIcon />,
@@ -226,6 +232,7 @@ const adminRoutes: RoutesType[] = [
   },
   {
     name: 'Audit Trail',
+    moduleValue: 'Audit',
     layout: `/${BASE_ROUTES.ADMIN}`,
     path: 'audit-trail',
     icon: <AuditIcon />,
@@ -235,6 +242,7 @@ const adminRoutes: RoutesType[] = [
   },
   {
     name: 'Reports',
+    moduleValue: 'Reports',
     layout: `/${BASE_ROUTES.ADMIN}`,
     path: 'reports',
     icon: <ReportIcon />,
@@ -244,6 +252,7 @@ const adminRoutes: RoutesType[] = [
   },
   {
     name: 'Staff User Management',
+    moduleValue: 'StaffUser',
     layout: `/${BASE_ROUTES.ADMIN}`,
     path: 'staff-user-management',
     icon: <UserIcon />,
@@ -275,6 +284,7 @@ const adminRoutes: RoutesType[] = [
   },
   {
     name: 'User Requests',
+    moduleValue: 'UserRequests',
     layout: `/${BASE_ROUTES.ADMIN}`,
     path: 'staff-user-requests',
     icon: <UserRequestsIcon />,
@@ -311,6 +321,7 @@ const adminRoutes: RoutesType[] = [
   },
   {
     name: 'Roles Permission',
+    moduleValue: 'RolePermissions',
     layout: `/${BASE_ROUTES.ADMIN}`,
     path: 'roles-permission',
     icon: <SecurityIcon />,
@@ -345,6 +356,7 @@ const adminRoutes: RoutesType[] = [
 const merchantRoutes: RoutesType[] = [
   {
     name: 'Dashboard',
+    moduleValue: 'Dashboard',
     layout: `/${BASE_ROUTES.MERCHANT}`,
     path: 'dashboard',
     icon: <DashboardIcon />,
@@ -361,6 +373,7 @@ const merchantRoutes: RoutesType[] = [
   },
   {
     name: 'Requests',
+    moduleValue: 'Requests',
     layout: `/${BASE_ROUTES.MERCHANT}`,
     path: 'requests',
     icon: <RequestIcon />,
@@ -397,6 +410,7 @@ const merchantRoutes: RoutesType[] = [
   },
   {
     name: 'Mandate Management',
+    moduleValue: 'Mandate',
     layout: `/${BASE_ROUTES.MERCHANT}`,
     path: 'mandate-management',
     icon: <MandateIcon />,
@@ -418,6 +432,7 @@ const merchantRoutes: RoutesType[] = [
   },
   {
     name: 'User Management',
+    moduleValue: 'Profile',
     layout: `/${BASE_ROUTES.MERCHANT}`,
     path: 'user-management',
     icon: <ProfileIcon />,
@@ -434,6 +449,7 @@ const merchantRoutes: RoutesType[] = [
   },
   {
     name: 'Audit Trail',
+    moduleValue: 'Audit',
     layout: `/${BASE_ROUTES.MERCHANT}`,
     path: 'audit-trail',
     icon: <AuditIcon />,
@@ -443,6 +459,7 @@ const merchantRoutes: RoutesType[] = [
   },
   {
     name: 'Reports',
+    moduleValue: 'Reports',
     layout: `/${BASE_ROUTES.MERCHANT}`,
     path: 'reports',
     icon: <ReportIcon />,
@@ -509,6 +526,7 @@ const adminAccessRights: { id: number; module: string; moduleValue: string }[] =
     moduleValue: 'RolePermissions',
   },
 ];
+
 const merchantAccessRights: { id: number; module: string; moduleValue: string }[] = [
   {
     id: 0,
