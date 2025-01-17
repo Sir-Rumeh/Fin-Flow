@@ -125,7 +125,8 @@ AxiosClient.interceptors.response.use(
         abortController.abort();
         abortController = new AbortController();
         logoutUser();
-        return Promise.reject(new Error('Token refresh failed. User logged out.'));
+        return;
+        // return Promise.reject(new Error('Token refresh failed. User logged out.'));
       } else {
         isRequestRetried = true;
         if (user) {
@@ -152,10 +153,10 @@ AxiosClient.interceptors.response.use(
             } else {
               dispatch(uiStopLoading());
               logoutUser();
-              // return Promise.reject(new Error('Token refresh failed. User logged out.'));
+              return Promise.reject(new Error('Token refresh failed. User logged out.'));
             }
           } catch (err) {
-            notifyError('Session expired. Please log in again.');
+            // notifyError('Session expired. Please log in again.');
             dispatch(uiStopLoading());
             localStorage.clear();
             setTimeout(() => {

@@ -2,12 +2,25 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import MerchantDashboardLayout from 'layouts/MerchantLayout';
 import { merchantRoutes } from 'routes/appRoutes';
 import NotFoundPage from 'pages/NotFoundPage';
-import { decodeToken, getUserFromLocalStorage, hasAccessToModule } from 'utils/helpers';
+import {
+  decodeToken,
+  getUserFromLocalStorage,
+  hasAccessToModule,
+  notifyError,
+} from 'utils/helpers';
+import { useEffect, useRef } from 'react';
 
 function MerchantRoutes() {
   const user = getUserFromLocalStorage();
   const userDetails = decodeToken(user?.token);
+  const documentLoaderRef = useRef(false);
+  useEffect(() => {
+    documentLoaderRef.current = true;
+  }, []);
   const getMerchantRoutes = (adminRoutes: RoutesType[]) => {
+    if (!userDetails?.permission && documentLoaderRef.current) {
+      notifyError('You do not have this module permission. Please contact an admin');
+    }
     return adminRoutes.map((route) => {
       const isAccessAllowed = hasAccessToModule(userDetails?.permission, route.moduleValue);
       if (!isAccessAllowed) return null;
