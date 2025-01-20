@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { pendingDashboardMerchantsList } from 'utils/constants';
+import { pendingDashboardMerchantsList, requestTypeDropdownOptions } from 'utils/constants';
 import TableFilter from 'components/TableFilter';
 import { QueryParams, TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
@@ -253,6 +253,7 @@ const MerchantRequests = () => {
                     selectName={'statusFilter'}
                     translationX={isLargeWidth ? 350 : undefined}
                     isRequestsFilter
+                    dropdownOptions={requestTypeDropdownOptions}
                   />
                 </div>
               </div>

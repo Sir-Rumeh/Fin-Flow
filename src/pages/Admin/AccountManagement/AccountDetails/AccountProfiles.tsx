@@ -23,6 +23,7 @@ import {
   getProfilesByAccountId,
 } from 'config/actions/profile-actions';
 import { getAccountById } from 'config/actions/account-actions';
+import { statusDropdownOptions } from 'utils/constants';
 
 const AccountProfiles = () => {
   const [searchParams] = useSearchParams();
@@ -333,6 +334,7 @@ const AccountProfiles = () => {
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}
                     selectName={'statusFilter'}
+                    dropdownOptions={statusDropdownOptions}
                   />
                 </div>
               </div>

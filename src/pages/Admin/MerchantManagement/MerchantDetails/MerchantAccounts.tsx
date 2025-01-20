@@ -23,6 +23,7 @@ import {
   getAccountsByMerchantId,
 } from 'config/actions/account-actions';
 import { getMerchantById } from 'config/actions/merchant-actions';
+import { statusDropdownOptions } from 'utils/constants';
 
 const MerchantAccounts = () => {
   const [searchParams] = useSearchParams();
@@ -333,6 +334,7 @@ const MerchantAccounts = () => {
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}
                     selectName={'statusFilter'}
+                    dropdownOptions={statusDropdownOptions}
                   />
                 </div>
               </div>

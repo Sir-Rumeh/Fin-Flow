@@ -19,6 +19,12 @@ export const statusDropdownOptions = [
   { value: 'Enabled', label: 'Enabled' },
   { value: 'Disabled', label: 'Disabled' },
 ];
+export const transactionsStatusDropdownOptions = [
+  { value: '', label: 'All' },
+  { value: 'Successful', label: 'Successful' },
+  { value: 'Failed', label: 'Failed' },
+  { value: 'Pending', label: 'Pending' },
+];
 export const requestTypeDropdownOptions = [
   { value: '', label: 'All' },
   { value: 'Creation', label: 'Creation' },

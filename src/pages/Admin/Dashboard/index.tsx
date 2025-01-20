@@ -25,6 +25,7 @@ import { useFormik } from 'formik';
 import { getUserFromLocalStorage, isAdminAuthData, isMerchantAuthData } from 'utils/helpers';
 import dayjs from 'dayjs';
 import LocalizedTime from 'dayjs/plugin/localizedFormat';
+import { CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
 
 const Dashboard = () => {
   dayjs.extend(LocalizedTime);
@@ -150,12 +151,31 @@ const Dashboard = () => {
       sortable: false,
     },
     {
-      field: 'cif',
-      headerName: 'CIF Number',
+      field: 'isActive',
+      headerName: 'Status',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
-      sortable: false,
+      renderCell: (params: GridRenderCellParams) => {
+        const renderIcon = (
+          IconComponent: React.ComponentType,
+          colorClass: string,
+          title: string,
+        ) => (
+          <div className="flex w-full items-center gap-2 font-semibold">
+            <IconComponent />
+            <span className={`mb-[1px] ${colorClass}`}>{title}</span>
+          </div>
+        );
+        switch (params?.row.isActive) {
+          case true:
+            return renderIcon(CreationRequestIcon, 'text-greenPrimary', 'Enabled');
+          case false:
+            return renderIcon(DeleteRequestIcon, 'text-redSecondary', 'Disabled');
+          default:
+            return <span>{params?.row.isActive ? 'Enabled' : 'Disabled'}</span>;
+        }
+      },
     },
 
     {
@@ -299,6 +319,24 @@ const Dashboard = () => {
     },
   });
 
+  const merchantStatusFilters = [
+    {
+      id: 1,
+      name: 'All',
+      value: '',
+    },
+    {
+      id: 2,
+      name: 'Enabled',
+      value: 'Enabled',
+    },
+    {
+      id: 2,
+      name: 'Disabled',
+      value: 'Disabled',
+    },
+  ];
+
   return (
     <>
       <section className="p-2 md:p-4">
@@ -327,15 +365,27 @@ const Dashboard = () => {
                   translationY={45}
                 >
                   <div className="slide-downward flex w-[7rem] flex-col rounded-md bg-white py-1 text-sm">
-                    <span
-                      onClick={() => {
-                        formik.setFieldValue('status', '');
-                      }}
-                      className="cursor-pointer border-b px-3 py-1 text-start hover:bg-lilacPurple"
-                    >
-                      All
-                    </span>
-                    <span
+                    {merchantStatusFilters.map((status) => {
+                      return (
+                        <span
+                          key={status.name}
+                          onClick={() => {
+                            formik.setFieldValue('status', status.value);
+                            setPaginationData((prev) => {
+                              return {
+                                ...prev,
+                                pageNumber: 1,
+                              };
+                            });
+                          }}
+                          className="cursor-pointer border-b px-3 py-1 text-start hover:bg-lilacPurple"
+                        >
+                          {status.name}
+                        </span>
+                      );
+                    })}
+
+                    {/* <span
                       onClick={() => {
                         formik.setFieldValue('status', 'Enabled');
                       }}
@@ -350,7 +400,7 @@ const Dashboard = () => {
                       className="cursor-pointer px-3 py-1 text-start hover:bg-lilacPurple"
                     >
                       Disabled
-                    </span>
+                    </span> */}
                   </div>
                 </CustomPopover>
               </div>

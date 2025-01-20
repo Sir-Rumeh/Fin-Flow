@@ -18,6 +18,7 @@ import { useFormik } from 'formik';
 import { useMediaQuery } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { getMandateRequests, getMandateRequestsStatistics } from 'config/actions/dashboard-actions';
+import { requestTypeDropdownOptions } from 'utils/constants';
 
 const MandateRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -253,6 +254,7 @@ const MandateRequests = () => {
                     selectName={'statusFilter'}
                     translationX={isLargeWidth ? 350 : undefined}
                     isRequestsFilter
+                    dropdownOptions={requestTypeDropdownOptions}
                   />
                 </div>
               </div>

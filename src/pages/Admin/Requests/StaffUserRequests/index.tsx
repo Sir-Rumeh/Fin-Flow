@@ -21,6 +21,7 @@ import {
   getStaffUsersRequestsStatistics,
 } from 'config/actions/staff-user-actions';
 import { useQuery } from '@tanstack/react-query';
+import { requestTypeDropdownOptions } from 'utils/constants';
 
 const StaffUserRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -245,6 +246,7 @@ const StaffUserRequests = () => {
                     selectName={'statusFilter'}
                     translationX={isLargeWidth ? 350 : undefined}
                     isRequestsFilter
+                    dropdownOptions={requestTypeDropdownOptions}
                   />
                 </div>
               </div>

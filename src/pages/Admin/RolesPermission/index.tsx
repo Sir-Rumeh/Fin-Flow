@@ -26,10 +26,10 @@ const RolesPermission = () => {
       tabIndex: 2,
       tabName: roleSettingsType.permission,
     },
-    {
-      tabIndex: 3,
-      tabName: roleSettingsType.assignRole,
-    },
+    // {
+    //   tabIndex: 3,
+    //   tabName: roleSettingsType.assignRole,
+    // },
   ];
 
   const pageDisplay = () => {

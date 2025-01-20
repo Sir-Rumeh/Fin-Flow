@@ -17,7 +17,7 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 import Modal from '@mui/material/Modal';
 import { GridColDef } from '@mui/x-data-grid';
-import { transactionHistory } from 'utils/constants';
+import { statusDropdownOptions, transactionHistory } from 'utils/constants';
 import { Popover } from '@mui/material';
 import WhiteArrowDown from 'assets/icons/WhiteArrowDown';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -502,6 +502,7 @@ const MandateDetails = () => {
                     toDateName={'toDateFilter'}
                     selectName={'statusFilter'}
                     showOptionsFilter={false}
+                    dropdownOptions={statusDropdownOptions}
                   />
                 </div>
               </div>

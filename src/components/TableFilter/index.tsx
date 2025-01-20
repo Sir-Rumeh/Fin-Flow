@@ -24,6 +24,7 @@ interface TableFilterProps {
   isRequestsFilter?: boolean;
   translationX?: number;
   translationY?: number;
+  dropdownOptions: { value: string; label: string }[];
 }
 
 const TableFilter = ({
@@ -41,6 +42,7 @@ const TableFilter = ({
   isRequestsFilter = false,
   translationX,
   translationY,
+  dropdownOptions,
 }: TableFilterProps) => {
   const [closeFilterCard, setCloseFilterCard] = useState(false);
   const [pulse, setPulse] = useState(false);
@@ -129,7 +131,8 @@ const TableFilter = ({
                     labelFor={selectName}
                     label={isRequestsFilter ? 'Request Type' : 'Status'}
                     formik={formik}
-                    options={isRequestsFilter ? requestTypeDropdownOptions : statusDropdownOptions}
+                    options={dropdownOptions}
+                    // options={isRequestsFilter ? requestTypeDropdownOptions : statusDropdownOptions}
                     scrollableOptions
                     labelFontWeight="font-bold"
                   />

@@ -10,6 +10,7 @@ import { useFormik } from 'formik';
 import CustomPopover from 'hoc/PopOverWrapper';
 import { useEffect, useState } from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
+import { statusDropdownOptions } from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
 import { SearchTypes } from 'utils/enums';
 import { capitalize } from 'utils/helpers';
@@ -165,6 +166,7 @@ const RoleList = () => {
               toDateName={'toDateFilter'}
               selectName={'statusFilter'}
               showOptionsFilter={false}
+              dropdownOptions={statusDropdownOptions}
             />
           </div>
         </div>

@@ -23,6 +23,7 @@ import {
   getMerchants,
 } from 'config/actions/merchant-actions';
 import { SearchTypes } from 'utils/enums';
+import { statusDropdownOptions } from 'utils/constants';
 
 const MerchantManagement = () => {
   const printPdfRef = useRef(null);
@@ -338,6 +339,7 @@ const MerchantManagement = () => {
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}
                     selectName={'statusFilter'}
+                    dropdownOptions={statusDropdownOptions}
                   />
                 </div>
               </div>

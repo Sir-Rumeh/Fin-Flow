@@ -22,6 +22,7 @@ import { MerchantAuthData, QueryParams, TabsProps } from 'utils/interfaces';
 import { useMediaQuery } from '@mui/material';
 import CustomTabs from 'hoc/CustomTabs';
 import { getUserFromLocalStorage } from 'utils/helpers';
+import { requestTypeDropdownOptions } from 'utils/constants';
 
 const MandateRequests = () => {
   const location = useLocation();
@@ -246,6 +247,7 @@ const MandateRequests = () => {
                 selectName={'statusFilter'}
                 translationX={isLargeWidth ? 350 : undefined}
                 isRequestsFilter
+                dropdownOptions={requestTypeDropdownOptions}
               />
             </div>
           </div>

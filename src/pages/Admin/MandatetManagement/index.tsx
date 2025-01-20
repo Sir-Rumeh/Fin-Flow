@@ -32,6 +32,7 @@ import {
 import { capitalize, getUserFromLocalStorage } from 'utils/helpers';
 import { updateMandateSchema } from 'utils/formValidators';
 import { SearchTypes, TransactionsTabsListTabNames } from 'utils/enums';
+import { statusDropdownOptions, transactionsStatusDropdownOptions } from 'utils/constants';
 
 const MandatetManagement = () => {
   const printPdfRef = useRef(null);
@@ -511,6 +512,7 @@ const MandatetManagement = () => {
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}
                     selectName={'statusFilter'}
+                    dropdownOptions={statusDropdownOptions}
                   />
                 </div>
               </div>
@@ -756,6 +758,7 @@ const MandatetManagement = () => {
                     toDateName={'toDateFilter'}
                     selectName={'statusFilter'}
                     showOptionsFilter={false}
+                    dropdownOptions={transactionsStatusDropdownOptions}
                   />
                 </div>
               </div>

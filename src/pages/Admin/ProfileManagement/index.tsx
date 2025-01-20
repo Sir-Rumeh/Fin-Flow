@@ -23,6 +23,7 @@ import {
   getProfiles,
 } from 'config/actions/profile-actions';
 import { SearchTypes } from 'utils/enums';
+import { statusDropdownOptions } from 'utils/constants';
 
 const ProfileManagement = () => {
   const queryClient = useQueryClient();
@@ -339,6 +340,7 @@ const ProfileManagement = () => {
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}
                     selectName={'statusFilter'}
+                    dropdownOptions={statusDropdownOptions}
                   />
                 </div>
               </div>

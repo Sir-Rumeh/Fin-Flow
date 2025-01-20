@@ -11,6 +11,7 @@ import { MerchantAuthData, QueryParams } from 'utils/interfaces';
 import { getProfiles, getProfilesByMerchantId } from 'config/actions/profile-actions';
 import { SearchTypes } from 'utils/enums';
 import { capitalize, getUserFromLocalStorage } from 'utils/helpers';
+import { statusDropdownOptions } from 'utils/constants';
 
 const UserManagement = () => {
   const printPdfRef = useRef(null);
@@ -165,6 +166,7 @@ const UserManagement = () => {
                 fromDateName={'fromDateFilter'}
                 toDateName={'toDateFilter'}
                 selectName={'statusFilter'}
+                dropdownOptions={statusDropdownOptions}
               />
             </div>
           </div>
