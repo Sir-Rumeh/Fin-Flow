@@ -112,6 +112,13 @@ const AccountManagement = () => {
 
   const columns: GridColDef[] = [
     {
+      field: 'merchantName',
+      headerName: 'Merchant Name',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
+    {
       field: 'merchantId',
       headerName: 'Merchant ID',
       width: screen.width < 1000 ? 200 : undefined,
@@ -124,14 +131,6 @@ const AccountManagement = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
-    },
-    {
-      field: 'cif',
-      headerName: 'CIF',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-      sortable: false,
     },
     {
       field: 'status',

@@ -8,21 +8,27 @@ import {
   hasAccessToModule,
   notifyError,
 } from 'utils/helpers';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 function MerchantRoutes() {
   const user = getUserFromLocalStorage();
   const userDetails = decodeToken(user?.token);
   const getMerchantRoutes = (routes: RoutesType[]) => {
-    const hasMatchingModuleValue = routes.some((route) =>
-      userDetails?.permission?.some((string: any) => string.includes(route.moduleValue)),
-    );
-    if (!userDetails?.permission || !hasMatchingModuleValue) {
-      return <Route path="*" element={<NotFoundPage />} key={'*'} />;
-    }
+    // const [hasModuleAccess, setHasModuleAccess] = useState(false);
+    // useEffect(() => {
+    //   const hasMatchingModuleValue = routes.some((route) =>
+    //     userDetails?.permission?.some((string: any) => string.includes(route.moduleValue)),
+    //   );
+    //   if (hasMatchingModuleValue) {
+    //     setHasModuleAccess(true);
+    //   }
+    // });
+    // if (!userDetails?.permission || !hasModuleAccess) {
+    //   return <Route path="*" element={<NotFoundPage />} key={'*'} />;
+    // }
     return routes.map((route) => {
-      const isAccessAllowed = hasAccessToModule(userDetails?.permission, route.moduleValue);
-      if (!isAccessAllowed) return null;
+      // const isAccessAllowed = hasAccessToModule(userDetails?.permission, route.moduleValue);
+      // if (!isAccessAllowed) return null;
       if (route.layout === '/merchant') {
         if (route.children && route.children.length > 0) {
           return (

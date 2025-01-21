@@ -104,7 +104,9 @@ const CreateMerchant = () => {
                   <CustomInput
                     labelFor="accountNumber"
                     label="Enter Merchant Account Number"
-                    inputType="number"
+                    inputType="text"
+                    mode="numeric"
+                    pattern="\d*"
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
@@ -122,8 +124,14 @@ const CreateMerchant = () => {
                   title="Continue"
                   customPaddingX="2rem"
                   onClick={() => {
-                    if (!formik.values.accountNumber)
+                    if (!formik.values.accountNumber) {
                       return formik.setFieldError('accountNumber', 'Account Number is required');
+                    } else if (
+                      formik.values.accountNumber?.length > 10 ||
+                      formik.values.accountNumber?.length < 10
+                    ) {
+                      return formik.setFieldError('accountNumber', 'Invalid Account Number');
+                    }
                     validateCifStatus();
                   }}
                   disabled={merchantAccountValidated}

@@ -15,6 +15,7 @@ import {
   refreshMerchantToken,
   refreshStaffToken,
 } from './actions/authentication-actions';
+import axiosRetry from 'axios-retry';
 
 const AxiosClient = axios.create({
   baseURL: AppConfig.PROFILE_URL,
@@ -99,7 +100,6 @@ AxiosClient.interceptors.response.use(
                   })
                 : null;
             dispatch(uiStopLoading());
-            notifyError('Session expired. Please log in again.');
             localStorage.clear();
             setTimeout(() => {
               window.location.href = '/';
@@ -114,7 +114,6 @@ AxiosClient.interceptors.response.use(
           }
         } else {
           dispatch(uiStopLoading());
-          notifyError('Session expired. Please log in again.');
           localStorage.clear();
           setTimeout(() => {
             window.location.href = '/';
@@ -122,6 +121,7 @@ AxiosClient.interceptors.response.use(
         }
       };
       if (isRequestRetried) {
+        isRequestRetried = false;
         abortController.abort();
         abortController = new AbortController();
         logoutUser();
@@ -175,8 +175,14 @@ AxiosClient.interceptors.response.use(
     } else if (error?.response?.status === 400 || 404) {
       notifyError(error?.response?.data?.responseMessage);
       return Promise.reject(error);
+    } else if (error?.response?.status === 403) {
+      notifyError('You do not have permission to perform this action. Please contact an admin');
+      return Promise.reject(error);
     } else if (error?.response?.status === 500) {
       notifyError('Something went wrong');
+      return Promise.reject(error);
+    } else if (error?.response?.status === 504) {
+      notifyError('Gateway connection timeout');
       return Promise.reject(error);
     } else if (error.message === networkErrorMessage) {
       notifyError(error.message);
@@ -185,6 +191,7 @@ AxiosClient.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+axiosRetry(AxiosClient, { retries: 0 });
 
 AxiosClient.interceptors.request.use((config) => {
   config.signal = abortController.signal;

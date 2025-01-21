@@ -190,6 +190,11 @@ const SingleUpload = () => {
     }
   }, [formik.values.merchantId]);
 
+  const minStartDate = () => {
+    const date = new Date();
+    return date.setDate(date.getDate() + 30);
+  };
+
   return (
     <>
       <div className="slide-down mt-5 rounded-lg bg-white px-5 py-10">
@@ -277,6 +282,7 @@ const SingleUpload = () => {
                   label="Start Date"
                   placeholder="Select date"
                   useTouched
+                  minDate={minStartDate()}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -438,7 +444,9 @@ const SingleUpload = () => {
                 <CustomInput
                   labelFor="payerPhoneNumber"
                   label="Payer Phone Number"
-                  inputType="number"
+                  inputType="text"
+                  mode="numeric"
+                  pattern="\d*"
                   placeholder="Enter here"
                   maxW="w-full"
                   formik={formik}
@@ -482,7 +490,9 @@ const SingleUpload = () => {
                 <CustomInput
                   labelFor="payeePhoneNumber"
                   label="Payee Phone Number"
-                  inputType="number"
+                  inputType="text"
+                  mode="numeric"
+                  pattern="\d*"
                   placeholder="Enter here"
                   maxW="w-full"
                   formik={formik}
@@ -536,11 +546,13 @@ const SingleUpload = () => {
                 <CustomInput
                   labelFor="billerAccountNumber"
                   label="Biller Account Number"
-                  inputType="number"
-                  useTouched={false}
+                  useTouched
                   placeholder="Enter here"
                   maxW="w-full"
                   formik={formik}
+                  inputType="text"
+                  mode="numeric"
+                  pattern="\d*"
                 />
               </div>
               <div className="w-full md:col-span-1">

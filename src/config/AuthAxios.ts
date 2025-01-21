@@ -15,6 +15,7 @@ import {
   refreshMerchantToken,
   refreshStaffToken,
 } from './actions/authentication-actions';
+import axiosRetry from 'axios-retry';
 
 const AxiosClient = axios.create({
   baseURL: AppConfig.AUTH_URL,
@@ -81,102 +82,23 @@ AxiosClient.interceptors.response.use(
     dispatch(uiStopLoading());
     const originalRequest = error.config;
     if (error?.response?.status === 401) {
-      const user = getUserFromLocalStorage();
-      const logoutUser = async () => {
-        if (user) {
-          try {
-            const isAdmin = isAdminAuthData(user);
-            const isMerchant = isMerchantAuthData(user);
-            isAdmin
-              ? await logoutStaff({
-                  email: user.userData.email,
-                  refreshToken: user.refreshToken,
-                })
-              : isMerchant
-                ? await logoutMerchant({
-                    email: user.profileData.email,
-                    refreshToken: user.refreshToken,
-                  })
-                : null;
-            dispatch(uiStopLoading());
-            notifyError('Session expired. Please log in again.');
-            localStorage.clear();
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 1500);
-          } catch (error) {
-            console.error(error);
-            dispatch(uiStopLoading());
-            localStorage.clear();
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 1500);
-          }
-        } else {
-          dispatch(uiStopLoading());
-          notifyError('Session expired. Please log in again.');
-          localStorage.clear();
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 1500);
-        }
-      };
-      if (isRequestRetried) {
-        abortController.abort();
-        abortController = new AbortController();
-        logoutUser();
-        return;
-        // return Promise.reject(new Error('Token refresh failed. User logged out.'));
-      } else {
-        isRequestRetried = true;
-        if (user) {
-          try {
-            let newToken;
-            const res = isAdminAuthData(user)
-              ? await refreshStaffToken({
-                  email: user.userData.email,
-                  refreshToken: user.refreshToken,
-                })
-              : await refreshMerchantToken({
-                  email: user.profileData.email,
-                  refreshToken: user.refreshToken,
-                });
-            if (res.responseCode === 200 && res.responseData) {
-              dispatch(uiStopLoading());
-              newToken = res?.responseData?.token;
-              if (newToken) {
-                localStorage.setItem('user', JSON.stringify({ ...user, token: newToken }));
-                AxiosClient.defaults.headers.common.Authorization = `Bearer ${newToken}`;
-                originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
-                return AxiosClient(originalRequest);
-              }
-            } else {
-              dispatch(uiStopLoading());
-              logoutUser();
-              // return Promise.reject(new Error('Token refresh failed. User logged out.'));
-            }
-          } catch (err) {
-            // notifyError('Session expired. Please log in again.');
-            dispatch(uiStopLoading());
-            localStorage.clear();
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 1500);
-          }
-        } else {
-          notifyError('User is not authenticated');
-          dispatch(uiStopLoading());
-          localStorage.clear();
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 1500);
-        }
-      }
+      notifyError('Session expired. Please log in again.');
+      dispatch(uiStopLoading());
+      localStorage.clear();
+      setTimeout(() => {
+        window.location.href = '/';
+      }, 1500);
     } else if (error?.response?.status === 400 || 404) {
       notifyError(error?.response?.data?.responseMessage);
       return Promise.reject(error);
+    } else if (error?.response?.status === 403) {
+      notifyError('You do not have permission to perform this action. Please contact an admin');
+      return Promise.reject(error);
     } else if (error?.response?.status === 500) {
       notifyError('Something went wrong');
+      return Promise.reject(error);
+    } else if (error?.response?.status === 504) {
+      notifyError('Gateway connection timeout');
       return Promise.reject(error);
     } else if (error.message === networkErrorMessage) {
       notifyError(error.message);
@@ -185,6 +107,7 @@ AxiosClient.interceptors.response.use(
     return Promise.reject(error);
   },
 );
+axiosRetry(AxiosClient, { retries: 0 });
 
 AxiosClient.interceptors.request.use((config) => {
   config.signal = abortController.signal;
