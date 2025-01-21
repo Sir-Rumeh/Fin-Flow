@@ -100,8 +100,12 @@ export default defineConfig(({ mode }) => {
    server: {
       host: true,
       port:  3000, 
+		cors: {
+			origin: "*", 
+			methods: ["GET", "POST"],
+		},
       fs: {
-      deny: ["restricted-folder", "/absolute/path/to/deny"],
+         deny: ["restricted-folder", "/absolute/path/to/deny"],
       },
 		origin: env.VITE_REACT_APP_CLIENT_URL,
    },
