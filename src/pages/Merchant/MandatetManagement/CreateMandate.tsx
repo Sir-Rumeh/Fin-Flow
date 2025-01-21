@@ -543,7 +543,9 @@ const CreateMandate = () => {
                       label="Payer Phone Number"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
-                      inputType="number"
+                      inputType="text"
+                      mode="numeric"
+                      pattern="\d*"
                       placeholder="Enter here"
                       formik={formik}
                     />
@@ -594,7 +596,9 @@ const CreateMandate = () => {
                       label="Payee Phone Number"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
-                      inputType="number"
+                      inputType="text"
+                      mode="numeric"
+                      pattern="\d*"
                       placeholder="Enter here"
                       formik={formik}
                     />
@@ -644,7 +648,9 @@ const CreateMandate = () => {
                       label="Biller Account Number"
                       containerStyles="flex h-[50px] items-center justify-between rounded-lg border border-gray-300 px-1 w-full"
                       inputStyles="h-[40px] w-full px-2 focus:outline-none focus:ring-0"
-                      inputType="number"
+                      inputType="text"
+                      mode="numeric"
+                      pattern="\d*"
                       placeholder="Enter here"
                       formik={formik}
                     />

@@ -185,7 +185,6 @@ const UserDetails = () => {
                 }
               />
               <DetailsCard title="Role" content={data?.responseData?.role} />
-              <DetailsCard title="Staff Level" content={data?.responseData?.staffLevel} />
             </ItemDetailsContainer>
           </div>
         </div>

@@ -8,7 +8,11 @@ import {
   DownloadIcon,
   SuccessModalIcon,
 } from 'assets/icons';
-import { transactionHistory } from 'utils/constants';
+import {
+  statusDropdownOptions,
+  transactionHistory,
+  transactionsStatusDropdownOptions,
+} from 'utils/constants';
 import appRoutes from 'utils/constants/routes';
 import ButtonComponent from 'components/FormElements/Button';
 import CustomPopover from 'hoc/PopOverWrapper';
@@ -522,6 +526,7 @@ const MandatetManagement = () => {
                 fromDateName={'fromDateFilter'}
                 toDateName={'toDateFilter'}
                 selectName={'statusFilter'}
+                dropdownOptions={statusDropdownOptions}
               />
             </div>
             <ExportBUtton
@@ -584,6 +589,7 @@ const MandatetManagement = () => {
                     toDateName={'toDateFilter'}
                     selectName={'statusFilter'}
                     showOptionsFilter={false}
+                    dropdownOptions={transactionsStatusDropdownOptions}
                   />
                 </div>
               </div>

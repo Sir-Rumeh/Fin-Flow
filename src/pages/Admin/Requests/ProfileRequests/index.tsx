@@ -18,6 +18,7 @@ import { useFormik } from 'formik';
 import { useMediaQuery } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { getProfileRequests, getProfileStatistics } from 'config/actions/profile-actions';
+import { requestTypeDropdownOptions } from 'utils/constants';
 
 const ProfileRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -253,6 +254,7 @@ const ProfileRequests = () => {
                     selectName={'statusFilter'}
                     translationX={isLargeWidth ? 350 : undefined}
                     isRequestsFilter
+                    dropdownOptions={requestTypeDropdownOptions}
                   />
                 </div>
               </div>

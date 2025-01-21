@@ -20,9 +20,10 @@ type CustomInputProps = {
   iconState?: boolean;
   handleInputType?: (e: any) => void;
   disabled?: boolean;
+  mode?: 'text' | 'search' | 'email' | 'tel' | 'none' | 'url' | 'numeric' | 'decimal' | undefined;
 };
 
-const CustomInput = ({
+const CustomInput: React.FC<CustomInputProps & React.InputHTMLAttributes<HTMLInputElement>> = ({
   labelFor,
   label,
   containerStyles,
@@ -40,12 +41,14 @@ const CustomInput = ({
   iconState,
   handleInputType = () => {},
   disabled,
+  mode,
+  ...rest
 }: CustomInputProps) => {
   const inputRef = useRef<HTMLInputElement | null>(null);
 
   useEffect(() => {
     const handleKeyExceptions = (event: KeyboardEvent) => {
-      if (event.key === 'e' || event.key === 'E' || event.key === '+' || event.key === '-') {
+      if (event.key === 'e' || event.key === 'E' || event.key === '-') {
         event.preventDefault();
       }
     };
@@ -65,6 +68,22 @@ const CustomInput = ({
       };
     }
   }, []);
+
+  const getInputMode = () => {
+    return mode
+      ? mode
+      : inputType === 'text'
+        ? 'text'
+        : inputType === 'number'
+          ? 'numeric'
+          : undefined;
+  };
+
+  const handleInput = (event: React.FormEvent<HTMLInputElement>) => {
+    const value = event.currentTarget.value;
+    // Remove any non-numeric characters (in case pasted)
+    event.currentTarget.value = value.replace(/\D/g, '');
+  };
 
   return (
     <div
@@ -123,6 +142,9 @@ const CustomInput = ({
             value={formik?.values[labelFor]}
             onBlur={() => formik?.handleBlur}
             disabled={disabled}
+            inputMode={getInputMode()}
+            onInput={mode === 'numeric' ? handleInput : undefined}
+            {...rest}
           />
           {icon}
           {disabled && (

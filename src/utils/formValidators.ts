@@ -24,31 +24,39 @@ export const reasonForRejectionSchema = Yup.object().shape({
 
 export const onboardMerchantSchema = Yup.object().shape({
   // merchantCIF: Yup.string().required('Merchant CIF is required'),
+  // accountNumber: Yup.mixed().when('merchantCIF', ([merchantCIF], schema) => {
+  //   if (merchantCIF)
+  //     return Yup.string()
+  //       .min(10, 'Invalid Account Number')
+  //       .max(10, 'Invalid Account Number')
+  //       .required('Account Number is required');
+  //   return schema;
+  // }),
+  accountNumber: Yup.string()
+    .min(10, 'Invalid Account Number')
+    .max(10, 'Invalid Account Number')
+    .required('Account Number is required'),
   merchantAccountValidated: Yup.boolean().required('Merchant Account needs to be validated'),
-  merchantName: Yup.mixed().when('merchantCIF', ([merchantCIF], schema) => {
-    if (merchantCIF) return Yup.string().required('Merchant Name is required');
+  merchantName: Yup.mixed().when('accountNumber', ([accountNumber], schema) => {
+    if (accountNumber) return Yup.string().required('Merchant Name is required');
     return schema;
   }),
-  accountNumber: Yup.mixed().when('merchantCIF', ([merchantCIF], schema) => {
-    if (merchantCIF)
-      return Yup.string()
-        .min(10, 'Invalid Account Number')
-        .max(10, 'Invalid Account Number')
-        .required('Account Number is required');
+  rcNumber: Yup.mixed().when('accountNumber', ([accountNumber], schema) => {
+    if (accountNumber) return Yup.string().required('RC Number is required');
     return schema;
   }),
-  rcNumber: Yup.mixed().when('merchantCIF', ([merchantCIF], schema) => {
-    if (merchantCIF) return Yup.string().required('RC Number is required');
+  address: Yup.mixed().when('accountNumber', ([accountNumber], schema) => {
+    if (accountNumber) return Yup.string().required('Address is required');
     return schema;
   }),
-  address: Yup.mixed().when('merchantCIF', ([merchantCIF], schema) => {
-    if (merchantCIF) return Yup.string().required('Address is required');
+  merchantFee: Yup.mixed().when('accountNumber', ([accountNumber], schema) => {
+    if (accountNumber)
+      return Yup.number()
+        .required('Merchant Fee is required')
+        .positive('Merchant Fee must be a positive number')
+        .typeError('Merchant Fee must be a number');
     return schema;
   }),
-  merchantFee: Yup.number()
-    .required('Merchant Fee is required')
-    .positive('Merchant Fee must be a positive number')
-    .typeError('Merchant Fee must be a number'),
 });
 
 export const editMerchantSchema = Yup.object().shape({
@@ -101,8 +109,8 @@ export const createMandateSchema = Yup.object().shape({
   biller: Yup.string().required('Biller is required'),
   billerId: Yup.string().required('Biller id is required'),
   billerAccountNumber: Yup.string()
-    .trim()
-    .length(9, 'Invalid Account Number')
+    .min(10, 'Invalid Account Number')
+    .max(10, 'Invalid Account Number')
     .required('Biller account number is required'),
   billerAccountName: Yup.string().required('Biller account name id is required'),
   billerBankCode: Yup.string().required('Biller bank code id is required'),

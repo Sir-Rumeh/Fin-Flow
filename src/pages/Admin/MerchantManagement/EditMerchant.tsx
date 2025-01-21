@@ -118,6 +118,8 @@ const EditMerchant = () => {
                     labelFor="accountNumber"
                     label="Account Number"
                     inputType="text"
+                    mode="numeric"
+                    pattern="\d*"
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}

@@ -35,7 +35,11 @@ import {
 } from 'config/actions/dashboard-actions';
 import { updateMandateSchema } from 'utils/formValidators';
 import { capitalize } from 'utils/helpers';
-import { transactionHistory } from 'utils/constants';
+import {
+  statusDropdownOptions,
+  transactionHistory,
+  transactionsStatusDropdownOptions,
+} from 'utils/constants';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import { Typography } from '@mui/material';
 import CustomTabs from 'hoc/CustomTabs';
@@ -452,6 +456,7 @@ const AccountMandates = () => {
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}
                     selectName={'statusFilter'}
+                    dropdownOptions={statusDropdownOptions}
                   />
                 </div>
               </div>
@@ -696,6 +701,7 @@ const AccountMandates = () => {
                     toDateName={'toDateFilter'}
                     selectName={'statusFilter'}
                     showOptionsFilter={false}
+                    dropdownOptions={transactionsStatusDropdownOptions}
                   />
                 </div>
               </div>

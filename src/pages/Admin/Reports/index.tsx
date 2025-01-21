@@ -3,7 +3,12 @@ import { useEffect, useRef, useState } from 'react';
 import CustomTable from 'components/CustomTable';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { CloseIcon, CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
-import { mandateRequestsList, transactionHistory } from 'utils/constants';
+import {
+  mandateRequestsList,
+  statusDropdownOptions,
+  transactionHistory,
+  transactionsStatusDropdownOptions,
+} from 'utils/constants';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
 import { Typography, useMediaQuery } from '@mui/material';
@@ -773,6 +778,7 @@ const Reports = () => {
                         toDateName={'toDateFilter'}
                         selectName={'statusFilter'}
                         translationX={isLargeWidth ? 300 : undefined}
+                        dropdownOptions={statusDropdownOptions}
                       />
                     </div>
                   </div>
@@ -825,6 +831,7 @@ const Reports = () => {
                         toDateName={'transacToDateFilter'}
                         selectName={'transacStatusFilter'}
                         translationX={isLargeWidth ? 300 : undefined}
+                        dropdownOptions={transactionsStatusDropdownOptions}
                       />
                     </div>
                   </div>
@@ -1058,6 +1065,7 @@ const Reports = () => {
                     toDateName={'transacToDateFilter'}
                     selectName={'transacStatusFilter'}
                     showOptionsFilter={false}
+                    dropdownOptions={transactionsStatusDropdownOptions}
                   />
                 </div>
               </div>

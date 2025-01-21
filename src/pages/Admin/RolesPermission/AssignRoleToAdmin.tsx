@@ -78,8 +78,8 @@ const AssignRoleToAdmin = ({
     const filteredStaffs = staffUsersList?.responseData?.items?.filter(
       (staff: any) => !(staff.role.length > 0),
     );
-    setStaffUsers(staffUsersList?.responseData?.items);
-    // setStaffUsers(filteredStaffs);
+    // setStaffUsers(staffUsersList?.responseData?.items);
+    setStaffUsers(filteredStaffs);
   }, [staffUsersList]);
 
   const addRoleRequestMutation = useMutation({

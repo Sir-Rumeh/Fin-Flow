@@ -6,7 +6,7 @@ import appRoutes from 'utils/constants/routes';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { GridColDef, GridRenderCellParams } from '@mui/x-data-grid';
 import { CreationRequestIcon, DeleteRequestIcon } from 'assets/icons';
-import { accountRequestsList } from 'utils/constants';
+import { accountRequestsList, statusDropdownOptions } from 'utils/constants';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
 import { ModalWrapper } from 'hoc/ModalWrapper';
@@ -112,6 +112,13 @@ const AccountManagement = () => {
 
   const columns: GridColDef[] = [
     {
+      field: 'merchantName',
+      headerName: 'Merchant Name',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
+    {
       field: 'merchantId',
       headerName: 'Merchant ID',
       width: screen.width < 1000 ? 200 : undefined,
@@ -124,14 +131,6 @@ const AccountManagement = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
-    },
-    {
-      field: 'cif',
-      headerName: 'CIF',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-      sortable: false,
     },
     {
       field: 'status',
@@ -331,6 +330,7 @@ const AccountManagement = () => {
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}
                     selectName={'statusFilter'}
+                    dropdownOptions={statusDropdownOptions}
                   />
                 </div>
               </div>

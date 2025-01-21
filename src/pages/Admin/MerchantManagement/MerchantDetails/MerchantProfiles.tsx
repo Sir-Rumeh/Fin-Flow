@@ -23,6 +23,7 @@ import {
   enableProfile,
   getProfilesByMerchantId,
 } from 'config/actions/profile-actions';
+import { statusDropdownOptions } from 'utils/constants';
 
 const MerchantProfiles = () => {
   const queryClient = useQueryClient();
@@ -333,6 +334,7 @@ const MerchantProfiles = () => {
                     fromDateName={'fromDateFilter'}
                     toDateName={'toDateFilter'}
                     selectName={'statusFilter'}
+                    dropdownOptions={statusDropdownOptions}
                   />
                 </div>
               </div>

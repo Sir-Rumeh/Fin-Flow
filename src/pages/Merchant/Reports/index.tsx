@@ -1,6 +1,10 @@
 import { useRef, useState } from 'react';
 import { GridColDef, GridRenderCellParams, GridTreeNodeWithRender } from '@mui/x-data-grid';
-import { transactionHistory } from 'utils/constants';
+import {
+  statusDropdownOptions,
+  transactionHistory,
+  transactionsStatusDropdownOptions,
+} from 'utils/constants';
 import CustomTable from 'components/CustomTable';
 import ButtonComponent from 'components/FormElements/Button';
 import { Box, Modal, Typography, useMediaQuery } from '@mui/material';
@@ -698,6 +702,7 @@ const Reports = () => {
                         toDateName={'toDateFilter'}
                         selectName={'statusFilter'}
                         translationX={isLargeWidth ? 300 : undefined}
+                        dropdownOptions={statusDropdownOptions}
                       />
                     </div>
                   </div>
@@ -760,6 +765,7 @@ const Reports = () => {
                         toDateName={'transacToDateFilter'}
                         selectName={'transacStatusFilter'}
                         translationX={isLargeWidth ? 300 : undefined}
+                        dropdownOptions={transactionsStatusDropdownOptions}
                       />
                     </div>
                   </div>
@@ -818,6 +824,7 @@ const Reports = () => {
                     toDateName={'transacToDateFilter'}
                     selectName={'transacStatusFilter'}
                     showOptionsFilter={false}
+                    dropdownOptions={transactionsStatusDropdownOptions}
                   />
                 </div>
               </div>

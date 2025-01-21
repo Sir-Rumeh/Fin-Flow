@@ -47,7 +47,7 @@ function CreateAccount() {
         merchantId: values.merchantId,
         merchantName: values.merchantName,
         accountName: values.accountName,
-        accountNumber: values.accountNumber,
+        accountNumber: `${values.accountNumber}`,
         cif: values.cif,
       };
       setAccountRequest(payload);
@@ -160,6 +160,8 @@ function CreateAccount() {
                       labelFor="accountNumber"
                       label="Account Number"
                       inputType="text"
+                      mode="numeric"
+                      pattern="\d*"
                       placeholder="Enter here"
                       maxW="w-full"
                       formik={formik}

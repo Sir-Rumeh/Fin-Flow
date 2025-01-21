@@ -15,7 +15,7 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import { MerchantAuthData, QueryParams, TabsProps } from 'utils/interfaces';
 import CustomTable from 'components/CustomTable';
-import { transactionHistory } from 'utils/constants';
+import { statusDropdownOptions, transactionHistory } from 'utils/constants';
 import { GridColDef } from '@mui/x-data-grid';
 import DownloadIcon from 'assets/icons/DownloadIcon';
 import TableFilter from 'components/TableFilter';
@@ -685,6 +685,7 @@ const MandateDetails = () => {
                     toDateName={'toDateFilter'}
                     selectName={'statusFilter'}
                     showOptionsFilter={false}
+                    dropdownOptions={statusDropdownOptions}
                   />
                 </div>
               </div>
