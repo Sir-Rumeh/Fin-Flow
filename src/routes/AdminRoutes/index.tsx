@@ -13,10 +13,10 @@ import { useEffect, useRef, useState } from 'react';
 function AdminRoutes() {
   const user = getUserFromLocalStorage();
   const userDetails = decodeToken(user?.token);
-  const getAdminRoutes = (adminRoutes: RoutesType[]) => {
+  const getAdminRoutes = (routes: RoutesType[]) => {
     // const [hasModuleAccess, setHasModuleAccess] = useState(false);
     // useEffect(() => {
-    //   const hasMatchingModuleValue = adminRoutes.some((route) =>
+    //   const hasMatchingModuleValue = routes.some((route) =>
     //     userDetails?.permission?.some((string: any) => string.includes(route.moduleValue)),
     //   );
     //   if (hasMatchingModuleValue) {
