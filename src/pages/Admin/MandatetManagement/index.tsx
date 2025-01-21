@@ -165,7 +165,12 @@ const MandatetManagement = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [paginationData, formik.values.searchMandate]);
+  }, [
+    paginationData,
+    formik.values.fromDateFilter,
+    formik.values.toDateFilter,
+    formik.values.searchMandate,
+  ]);
 
   useEffect(() => {
     setTransactionsQueryParams((prev) => ({

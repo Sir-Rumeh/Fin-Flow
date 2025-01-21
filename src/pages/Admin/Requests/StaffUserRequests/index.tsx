@@ -63,13 +63,19 @@ const StaffUserRequests = () => {
     setQueryParams((prev) => ({
       ...prev,
       status: activeTab,
-      pageNo: paginationData.pageNumber,
-      pageSize: paginationData.pageSize,
+      pageNo: formik.values.searchStaffUser?.length > 0 ? undefined : paginationData.pageNumber,
+      pageSize: formik.values.searchStaffUser?.length > 0 ? 100 : paginationData.pageSize,
       searchFilter: formik.values.searchStaffUser,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [activeTab, paginationData]);
+  }, [
+    activeTab,
+    paginationData,
+    formik.values.fromDateFilter,
+    formik.values.toDateFilter,
+    formik.values.searchStaffUser,
+  ]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({

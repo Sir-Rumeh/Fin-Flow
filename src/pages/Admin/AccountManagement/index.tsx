@@ -91,7 +91,12 @@ const AccountManagement = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [paginationData, formik.values.searchAccount]);
+  }, [
+    paginationData,
+    formik.values.fromDateFilter,
+    formik.values.toDateFilter,
+    formik.values.searchAccount,
+  ]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({

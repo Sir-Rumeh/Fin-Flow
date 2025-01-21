@@ -62,13 +62,19 @@ const MandateRequests = () => {
       ...prev,
       status: activeTab,
       requestType: formik.values.statusFilter,
-      pageNo: paginationData.pageNumber,
-      pageSize: paginationData.pageSize,
+      pageNo: formik.values.searchMandate?.length > 0 ? undefined : paginationData.pageNumber,
+      pageSize: formik.values.searchMandate?.length > 0 ? 100 : paginationData.pageSize,
       searchFilter: formik.values.searchMandate,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [activeTab, paginationData, formik.values.searchMandate]);
+  }, [
+    activeTab,
+    paginationData,
+    formik.values.fromDateFilter,
+    formik.values.toDateFilter,
+    formik.values.searchMandate,
+  ]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({

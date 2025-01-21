@@ -91,7 +91,12 @@ const StaffUserManagement = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [paginationData]);
+  }, [
+    paginationData,
+    formik.values.fromDateFilter,
+    formik.values.toDateFilter,
+    formik.values.searchStaffUser,
+  ]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({

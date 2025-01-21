@@ -68,6 +68,24 @@ const ProfileRequests = () => {
     }));
   };
 
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: activeTab,
+      pageNo: formik.values.searchProfile?.length > 0 ? undefined : paginationData.pageNumber,
+      pageSize: formik.values.searchProfile?.length > 0 ? 100 : paginationData.pageSize,
+      searchFilter: formik.values.searchProfile,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  }, [
+    activeTab,
+    formik.values.searchProfile,
+    formik.values.fromDateFilter,
+    formik.values.toDateFilter,
+    paginationData,
+  ]);
+
   const columns: GridColDef[] = [
     {
       field: 'accountID',
@@ -194,24 +212,6 @@ const ProfileRequests = () => {
       tabTotal: statistics?.responseData?.totalRejected,
     },
   ];
-
-  useEffect(() => {
-    setQueryParams((prev) => ({
-      ...prev,
-      status: activeTab,
-      pageNo: paginationData.pageNumber,
-      pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchProfile,
-      startDate: formik.values.fromDateFilter,
-      endDate: formik.values.toDateFilter,
-    }));
-  }, [
-    activeTab,
-    formik.values.searchProfile,
-    formik.values.fromDateFilter,
-    formik.values.toDateFilter,
-    paginationData,
-  ]);
 
   return (
     <>

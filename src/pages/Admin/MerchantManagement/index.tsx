@@ -92,7 +92,12 @@ const MerchantManagement = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [paginationData, formik.values.searchMerchantAccount]);
+  }, [
+    paginationData,
+    formik.values.fromDateFilter,
+    formik.values.toDateFilter,
+    formik.values.searchMerchantAccount,
+  ]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({

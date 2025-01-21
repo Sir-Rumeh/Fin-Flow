@@ -93,7 +93,12 @@ const ProfileManagement = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [paginationData, formik.values.searchProfile]);
+  }, [
+    paginationData,
+    formik.values.fromDateFilter,
+    formik.values.toDateFilter,
+    formik.values.searchProfile,
+  ]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
