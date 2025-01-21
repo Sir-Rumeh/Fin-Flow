@@ -1,6 +1,7 @@
 export const AppConfig = {
   ENCRYPTION_KEY: import.meta.env.VITE_REACT_APP_ENCRYPTION_KEY,
   ENCRYPTION_IV: import.meta.env.VITE_REACT_APP_ENCRYPTION_IV,
+  CLIENT_URL: import.meta.env.VITE_REACT_APP_CLIENT_URL,
   SERVER_URL: import.meta.env.VITE_REACT_APP_SERVER_URL,
   AUTH_URL: import.meta.env.VITE_REACT_APP_AUTH_SERVER_URL,
   USER_URL: import.meta.env.VITE_REACT_APP_USER_SERVER_URL,

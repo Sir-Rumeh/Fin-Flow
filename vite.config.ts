@@ -1,9 +1,11 @@
+
 /* eslint-disable @typescript-eslint/ban-ts-comment */
 
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import react from "@vitejs/plugin-react";
 //@ts-ignore
 import path from "path";
+
 
 export default defineConfig({
 	plugins: [react(), 
@@ -23,6 +25,8 @@ export default defineConfig({
 		fs: {
 			deny: ['restricted-folder', '/absolute/path/to/deny'],
 		},
+		origin: process.env.VITE_REACT_APP_CLIENT_URL,
+		
 	},
 	resolve: {
 		alias: {
@@ -53,3 +57,71 @@ export default defineConfig({
 		},
 	},
 });
+
+
+
+
+
+
+// /* eslint-disable @typescript-eslint/ban-ts-comment */
+
+// import { defineConfig, loadEnv } from "vite";
+// import react from "@vitejs/plugin-react";
+// import path from "path";
+
+// export default defineConfig(({ mode }) => {
+//   // Load environment variables based on the current mode
+//   const env = loadEnv(mode, process.cwd());
+
+//   return {
+//     plugins: [
+//       react(),
+//       {
+//         name: "validate-imports",
+//         enforce: "pre",
+//         resolveId(source) {
+//           if (
+//             source.includes("?import&raw") &&
+//             source.startsWith("/restricted-folder")
+//           ) {
+//             throw new Error(
+//               "Access to restricted files via ?import&raw is not allowed."
+//             );
+//           }
+//         },
+//       },
+//     ],
+// 	 define: {
+//       // Expose environment variables to the app
+//       "process.env": {
+// 			VITE_REACT_APP_CLIENT_URL: env.VITE_REACT_APP_CLIENT_URL,
+//       },
+//     },
+//     server: {
+//       host: true,
+//       port:  3000, 
+//       fs: {
+//         deny: ["restricted-folder", "/absolute/path/to/deny"],
+//       },
+// 		origin: env.VITE_REACT_APP_CLIENT_URL,
+//     },
+//     resolve: {
+//       alias: {
+//         components: path.resolve(__dirname, "./src/components"),
+//         config: path.resolve(__dirname, "./src/config"),
+//         assets: path.resolve(__dirname, "./src/assets"),
+//         hoc: path.resolve(__dirname, "./src/hoc"),
+//         hooks: path.resolve(__dirname, "./src/hooks"),
+//         interfaces: path.resolve(__dirname, "./src/interfaces"),
+//         lib: path.resolve(__dirname, "./src/lib"),
+//         store: path.resolve(__dirname, "./src/store"),
+//         utils: path.resolve(__dirname, "./src/utils"),
+//         routes: path.resolve(__dirname, "./src/routes"),
+//         layouts: path.resolve(__dirname, "./src/layouts"),
+//         pages: path.resolve(__dirname, "./src/pages"),
+//       },
+//     },
+
+//   };
+// });
+

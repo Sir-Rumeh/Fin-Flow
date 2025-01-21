@@ -295,6 +295,11 @@ const CreateMandate = () => {
     refetchAccountsOptions();
   }, [formik.values.merchantId]);
 
+  const minStartDate = () => {
+    const date = new Date();
+    return date.setDate(date.getDate() + 30);
+  };
+
   return (
     <>
       <div className="px-5 py-5">
@@ -419,6 +424,7 @@ const CreateMandate = () => {
                       label="Start Date"
                       placeholder="Select date"
                       height="50px"
+                      minDate={minStartDate()}
                     />
                     <FormDatePicker
                       name={'endDate'}
