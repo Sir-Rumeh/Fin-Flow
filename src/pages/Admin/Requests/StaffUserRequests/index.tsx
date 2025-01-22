@@ -63,8 +63,15 @@ const StaffUserRequests = () => {
     setQueryParams((prev) => ({
       ...prev,
       status: activeTab,
-      pageNo: formik.values.searchStaffUser?.length > 0 ? undefined : paginationData.pageNumber,
-      pageSize: formik.values.searchStaffUser?.length > 0 ? 100 : paginationData.pageSize,
+      requestType: formik.values.statusFilter,
+      pageNo:
+        formik.values.searchStaffUser?.length > 0 || formik.values.statusFilter?.length > 0
+          ? undefined
+          : paginationData.pageNumber,
+      pageSize:
+        formik.values.searchStaffUser?.length > 0 || formik.values.statusFilter?.length > 0
+          ? 100
+          : paginationData.pageSize,
       searchFilter: formik.values.searchStaffUser,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
@@ -75,12 +82,13 @@ const StaffUserRequests = () => {
     formik.values.fromDateFilter,
     formik.values.toDateFilter,
     formik.values.searchStaffUser,
+    formik.values.statusFilter,
   ]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
       ...prev,
-      status: formik.values.statusFilter,
+      requestType: formik.values.statusFilter,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));

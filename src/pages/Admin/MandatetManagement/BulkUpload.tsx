@@ -1,6 +1,7 @@
 import { useMutation } from '@tanstack/react-query';
 import { CloseIcon } from 'assets/icons';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
+import DownloadGreenIcon from 'assets/icons/DownloadGreenIcon';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import UploadIcon from 'assets/icons/UploadIcon';
 import ButtonComponent from 'components/FormElements/Button';
@@ -15,6 +16,7 @@ import {
   isFileSizeValid,
   matchesInterface,
   notifyError,
+  notifySuccess,
 } from 'utils/helpers';
 import { MandateRequest } from 'utils/interfaces';
 import * as XLSX from 'utils/libs/xlsx.mjs';
@@ -85,32 +87,39 @@ const BulkUpload = () => {
     narration: '',
     payerName: '',
     payeeName: '',
+    payerAddress: '',
     payerEmailAddress: '',
     payerPhoneNumber: '',
-    payerAddress: '',
+    payeeAddress: '',
     payeeEmailAddress: '',
     payeePhoneNumber: '',
-    payeeAddress: '',
     biller: '',
     billerID: '',
-    billerAccountNumber: '',
     billerCode: '',
+    billerAccountNumber: '',
     bankName: '',
   };
 
   useEffect(() => {
-    const newDataArray = convertExcelArrayToObjects(
-      jsonData,
-      ['mandateId', 'mandateCode', 'supportingDocument'],
-      ['mandateId', 'mandateCode', 'supportingDocument'],
-    );
-    const dataMatch = newDataArray.some((obj) => matchesInterface(obj, referenceObject));
-    if (jsonData.length > 0 && !dataMatch) {
-      notifyError('Incorrect data format');
+    try {
+      const newDataArray = convertExcelArrayToObjects(
+        jsonData,
+        ['mandateId', 'mandateCode', 'supportingDocument'],
+        ['mandateId', 'mandateCode', 'supportingDocument'],
+      );
+      console.log('data array', newDataArray);
+      const dataMatch = newDataArray.some((obj) => matchesInterface(obj, referenceObject));
+      if (jsonData.length > 0 && !dataMatch) {
+        notifyError('Incorrect data format');
+        clearFiles();
+        return;
+      } else {
+        setFormattedBulkData(newDataArray as MandateRequest[]);
+      }
+    } catch (error: any) {
+      notifyError(error?.message);
       clearFiles();
       return;
-    } else {
-      setFormattedBulkData(newDataArray as MandateRequest[]);
     }
   }, [jsonData]);
 
@@ -144,6 +153,17 @@ const BulkUpload = () => {
     </li>
   ));
 
+  const handleDownloadSampleTemplate = () => {
+    const filePath = '/DDI-mandate-bulk-upload-sample.csv';
+    const link = document.createElement('a');
+    link.href = filePath;
+    link.download = 'DDI-Mandate-Bulk-Upload-Sample.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    notifySuccess('Successfully Downloaded Sample Template');
+  };
+
   return (
     <>
       <div className="slide-down mt-5 rounded-lg bg-white px-5 py-10">
@@ -167,6 +187,16 @@ const BulkUpload = () => {
                         <UploadIcon /> Browse Document
                       </button>
                     </div>
+                  </div>
+                </div>
+                <div className="mt-10">
+                  <div className="flex w-full items-center justify-around">
+                    <button
+                      onClick={handleDownloadSampleTemplate}
+                      className="mt-2 flex w-full items-center gap-2 rounded-lg border border-green-800 px-4 py-2 text-center font-semibold text-green-700"
+                    >
+                      <DownloadGreenIcon /> Download Sample Excel Template
+                    </button>
                   </div>
                 </div>
                 <div className="mt-4 flex w-[70%] flex-col sm:w-[100%]">
@@ -210,7 +240,7 @@ const BulkUpload = () => {
                   type="button"
                   title="Upload Bulk Mandates"
                   customPaddingX="1.5rem"
-                  width="11rem"
+                  width="12rem"
                   onClick={() => {
                     if (!(jsonData.length > 0)) {
                       notifyError(

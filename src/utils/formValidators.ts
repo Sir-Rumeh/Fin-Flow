@@ -108,11 +108,12 @@ export const createMandateSchema = Yup.object().shape({
   payeeAddress: Yup.string().required('Payee address is required'),
   biller: Yup.string().required('Biller is required'),
   billerId: Yup.string().required('Biller id is required'),
+  billerCode: Yup.string().required('Biller Code is required'),
   billerAccountNumber: Yup.string()
     .min(10, 'Invalid Account Number')
     .max(10, 'Invalid Account Number')
     .required('Biller account number is required'),
-  billerAccountName: Yup.string().required('Biller account name id is required'),
+  // billerAccountName: Yup.string().required('Biller account name id is required'),
   billerBankCode: Yup.string().required('Biller bank code id is required'),
   billerBankName: Yup.string().required('Biller bank name id is required'),
 });

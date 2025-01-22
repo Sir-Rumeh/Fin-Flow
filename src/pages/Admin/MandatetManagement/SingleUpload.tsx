@@ -515,7 +515,7 @@ const SingleUpload = () => {
               <div className="w-full md:col-span-1">
                 <CustomInput
                   labelFor="biller"
-                  label="Biller"
+                  label="Biller Name"
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
@@ -532,7 +532,7 @@ const SingleUpload = () => {
                   formik={formik}
                 />
               </div>
-              {/* <div className="w-full md:col-span-1">
+              <div className="w-full md:col-span-1">
                 <CustomInput
                   labelFor="billerCode"
                   label="Biller Code"
@@ -541,7 +541,7 @@ const SingleUpload = () => {
                   maxW="w-full"
                   formik={formik}
                 />
-              </div> */}
+              </div>
               <div className="w-full md:col-span-1">
                 <CustomInput
                   labelFor="billerAccountNumber"
@@ -555,20 +555,20 @@ const SingleUpload = () => {
                   pattern="\d*"
                 />
               </div>
-              <div className="w-full md:col-span-1">
+              {/* <div className="w-full md:col-span-1">
                 <CustomInput
                   labelFor="billerAccountName"
-                  label="Account Name"
+                  label="Biller Account Name"
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
                   formik={formik}
                 />
-              </div>
+              </div> */}
               <div className="w-full md:col-span-1">
                 <CustomInput
                   labelFor="billerBankCode"
-                  label="Bank Code"
+                  label="Biller Bank Code"
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
@@ -578,7 +578,7 @@ const SingleUpload = () => {
               <div className="w-full md:col-span-1">
                 <CustomInput
                   labelFor="billerBankName"
-                  label="Bank Name"
+                  label="Biller Bank Name"
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"

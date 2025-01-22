@@ -33,7 +33,12 @@ const { dispatch } = store;
 
 const networkErrorMessage = 'Network error: Please check your internet connection.';
 
-let isRequestRetried = false;
+const abortControllers = new Map();
+
+const cancelPendingRequests = () => {
+  abortControllers.forEach((controller) => controller.abort());
+  abortControllers.clear();
+};
 
 AxiosClient.interceptors.request.use(
   (axiosConfig) => {
@@ -43,6 +48,11 @@ AxiosClient.interceptors.request.use(
       throw networkError;
     }
     dispatch(uiStartLoading());
+
+    // Attach a new AbortController for this request
+    const controller = new AbortController();
+    abortControllers.set(axiosConfig, controller);
+    axiosConfig.signal = controller.signal;
 
     const user = getUserFromLocalStorage();
 
@@ -67,8 +77,6 @@ AxiosClient.interceptors.request.use(
   },
 );
 
-let abortController = new AbortController();
-
 AxiosClient.interceptors.response.use(
   (response: AxiosResponse | any) => {
     if (!(response.status === 200)) {
@@ -76,12 +84,15 @@ AxiosClient.interceptors.response.use(
       return Promise.reject(response);
     }
     dispatch(uiStopLoading());
+    abortControllers.delete(response.config);
     return response;
   },
   async (error) => {
     dispatch(uiStopLoading());
     const originalRequest = error.config;
+    abortControllers.delete(originalRequest);
     if (error?.response?.status === 401) {
+      cancelPendingRequests();
       const user = getUserFromLocalStorage();
       const logoutUser = async () => {
         if (user) {
@@ -103,32 +114,31 @@ AxiosClient.interceptors.response.use(
             localStorage.clear();
             setTimeout(() => {
               window.location.href = '/';
-            }, 1500);
+            }, 500);
           } catch (error) {
             console.error(error);
             dispatch(uiStopLoading());
             localStorage.clear();
             setTimeout(() => {
               window.location.href = '/';
-            }, 1500);
+            }, 500);
           }
         } else {
           dispatch(uiStopLoading());
           localStorage.clear();
           setTimeout(() => {
             window.location.href = '/';
-          }, 1500);
+          }, 500);
         }
       };
-      if (isRequestRetried) {
-        isRequestRetried = false;
-        abortController.abort();
-        abortController = new AbortController();
+      if (originalRequest._isRetry) {
+        const controller = abortControllers.get(originalRequest);
+        if (controller) controller.abort();
         logoutUser();
         return;
         // return Promise.reject(new Error('Token refresh failed. User logged out.'));
       } else {
-        isRequestRetried = true;
+        originalRequest._isRetry = true;
         if (user) {
           try {
             let newToken;
@@ -152,16 +162,15 @@ AxiosClient.interceptors.response.use(
               }
             } else {
               dispatch(uiStopLoading());
-              logoutUser();
               return Promise.reject(new Error('Token refresh failed. User logged out.'));
             }
           } catch (err) {
             // notifyError('Session expired. Please log in again.');
             dispatch(uiStopLoading());
-            localStorage.clear();
+            logoutUser();
             setTimeout(() => {
               window.location.href = '/';
-            }, 1500);
+            }, 500);
           }
         } else {
           notifyError('User is not authenticated');
@@ -169,7 +178,7 @@ AxiosClient.interceptors.response.use(
           localStorage.clear();
           setTimeout(() => {
             window.location.href = '/';
-          }, 1500);
+          }, 500);
         }
       }
     } else if (error?.response?.status === 400 || 404) {
@@ -191,11 +200,7 @@ AxiosClient.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-axiosRetry(AxiosClient, { retries: 0 });
 
-AxiosClient.interceptors.request.use((config) => {
-  config.signal = abortController.signal;
-  return config;
-});
+axiosRetry(AxiosClient, { retries: 0 });
 
 export default AxiosClient;

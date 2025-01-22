@@ -87,7 +87,7 @@ AxiosClient.interceptors.response.use(
       localStorage.clear();
       setTimeout(() => {
         window.location.href = '/';
-      }, 1500);
+      }, 500);
     } else if (error?.response?.status === 400 || 404) {
       notifyError(error?.response?.data?.responseMessage);
       return Promise.reject(error);
