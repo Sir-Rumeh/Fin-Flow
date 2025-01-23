@@ -9,7 +9,7 @@ const initialState: InitialState = {
 };
 
 const axiosSlice = createSlice({
-  name: 'loading',
+  name: 'axios',
   initialState,
   reducers: {
     enableIsRetried: function (state) {
