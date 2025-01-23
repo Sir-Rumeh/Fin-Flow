@@ -154,23 +154,21 @@ const Reports = () => {
     { value: 'Disabled', label: 'Disabled' },
   ];
 
-  const total = 20;
-
   const tabsList: TabsProps[] = [
     {
       tabIndex: 1,
       tabName: TransactionsTabsListTabNames.Successful,
-      tabTotal: total,
+      // tabTotal: total,
     },
     {
       tabIndex: 2,
       tabName: TransactionsTabsListTabNames.Pending,
-      tabTotal: total,
+      // tabTotal: total,
     },
     {
       tabIndex: 3,
       tabName: TransactionsTabsListTabNames.Failed,
-      tabTotal: total,
+      // tabTotal: total,
     },
   ];
 
@@ -524,7 +522,11 @@ const Reports = () => {
     queryFn: ({ queryKey }) => getMerchants(queryKey[1] as QueryParams),
   });
 
-  const { data: mandateTransactionsData, refetch: refecthMandateTransactions } = useQuery({
+  const {
+    isLoading: isMandateTransactionsLoading,
+    data: mandateTransactionsData,
+    refetch: refecthMandateTransactions,
+  } = useQuery({
     queryKey: ['mandate-transactions', mandateTransactionsQueryParams],
     queryFn: ({ queryKey }) => getTransactions(queryKey[1] as QueryParams),
   });
@@ -815,6 +817,7 @@ const Reports = () => {
                       tabs={tabsList}
                       activeTab={activeTransactionTab}
                       setActiveTab={setActiveTransactionTab}
+                      showTabTotal={false}
                     />
                   </div>
                   <div className="flex w-full items-center lg:justify-end">
@@ -1050,6 +1053,7 @@ const Reports = () => {
                     tabs={tabsList}
                     activeTab={activeTransactionTab}
                     setActiveTab={setActiveTransactionTab}
+                    showTabTotal={false}
                   />
                 </div>
                 <div className="flexitems-center justify-end">
@@ -1078,6 +1082,7 @@ const Reports = () => {
                   defaultAnimation={false}
                   paginationData={mandateTransactionsPaginationData}
                   setPaginationData={setMandateTransactionsPaginationData}
+                  isDataLoading={isMandateTransactionsLoading}
                 />
               </div>
             </div>

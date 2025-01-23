@@ -195,23 +195,21 @@ const MandatetManagement = () => {
     },
   });
 
-  const total = 20;
-
   const tabsList: TabsProps[] = [
     {
       tabIndex: 1,
       tabName: TransactionsTabsListTabNames.Successful,
-      tabTotal: total,
+      // tabTotal: total,
     },
     {
       tabIndex: 2,
       tabName: TransactionsTabsListTabNames.Pending,
-      tabTotal: total,
+      // tabTotal: total,
     },
     {
       tabIndex: 3,
       tabName: TransactionsTabsListTabNames.Failed,
-      tabTotal: total,
+      // tabTotal: total,
     },
   ];
 
@@ -432,7 +430,11 @@ const MandatetManagement = () => {
       getMandatesByMerchantId(loggedInMerchantId, queryKey[1] as QueryParams),
   });
 
-  const { data: transactionsData, refetch: refetchTransactions } = useQuery({
+  const {
+    isLoading: isTransactionsLoading,
+    data: transactionsData,
+    refetch: refetchTransactions,
+  } = useQuery({
     queryKey: ['transactions', transactionsQueryParams],
     queryFn: ({ queryKey }) =>
       getTransactionsByMerchantId(loggedInMerchantId, queryKey[1] as QueryParams),
@@ -574,6 +576,7 @@ const MandatetManagement = () => {
                     tabs={tabsList}
                     activeTab={activeTransactionTab}
                     setActiveTab={setActiveTransactionTab}
+                    showTabTotal={false}
                   />
                 </div>
                 <div className="flex items-center justify-end">
@@ -601,6 +604,7 @@ const MandatetManagement = () => {
                   rowCount={transactionsData?.responseData?.totalCount}
                   paginationData={transactionPaginationData}
                   setPaginationData={setTransactionPaginationData}
+                  isDataLoading={isTransactionsLoading}
                 />
               </div>
             </div>

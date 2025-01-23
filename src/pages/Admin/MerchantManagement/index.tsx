@@ -86,8 +86,14 @@ const MerchantManagement = () => {
     setQueryParams((prev) => ({
       ...prev,
       status: formik.values.statusFilter,
-      pageNo: paginationData.pageNumber,
-      pageSize: paginationData.pageSize,
+      pageNo:
+        formik.values.searchMerchantAccount?.length > 0 || formik.values.statusFilter?.length > 0
+          ? undefined
+          : paginationData.pageNumber,
+      pageSize:
+        formik.values.searchMerchantAccount?.length > 0 || formik.values.statusFilter?.length > 0
+          ? 100
+          : paginationData.pageSize,
       searchFilter: formik.values.searchMerchantAccount,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,

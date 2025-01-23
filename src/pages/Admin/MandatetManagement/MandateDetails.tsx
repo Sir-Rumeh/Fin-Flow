@@ -99,23 +99,21 @@ const MandateDetails = () => {
     },
   });
 
-  const total = 20;
-
   const tabsList: TabsProps[] = [
     {
       tabIndex: 1,
       tabName: TransactionsTabsListTabNames.Successful,
-      tabTotal: total,
+      // tabTotal: total,
     },
     {
       tabIndex: 2,
       tabName: TransactionsTabsListTabNames.Pending,
-      tabTotal: total,
+      // tabTotal: total,
     },
     {
       tabIndex: 3,
       tabName: TransactionsTabsListTabNames.Failed,
-      tabTotal: total,
+      // tabTotal: total,
     },
   ];
 
@@ -174,7 +172,7 @@ const MandateDetails = () => {
   ];
 
   const { data, refetch } = useQuery({
-    queryKey: ['mandates', mandateId],
+    queryKey: ['mandate-details', mandateId],
     queryFn: ({ queryKey }) => getMandateById(queryKey[1]),
   });
 
@@ -207,7 +205,11 @@ const MandateDetails = () => {
     }));
   };
 
-  const { data: transactions, refetch: refetchTransactions } = useQuery({
+  const {
+    isLoading: isTransactionsLoading,
+    data: transactionsData,
+    refetch: refetchTransactions,
+  } = useQuery({
     queryKey: ['transactions', transactionsQueryParams],
     queryFn: ({ queryKey }) => getTransactions(queryKey[1] as QueryParams),
   });
@@ -670,6 +672,7 @@ const MandateDetails = () => {
                     tabs={tabsList}
                     activeTab={activeTransactionTab}
                     setActiveTab={setActiveTransactionTab}
+                    showTabTotal={false}
                   />
                 </div>
                 <div className="flexitems-center justify-end">
@@ -692,11 +695,12 @@ const MandateDetails = () => {
               <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
               <div className="slide-down mt-6">
                 <CustomTable
-                  tableData={transactions}
+                  tableData={transactionsData?.responseData?.items}
                   columns={transactionsTableColumn}
-                  rowCount={transactions?.responseData?.totalCount}
+                  rowCount={transactionsData?.responseData?.totalCount}
                   paginationData={transactionPaginationData}
                   setPaginationData={setTransactionPaginationData}
+                  isDataLoading={isTransactionsLoading}
                 />
               </div>
             </div>

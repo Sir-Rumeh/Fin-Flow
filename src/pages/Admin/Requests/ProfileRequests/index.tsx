@@ -59,10 +59,29 @@ const ProfileRequests = () => {
     endDate: formik.values.toDateFilter,
   });
 
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: activeTab,
+      requestType: formik.values.statusFilter,
+      pageNo:
+        formik.values.searchProfile?.length > 0 || formik.values.statusFilter?.length > 0
+          ? undefined
+          : paginationData.pageNumber,
+      pageSize:
+        formik.values.searchProfile?.length > 0 || formik.values.statusFilter?.length > 0
+          ? 100
+          : paginationData.pageSize,
+      searchFilter: formik.values.searchProfile,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  }, [activeTab, paginationData, formik.values.searchProfile]);
+
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
       ...prev,
-      status: formik.values.statusFilter,
+      requestType: formik.values.statusFilter,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
@@ -194,24 +213,6 @@ const ProfileRequests = () => {
       tabTotal: statistics?.responseData?.totalRejected,
     },
   ];
-
-  useEffect(() => {
-    setQueryParams((prev) => ({
-      ...prev,
-      status: activeTab,
-      pageNo: paginationData.pageNumber,
-      pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchProfile,
-      startDate: formik.values.fromDateFilter,
-      endDate: formik.values.toDateFilter,
-    }));
-  }, [
-    activeTab,
-    formik.values.searchProfile,
-    formik.values.fromDateFilter,
-    formik.values.toDateFilter,
-    paginationData,
-  ]);
 
   return (
     <>

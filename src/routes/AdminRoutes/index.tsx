@@ -14,22 +14,22 @@ function AdminRoutes() {
   const user = getUserFromLocalStorage();
   const userDetails = decodeToken(user?.token);
   const getAdminRoutes = (routes: RoutesType[]) => {
-    // const [hasModuleAccess, setHasModuleAccess] = useState(false);
-    // useEffect(() => {
-    //   const hasMatchingModuleValue = routes.some((route) =>
-    //     userDetails?.permission?.some((string: any) => string.includes(route.moduleValue)),
-    //   );
-    //   if (hasMatchingModuleValue) {
-    //     setHasModuleAccess(true);
-    //   }
-    // });
-    // if (!userDetails?.permission || !hasModuleAccess) {
-    //   return <Route path="*" element={<NotFoundPage />} key={'*'} />;
-    // }
+    const [hasModuleAccess, setHasModuleAccess] = useState(false);
+    useEffect(() => {
+      const hasMatchingModuleValue = routes.some((route) =>
+        userDetails?.permission?.some((string: any) => string.includes(route.moduleValue)),
+      );
+      if (hasMatchingModuleValue) {
+        setHasModuleAccess(true);
+      }
+    });
+    if (!userDetails?.permission || !hasModuleAccess) {
+      return <Route path="*" element={<NotFoundPage />} key={'*'} />;
+    }
 
     return adminRoutes.map((route) => {
-      // const isAccessAllowed = hasAccessToModule(userDetails?.permission, route.moduleValue);
-      // if (!isAccessAllowed) return null;
+      const isAccessAllowed = hasAccessToModule(userDetails?.permission, route.moduleValue);
+      if (!isAccessAllowed) return null;
       if (route.layout === '/admin') {
         if (route.children && route.children.length > 0) {
           return (

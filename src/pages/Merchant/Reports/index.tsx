@@ -239,23 +239,21 @@ const Reports = () => {
     },
   });
 
-  const total = 20;
-
   const tabsList: TabsProps[] = [
     {
       tabIndex: 1,
       tabName: TransactionsTabsListTabNames.Successful,
-      tabTotal: total,
+      // tabTotal: total,
     },
     {
       tabIndex: 2,
       tabName: TransactionsTabsListTabNames.Pending,
-      tabTotal: total,
+      // tabTotal: total,
     },
     {
       tabIndex: 3,
       tabName: TransactionsTabsListTabNames.Failed,
-      tabTotal: total,
+      // tabTotal: total,
     },
   ];
 
@@ -517,7 +515,11 @@ const Reports = () => {
     enabled: reportType === reportTypes[1].value,
     retry: 2,
   });
-  const { data: mandateTransactionsData, refetch: refecthMandateTransactions } = useQuery({
+  const {
+    isLoading: isMandateTransactionsLoading,
+    data: mandateTransactionsData,
+    refetch: refecthMandateTransactions,
+  } = useQuery({
     queryKey: ['mandate-transactions', mandateTransactionsQueryParams],
     queryFn: ({ queryKey }) =>
       getTransactionsByMerchantId(loggedInMerchantId, queryKey[1] as QueryParams),
@@ -809,6 +811,7 @@ const Reports = () => {
                     tabs={tabsList}
                     activeTab={activeTransactionTab}
                     setActiveTab={setActiveTransactionTab}
+                    showTabTotal={false}
                   />
                 </div>
                 <div className="flexitems-center justify-end">
@@ -836,6 +839,7 @@ const Reports = () => {
                   rowCount={mandateTransactionsData?.responseData?.totalCount}
                   paginationData={mandateTransactionsPaginationData}
                   setPaginationData={setMandateTransactionsPaginationData}
+                  isDataLoading={isMandateTransactionsLoading}
                 />
               </div>
             </div>

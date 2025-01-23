@@ -256,13 +256,19 @@ export function isMerchantAuthData(
   return (user as MerchantAuthData).profileData !== undefined;
 }
 
-export const convertTCamelCase = (str: string) =>
+const convertToCamelCase = (str: string) =>
   str
-    .toLowerCase()
-    .replace(/(?:^\w|[A-Z]|\b\w|\s+)/g, (match, index) =>
-      index === 0 ? match.toLowerCase() : match.toUpperCase(),
-    )
-    .replace(/\s+/g, '');
+    .split(/\s+/)
+    .map((word, index) => {
+      if (index === 0) {
+        return word.toLowerCase();
+      }
+      if (word === word.toUpperCase() && word.length > 1) {
+        return word;
+      }
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    })
+    .join('');
 
 export const convertExcelArrayToObjects = (
   data: any[][],
@@ -270,15 +276,21 @@ export const convertExcelArrayToObjects = (
   extraValues?: string[],
 ) => {
   if (data.length < 2) return [];
-  const headers = data[0].map(convertTCamelCase);
+  const headers = data[0].map(convertToCamelCase);
   const rows = data.slice(1);
   return rows.map((row) => {
     const rowObject = headers.reduce(
       (obj, header, index) => {
         const value = row[index];
-        if (header.toLocaleLowerCase().includes('date')) {
+        if (
+          header.toLocaleLowerCase().includes('startdate') ||
+          header.toLocaleLowerCase().includes('enddate')
+        ) {
+          // console.log('date value', header.toLocaleLowerCase());
           const formattedDateIsoDate = new Date(value).toISOString().split('T')[0] + 'T00:00:00';
           obj[header] = formattedDateIsoDate;
+        } else if (header.toLocaleLowerCase().includes('amount')) {
+          obj[header] = value || null;
         } else {
           obj[header] = String(value) || '';
         }
@@ -303,7 +315,13 @@ export const convertExcelArrayToObjects = (
 };
 
 export function matchesInterface<T extends object>(obj: any, reference: T): obj is T {
-  return Object.keys(reference).every((key) => key in obj);
+  return Object.keys(reference).every((key) => {
+    if (!(key in obj)) {
+      console.log(`Mismatch at property: ${key}`);
+      return false;
+    }
+    return true;
+  });
 }
 
 export const filterSelectedOption = (filter: any, filterId: any, options: any) => {

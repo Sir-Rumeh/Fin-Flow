@@ -13,7 +13,7 @@ import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import ExportBUtton from 'components/FormElements/ExportButton';
 import { useFormik } from 'formik';
-import { Typography, useMediaQuery } from '@mui/material';
+import { CircularProgress, Typography, useMediaQuery } from '@mui/material';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import { MerchantAuthData, QueryParams, TabsProps } from 'utils/interfaces';
 import CustomTabs from 'hoc/CustomTabs';
@@ -33,6 +33,7 @@ import { capitalize, getUserFromLocalStorage } from 'utils/helpers';
 import { updateMandateSchema } from 'utils/formValidators';
 import { SearchTypes, TransactionsTabsListTabNames } from 'utils/enums';
 import { statusDropdownOptions, transactionsStatusDropdownOptions } from 'utils/constants';
+import LoadingIndicator from 'components/common/LoadingIndicator';
 
 const MandatetManagement = () => {
   const printPdfRef = useRef(null);
@@ -57,23 +58,21 @@ const MandatetManagement = () => {
   const [selectedMandateCode, setSelectedMandateCode] = useState('');
   const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
 
-  const total = 20;
-
   const tabsList: TabsProps[] = [
     {
       tabIndex: 1,
       tabName: TransactionsTabsListTabNames.Successful,
-      tabTotal: total,
+      // tabTotal: total,
     },
     {
       tabIndex: 2,
       tabName: TransactionsTabsListTabNames.Pending,
-      tabTotal: total,
+      // tabTotal: total,
     },
     {
       tabIndex: 3,
       tabName: TransactionsTabsListTabNames.Failed,
-      tabTotal: total,
+      // tabTotal: total,
     },
   ];
 
@@ -159,13 +158,19 @@ const MandatetManagement = () => {
     setQueryParams((prev) => ({
       ...prev,
       status: formik.values.statusFilter,
-      pageNo: paginationData.pageNumber,
-      pageSize: paginationData.pageSize,
+      pageNo:
+        formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
+          ? undefined
+          : paginationData.pageNumber,
+      pageSize:
+        formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
+          ? 100
+          : paginationData.pageSize,
       searchFilter: formik.values.searchMandate,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [paginationData, formik.values.searchMandate]);
+  }, [paginationData]);
 
   useEffect(() => {
     setTransactionsQueryParams((prev) => ({
@@ -174,7 +179,7 @@ const MandatetManagement = () => {
       pageNo: transactionPaginationData.pageNumber,
       pageSize: transactionPaginationData.pageSize,
     }));
-  }, [transactionPaginationData]);
+  }, [activeTransactionTab, transactionPaginationData]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
@@ -419,7 +424,11 @@ const MandatetManagement = () => {
     queryFn: ({ queryKey }) => getMandates(queryKey[1] as QueryParams),
   });
 
-  const { data: transactionsData, refetch: refetchTransactions } = useQuery({
+  const {
+    isLoading: isTransactionsLoading,
+    data: transactionsData,
+    refetch: refetchTransactions,
+  } = useQuery({
     queryKey: ['transactions', transactionsQueryParams],
     queryFn: ({ queryKey }) => getTransactions(queryKey[1] as QueryParams),
   });
@@ -743,6 +752,7 @@ const MandatetManagement = () => {
                     tabs={tabsList}
                     activeTab={activeTransactionTab}
                     setActiveTab={setActiveTransactionTab}
+                    showTabTotal={false}
                   />
                 </div>
                 <div className="flex items-center justify-end">
@@ -765,11 +775,12 @@ const MandatetManagement = () => {
               <div className="mt-3 h-[2px] w-full bg-grayPrimary"></div>
               <div className="slide-down mt-6">
                 <CustomTable
-                  tableData={transactionsData?.responseData?.totalCount}
+                  tableData={transactionsData?.responseData?.items}
                   columns={transactionsTableColumn}
                   rowCount={transactionsData?.responseData?.totalCount}
                   paginationData={transactionPaginationData}
                   setPaginationData={setTransactionPaginationData}
+                  isDataLoading={isTransactionsLoading}
                 />
               </div>
             </div>

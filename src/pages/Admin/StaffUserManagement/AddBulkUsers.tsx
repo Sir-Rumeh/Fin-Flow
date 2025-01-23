@@ -14,12 +14,14 @@ import {
   isFileSizeValid,
   matchesInterface,
   notifyError,
+  notifySuccess,
 } from 'utils/helpers';
 import { CloseIcon } from 'assets/icons';
 import { useMutation } from '@tanstack/react-query';
 import { StaffUserRequest } from 'utils/interfaces';
 import { addBulkStaffUserRequest } from 'config/actions/staff-user-actions';
 import * as XLSX from 'utils/libs/xlsx.mjs';
+import DownloadGreenIcon from 'assets/icons/DownloadGreenIcon';
 
 function AddUser() {
   const navigate = useNavigate();
@@ -100,14 +102,21 @@ function AddUser() {
   };
 
   useEffect(() => {
-    const newDataArray = convertExcelArrayToObjects(jsonData);
-    const dataMatch = newDataArray.some((obj) => matchesInterface(obj, referenceObject));
-    if (jsonData.length > 0 && !dataMatch) {
-      notifyError('Incorrect data format');
+    try {
+      const newDataArray = convertExcelArrayToObjects(jsonData);
+      console.log('data array', newDataArray);
+      const dataMatch = newDataArray.some((obj) => matchesInterface(obj, referenceObject));
+      if (jsonData.length > 0 && !dataMatch) {
+        notifyError('Incorrect data format');
+        clearFiles();
+        return;
+      } else {
+        setFormattedBulkData(newDataArray as StaffUserRequest[]);
+      }
+    } catch (error: any) {
+      notifyError(error?.message);
       clearFiles();
       return;
-    } else {
-      setFormattedBulkData(newDataArray as StaffUserRequest[]);
     }
   }, [jsonData]);
 
@@ -127,6 +136,17 @@ function AddUser() {
       {file.name} - {file.size / 1000} kb
     </li>
   ));
+
+  const handleDownloadSampleTemplate = () => {
+    const filePath = '/DDI-staff-bulk-upload-sample.csv';
+    const link = document.createElement('a');
+    link.href = filePath;
+    link.download = 'DDI-Staff-Bulk-Upload-Sample.csv';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    notifySuccess('Successfully Downloaded Sample Template');
+  };
   return (
     <>
       <div className="px-5 py-1">
@@ -164,6 +184,16 @@ function AddUser() {
                           <UploadIcon /> Browse Document
                         </button>
                       </div>
+                    </div>
+                  </div>
+                  <div className="mt-10">
+                    <div className="flex w-full items-center justify-around">
+                      <button
+                        onClick={handleDownloadSampleTemplate}
+                        className="mt-2 flex w-full items-center gap-2 rounded-lg border border-green-800 px-4 py-2 text-center font-semibold text-green-700"
+                      >
+                        <DownloadGreenIcon /> Download Sample Excel Template
+                      </button>
                     </div>
                   </div>
                   <div className="mt-4 flex w-[70%] flex-col sm:w-[100%]">
