@@ -134,6 +134,7 @@ AxiosClient.interceptors.response.use(
       };
       // if (originalRequest._isRetry) {
       const isRequestRetried = store.getState().axios.isRequestRetried;
+      console.log('is axios request retried', isRequestRetried);
       if (isRequestRetried) {
         const controller = abortControllers.get(originalRequest);
         if (controller) controller.abort();
