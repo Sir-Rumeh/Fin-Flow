@@ -38,8 +38,7 @@ export default defineConfig({
       },
 	},
 	preview: {
-		allowedHosts: [process.env.VITE_REACT_APP_CLIENT_URL],
-		//   allowedHosts: ['ddi-portal.uat-fcmb.com'], 
+		  allowedHosts: ['ddi-portal.uat-fcmb.com'], 
 	},
 	resolve: {
 	  alias: {
