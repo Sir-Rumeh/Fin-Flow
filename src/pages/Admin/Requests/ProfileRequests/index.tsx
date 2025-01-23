@@ -76,13 +76,7 @@ const ProfileRequests = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [
-    activeTab,
-    paginationData,
-    formik.values.fromDateFilter,
-    formik.values.toDateFilter,
-    formik.values.searchProfile,
-  ]);
+  }, [activeTab, paginationData, formik.values.searchProfile]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({

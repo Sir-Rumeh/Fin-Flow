@@ -1,7 +1,7 @@
 import { DataGrid, DataGridProps, gridClasses } from '@mui/x-data-grid';
 import TableLogo from 'assets/images/table_logo.png';
 import { useEffect, useState } from 'react';
-import { useMediaQuery } from '@mui/material';
+import { CircularProgress, useMediaQuery } from '@mui/material';
 import 'assets/fonts/Gotham.css';
 import ChevronLeft from 'assets/icons/ChevronLeft';
 import ChevronRightIcon from 'assets/icons/ChevronRightIcon';
@@ -19,6 +19,7 @@ type CustomTableProps = {
   paginationData?: PaginationProps;
   setPaginationData?: React.Dispatch<React.SetStateAction<PaginationProps>>;
   handlePageChange?: () => void;
+  isDataLoading?: boolean;
 } & DataGridProps;
 
 function CustomTable({
@@ -29,6 +30,7 @@ function CustomTable({
   paginationData,
   setPaginationData,
   handlePageChange,
+  isDataLoading,
   ...props
 }: CustomTableProps): JSX.Element {
   const isSmallWidth = useMediaQuery('(max-width:1440px)');
@@ -219,6 +221,12 @@ function CustomTable({
             </div>
           </>
         </div>
+      ) : isDataLoading ? (
+        <>
+          <div className="flex h-[100&] w-full justify-center py-40">
+            <CircularProgress sx={{ color: '#5C068C', zIndex: 999 }} />
+          </div>
+        </>
       ) : (
         <div className="slide-down mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">
           <div>

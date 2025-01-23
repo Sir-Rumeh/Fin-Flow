@@ -76,14 +76,7 @@ const MerchantRequests = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [
-    activeTab,
-    paginationData,
-    formik.values.fromDateFilter,
-    formik.values.toDateFilter,
-    formik.values.searchMerchantAccount,
-    formik.values.statusFilter,
-  ]);
+  }, [activeTab, paginationData, formik.values.searchMerchantAccount]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({

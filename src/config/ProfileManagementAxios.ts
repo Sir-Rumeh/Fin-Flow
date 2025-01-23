@@ -16,6 +16,7 @@ import {
   refreshStaffToken,
 } from './actions/authentication-actions';
 import axiosRetry from 'axios-retry';
+import { disableIsRetried, enableIsRetried } from 'store/reducers/AxiosSlice';
 
 const AxiosClient = axios.create({
   baseURL: AppConfig.PROFILE_URL,
@@ -131,14 +132,17 @@ AxiosClient.interceptors.response.use(
           }, 500);
         }
       };
-      if (originalRequest._isRetry) {
+      // if (originalRequest._isRetry) {
+      const isRequestRetried = store.getState().axios.isRequestRetried;
+      if (isRequestRetried) {
         const controller = abortControllers.get(originalRequest);
         if (controller) controller.abort();
         logoutUser();
         return;
         // return Promise.reject(new Error('Token refresh failed. User logged out.'));
       } else {
-        originalRequest._isRetry = true;
+        // originalRequest._isRetry = true;
+        dispatch(enableIsRetried());
         if (user) {
           try {
             let newToken;
@@ -164,8 +168,10 @@ AxiosClient.interceptors.response.use(
               dispatch(uiStopLoading());
               return Promise.reject(new Error('Token refresh failed. User logged out.'));
             }
+            dispatch(disableIsRetried());
           } catch (err) {
             // notifyError('Session expired. Please log in again.');
+            dispatch(disableIsRetried());
             dispatch(uiStopLoading());
             logoutUser();
             setTimeout(() => {
@@ -174,6 +180,7 @@ AxiosClient.interceptors.response.use(
           }
         } else {
           notifyError('User is not authenticated');
+          dispatch(disableIsRetried());
           dispatch(uiStopLoading());
           localStorage.clear();
           setTimeout(() => {

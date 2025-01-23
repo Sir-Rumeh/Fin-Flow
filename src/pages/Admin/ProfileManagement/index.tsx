@@ -87,18 +87,19 @@ const ProfileManagement = () => {
     setQueryParams((prev) => ({
       ...prev,
       status: formik.values.statusFilter,
-      pageNo: paginationData.pageNumber,
-      pageSize: paginationData.pageSize,
+      pageNo:
+        formik.values.searchProfile?.length > 0 || formik.values.statusFilter?.length > 0
+          ? undefined
+          : paginationData.pageNumber,
+      pageSize:
+        formik.values.searchProfile?.length > 0 || formik.values.statusFilter?.length > 0
+          ? 100
+          : paginationData.pageSize,
       searchFilter: formik.values.searchProfile,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [
-    paginationData,
-    formik.values.fromDateFilter,
-    formik.values.toDateFilter,
-    formik.values.searchProfile,
-  ]);
+  }, [paginationData, formik.values.searchProfile]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
