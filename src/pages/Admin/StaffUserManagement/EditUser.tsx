@@ -250,7 +250,7 @@ function EditUser() {
           proceedAction={() => {
             formik.resetForm();
             closeModal('editSuccessful');
-            navigate(`/${appRoutes.adminDashboard.profileManagement.index}`);
+            navigate(`/${appRoutes.adminDashboard.staffUserManagement.index}`);
           }}
         />
       )}

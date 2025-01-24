@@ -112,41 +112,34 @@ AxiosClient.interceptors.response.use(
                   })
                 : null;
             dispatch(uiStopLoading());
+            notifyError('Token refresh failed. Please log in again to continue.');
             localStorage.clear();
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 500);
           } catch (error) {
             console.error(error);
             dispatch(uiStopLoading());
             localStorage.clear();
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 500);
           }
         } else {
+          notifyError('User is not authenticated.');
           dispatch(uiStopLoading());
           localStorage.clear();
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 500);
         }
       };
-      // if (originalRequest._isRetry) {
       const isRequestRetried = store.getState().axios.isRequestRetried;
-      console.log('is merchant request retried', isRequestRetried);
+      // if (originalRequest._isRetry) {
       if (isRequestRetried) {
         const controller = abortControllers.get(originalRequest);
         if (controller) controller.abort();
+        dispatch(disableIsRetried());
         logoutUser();
-        return;
-        // return Promise.reject(new Error('Token refresh failed. User logged out.'));
+        return Promise.reject(new Error('Token refresh failed. User logged out.'));
       } else {
         // originalRequest._isRetry = true;
         dispatch(enableIsRetried());
         if (user) {
           try {
             let newToken;
+            let newRefreshToken;
             const res = isAdminAuthData(user)
               ? await refreshStaffToken({
                   email: user.userData.email,
@@ -159,8 +152,13 @@ AxiosClient.interceptors.response.use(
             if (res.responseCode === 200 && res.responseData) {
               dispatch(uiStopLoading());
               newToken = res?.responseData?.token;
+              newRefreshToken = res?.responseData?.refreshToken;
+              dispatch(disableIsRetried());
               if (newToken) {
-                localStorage.setItem('user', JSON.stringify({ ...user, token: newToken }));
+                localStorage.setItem(
+                  'user',
+                  JSON.stringify({ ...user, token: newToken, refreshToken: newRefreshToken }),
+                );
                 AxiosClient.defaults.headers.common.Authorization = `Bearer ${newToken}`;
                 originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
                 return AxiosClient(originalRequest);
@@ -169,24 +167,16 @@ AxiosClient.interceptors.response.use(
               dispatch(uiStopLoading());
               return Promise.reject(new Error('Token refresh failed. User logged out.'));
             }
-            dispatch(disableIsRetried());
           } catch (err) {
-            // notifyError('Session expired. Please log in again.');
-            dispatch(disableIsRetried());
             dispatch(uiStopLoading());
+            dispatch(disableIsRetried());
             logoutUser();
-            setTimeout(() => {
-              window.location.href = '/';
-            }, 500);
           }
         } else {
           notifyError('User is not authenticated');
-          dispatch(disableIsRetried());
           dispatch(uiStopLoading());
+          dispatch(disableIsRetried());
           localStorage.clear();
-          setTimeout(() => {
-            window.location.href = '/';
-          }, 500);
         }
       }
     } else if (error?.response?.status === 400 || 404) {

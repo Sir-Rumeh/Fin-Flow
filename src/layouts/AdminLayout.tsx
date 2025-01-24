@@ -63,6 +63,9 @@ export default function AdminLayout() {
     if (user) {
       setUserRefreshToken(user.refreshToken);
       setUserEmail(getUserEmail(user));
+    } else if (!user) {
+      localStorage.clear();
+      navigate('/');
     }
   }, [user]);
 

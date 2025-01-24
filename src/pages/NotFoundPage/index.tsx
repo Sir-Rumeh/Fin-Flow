@@ -39,7 +39,7 @@ const NotFoundPage = () => {
       {failedAccess ? (
         <div className="space-y-2 text-center">
           <h1>You do not have permission to view this module.</h1>
-          <h1>Please contact an admin</h1>
+          <h1>Please contact an admin.</h1>
         </div>
       ) : (
         <div className="text-center">
