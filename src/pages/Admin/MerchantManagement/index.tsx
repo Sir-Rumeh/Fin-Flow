@@ -65,6 +65,14 @@ const MerchantManagement = () => {
       setQueryParams((prev) => ({
         ...prev,
         searchFilter: formik.values.searchMerchantAccount,
+        pageNo:
+          formik.values.searchMerchantAccount?.length > 0 || formik.values.statusFilter?.length > 0
+            ? undefined
+            : paginationData.pageNumber,
+        pageSize:
+          formik.values.searchMerchantAccount?.length > 0 || formik.values.statusFilter?.length > 0
+            ? 100
+            : paginationData.pageSize,
       }));
       refetch();
     },
@@ -98,7 +106,7 @@ const MerchantManagement = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [paginationData, formik.values.searchMerchantAccount]);
+  }, [paginationData]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({

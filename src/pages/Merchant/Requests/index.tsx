@@ -49,6 +49,14 @@ const MandateRequests = () => {
       setQueryParams((prev) => ({
         ...prev,
         searchFilter: formik.values.searchMandate,
+        pageNo:
+          formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
+            ? undefined
+            : paginationData.pageNumber,
+        pageSize:
+          formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
+            ? 100
+            : paginationData.pageSize,
       }));
       refetch();
     },
@@ -200,19 +208,19 @@ const MandateRequests = () => {
     setQueryParams((prev) => ({
       ...prev,
       status: activeTab,
-      pageNo: paginationData.pageNumber,
-      pageSize: paginationData.pageSize,
+      pageNo:
+        formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
+          ? undefined
+          : paginationData.pageNumber,
+      pageSize:
+        formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
+          ? 100
+          : paginationData.pageSize,
       searchFilter: formik.values.searchMandate,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [
-    activeTab,
-    formik.values.searchMandate,
-    formik.values.fromDateFilter,
-    formik.values.toDateFilter,
-    paginationData,
-  ]);
+  }, [activeTab, paginationData]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
