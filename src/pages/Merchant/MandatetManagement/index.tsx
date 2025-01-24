@@ -121,6 +121,14 @@ const MandatetManagement = () => {
       setQueryParams((prev) => ({
         ...prev,
         searchFilter: formik.values.searchMandate,
+        pageNo:
+          formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
+            ? undefined
+            : paginationData.pageNumber,
+        pageSize:
+          formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
+            ? 100
+            : paginationData.pageSize,
       }));
       setTransactionsQueryParams((prev) => ({
         ...prev,
@@ -158,13 +166,19 @@ const MandatetManagement = () => {
     setQueryParams((prev) => ({
       ...prev,
       status: formik.values.statusFilter,
-      pageNo: paginationData.pageNumber,
-      pageSize: paginationData.pageSize,
+      pageNo:
+        formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
+          ? undefined
+          : paginationData.pageNumber,
+      pageSize:
+        formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
+          ? 100
+          : paginationData.pageSize,
       searchFilter: formik.values.searchMandate,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [paginationData, formik.values.searchMandate]);
+  }, [paginationData]);
 
   useEffect(() => {
     setTransactionsQueryParams((prev) => ({
