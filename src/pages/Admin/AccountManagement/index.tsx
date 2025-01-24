@@ -64,6 +64,14 @@ const AccountManagement = () => {
       setQueryParams((prev) => ({
         ...prev,
         searchFilter: formik.values.searchAccount,
+        pageNo:
+          formik.values.searchAccount?.length > 0 || formik.values.statusFilter?.length > 0
+            ? undefined
+            : paginationData.pageNumber,
+        pageSize:
+          formik.values.searchAccount?.length > 0 || formik.values.statusFilter?.length > 0
+            ? 100
+            : paginationData.pageSize,
       }));
       refetch();
     },
@@ -97,7 +105,7 @@ const AccountManagement = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [paginationData, formik.values.searchAccount]);
+  }, [paginationData]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({

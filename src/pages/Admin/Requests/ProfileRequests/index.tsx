@@ -41,6 +41,14 @@ const ProfileRequests = () => {
       setQueryParams((prev) => ({
         ...prev,
         searchFilter: formik.values.searchProfile,
+        pageNo:
+          formik.values.searchProfile?.length > 0 || formik.values.statusFilter?.length > 0
+            ? undefined
+            : paginationData.pageNumber,
+        pageSize:
+          formik.values.searchProfile?.length > 0 || formik.values.statusFilter?.length > 0
+            ? 100
+            : paginationData.pageSize,
       }));
       refetch();
     },
@@ -76,7 +84,7 @@ const ProfileRequests = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [activeTab, paginationData, formik.values.searchProfile]);
+  }, [activeTab, paginationData]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({

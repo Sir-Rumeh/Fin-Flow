@@ -42,6 +42,14 @@ const StaffUserRequests = () => {
       setQueryParams((prev) => ({
         ...prev,
         searchFilter: formik.values.searchStaffUser,
+        pageNo:
+          formik.values.searchStaffUser?.length > 0 || formik.values.statusFilter?.length > 0
+            ? undefined
+            : paginationData.pageNumber,
+        pageSize:
+          formik.values.searchStaffUser?.length > 0 || formik.values.statusFilter?.length > 0
+            ? 100
+            : paginationData.pageSize,
       }));
       refetch();
     },
@@ -76,7 +84,7 @@ const StaffUserRequests = () => {
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
-  }, [activeTab, paginationData, formik.values.searchStaffUser]);
+  }, [activeTab, paginationData]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
