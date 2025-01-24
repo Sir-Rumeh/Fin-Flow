@@ -10,6 +10,7 @@ import DarkArrowDown from './DarkArrowDown';
 import CloseIcon from './CloseIcon';
 import SearchIcon from './SearchIcon';
 import DownloadIcon from './DownloadIcon';
+import Alat from './alat.svg';
 
 export {
   DashboardCardArrowIcon,
@@ -24,4 +25,5 @@ export {
   CloseIcon,
   SearchIcon,
   DownloadIcon,
+  Alat,
 };

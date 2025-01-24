@@ -8,6 +8,11 @@ import MerchantRoutes from 'routes/MerchantRoutes';
 import OTP from 'pages/Auth/OTP';
 import AdminProtectedRoute from 'routes/ProtectedRoutes/AdminProtectedRoutes';
 import MerchantProtectedRoute from './ProtectedRoutes/MerchantProtectedRoutes';
+import ResetPassword from 'pages/Auth/ResetPassword';
+import ChangeForgottenPassword from 'pages/Auth/ChangeForgottenPassword';
+import ChangePassword from 'pages/Auth/ChangePassword';
+import ForgottenPasswordOtp from 'pages/Auth/ForgottenPasswordOtp';
+import ResetPasswordOtp from 'pages/Auth/ResetPasswordOtp';
 
 export default function Routing() {
   return (
@@ -16,6 +21,26 @@ export default function Routing() {
       <Route path={`${appRoutes.adminLogin}`} element={<AdminLogin />} />
       <Route path={`${appRoutes.adminLoginOTP}`} element={<OTP />} />
       <Route path={`${appRoutes.merchantLogin}`} element={<MerchantLogin />} />
+      <Route
+        path={`${appRoutes.merchantLogin}/${appRoutes.resetPassword}`}
+        element={<ResetPassword />}
+      />
+      <Route
+        path={`${appRoutes.merchantLogin}/${appRoutes.changeForgottenPassword}`}
+        element={<ChangeForgottenPassword />}
+      />
+      <Route
+        path={`${appRoutes.merchantLogin}/${appRoutes.changePassword}`}
+        element={<ChangePassword />}
+      />
+      <Route
+        path={`${appRoutes.merchantLogin}/${appRoutes.forgottenPasswordOtp}`}
+        element={<ForgottenPasswordOtp />}
+      />
+      <Route
+        path={`${appRoutes.merchantLogin}/${appRoutes.resetPasswordOtp}`}
+        element={<ResetPasswordOtp />}
+      />
       <Route path={`${appRoutes.merchantLoginOTP}`} element={<OTP />} />
       <Route
         path={`${appRoutes.adminDashboard.dashboard.index}/*`}

@@ -3,7 +3,10 @@ import FcmbLogo from 'assets/icons/FcmbIcon';
 import { Link, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
 import appRoutes, { BASE_ROUTES } from 'utils/constants/routes';
-import { userLoginValidationSchema } from 'utils/formValidators';
+import {
+  changeForgottenPasswordValidationSchema,
+  userLoginValidationSchema,
+} from 'utils/formValidators';
 import CustomInput from 'components/FormElements/CustomInput';
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
@@ -13,7 +16,7 @@ import { encrypt } from 'utils/helpers/security';
 import { UserLoginRoles } from 'utils/enums';
 import { Alat } from 'assets/icons';
 
-const MerchantLogin = () => {
+const ChangeForgottenPassword = () => {
   const navigate = useNavigate();
   const [inputTypeState, setInputTypeState] = useState(false);
   const [enccryptedData, setEncryptedData] = useState(false);
@@ -24,33 +27,22 @@ const MerchantLogin = () => {
 
   const formik = useFormik({
     initialValues: {
-      email: '',
       password: '',
+      newPassword: '',
     },
-    validationSchema: userLoginValidationSchema,
+    validationSchema: changeForgottenPasswordValidationSchema,
     onSubmit: (values) => {
-      const encryptedData = encrypt(values);
-      setEncryptedData(encryptedData);
       const payload = {
-        data: encryptedData,
+        data: values,
         otp: '',
         step: 'credential-validation',
       };
-      loginMerchantMutation.mutate(payload);
-    },
-  });
-
-  const loginMerchantMutation = useMutation({
-    mutationFn: (payload: { data: string } | undefined) => loginMerchant(payload),
-    onSuccess: (data) => {
-      notifySuccess('OTP Sent Successfully');
+      console.log(payload);
+      notifySuccess('Password reset successfully');
       formik.resetForm();
-      navigate(`/${appRoutes.merchantLoginOTP}`, {
-        state: { data: enccryptedData, origin: UserLoginRoles.Merchant },
-      });
-    },
-    onError: (error) => {
-      console.log(error);
+      setTimeout(() => {
+        navigate(`/${appRoutes.merchantLogin}/${appRoutes.forgottenPasswordOtp}`);
+      }, 3000);
     },
   });
 
@@ -62,41 +54,22 @@ const MerchantLogin = () => {
             <FcmbLogo />
             <h3 className="pl-6 font-medium text-blackPrimary">DDI Portal</h3>
           </div>
-          {/* <div className="flex items-center justify-around rounded-md bg-white p-2">
-            <div className="flex items-center gap-4 text-sm">
-              <img src={Alat} alt="alat-icon" />
-              <p>
-                First time user?{' '}
-                <Link to={BASE_ROUTES.RESETPASSWORD} className="text-[#5C068C]">
-                  Reset your password
-                </Link>{' '}
-                to login
-              </p>
-            </div>
-          </div> */}
         </div>
 
         <div className="mt-6 rounded-lg bg-white shadow-sm md:w-[36.5rem]">
           <div className="px-[4.375rem] pb-2 pt-10">
-            <h2 className="pb-10 text-2xl font-medium leading-[1.875rem] text-blackPrimary">
-              Sign in
+            <h2 className="pb-3 text-2xl font-medium leading-[1.875rem] text-blackPrimary">
+              Enter a new password
             </h2>
+            <p className="pb-4 text-sm text-zinc-400">
+              Create a new password to allow you login to your account
+            </p>
 
             <form onSubmit={formik.handleSubmit}>
-              <div className="mt-[2.5rem] w-full">
-                <CustomInput
-                  labelFor="email"
-                  label="Email Address"
-                  inputType="text"
-                  placeholder="Enter a valid email"
-                  maxW="w-full"
-                  formik={formik}
-                />
-              </div>
               <div className="mt-[4rem] w-full">
                 <CustomInput
                   labelFor="password"
-                  label="Password"
+                  label="Enter new password"
                   placeholder="Enter password"
                   maxW="w-full"
                   formik={formik}
@@ -106,10 +79,18 @@ const MerchantLogin = () => {
                   handleInputType={onHandleInputType}
                 />
               </div>
-              <div className="flex justify-end pt-5">
-                <Link to={BASE_ROUTES.RESETPASSWORD} className="text-sm text-[#5C068C]">
-                  Forgot your password?
-                </Link>{' '}
+              <div className="mt-[5rem] w-full">
+                <CustomInput
+                  labelFor="newPassword"
+                  label="Confirm new password"
+                  placeholder="Confirm password"
+                  maxW="w-full"
+                  formik={formik}
+                  passwordInput
+                  inputType={inputTypeState ? 'text' : 'newPassword'}
+                  iconState={inputTypeState}
+                  handleInputType={onHandleInputType}
+                />
               </div>
               <div className="mt-[2.5rem] w-full">
                 <ButtonComponent
@@ -120,7 +101,7 @@ const MerchantLogin = () => {
                   type="submit"
                   width="99%"
                   height="3rem"
-                  title="Sign In"
+                  title="Continue"
                 />
               </div>
             </form>
@@ -133,4 +114,4 @@ const MerchantLogin = () => {
   );
 };
 
-export default MerchantLogin;
+export default ChangeForgottenPassword;
