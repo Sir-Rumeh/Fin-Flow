@@ -4,6 +4,9 @@ export const BASE_ROUTES = {
   MERCHANTLOGIN: 'merchant-login',
   ADMIN: 'admin',
   MERCHANT: 'merchant',
+  RESETPASSWORD: 'reset-password',
+  CHANGEPASSWORD: 'change-password',
+  CHANGEFORGOTTENPASSWORD: 'change-forgotten-password',
 };
 
 export const appRoutes = {
@@ -11,7 +14,12 @@ export const appRoutes = {
   adminLogin: BASE_ROUTES.ADMINLOGIN,
   adminLoginOTP: `${BASE_ROUTES.ADMINLOGIN}/otp`,
   merchantLogin: BASE_ROUTES.MERCHANTLOGIN,
+  resetPassword: BASE_ROUTES.RESETPASSWORD,
+  changePassword: BASE_ROUTES.CHANGEPASSWORD,
+  changeForgottenPassword: BASE_ROUTES.CHANGEFORGOTTENPASSWORD,
   merchantLoginOTP: `${BASE_ROUTES.MERCHANTLOGIN}/otp`,
+  forgottenPasswordOtp: `forgotten-password-otp`,
+  resetPasswordOtp: `reset-password-otp`,
   adminDashboard: {
     dashboard: {
       index: `${BASE_ROUTES.ADMIN}`,
