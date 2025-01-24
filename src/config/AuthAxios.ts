@@ -80,14 +80,10 @@ AxiosClient.interceptors.response.use(
   },
   async (error) => {
     dispatch(uiStopLoading());
-    const originalRequest = error.config;
     if (error?.response?.status === 401) {
       notifyError('Session expired. Please log in again.');
       dispatch(uiStopLoading());
       localStorage.clear();
-      setTimeout(() => {
-        window.location.href = '/';
-      }, 500);
     } else if (error?.response?.status === 400 || 404) {
       notifyError(error?.response?.data?.responseMessage);
       return Promise.reject(error);
