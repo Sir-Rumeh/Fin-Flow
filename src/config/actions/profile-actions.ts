@@ -124,7 +124,7 @@ export const rejectProfileRequest = async (
   payload: { remark: string },
 ) => {
   try {
-    const response = await AxiosClient.put(`/profilerequests/decline/${requestId}`, payload);
+    const response = await AxiosClient.put(`/profilerequests/reject/${requestId}`, payload);
     return response.data;
   } catch (error) {
     throw error;
