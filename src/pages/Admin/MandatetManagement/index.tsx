@@ -35,53 +35,7 @@ import { SearchTypes, TransactionsTabsListTabNames } from 'utils/enums';
 import { statusDropdownOptions, transactionsStatusDropdownOptions } from 'utils/constants';
 import LoadingIndicator from 'components/common/LoadingIndicator';
 import { useReactToPrint } from 'react-to-print';
-import DetailsCard from 'components/common/DashboardCards/DetailsCard';
-import FcmbLogo from 'assets/images/fcmb_logo.png';
-import dayjs from 'dayjs';
-
-interface TransactionReceiptProps {
-  data: {
-    mandateCode: string;
-    amount: string;
-    effectiveDate: string;
-    billingStatus: string;
-  };
-}
-
-const DownloadableReceipt = forwardRef<HTMLDivElement, TransactionReceiptProps>(({ data }, ref) => {
-  return (
-    <>
-      <div className="flex items-center gap-x-1">
-        <img src={FcmbLogo} alt="fcmb_logo" />
-      </div>
-      <div className="mt-8 flex flex-col items-center justify-center gap-2">
-        <h2 className="bg-primary-400 p-2">{`Transaction Receipt for Mandate ${data?.mandateCode} `}</h2>
-        <div className="flex items-center gap-2">
-          <p>Date:</p>
-          <span className="font-bold underline">{dayjs().format('DD MM, YYYY')}</span>
-        </div>
-      </div>
-      <div
-        ref={ref}
-        className="mt-6 grid grid-cols-1 gap-[20px] sm:grid-cols-2"
-        style={{ padding: '20px', border: '1px solid black' }}
-      >
-        <div>
-          <DetailsCard title="Mandate Code" content={data?.mandateCode} />
-        </div>
-        <div>
-          <DetailsCard title="Amount" content={data?.amount} />
-        </div>
-        <div>
-          <DetailsCard title="Effective Date" content={data?.effectiveDate} />
-        </div>
-        <div>
-          <DetailsCard title="Billing Status" content={data?.billingStatus} />
-        </div>
-      </div>
-    </>
-  );
-});
+import TransactionReceipt from 'components/TransactionReceipt';
 
 const MandatetManagement = () => {
   const printPdfRef = useRef(null);
@@ -89,6 +43,7 @@ const MandatetManagement = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [transactionsSearchTerm, setTransactionsSearchTerm] = useState('');
   const [transactionDetails, setTransactionDetails] = useState<any>();
+  const receiptRef = useRef<HTMLDivElement>(null);
   const user = getUserFromLocalStorage() as MerchantAuthData;
   const loggedInMerchantId = user?.profileData?.merchantID;
 
@@ -106,8 +61,6 @@ const MandatetManagement = () => {
   });
   const [selectedMandateCode, setSelectedMandateCode] = useState('');
   const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
-
-  const receiptRef = useRef<HTMLDivElement>(null);
 
   const tabsList: TabsProps[] = [
     {
@@ -560,7 +513,7 @@ const MandatetManagement = () => {
   return (
     <>
       <div style={{ display: 'none' }}>
-        <DownloadableReceipt ref={receiptRef} data={transactionDetails} />
+        <TransactionReceipt ref={receiptRef} data={transactionDetails} />
       </div>
       <section className="p-2 md:p-4">
         <div className="fade-in-down my-2 flex items-center justify-between">
