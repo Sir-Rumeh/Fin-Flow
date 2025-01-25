@@ -256,7 +256,7 @@ const MerchantRequests = () => {
                 <div className="">
                   <TableFilter
                     name={'searchMerchantAccount'}
-                    placeholder={'Search Merchant Account'}
+                    placeholder={'Search Merchant Account Number'}
                     label={'Search Merchant'}
                     value={searchTerm}
                     setSearch={setSearchTerm}

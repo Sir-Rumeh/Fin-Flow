@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import {
   ArrowRightIcon,
@@ -39,6 +39,8 @@ import TableFilter from 'components/TableFilter';
 import CustomTable from 'components/CustomTable';
 import { MerchantAuthData, QueryParams, TabsProps } from 'utils/interfaces';
 import { SearchTypes, TransactionsTabsListTabNames } from 'utils/enums';
+import { useReactToPrint } from 'react-to-print';
+import TransactionReceipt from 'components/TransactionReceipt';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -58,6 +60,8 @@ const MandateDetails = () => {
   const { id: mandateId } = useParams();
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
+  const [transactionDetails, setTransactionDetails] = useState<any>();
+  const receiptRef = useRef<HTMLDivElement>(null);
   const user = getUserFromLocalStorage() as MerchantAuthData;
   const loggedInMerchantId = user?.profileData?.merchantID;
   const [transactionPaginationData, setTransactionPaginationData] = useState({
@@ -102,6 +106,17 @@ const MandateDetails = () => {
 
   const closeModal = (modalName: keyof typeof modals) => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
+  };
+
+  const handlePrintReceipt = useReactToPrint({
+    content: () => receiptRef.current,
+  });
+
+  const handleDownloadReceipt = (row: any) => {
+    setTransactionDetails(row);
+    setTimeout(() => {
+      handlePrintReceipt();
+    }, 0);
   };
 
   const transactionsTableColumn: GridColDef[] = [
@@ -149,7 +164,12 @@ const MandateDetails = () => {
       width: 180,
       renderCell: (params) => {
         return (
-          <button className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple">
+          <button
+            onClick={() => {
+              handleDownloadReceipt(params?.row);
+            }}
+            className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple"
+          >
             <DownloadIcon />
             Download Receipt
           </button>
@@ -309,6 +329,9 @@ const MandateDetails = () => {
 
   return (
     <>
+      <div style={{ display: 'none' }}>
+        <TransactionReceipt ref={receiptRef} data={transactionDetails} />
+      </div>
       <div className="px-5 py-5">
         <div className="flex items-center gap-4">
           <Link

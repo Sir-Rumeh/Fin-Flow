@@ -1,5 +1,5 @@
 import ButtonComponent from 'components/FormElements/Button';
-import { useEffect, useRef, useState } from 'react';
+import React, { forwardRef, useEffect, useRef, useState } from 'react';
 import TableFilter from 'components/TableFilter';
 import CustomTable from 'components/CustomTable';
 import appRoutes from 'utils/constants/routes';
@@ -34,12 +34,16 @@ import { updateMandateSchema } from 'utils/formValidators';
 import { SearchTypes, TransactionsTabsListTabNames } from 'utils/enums';
 import { statusDropdownOptions, transactionsStatusDropdownOptions } from 'utils/constants';
 import LoadingIndicator from 'components/common/LoadingIndicator';
+import { useReactToPrint } from 'react-to-print';
+import TransactionReceipt from 'components/TransactionReceipt';
 
 const MandatetManagement = () => {
   const printPdfRef = useRef(null);
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState('');
   const [transactionsSearchTerm, setTransactionsSearchTerm] = useState('');
+  const [transactionDetails, setTransactionDetails] = useState<any>();
+  const receiptRef = useRef<HTMLDivElement>(null);
   const user = getUserFromLocalStorage() as MerchantAuthData;
   const loggedInMerchantId = user?.profileData?.merchantID;
 
@@ -373,6 +377,17 @@ const MandatetManagement = () => {
     },
   ];
 
+  const handlePrintReceipt = useReactToPrint({
+    content: () => receiptRef.current,
+  });
+
+  const handleDownloadReceipt = (row: any) => {
+    setTransactionDetails(row);
+    setTimeout(() => {
+      handlePrintReceipt();
+    }, 0);
+  };
+
   const transactionsTableColumn: GridColDef[] = [
     // {
     //   field: 'accountId',
@@ -416,12 +431,20 @@ const MandatetManagement = () => {
       headerClassName: 'ag-thead ',
       sortable: false,
       width: 180,
+
       renderCell: (params) => {
         return (
-          <button className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple">
-            <DownloadIcon />
-            Download Receipt
-          </button>
+          <>
+            <button
+              onClick={() => {
+                handleDownloadReceipt(params?.row);
+              }}
+              className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple"
+            >
+              <DownloadIcon />
+              Download Receipt
+            </button>
+          </>
         );
       },
     },
@@ -489,6 +512,9 @@ const MandatetManagement = () => {
 
   return (
     <>
+      <div style={{ display: 'none' }}>
+        <TransactionReceipt ref={receiptRef} data={transactionDetails} />
+      </div>
       <section className="p-2 md:p-4">
         <div className="fade-in-down my-2 flex items-center justify-between">
           <div>

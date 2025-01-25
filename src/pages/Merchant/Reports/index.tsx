@@ -47,6 +47,8 @@ import dayjs from 'dayjs';
 import { updateMandateSchema } from 'utils/formValidators';
 import { getUserFromLocalStorage } from 'utils/helpers';
 import { SearchTypes, TransactionsTabsListTabNames } from 'utils/enums';
+import { useReactToPrint } from 'react-to-print';
+import TransactionReceipt from 'components/TransactionReceipt';
 
 const style = {
   position: 'absolute' as 'absolute',
@@ -69,6 +71,8 @@ const Reports = () => {
   const [reportType, setReportType] = useState('');
   const [activeTransactionTab, setActiveTransactionTab] = useState('Successful');
   const [selectedMandateCode, setSelectedMandateCode] = useState('');
+  const [transactionDetails, setTransactionDetails] = useState<any>();
+  const receiptRef = useRef<HTMLDivElement>(null);
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
     pageSize: 10,
@@ -414,6 +418,17 @@ const Reports = () => {
     },
   ];
 
+  const handlePrintReceipt = useReactToPrint({
+    content: () => receiptRef.current,
+  });
+
+  const handleDownloadReceipt = (row: any) => {
+    setTransactionDetails(row);
+    setTimeout(() => {
+      handlePrintReceipt();
+    }, 0);
+  };
+
   const transactionsReportColumn: GridColDef[] = [
     // {
     //   field: 'accountId',
@@ -459,7 +474,12 @@ const Reports = () => {
       width: 180,
       renderCell: (params) => {
         return (
-          <button className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple">
+          <button
+            onClick={() => {
+              handleDownloadReceipt(params?.row);
+            }}
+            className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple"
+          >
             <DownloadIcon />
             Download Receipt
           </button>
@@ -596,6 +616,9 @@ const Reports = () => {
 
   return (
     <>
+      <div style={{ display: 'none' }}>
+        <TransactionReceipt ref={receiptRef} data={transactionDetails} />
+      </div>
       <section className="p-2 md:p-4">
         <div className="fade-in-down my-2 flex items-center justify-between">
           <div>
