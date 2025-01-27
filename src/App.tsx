@@ -70,7 +70,7 @@ function App() {
   };
 
   const handleOnIdle = async () => {
-    logoutUser();
+    await logoutUser();
   };
 
   useIdleTimer({

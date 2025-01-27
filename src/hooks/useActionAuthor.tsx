@@ -37,43 +37,33 @@ function useActionAuthor(id: string): Author {
   };
 
   useEffect(() => {
-    let isCancelled = false;
-
     if (id?.startsWith('URS')) {
       userType = 'Admin';
       const fetchData = async () => {
         const adminDetails = await getAdminDetails();
-        if (!isCancelled) {
-          const authorData: Author = {
-            userType: 'Admin',
-            authorId: id,
-            authorName: `${adminDetails?.responseData?.firstName} ${adminDetails?.responseData?.lastName}`,
-            authorAddress: adminDetails?.responseData?.address,
-          };
-          setData(authorData);
-        }
+        const authorData: Author = {
+          userType: 'Admin',
+          authorId: id,
+          authorName: `${adminDetails?.responseData?.firstName} ${adminDetails?.responseData?.lastName}`,
+          authorAddress: adminDetails?.responseData?.address,
+        };
+        setData(authorData);
       };
       fetchData();
     } else if (id?.startsWith('PFL')) {
       userType = 'Merchant';
       const fetchData = async () => {
         const merchantUserDetails = await getMerchantUserDetails();
-        if (!isCancelled) {
-          const authorData: Author = {
-            userType: 'Merchant',
-            authorId: id,
-            authorName: `${merchantUserDetails?.responseData?.firstName} ${merchantUserDetails?.responseData?.lastName}`,
-            authorAddress: merchantUserDetails?.responseData?.address,
-          };
-          setData(authorData);
-        }
+        const authorData: Author = {
+          userType: 'Merchant',
+          authorId: id,
+          authorName: `${merchantUserDetails?.responseData?.firstName} ${merchantUserDetails?.responseData?.lastName}`,
+          authorAddress: merchantUserDetails?.responseData?.address,
+        };
+        setData(authorData);
       };
       fetchData();
     }
-
-    return () => {
-      isCancelled = true;
-    };
   }, [id]);
 
   return data || defaultAuthorData;

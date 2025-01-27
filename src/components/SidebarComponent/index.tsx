@@ -102,7 +102,7 @@ const Sidebar = (props: { open: boolean; onClose: any; userRole: string }) => {
         <ul className="mt-auto flex items-center justify-start border-t border-gray-50 pt-1">
           <button
             className="relative mb-3 flex px-2 py-4 hover:cursor-pointer"
-            onClick={() => logoutUser()}
+            onClick={async () => await logoutUser()}
           >
             <li className="my-[3px] flex w-full cursor-pointer items-center justify-center px-5">
               <span className="font-medium text-white">

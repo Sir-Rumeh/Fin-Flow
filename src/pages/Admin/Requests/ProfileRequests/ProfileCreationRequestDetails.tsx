@@ -146,7 +146,7 @@ const ProfileCreationRequestDetails = () => {
           <div className="">
             <ItemDetailsContainer title="Profile Creation Details">
               <DetailsCard title="Account Name" content="Fair Money" />
-              <DetailsCard title="Merchant ID" content={data?.responseData?.amount || ''} />
+              <DetailsCard title="Merchant ID" content={data?.responseData?.merchantID || ''} />
               <DetailsCard
                 title="Full Name"
                 content={`${data?.responseData?.firstName || ''} ${data?.responseData?.lastName || ''}`}
@@ -154,7 +154,7 @@ const ProfileCreationRequestDetails = () => {
               <DetailsCard title="Merchant Name" content={data?.responseData?.merchantName || ''} />
               <DetailsCard title="Account Id" content={data?.responseData?.accountID || ''} />
               <DetailsCard title="Email" content={data?.responseData?.email || ''} />
-              <DetailsCard title="CIF Number" content="12345" />
+              {/* <DetailsCard title="CIF Number" content="12345" /> */}
               <DetailsCard title="Role" content={data?.responseData?.role || ''} />
               <DetailsCard
                 title="Date Requested"

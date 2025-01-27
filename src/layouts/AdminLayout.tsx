@@ -115,9 +115,9 @@ export default function AdminLayout() {
           info={'Your session has expired.'}
           icon={<RedAlertIcon />}
           type={'completed'}
-          proceedAction={() => {
+          proceedAction={async () => {
             closeModal('isSessionTimedOut');
-            logoutUser();
+            await logoutUser();
           }}
         />
       )}
