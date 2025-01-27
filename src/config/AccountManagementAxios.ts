@@ -92,6 +92,7 @@ AxiosClient.interceptors.response.use(
     dispatch(uiStopLoading());
     const originalRequest = error.config;
     abortControllers.delete(originalRequest);
+    const controller = abortControllers.get(originalRequest);
     if (error?.response?.status === 401) {
       cancelPendingRequests();
       const user = getUserFromLocalStorage();
@@ -125,17 +126,17 @@ AxiosClient.interceptors.response.use(
           localStorage.clear();
         }
       };
-      const isRequestRetried = store.getState().axios.isRequestRetried;
-      // if (originalRequest._isRetry) {
-      if (isRequestRetried) {
-        const controller = abortControllers.get(originalRequest);
+      // const isRequestRetried = store.getState().axios.isRequestRetried;
+      // if (isRequestRetried) {
+      if (originalRequest._isRetry) {
         if (controller) controller.abort();
-        dispatch(disableIsRetried());
-        logoutUser();
+        originalRequest._isRetry = false;
+        // dispatch(disableIsRetried());
+        await logoutUser();
         return Promise.reject(new Error('Token refresh failed. User logged out.'));
       } else {
-        // originalRequest._isRetry = true;
-        dispatch(enableIsRetried());
+        originalRequest._isRetry = true;
+        // dispatch(enableIsRetried());
         if (user) {
           try {
             let newToken;
@@ -153,7 +154,8 @@ AxiosClient.interceptors.response.use(
               dispatch(uiStopLoading());
               newToken = res?.responseData?.token;
               newRefreshToken = res?.responseData?.refreshToken;
-              dispatch(disableIsRetried());
+              originalRequest._isRetry = false;
+              // dispatch(disableIsRetried());
               if (newToken) {
                 localStorage.setItem(
                   'user',
@@ -169,17 +171,28 @@ AxiosClient.interceptors.response.use(
             }
           } catch (err) {
             dispatch(uiStopLoading());
-            dispatch(disableIsRetried());
-            logoutUser();
+            originalRequest._isRetry = false;
+            // dispatch(disableIsRetried());
+            await logoutUser();
           }
         } else {
           notifyError('User is not authenticated');
           dispatch(uiStopLoading());
-          dispatch(disableIsRetried());
+          originalRequest._isRetry = false;
+          // dispatch(disableIsRetried());
           localStorage.clear();
         }
       }
-    } else if (error?.response?.status === 400 || 404) {
+    } else if (error?.response?.status === 400) {
+      if (controller) controller.abort();
+      notifyError(
+        error?.response?.data?.responseMessage ||
+          error?.response?.data?.message ||
+          'Invalid Request.',
+      );
+      return Promise.reject(error);
+    } else if (error?.response?.status === 404) {
+      if (controller) controller.abort();
       notifyError(
         error?.response?.data?.responseMessage ||
           error?.response?.data?.message ||
@@ -187,6 +200,7 @@ AxiosClient.interceptors.response.use(
       );
       return Promise.reject(error);
     } else if (error?.response?.status === 403) {
+      if (controller) controller.abort();
       notifyError('You do not have permission to perform this action. Please contact an admin');
       return Promise.reject(error);
     } else if (error?.response?.status === 500) {

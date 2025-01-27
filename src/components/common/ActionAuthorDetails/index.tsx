@@ -33,7 +33,7 @@ const ActionAuthorDetails = ({
               title="Date Created"
               content={actionDate && new Date(actionDate).toLocaleDateString()}
             />
-            {isAdminAuthData(user) && (
+            {user && isAdminAuthData(user) && (
               <DetailsCard title="Address" content={details?.authorAddress} />
             )}
           </>
@@ -47,7 +47,7 @@ const ActionAuthorDetails = ({
               title="Date Approved"
               content={actionDate && new Date(actionDate).toLocaleDateString()}
             />
-            {isAdminAuthData(user) && (
+            {user && isAdminAuthData(user) && (
               <DetailsCard title="Address" content={details?.authorAddress} />
             )}
           </>
@@ -61,7 +61,7 @@ const ActionAuthorDetails = ({
               title="Date Rejected"
               content={actionDate && new Date(actionDate).toLocaleDateString()}
             />
-            {isAdminAuthData(user) && (
+            {user && isAdminAuthData(user) && (
               <DetailsCard title="Address" content={details?.authorAddress} />
             )}
           </>
@@ -75,7 +75,7 @@ const ActionAuthorDetails = ({
               title="Date Requested"
               content={actionDate && new Date(actionDate).toLocaleDateString()}
             />
-            {isAdminAuthData(user) && (
+            {user && isAdminAuthData(user) && (
               <DetailsCard title="Address" content={details?.authorAddress} />
             )}
           </>
