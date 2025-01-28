@@ -17,7 +17,11 @@ import {
   QueryParams,
   RolePermissionRequest,
 } from 'utils/interfaces';
-import { addRolePermissionRequest, getRoles } from 'config/actions/role-permission-actions';
+import {
+  addRolePermissionRequest,
+  getRolePermissionByRoleId,
+  getRoles,
+} from 'config/actions/role-permission-actions';
 import { formatApiDataForDropdown, notifyError } from 'utils/helpers';
 import { adminAccessRights, merchantAccessRights } from 'routes/appRoutes';
 import { Designation } from 'utils/enums';
@@ -70,12 +74,25 @@ const AddRolePermission = () => {
     queryFn: ({ queryKey }) => getRoles(queryKey[1] as QueryParams),
   });
 
+  function removeUnwantedProperties(data: any[]) {
+    return data.map(
+      ({ id, isActive, createdBy, createdAt, updatedBy, updatedAt, isDeleted, ...rest }) => rest,
+    );
+  }
+
   useEffect(() => {
     const role = data?.responseData?.items.filter(
       (role: any) => role.id === formik.values.groupId,
     )[0];
+    const getRolePermissions = async () => {
+      const res = await getRolePermissionByRoleId(formik.values.groupId);
+      if (res) {
+        const formattedRes = removeUnwantedProperties(res.responseData);
+        formik.setFieldValue('permissions', formattedRes);
+      }
+    };
     setSelectedRole(role);
-    formik.setFieldValue('permissions', []);
+    getRolePermissions();
   }, [formik.values.groupId]);
 
   const addRolePermissionRequestMutation = useMutation({
