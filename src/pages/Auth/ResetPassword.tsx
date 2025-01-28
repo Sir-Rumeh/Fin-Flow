@@ -1,44 +1,44 @@
 import ButtonComponent from 'components/FormElements/Button';
 import FcmbLogo from 'assets/icons/FcmbIcon';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import appRoutes, { BASE_ROUTES } from 'utils/constants/routes';
+import appRoutes from 'utils/constants/routes';
 import { resetPasswordValidationSchema } from 'utils/formValidators';
 import CustomInput from 'components/FormElements/CustomInput';
-import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { loginMerchant } from 'config/actions/authentication-actions';
-import { notifyError, notifySuccess } from 'utils/helpers';
-import { encrypt } from 'utils/helpers/security';
-import { UserLoginRoles } from 'utils/enums';
-import { Alat } from 'assets/icons';
+import { notifySuccess } from 'utils/helpers';
+import { sendPasswordResetMail } from 'config/actions/profile-actions';
+
+interface RequestPayload {
+  data: any;
+  resetId: string | null;
+  otp: string;
+  step: string;
+}
 
 const ResetPassword = () => {
   const navigate = useNavigate();
-  const [inputTypeState, setInputTypeState] = useState(false);
-  const [enccryptedData, setEncryptedData] = useState(false);
-
-  const onHandleInputType = () => {
-    setInputTypeState(!inputTypeState);
-  };
-
   const formik = useFormik({
     initialValues: {
       email: '',
     },
     validationSchema: resetPasswordValidationSchema,
     onSubmit: (values) => {
-      const payload = {
-        data: values,
-        otp: '',
-        step: 'credential-validation',
-      };
-      console.log(payload);
-      notifySuccess('Password reset email sent successfully');
+      sendPasswordResetMailMutation.mutate(values.email);
+    },
+  });
+
+  const sendPasswordResetMailMutation = useMutation({
+    mutationFn: (email: string | undefined) => sendPasswordResetMail(email),
+    onSuccess: (data) => {
+      notifySuccess('Password reset mail sent successfully');
       formik.resetForm();
       setTimeout(() => {
-        navigate(`/${appRoutes.merchantLogin}/${appRoutes.resetForgottenPassword}`);
-      }, 3000);
+        navigate(`${appRoutes.login}`);
+      }, 300);
+    },
+    onError: (error) => {
+      console.log(error);
     },
   });
 

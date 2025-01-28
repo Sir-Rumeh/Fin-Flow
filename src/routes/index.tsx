@@ -11,8 +11,10 @@ import MerchantProtectedRoute from './ProtectedRoutes/MerchantProtectedRoutes';
 import ResetPassword from 'pages/Auth/ResetPassword';
 import ResetForgottenPassword from 'pages/Auth/ResetForgottenPassword';
 import ChangePassword from 'pages/Auth/ChangePassword';
-import ForgottenPasswordOtp from 'pages/Auth/ForgottenPasswordOtp';
+import ChangePasswordOtp from 'pages/Auth/ChangePasswordOtp';
 import ResetPasswordOtp from 'pages/Auth/ResetPasswordOtp';
+import NotFoundPage from 'pages/NotFoundPage';
+import Error404Page from 'pages/NotFoundPage/Error404Page';
 
 export default function Routing() {
   return (
@@ -37,7 +39,7 @@ export default function Routing() {
       />
       <Route
         path={`${appRoutes.merchantLogin}/${appRoutes.changePasswordOtp}`}
-        element={<ForgottenPasswordOtp />}
+        element={<ChangePasswordOtp />}
       />
       <Route
         path={`${appRoutes.merchantLogin}/${appRoutes.resetPasswordOtp}`}
@@ -59,6 +61,7 @@ export default function Routing() {
           </MerchantProtectedRoute>
         }
       />
+      <Route path="*" element={<Error404Page />} />
     </Routes>
   );
 }

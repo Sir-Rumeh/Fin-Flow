@@ -2,14 +2,14 @@ import ButtonComponent from 'components/FormElements/Button';
 import FcmbLogo from 'assets/icons/FcmbIcon';
 import { useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import appRoutes, { BASE_ROUTES } from 'utils/constants/routes';
+import appRoutes from 'utils/constants/routes';
 import { userLoginValidationSchema } from 'utils/formValidators';
 import CustomInput from 'components/FormElements/CustomInput';
 import { useState } from 'react';
 import { encrypt } from 'utils/helpers/security';
 import { useMutation } from '@tanstack/react-query';
 import { loginStaff } from 'config/actions/authentication-actions';
-import { notifyError, notifySuccess } from 'utils/helpers';
+import { notifySuccess } from 'utils/helpers';
 import { UserLoginRoles } from 'utils/enums';
 
 const AdminLogin = () => {

@@ -8,10 +8,9 @@ import CustomInput from 'components/FormElements/CustomInput';
 import { useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { loginMerchant } from 'config/actions/authentication-actions';
-import { notifyError, notifySuccess } from 'utils/helpers';
+import { notifySuccess } from 'utils/helpers';
 import { encrypt } from 'utils/helpers/security';
 import { UserLoginRoles } from 'utils/enums';
-import { Alat } from 'assets/icons';
 
 const MerchantLogin = () => {
   const navigate = useNavigate();

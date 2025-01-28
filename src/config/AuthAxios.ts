@@ -84,8 +84,19 @@ AxiosClient.interceptors.response.use(
       notifyError('Session expired. Please log in again.');
       dispatch(uiStopLoading());
       localStorage.clear();
-    } else if (error?.response?.status === 400 || 404) {
-      notifyError(error?.response?.data?.responseMessage);
+    } else if (error?.response?.status === 400) {
+      notifyError(
+        error?.response?.data?.responseMessage ||
+          error?.response?.data?.message ||
+          'Invalid Request.',
+      );
+      return Promise.reject(error);
+    } else if (error?.response?.status === 404) {
+      notifyError(
+        error?.response?.data?.responseMessage ||
+          error?.response?.data?.message ||
+          'Resource not found.',
+      );
       return Promise.reject(error);
     } else if (error?.response?.status === 403) {
       notifyError('You do not have permission to perform this action. Please contact an admin');

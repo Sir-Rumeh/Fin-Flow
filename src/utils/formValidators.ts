@@ -20,12 +20,23 @@ export const changeForgottenPasswordValidationSchema = Yup.object().shape({
 });
 
 export const changePasswordValidationSchema = Yup.object().shape({
-  oldPassword: Yup.string().required(
-    'Invalid password format, please follow the password requirements',
-  ),
-  newPassword: Yup.string().required(
-    'Invalid password format, please follow the password requirements',
-  ),
+  oldPassword: Yup.string()
+    .required('Required')
+    .min(8, 'Password must be 8 characters long')
+    .matches(/[0-9]/, 'Password requires a number')
+    .matches(/[a-z]/, 'Password requires a lowercase letter')
+    .matches(/[A-Z]/, 'Password requires an uppercase letter')
+    .matches(/[^\w]/, 'Password requires a symbol'),
+  newPassword: Yup.string()
+    .required('Required')
+    .min(8, 'Password must be 8 characters long')
+    .matches(/[0-9]/, 'Password requires a number')
+    .matches(/[a-z]/, 'Password requires a lowercase letter')
+    .matches(/[A-Z]/, 'Password requires an uppercase letter')
+    .matches(/[^\w]/, 'Password requires a symbol'),
+  confirmPassword: Yup.string()
+    .required('Required')
+    .oneOf([Yup.ref('newPassword'), 'null'], 'New passwords must match'),
 });
 
 export const userLoginValidationSchema = Yup.object().shape({

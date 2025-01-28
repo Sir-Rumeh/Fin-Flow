@@ -2,21 +2,30 @@ import ButtonComponent from 'components/FormElements/Button';
 import FcmbLogo from 'assets/icons/FcmbIcon';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import appRoutes, { BASE_ROUTES } from 'utils/constants/routes';
-import { OTPValidationSchema, userLoginValidationSchema } from 'utils/formValidators';
+import appRoutes from 'utils/constants/routes';
+import { OTPValidationSchema } from 'utils/formValidators';
 import CustomInput from 'components/FormElements/CustomInput';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { encrypt } from 'utils/helpers/security';
 import { useMutation } from '@tanstack/react-query';
-import { loginMerchant, loginStaff } from 'config/actions/authentication-actions';
-import { notifyError, notifySuccess } from 'utils/helpers';
+import {
+  changeMerchantPassword,
+  loginMerchant,
+  loginStaff,
+} from 'config/actions/authentication-actions';
+import { notifySuccess } from 'utils/helpers';
 import { UserLoginRoles } from 'utils/enums';
 
-const ForgottenPasswordOtp = () => {
+interface RequestPayload {
+  data: any;
+  resetId: string | null;
+  otp: string;
+  step: string;
+}
+
+const ChangePasswordOtp = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const [inputTypeState, setInputTypeState] = useState(false);
-
   const [OTPbtnDisabledState, setOTPbtnDisabledState] = useState(true);
   const [time, setTime] = useState({ seconds: 0, minutes: 5 });
   const timerRef = useRef<any>(null);
@@ -25,6 +34,10 @@ const ForgottenPasswordOtp = () => {
     setInputTypeState(!inputTypeState);
   };
 
+  useEffect(() => {
+    if (!(state?.data && state?.origin)) navigate(`/${appRoutes.login}`);
+  }, [state]);
+
   const formik = useFormik({
     initialValues: {
       otp: '',
@@ -32,27 +45,26 @@ const ForgottenPasswordOtp = () => {
     validationSchema: OTPValidationSchema,
     onSubmit: (values) => {
       const payload = {
-        data: state?.data,
+        data: state?.data?.data,
+        resetId: state?.data?.resetId,
         otp: values.otp,
         step: 'otp-validation',
       };
-      console.log(payload);
-
-      notifySuccess('Login Successful');
+      changeMerchantPasswordMutation.mutate(payload);
     },
   });
 
-  // const merchantOTPMutation = useMutation({
-  //   mutationFn: (payload: { data: string } | undefined) => loginMerchant(payload),
-  //   onSuccess: (data) => {
-  //     localStorage.setItem('user', JSON.stringify(data?.responseData));
-  //     notifySuccess('Login Successful');
-  //     formik.resetForm();
-  //   },
-  //   onError: (error) => {
-  //     console.log(error);
-  //   },
-  // });
+  const changeMerchantPasswordMutation = useMutation({
+    mutationFn: (payload: RequestPayload | undefined) => changeMerchantPassword(payload),
+    onSuccess: (data) => {
+      notifySuccess('Password change successful');
+      formik.resetForm();
+      navigate(`/${appRoutes.merchantLogin}`);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   const onHandleResetOTP = async (data: boolean) => {
     if (data) {
@@ -192,4 +204,4 @@ const ForgottenPasswordOtp = () => {
   );
 };
 
-export default ForgottenPasswordOtp;
+export default ChangePasswordOtp;

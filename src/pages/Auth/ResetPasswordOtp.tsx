@@ -2,15 +2,25 @@ import ButtonComponent from 'components/FormElements/Button';
 import FcmbLogo from 'assets/icons/FcmbIcon';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import appRoutes, { BASE_ROUTES } from 'utils/constants/routes';
-import { OTPValidationSchema, userLoginValidationSchema } from 'utils/formValidators';
+import appRoutes from 'utils/constants/routes';
+import { OTPValidationSchema } from 'utils/formValidators';
 import CustomInput from 'components/FormElements/CustomInput';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { encrypt } from 'utils/helpers/security';
 import { useMutation } from '@tanstack/react-query';
-import { loginMerchant, loginStaff } from 'config/actions/authentication-actions';
+import {
+  loginMerchant,
+  loginStaff,
+  resetMerchantPassword,
+} from 'config/actions/authentication-actions';
 import { notifyError, notifySuccess } from 'utils/helpers';
 import { UserLoginRoles } from 'utils/enums';
+
+interface RequestPayload {
+  data: any;
+  resetId: string | null;
+  otp: string;
+  step: string;
+}
 
 const ResetPasswordOtp = () => {
   const navigate = useNavigate();
@@ -25,6 +35,10 @@ const ResetPasswordOtp = () => {
     setInputTypeState(!inputTypeState);
   };
 
+  useEffect(() => {
+    if (!(state?.data && state?.origin)) navigate(`/${appRoutes.login}`);
+  }, [state]);
+
   const formik = useFormik({
     initialValues: {
       otp: '',
@@ -32,27 +46,26 @@ const ResetPasswordOtp = () => {
     validationSchema: OTPValidationSchema,
     onSubmit: (values) => {
       const payload = {
-        data: state?.data,
+        data: state?.data?.data,
+        resetId: state?.data?.resetId,
         otp: values.otp,
         step: 'otp-validation',
       };
-      console.log(payload);
-
-      notifySuccess('Login Successful');
+      resetMerchantPasswordMutation.mutate(payload);
     },
   });
 
-  // const merchantOTPMutation = useMutation({
-  //   mutationFn: (payload: { data: string } | undefined) => loginMerchant(payload),
-  //   onSuccess: (data) => {
-  //     localStorage.setItem('user', JSON.stringify(data?.responseData));
-  //     notifySuccess('Login Successful');
-  //     formik.resetForm();
-  //   },
-  //   onError: (error) => {
-  //     console.log(error);
-  //   },
-  // });
+  const resetMerchantPasswordMutation = useMutation({
+    mutationFn: (payload: RequestPayload | undefined) => resetMerchantPassword(payload),
+    onSuccess: (data) => {
+      notifySuccess('Password change successful');
+      formik.resetForm();
+      navigate(`/${appRoutes.merchantLogin}`);
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
 
   const onHandleResetOTP = async (data: boolean) => {
     if (data) {
