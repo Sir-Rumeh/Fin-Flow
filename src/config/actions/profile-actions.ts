@@ -158,3 +158,12 @@ export const sendPasswordResetMail = async (email: string | undefined) => {
     throw error;
   }
 };
+
+export const resendPasswordChangeMail = async (profileId: string | undefined) => {
+  try {
+    const response = await AxiosClient.get(`/profiles/resend/onboarding/${profileId}`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};

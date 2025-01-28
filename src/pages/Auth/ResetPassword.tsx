@@ -24,23 +24,20 @@ const ResetPassword = () => {
     },
     validationSchema: resetPasswordValidationSchema,
     onSubmit: (values) => {
-      sendPasswordResetMailMutation.mutate(values.email);
+      sendPasswordResetMailMutation(values.email);
     },
   });
 
-  const sendPasswordResetMailMutation = useMutation({
-    mutationFn: (email: string | undefined) => sendPasswordResetMail(email),
-    onSuccess: (data) => {
+  const sendPasswordResetMailMutation = async (email: string | undefined) => {
+    const res = await sendPasswordResetMail(email);
+    if (res) {
       notifySuccess('Password reset mail sent successfully');
       formik.resetForm();
       setTimeout(() => {
         navigate(`${appRoutes.login}`);
       }, 300);
-    },
-    onError: (error) => {
-      console.log(error);
-    },
-  });
+    }
+  };
 
   return (
     <div className="font-circular-std grid h-screen place-items-center bg-backgroundColor">
