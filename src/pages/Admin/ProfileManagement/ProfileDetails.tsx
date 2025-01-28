@@ -17,6 +17,7 @@ import {
   enableProfile,
   getProfileById,
 } from 'config/actions/profile-actions';
+import ActionAuthorDetails, { AuthorActionType } from 'components/common/ActionAuthorDetails';
 
 const ProfileDetails = () => {
   const queryClient = useQueryClient();
@@ -172,28 +173,19 @@ const ProfileDetails = () => {
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Creator Details">
-              <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
-              <DetailsCard
-                title="Date Created"
-                content={
-                  data?.responseData?.createdAt &&
-                  new Date(data?.responseData?.createdAt).toLocaleDateString()
-                }
+              <ActionAuthorDetails
+                id={data?.responseData?.createdBy}
+                actionType={AuthorActionType.CreatedBy}
+                actionDate={data?.responseData?.createdAt}
               />
-              {/* <DetailsCard title="ID" content={data.responseData.createdBy} /> */}
-              <DetailsCard title="Address" content={data?.responseData?.address} />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
-              <DetailsCard title="ID" content={data?.responseData?.approvedBy} />
-              <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
-              <DetailsCard
-                title="Date Approved"
-                content={
-                  data?.responseData?.createdAt &&
-                  new Date(data.responseData.createdAt).toLocaleDateString()
-                }
+              <ActionAuthorDetails
+                id={data?.responseData?.approvedBy}
+                actionType={AuthorActionType.ApprovedBy}
+                actionDate={data?.responseData?.dateApproved}
               />
             </ItemDetailsContainer>
           </div>

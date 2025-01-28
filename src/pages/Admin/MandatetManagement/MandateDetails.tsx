@@ -43,6 +43,7 @@ import { updateMandateSchema } from 'utils/formValidators';
 import { SearchTypes, TransactionsTabsListTabNames } from 'utils/enums';
 import { useReactToPrint } from 'react-to-print';
 import TransactionReceipt from 'components/TransactionReceipt';
+import ActionAuthorDetails, { AuthorActionType } from 'components/common/ActionAuthorDetails';
 
 const MandateDetails = () => {
   const navigate = useNavigate();
@@ -462,14 +463,10 @@ const MandateDetails = () => {
 
             <div className="mt-10">
               <ItemDetailsContainer title="Creator Details">
-                <DetailsCard title="ID" content={data?.responseData?.createdBy} />
-                <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
-                <DetailsCard
-                  title="Date Created"
-                  content={
-                    data?.responseData?.dateCreated &&
-                    new Date(data.responseData.dateCreated).toLocaleDateString()
-                  }
+                <ActionAuthorDetails
+                  id={data?.responseData?.createdBy}
+                  actionType={AuthorActionType.CreatedBy}
+                  actionDate={data?.responseData?.dateCreated}
                 />
               </ItemDetailsContainer>
             </div>
@@ -477,14 +474,10 @@ const MandateDetails = () => {
             <div className="mt-10">
               {data?.responseData?.status === 'Approved' && (
                 <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
-                  <DetailsCard title="ID" content={data?.responseData?.approverId} />
-                  <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
-                  <DetailsCard
-                    title="Date Approved"
-                    content={
-                      data?.responseData?.dateApproved &&
-                      new Date(data.responseData.dateApproved).toLocaleDateString()
-                    }
+                  <ActionAuthorDetails
+                    id={data?.responseData?.approvedBy}
+                    actionType={AuthorActionType.ApprovedBy}
+                    actionDate={data?.responseData?.dateApproved}
                   />
                 </ItemDetailsContainer>
               )}
