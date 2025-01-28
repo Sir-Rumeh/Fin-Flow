@@ -16,7 +16,7 @@ import { encrypt } from 'utils/helpers/security';
 import { UserLoginRoles } from 'utils/enums';
 import { Alat } from 'assets/icons';
 
-const ChangeForgottenPassword = () => {
+const ResetForgottenPassword = () => {
   const navigate = useNavigate();
   const [inputTypeState, setInputTypeState] = useState(false);
   const [enccryptedData, setEncryptedData] = useState(false);
@@ -41,7 +41,7 @@ const ChangeForgottenPassword = () => {
       notifySuccess('Password reset successfully');
       formik.resetForm();
       setTimeout(() => {
-        navigate(`/${appRoutes.merchantLogin}/${appRoutes.forgottenPasswordOtp}`);
+        navigate(`/${appRoutes.merchantLogin}/${appRoutes.resetPasswordOtp}`);
       }, 3000);
     },
   });
@@ -114,4 +114,4 @@ const ChangeForgottenPassword = () => {
   );
 };
 
-export default ChangeForgottenPassword;
+export default ResetForgottenPassword;

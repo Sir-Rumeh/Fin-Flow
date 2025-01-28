@@ -9,7 +9,7 @@ import OTP from 'pages/Auth/OTP';
 import AdminProtectedRoute from 'routes/ProtectedRoutes/AdminProtectedRoutes';
 import MerchantProtectedRoute from './ProtectedRoutes/MerchantProtectedRoutes';
 import ResetPassword from 'pages/Auth/ResetPassword';
-import ChangeForgottenPassword from 'pages/Auth/ChangeForgottenPassword';
+import ResetForgottenPassword from 'pages/Auth/ResetForgottenPassword';
 import ChangePassword from 'pages/Auth/ChangePassword';
 import ForgottenPasswordOtp from 'pages/Auth/ForgottenPasswordOtp';
 import ResetPasswordOtp from 'pages/Auth/ResetPasswordOtp';
@@ -21,27 +21,28 @@ export default function Routing() {
       <Route path={`${appRoutes.adminLogin}`} element={<AdminLogin />} />
       <Route path={`${appRoutes.adminLoginOTP}`} element={<OTP />} />
       <Route path={`${appRoutes.merchantLogin}`} element={<MerchantLogin />} />
+      <Route path={`${appRoutes.merchantLoginOTP}`} element={<OTP />} />
+      {/*  */}
       <Route
         path={`${appRoutes.merchantLogin}/${appRoutes.resetPassword}`}
         element={<ResetPassword />}
       />
       <Route
-        path={`${appRoutes.merchantLogin}/${appRoutes.changeForgottenPassword}`}
-        element={<ChangeForgottenPassword />}
+        path={`${appRoutes.merchantLogin}/${appRoutes.resetForgottenPassword}`}
+        element={<ResetForgottenPassword />}
       />
       <Route
         path={`${appRoutes.merchantLogin}/${appRoutes.changePassword}`}
         element={<ChangePassword />}
       />
       <Route
-        path={`${appRoutes.merchantLogin}/${appRoutes.forgottenPasswordOtp}`}
+        path={`${appRoutes.merchantLogin}/${appRoutes.changePasswordOtp}`}
         element={<ForgottenPasswordOtp />}
       />
       <Route
         path={`${appRoutes.merchantLogin}/${appRoutes.resetPasswordOtp}`}
         element={<ResetPasswordOtp />}
       />
-      <Route path={`${appRoutes.merchantLoginOTP}`} element={<OTP />} />
       <Route
         path={`${appRoutes.adminDashboard.dashboard.index}/*`}
         element={

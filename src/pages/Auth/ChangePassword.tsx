@@ -42,7 +42,7 @@ const ChangePassword = () => {
       notifySuccess('Password reset successfully');
       formik.resetForm();
       setTimeout(() => {
-        navigate(`/${appRoutes.merchantLogin}/${appRoutes.resetPasswordOtp}`);
+        navigate(`/${appRoutes.merchantLogin}/${appRoutes.changePasswordOtp}`);
       }, 3000);
     },
   });

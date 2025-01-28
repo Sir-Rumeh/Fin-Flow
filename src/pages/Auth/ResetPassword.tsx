@@ -37,8 +37,7 @@ const ResetPassword = () => {
       notifySuccess('Password reset email sent successfully');
       formik.resetForm();
       setTimeout(() => {
-        navigate(`/${appRoutes.merchantLogin}/${appRoutes.changeForgottenPassword}`);
-        // navigate(`/${appRoutes.merchantLogin}/${appRoutes.changePassword}`);
+        navigate(`/${appRoutes.merchantLogin}/${appRoutes.resetForgottenPassword}`);
       }, 3000);
     },
   });
