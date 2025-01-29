@@ -50,7 +50,6 @@ function CreateProfile() {
       firstName: '',
       lastName: '',
       email: '',
-      password: '',
       role: '',
     },
     validationSchema: createProfileSchema,
@@ -59,7 +58,6 @@ function CreateProfile() {
         merchantID: values.merchantID,
         profileID: '',
         accountID: values.accountID,
-        password: values.password,
         userName: `${values.firstName} ${values.lastName}`,
         role: values.role,
         firstName: values.firstName,
@@ -230,17 +228,6 @@ function CreateProfile() {
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
-                  />
-                  <CustomInput
-                    labelFor="password"
-                    label="Password"
-                    placeholder="Enter here"
-                    maxW="w-full"
-                    formik={formik}
-                    passwordInput
-                    inputType={inputTypeState ? 'text' : 'password'}
-                    iconState={inputTypeState}
-                    handleInputType={onHandleInputType}
                   />
                   <div className="">
                     <FormSelect

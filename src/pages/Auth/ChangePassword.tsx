@@ -1,49 +1,80 @@
 import ButtonComponent from 'components/FormElements/Button';
 import FcmbLogo from 'assets/icons/FcmbIcon';
-import { Link, useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import appRoutes, { BASE_ROUTES } from 'utils/constants/routes';
-import {
-  changeForgottenPasswordValidationSchema,
-  changePasswordValidationSchema,
-  userLoginValidationSchema,
-} from 'utils/formValidators';
+import appRoutes from 'utils/constants/routes';
+import { changePasswordValidationSchema } from 'utils/formValidators';
 import CustomInput from 'components/FormElements/CustomInput';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
-import { loginMerchant } from 'config/actions/authentication-actions';
+import { changeMerchantPassword } from 'config/actions/authentication-actions';
 import { notifyError, notifySuccess } from 'utils/helpers';
 import { encrypt } from 'utils/helpers/security';
 import { UserLoginRoles } from 'utils/enums';
-import { Alat } from 'assets/icons';
+
+interface RequestPayload {
+  data: any;
+  resetId: string | null;
+  otp: string;
+  step: string;
+}
 
 const ChangePassword = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
   const [inputTypeState, setInputTypeState] = useState(false);
-  const [enccryptedData, setEncryptedData] = useState(false);
+  const [payloadData, setPayloadData] = useState<RequestPayload | undefined>();
+  const requestEmail = searchParams.get('email');
+  const requestReset = searchParams.get('reset');
 
   const onHandleInputType = () => {
     setInputTypeState(!inputTypeState);
   };
 
+  useEffect(() => {
+    if (!(requestEmail && requestReset)) {
+      notifyError('Please use a valid link');
+      navigate(`/${appRoutes.merchantLogin}`);
+    }
+  }, [requestEmail, requestReset]);
+
   const formik = useFormik({
     initialValues: {
       oldPassword: '',
       newPassword: '',
+      confirmPassword: '',
     },
     validationSchema: changePasswordValidationSchema,
     onSubmit: (values) => {
+      const credentials = {
+        email: requestEmail,
+        defaultPassword: values.oldPassword,
+        newPassword: values.newPassword,
+      };
+      const encryptedData = encrypt(credentials);
       const payload = {
-        data: values,
+        data: encryptedData,
+        resetId: requestReset,
         otp: '',
         step: 'credential-validation',
       };
-      console.log(payload);
-      notifySuccess('Password reset successfully');
+      setPayloadData(payload);
+      changeMerchantPasswordMutation.mutate(payload);
+    },
+  });
+
+  const changeMerchantPasswordMutation = useMutation({
+    mutationFn: (payload: RequestPayload | undefined) => changeMerchantPassword(payload),
+    onSuccess: (data) => {
+      notifySuccess('Password change otp sent successfully');
       formik.resetForm();
-      setTimeout(() => {
-        navigate(`/${appRoutes.merchantLogin}/${appRoutes.resetPasswordOtp}`);
-      }, 3000);
+      navigate(`/${appRoutes.merchantLogin}/${appRoutes.changePasswordOtp}`, {
+        state: { data: payloadData, origin: UserLoginRoles.Merchant },
+      });
+    },
+    onError: (error) => {
+      console.log(error);
     },
   });
 
@@ -75,7 +106,7 @@ const ChangePassword = () => {
                   maxW="w-full"
                   formik={formik}
                   passwordInput
-                  inputType={inputTypeState ? 'text' : 'oldPassword'}
+                  inputType={inputTypeState ? 'text' : 'password'}
                   iconState={inputTypeState}
                   handleInputType={onHandleInputType}
                 />
@@ -83,12 +114,25 @@ const ChangePassword = () => {
               <div className="mt-[5rem] w-full">
                 <CustomInput
                   labelFor="newPassword"
-                  label="Enter new Password"
+                  label="Enter new password"
+                  placeholder="Enter password"
+                  maxW="w-full"
+                  formik={formik}
+                  passwordInput
+                  inputType={inputTypeState ? 'text' : 'password'}
+                  iconState={inputTypeState}
+                  handleInputType={onHandleInputType}
+                />
+              </div>
+              <div className="mt-[5rem] w-full">
+                <CustomInput
+                  labelFor="confirmPassword"
+                  label="Confirm new password"
                   placeholder="Confirm password"
                   maxW="w-full"
                   formik={formik}
                   passwordInput
-                  inputType={inputTypeState ? 'text' : 'newPassword'}
+                  inputType={inputTypeState ? 'text' : 'password'}
                   iconState={inputTypeState}
                   handleInputType={onHandleInputType}
                 />

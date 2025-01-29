@@ -2,14 +2,13 @@ import ButtonComponent from 'components/FormElements/Button';
 import FcmbLogo from 'assets/icons/FcmbIcon';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useFormik } from 'formik';
-import appRoutes, { BASE_ROUTES } from 'utils/constants/routes';
-import { OTPValidationSchema, userLoginValidationSchema } from 'utils/formValidators';
+import appRoutes from 'utils/constants/routes';
+import { OTPValidationSchema } from 'utils/formValidators';
 import CustomInput from 'components/FormElements/CustomInput';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import { encrypt } from 'utils/helpers/security';
 import { useMutation } from '@tanstack/react-query';
 import { loginMerchant, loginStaff } from 'config/actions/authentication-actions';
-import { notifyError, notifySuccess } from 'utils/helpers';
+import { notifySuccess } from 'utils/helpers';
 import { UserLoginRoles } from 'utils/enums';
 
 const OTP = () => {
@@ -24,6 +23,10 @@ const OTP = () => {
   const onHandleInputType = () => {
     setInputTypeState(!inputTypeState);
   };
+
+  useEffect(() => {
+    if (!state?.data) navigate(`/${appRoutes.login}`);
+  }, [state]);
 
   const formik = useFormik({
     initialValues: {

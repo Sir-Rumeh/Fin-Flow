@@ -21,9 +21,11 @@ import {
   disableProfile,
   enableProfile,
   getProfiles,
+  resendPasswordChangeMail,
 } from 'config/actions/profile-actions';
 import { SearchTypes } from 'utils/enums';
 import { statusDropdownOptions } from 'utils/constants';
+import { notifySuccess } from 'utils/helpers';
 
 const ProfileManagement = () => {
   const queryClient = useQueryClient();
@@ -69,12 +71,9 @@ const ProfileManagement = () => {
           formik.values.searchProfile?.length > 0 || formik.values.statusFilter?.length > 0
             ? undefined
             : paginationData.pageNumber,
-        pageSize:
-          formik.values.searchProfile?.length > 0 || formik.values.statusFilter?.length > 0
-            ? 100
-            : paginationData.pageSize,
+        pageSize: paginationData.pageSize,
       }));
-      refetch();
+      // refetch();
     },
   });
 
@@ -267,6 +266,15 @@ const ProfileManagement = () => {
                 >
                   Delete
                 </button>
+                <button
+                  onClick={() => {
+                    resendChangePaaswordMailMutation(params?.row.id);
+                  }}
+                  type="button"
+                  className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
+                >
+                  Send Reset Password Mail
+                </button>
               </div>
             </CustomPopover>
           </div>
@@ -313,6 +321,12 @@ const ProfileManagement = () => {
     },
   });
 
+  const resendChangePaaswordMailMutation = async (profileId: string | undefined) => {
+    const res = await resendPasswordChangeMail(profileId);
+    if (res) {
+      notifySuccess('Password reset mail sent successfully');
+    }
+  };
   return (
     <>
       <section className="p-2 md:p-4">

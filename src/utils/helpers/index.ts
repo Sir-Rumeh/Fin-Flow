@@ -132,6 +132,9 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
     params.append('PageSize', formattedQueryParams.pageSize.toString());
   if (formattedQueryParams.sortBy) params.append('SortBy', formattedQueryParams.sortBy);
   if (formattedQueryParams.sortOrder) params.append('SortOrder', formattedQueryParams.sortOrder);
+  if (formattedQueryParams.mandateCode) {
+    params.append('MandateCode', formattedQueryParams.mandateCode);
+  }
   if (formattedQueryParams.searchFilter) {
     if (formattedQueryParams.searchType === SearchTypes.SearchRoles) {
       params.append('Name', formattedQueryParams.searchFilter);
@@ -150,7 +153,7 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
       params.append('AccountNumber', formattedQueryParams.searchFilter);
     }
     if (formattedQueryParams.searchType === SearchTypes.SearchTransactions) {
-      params.append('AccountNumber', formattedQueryParams.searchFilter);
+      params.append('MandateCode', formattedQueryParams.searchFilter);
     }
     if (formattedQueryParams.searchType === SearchTypes.SearchMerchants) {
       params.append('AccountNumber', formattedQueryParams.searchFilter);
@@ -216,14 +219,14 @@ export const formatNumberDisplay = (number: number | string) => {
 };
 
 export const getDateRange = (dataArray: any[]) => {
-  if (dataArray?.length === 0) return 'No data available';
+  if (!dataArray || dataArray?.length === 0) return 'No data available';
 
   const sortedData = [...dataArray]?.sort(
     (a, b) => new Date(a.dateCreated).getTime() - new Date(b.dateCreated).getTime(),
   );
 
-  const firstDate = new Date(sortedData[0].dateCreated);
-  const lastDate = new Date(sortedData[sortedData.length - 1].dateCreated);
+  const firstDate = new Date(sortedData[0]?.dateCreated);
+  const lastDate = new Date(sortedData[sortedData.length - 1]?.dateCreated);
 
   const firstMonth = firstDate.toLocaleString('default', { month: 'long' });
   const firstYear = firstDate.getFullYear();

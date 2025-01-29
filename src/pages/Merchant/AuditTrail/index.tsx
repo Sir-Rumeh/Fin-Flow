@@ -185,7 +185,7 @@ const AuditTrail = () => {
             <div className="w-full">
               <CustomInput
                 labelFor="searchFilter"
-                label="Username/Staff ID"
+                label="Account Name"
                 inputType="text"
                 placeholder="Enter here"
                 maxW="w-full"

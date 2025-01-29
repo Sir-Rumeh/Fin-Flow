@@ -43,12 +43,9 @@ const MandateRequests = () => {
           formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
             ? undefined
             : paginationData.pageNumber,
-        pageSize:
-          formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
-            ? 100
-            : paginationData.pageSize,
+        pageSize: paginationData.pageSize,
       }));
-      refetch();
+      // refetch();
     },
   });
 

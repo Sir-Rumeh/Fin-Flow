@@ -20,12 +20,23 @@ export const changeForgottenPasswordValidationSchema = Yup.object().shape({
 });
 
 export const changePasswordValidationSchema = Yup.object().shape({
-  oldPassword: Yup.string().required(
-    'Invalid password format, please follow the password requirements',
-  ),
-  newPassword: Yup.string().required(
-    'Invalid password format, please follow the password requirements',
-  ),
+  oldPassword: Yup.string()
+    .required('Required')
+    .min(8, 'Password must be 8 characters long')
+    .matches(/[0-9]/, 'Password requires a number')
+    .matches(/[a-z]/, 'Password requires a lowercase letter')
+    .matches(/[A-Z]/, 'Password requires an uppercase letter')
+    .matches(/[^\w]/, 'Password requires a symbol'),
+  newPassword: Yup.string()
+    .required('Required')
+    .min(8, 'Password must be 8 characters long')
+    .matches(/[0-9]/, 'Password requires a number')
+    .matches(/[a-z]/, 'Password requires a lowercase letter')
+    .matches(/[A-Z]/, 'Password requires an uppercase letter')
+    .matches(/[^\w]/, 'Password requires a symbol'),
+  confirmPassword: Yup.string()
+    .required('Required')
+    .oneOf([Yup.ref('newPassword'), 'null'], 'New passwords must match'),
 });
 
 export const userLoginValidationSchema = Yup.object().shape({
@@ -178,13 +189,6 @@ export const createProfileSchema = Yup.object().shape({
   firstName: Yup.string().required('First name is required'),
   lastName: Yup.string().required('Last name is required'),
   email: Yup.string().email('Please enter a valid email address').required('Email is required'),
-  password: Yup.string()
-    .required('Password is required')
-    .min(8, 'Password must be at least 8 characters')
-    .max(16, 'Password must not exceed 16 characters')
-    .matches(/[A-Z]/, 'Password must include at least one uppercase letter')
-    .matches(/^(?=.*[a-zA-Z])(?=.*\d).+$/, 'Password must be alphanumeric')
-    .matches(/[\W_]/, 'Password must include at least one special character'),
   role: Yup.string().required('User role is required'),
 });
 
@@ -219,7 +223,7 @@ export const assignRoleSchema = Yup.object().shape({
 // });
 
 export const addRolePermissionSchema = Yup.object().shape({
-  groupId: Yup.string().required('Group name is required'),
+  groupId: Yup.string().required('Role name is required'),
   permissions: Yup.array()
     .of(
       Yup.object().shape({
