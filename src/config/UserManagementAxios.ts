@@ -89,7 +89,6 @@ AxiosClient.interceptors.response.use(
   async (error) => {
     dispatch(uiStopLoading());
     const originalRequest = error.config;
-    abortControllers.delete(originalRequest);
     const controller = abortControllers.get(originalRequest);
     if (error?.response?.status === 401) {
       cancelPendingRequests();
