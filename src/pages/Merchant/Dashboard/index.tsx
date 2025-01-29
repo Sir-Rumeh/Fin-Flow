@@ -4,6 +4,7 @@ import {
   getMandateRequests,
   getMandateRequestsByMerchantId,
   getMandateRequestsStatistics,
+  getMandateRequestsStatisticsByMerchantId,
 } from 'config/actions/dashboard-actions';
 import { Skeleton } from '@mui/material';
 import appRoutes from 'utils/constants/routes';
@@ -28,6 +29,7 @@ const Dashboard = () => {
   });
 
   const user = getUserFromLocalStorage() as MerchantAuthData;
+  const loggedInMerchantId = user?.profileData?.merchantID;
 
   const [username, setUsername] = useState('');
   useEffect(() => {
@@ -51,13 +53,6 @@ const Dashboard = () => {
 
   const MandateTableColumn: GridColDef[] = [
     {
-      field: 'accountId',
-      headerName: 'Account ID',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-    },
-    {
       field: 'merchantId',
       headerName: 'Merchant ID',
       width: screen.width < 1000 ? 200 : undefined,
@@ -65,12 +60,20 @@ const Dashboard = () => {
       headerClassName: 'ag-thead',
     },
     {
-      field: 'mandateCode',
-      headerName: 'Mandate Code',
+      field: 'accountNumber',
+      headerName: 'Account Number',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      sortable: false,
     },
+    // {
+    //   field: 'mandateCode',
+    //   headerName: 'Mandate Code',
+    //   width: screen.width < 1000 ? 200 : undefined,
+    //   flex: screen.width >= 1000 ? 1 : undefined,
+    //   headerClassName: 'ag-thead',
+    // },
     {
       field: 'mandateType',
       headerName: 'Mandate Type',
@@ -148,8 +151,6 @@ const Dashboard = () => {
     },
   ];
 
-  const loggedInMerchantId = user?.profileData?.merchantID;
-
   const { data, refetch } = useQuery({
     queryKey: ['mandateRequests', queryParams],
     queryFn: ({ queryKey }) =>
@@ -158,7 +159,8 @@ const Dashboard = () => {
 
   const { isLoading: isStatisticsDataLoading, data: statistics } = useQuery({
     queryKey: ['mandateStatistics'],
-    queryFn: () => getMandateRequestsStatistics(),
+    // queryFn: () => getMandateRequestsStatistics(),
+    queryFn: () => getMandateRequestsStatisticsByMerchantId(loggedInMerchantId),
   });
 
   useEffect(() => {

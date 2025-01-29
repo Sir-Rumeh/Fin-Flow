@@ -59,7 +59,7 @@ export const getMandatesByMerchantId = async (
   const params = new URLSearchParams();
   appendParams(params, queryParams);
   try {
-    const response = await AxiosClient.get(`/mandates/merchant/${merchantId}`);
+    const response = await AxiosClient.get(`/mandates/merchant/${merchantId}`, { params });
     return response.data;
   } catch (error) {
     throw error;
@@ -73,7 +73,7 @@ export const getMandateRequestsByMerchantId = async (
   const params = new URLSearchParams();
   appendParams(params, queryParams);
   try {
-    const response = await AxiosClient.get(`/mandaterequests/merchant/${merchantId}`);
+    const response = await AxiosClient.get(`/mandaterequests/merchant/${merchantId}`, { params });
     return response.data;
   } catch (error) {
     throw error;
@@ -97,6 +97,15 @@ export const getMandatesByAccountId = async (
 export const getMandateRequestsStatistics = async () => {
   try {
     const response = await AxiosClient.get(`/mandaterequests/statistics`);
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+};
+
+export const getMandateRequestsStatisticsByMerchantId = async (requestId: string | undefined) => {
+  try {
+    const response = await AxiosClient.get(`/Mandaterequests/merchant/statistics/${requestId}`);
     return response.data;
   } catch (error) {
     throw error;

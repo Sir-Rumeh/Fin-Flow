@@ -17,6 +17,7 @@ import {
   getMandateRequests,
   getMandateRequestsByMerchantId,
   getMandateRequestsStatistics,
+  getMandateRequestsStatisticsByMerchantId,
 } from 'config/actions/dashboard-actions';
 import { MerchantAuthData, QueryParams, TabsProps } from 'utils/interfaces';
 import { useMediaQuery } from '@mui/material';
@@ -31,6 +32,7 @@ const MandateRequests = () => {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [activeTab, setActiveTab] = useState(status !== null ? status : TabsListTabNames.Pending);
+  // const [activeTab, setActiveTab] = useState(TabsListTabNames.Pending);
   const [paginationData, setPaginationData] = useState({
     pageNumber: 1,
     pageSize: 10,
@@ -64,12 +66,13 @@ const MandateRequests = () => {
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
     status: activeTab,
+    requestType: '',
     pageNo: paginationData.pageNumber,
     pageSize: paginationData.pageSize,
     sortBy: 'asc',
     sortOrder: 'desc',
     searchFilter: formik.values.searchMandate,
-    searchType: SearchTypes.SearchMandates,
+    searchType: SearchTypes.SearchMandateRequests,
     startDate: formik.values.fromDateFilter,
     endDate: formik.values.toDateFilter,
   });
@@ -90,12 +93,20 @@ const MandateRequests = () => {
       headerClassName: 'ag-thead',
     },
     {
-      field: 'mandateCode',
-      headerName: 'Mandate Code',
+      field: 'accountNumber',
+      headerName: 'Account Number',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      sortable: false,
     },
+    // {
+    //   field: 'mandateCode',
+    //   headerName: 'Mandate Code',
+    //   width: screen.width < 1000 ? 200 : undefined,
+    //   flex: screen.width >= 1000 ? 1 : undefined,
+    //   headerClassName: 'ag-thead',
+    // },
     {
       field: 'mandateType',
       headerName: 'Mandate Type',
@@ -110,10 +121,10 @@ const MandateRequests = () => {
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       renderCell: (params) => {
-        const renderIcon = (IconComponent: any, colorClass: any) => (
+        const renderIcon = (IconComponent: any, colorClass: string) => (
           <div className="flex items-center gap-2">
             <IconComponent />
-            <span className={`mb-[1px] ${colorClass}`}>{params.value}</span>
+            <span className={`mb-[1px] ${colorClass}`}>{params?.row.requestType}</span>
           </div>
         );
         switch (params.value) {
@@ -127,7 +138,7 @@ const MandateRequests = () => {
           case RequestType.Deletion:
             return renderIcon(DeleteRequestIcon, 'text-redSecondary font-semibold');
           default:
-            return <span>{params.value}</span>;
+            return <span>{params?.row.requestType}</span>;
         }
       },
     },
@@ -179,28 +190,29 @@ const MandateRequests = () => {
     queryKey: ['mandateRequests', queryParams],
     queryFn: ({ queryKey }) =>
       getMandateRequestsByMerchantId(loggedInMerchantId, queryKey[1] as QueryParams),
+    enabled: !!loggedInMerchantId,
   });
 
   const { data: statistics } = useQuery({
     queryKey: ['mandateStatistics', queryParams],
-    queryFn: () => getMandateRequestsStatistics(),
+    queryFn: () => getMandateRequestsStatisticsByMerchantId(loggedInMerchantId),
   });
 
   const tabsList: TabsProps[] = [
     {
       tabIndex: 1,
       tabName: TabsListTabNames.Pending,
-      tabTotal: statistics?.responseData?.totalPending,
+      tabTotal: statistics ? statistics?.responseData?.totalPending : 0,
     },
     {
       tabIndex: 2,
       tabName: TabsListTabNames.Approved,
-      tabTotal: statistics?.responseData?.totalApproved,
+      tabTotal: statistics ? statistics?.responseData?.totalApproved : 0,
     },
     {
       tabIndex: 3,
       tabName: TabsListTabNames.Declined,
-      tabTotal: statistics?.responseData?.totalRejected,
+      tabTotal: statistics ? statistics?.responseData?.totalRejected : 0,
     },
   ];
 
@@ -208,6 +220,7 @@ const MandateRequests = () => {
     setQueryParams((prev) => ({
       ...prev,
       status: activeTab,
+      requestType: formik.values.statusFilter,
       pageNo:
         formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
           ? undefined
@@ -225,11 +238,13 @@ const MandateRequests = () => {
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
       ...prev,
-      status: formik.values.statusFilter,
+      requestType: formik.values.statusFilter,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
     }));
   };
+
+  console.log(queryParams.status);
 
   return (
     <>
@@ -239,12 +254,25 @@ const MandateRequests = () => {
         <div className="mt-5 w-full rounded-lg bg-white px-5 py-5">
           <div className="flex flex-col items-center justify-between gap-4 lg:flex-row lg:gap-0">
             <div className="flex w-full flex-row items-center justify-center gap-6 md:gap-10 lg:w-[50%] lg:justify-start">
-              <CustomTabs tabs={tabsList} activeTab={activeTab} setActiveTab={setActiveTab} />
+              {/* <CustomTabs tabs={tabsList} activeTab={activeTab} setActiveTab={setActiveTab} /> */}
+              <CustomTabs
+                tabs={tabsList}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
+                performExtraAction={() =>
+                  setPaginationData((prev) => {
+                    return {
+                      ...prev,
+                      pageNumber: 1,
+                    };
+                  })
+                }
+              />
             </div>
             <div className="">
               <TableFilter
                 name={'searchMandate'}
-                placeholder={'Search Mandate'}
+                placeholder={'Search By Account Number'}
                 label={'Search Mandate'}
                 value={searchTerm}
                 setSearch={setSearchTerm}
