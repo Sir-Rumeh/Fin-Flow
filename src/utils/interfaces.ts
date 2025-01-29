@@ -177,7 +177,6 @@ export interface ProfileRequest {
   merchantID: string | undefined;
   accountID: string | undefined;
   userName: string | undefined;
-  password: string | undefined;
   role: string | undefined;
   firstName: string | undefined;
   lastName: string | undefined;
