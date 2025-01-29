@@ -593,6 +593,7 @@ const Reports = () => {
         formik.values.searchMandateCode?.length > 0 || formik.values.statusFilter?.length > 0
           ? undefined
           : paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
     }));
   }, [paginationData]);
 
@@ -607,6 +608,7 @@ const Reports = () => {
         formik.values.statusFilter?.length > 0
           ? undefined
           : transactionPaginationData.pageNumber,
+      pageSize: paginationData.pageSize,
     }));
   }, [mandateTransactionsPaginationData.pageNumber, activeTransactionTab]);
 
@@ -621,6 +623,7 @@ const Reports = () => {
         transactionsFormik.values.statusFilter?.length > 0
           ? undefined
           : transactionPaginationData.pageNumber,
+      pageSize: paginationData.pageSize,
     }));
   }, [
     transactionPaginationData,

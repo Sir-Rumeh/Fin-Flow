@@ -68,10 +68,7 @@ const StaffUserManagement = () => {
           formik.values.searchStaffUser?.length > 0 || formik.values.statusFilter?.length > 0
             ? undefined
             : paginationData.pageNumber,
-        pageSize:
-          formik.values.searchStaffUser?.length > 0 || formik.values.statusFilter?.length > 0
-            ? 100
-            : paginationData.pageSize,
+        pageSize: paginationData.pageSize,
       }));
       // refetch();
     },
@@ -97,10 +94,7 @@ const StaffUserManagement = () => {
         formik.values.searchStaffUser?.length > 0 || formik.values.statusFilter?.length > 0
           ? undefined
           : paginationData.pageNumber,
-      pageSize:
-        formik.values.searchStaffUser?.length > 0 || formik.values.statusFilter?.length > 0
-          ? 100
-          : paginationData.pageSize,
+      pageSize: paginationData.pageSize,
       searchFilter: formik.values.searchStaffUser,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
@@ -360,7 +354,7 @@ const StaffUserManagement = () => {
                 <div className="">
                   <TableFilter
                     name={'searchStaffUser'}
-                    placeholder={'Search Staff User'}
+                    placeholder={'Search Staff User Email'}
                     label={'Search Staff User'}
                     value={searchTerm}
                     setSearch={setSearchTerm}

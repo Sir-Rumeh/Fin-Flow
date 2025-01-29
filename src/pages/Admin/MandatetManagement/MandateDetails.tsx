@@ -134,13 +134,13 @@ const MandateDetails = () => {
   };
 
   const transactionsTableColumn: GridColDef[] = [
-    // {
-    //   field: 'accountId',
-    //   headerName: 'Account ID',
-    //   width: screen.width < 1000 ? 200 : undefined,
-    //   flex: screen.width >= 1000 ? 1 : undefined,
-    //   headerClassName: 'ag-thead',
-    // },
+    {
+      field: 'accountNumber',
+      headerName: 'Account Number',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
     {
       field: 'mandateCode',
       headerName: 'Mandate Code',
@@ -694,7 +694,7 @@ const MandateDetails = () => {
                 <div className="flexitems-center justify-end">
                   <TableFilter
                     name={'searchTransactionHistory'}
-                    placeholder={'Search By Account Number'}
+                    placeholder={'Search By Mandate Code'}
                     label={'Search Transactions'}
                     value={transactionsSearchTerm}
                     setSearch={setTransactionsSearchTerm}

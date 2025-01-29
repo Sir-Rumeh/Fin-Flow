@@ -153,10 +153,7 @@ const AuditTrail = () => {
         formik.values.searchFilter?.length > 0 || formik.values.statusFilter?.length > 0
           ? undefined
           : paginationData.pageNumber,
-      pageSize:
-        formik.values.searchFilter?.length > 0 || formik.values.statusFilter?.length > 0
-          ? 100
-          : paginationData.pageSize,
+      pageSize: paginationData.pageSize,
       startDate: formik.values.startDate,
       endDate: formik.values.endDate,
     }));
@@ -248,11 +245,7 @@ const AuditTrail = () => {
                         formik.values.statusFilter?.length > 0
                           ? undefined
                           : paginationData.pageNumber,
-                      pageSize:
-                        formik.values.searchFilter?.length > 0 ||
-                        formik.values.statusFilter?.length > 0
-                          ? 100
-                          : paginationData.pageSize,
+                      pageSize: paginationData.pageSize,
                       startDate: formik.values.startDate,
                       endDate: formik.values.endDate,
                     }));
