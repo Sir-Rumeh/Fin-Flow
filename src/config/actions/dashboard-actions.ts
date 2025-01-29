@@ -59,7 +59,7 @@ export const getMandatesByMerchantId = async (
   const params = new URLSearchParams();
   appendParams(params, queryParams);
   try {
-    const response = await AxiosClient.get(`/mandates/merchant/${merchantId}`, { params });
+    const response = await AxiosClient.get(`/Mandates/merchant/${merchantId}`, { params });
     return response.data;
   } catch (error) {
     throw error;

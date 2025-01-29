@@ -5,13 +5,14 @@ import appRoutes from 'utils/constants/routes';
 import CustomTable from 'components/CustomTable';
 import TableFilter from 'components/TableFilter';
 import { useFormik } from 'formik';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { MerchantAuthData, QueryParams } from 'utils/interfaces';
 import { getProfiles, getProfilesByMerchantId } from 'config/actions/profile-actions';
 import { SearchTypes } from 'utils/enums';
 import { capitalize, getUserFromLocalStorage } from 'utils/helpers';
 import { statusDropdownOptions } from 'utils/constants';
+import ExportBUtton from 'components/FormElements/ExportButton';
 
 const UserManagement = () => {
   const printPdfRef = useRef(null);
@@ -32,6 +33,11 @@ const UserManagement = () => {
       setQueryParams((prev) => ({
         ...prev,
         searchFilter: formik.values.searchUser,
+        pageNo:
+          formik.values.searchUser?.length > 0 || formik.values.statusFilter?.length > 0
+            ? undefined
+            : paginationData.pageNumber,
+        pageSize: paginationData.pageSize,
       }));
       // refetch();
     },
@@ -49,9 +55,26 @@ const UserManagement = () => {
     endDate: formik.values.toDateFilter,
   });
 
+  const handleOptionsFilter = () => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  };
+
+  const excelHeaders = [
+    { label: 'Merchant Name', key: 'merchantName' },
+    { label: 'Account ID', key: 'accountID' },
+    { label: 'Email', key: 'email' },
+    { label: 'Active Status', key: 'isActive' },
+    { label: 'Date Requested', key: 'createdAt' },
+  ];
+
   const UserTableColumn: GridColDef[] = [
     {
-      field: 'id',
+      field: 'accountID',
       headerName: 'Account ID',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -148,6 +171,24 @@ const UserManagement = () => {
       getProfilesByMerchantId(loggedInMerchantId, queryKey[1] as QueryParams),
   });
 
+  useEffect(() => {
+    setQueryParams((prev) => ({
+      ...prev,
+      status: formik.values.statusFilter,
+      pageNo:
+        formik.values.searchUser?.length > 0 || formik.values.statusFilter?.length > 0
+          ? undefined
+          : paginationData.pageNumber,
+      pageSize:
+        formik.values.searchUser?.length > 0 || formik.values.statusFilter?.length > 0
+          ? 100
+          : paginationData.pageSize,
+      searchFilter: formik.values.searchUser,
+      startDate: formik.values.fromDateFilter,
+      endDate: formik.values.toDateFilter,
+    }));
+  }, [paginationData]);
+
   return (
     <>
       <div className="px-5 py-5">
@@ -157,11 +198,11 @@ const UserManagement = () => {
             <div className="">
               <TableFilter
                 name={'searchUser'}
-                placeholder={'Search User'}
+                placeholder={'Search User Email'}
                 label={'Search User Email'}
                 value={searchTerm}
                 setSearch={setSearchTerm}
-                handleOptionsFilter={() => {}}
+                handleOptionsFilter={handleOptionsFilter}
                 formik={formik}
                 fromDateName={'fromDateFilter'}
                 toDateName={'toDateFilter'}
@@ -169,6 +210,12 @@ const UserManagement = () => {
                 dropdownOptions={statusDropdownOptions}
               />
             </div>
+            <ExportBUtton
+              data={data?.responseData?.items}
+              printPdfRef={printPdfRef}
+              headers={excelHeaders}
+              fileName="Users.csv"
+            />
           </div>
           <div className="mt-4 h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-6 w-full">

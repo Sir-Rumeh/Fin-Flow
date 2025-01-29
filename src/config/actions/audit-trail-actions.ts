@@ -20,7 +20,7 @@ export const getAuditTrailByMerchantId = async (
   const params = new URLSearchParams();
   appendParams(params, queryParams);
   try {
-    const response = await AxiosClient.get(`/audits/merchant/${merchantId}`);
+    const response = await AxiosClient.get(`/audits/merchant/${merchantId}`, { params });
     return response.data;
   } catch (error) {
     throw error;
