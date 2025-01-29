@@ -189,6 +189,12 @@ const AuditTrail = () => {
     }
   }, [queryParams.pageNo]);
 
+  const clearFilter = () => {
+    formik.setFieldValue('startDate', null);
+    formik.setFieldValue('endDate', null);
+    formik.setFieldValue('searchFilter', null);
+  };
+
   return (
     <>
       <section className="p-2 md:p-4">
@@ -265,6 +271,19 @@ const AuditTrail = () => {
                     }, 0);
                   }}
                 />
+              </div>
+            </div>
+            <div className="flex w-full items-center justify-end gap-3 py-1">
+              <div className="">
+                <button
+                  type="button"
+                  onClick={() => {
+                    clearFilter();
+                  }}
+                  className={`rounded-lg bg-[#f3dad9] px-[1.2rem] py-[0.65rem] font-semibold text-[#B42318] hover:bg-[#f8efed]`}
+                >
+                  Clear Filter
+                </button>
               </div>
             </div>
           </div>

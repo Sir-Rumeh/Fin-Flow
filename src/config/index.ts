@@ -14,3 +14,5 @@ export const AppConfig = {
   SUBSCRIPTION_KEY_VALUE: import.meta.env.VITE_REACT_APP_SUBSCRIPTION_KEY_VALUE,
   XTOKEN_PASSWORD: import.meta.env.VITE_REACT_APP_XTOKEN_PASSWORD,
 };
+
+export const abortControllers = new Map();

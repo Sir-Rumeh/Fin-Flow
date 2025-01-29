@@ -474,13 +474,13 @@ const Reports = () => {
   };
 
   const transactionsReportColumn: GridColDef[] = [
-    // {
-    //   field: 'accountId',
-    //   headerName: 'Account ID',
-    //   width: screen.width < 1000 ? 200 : undefined,
-    //   flex: screen.width >= 1000 ? 1 : undefined,
-    //   headerClassName: 'ag-thead',
-    // },
+    {
+      field: 'accountNumber',
+      headerName: 'Account Number',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
     {
       field: 'mandateCode',
       headerName: 'Mandate Code',
@@ -682,6 +682,14 @@ const Reports = () => {
   const isSmallWidth = useMediaQuery('(max-width:370px)');
   const isLargeWidth = useMediaQuery('(min-width:1320px)');
 
+  const clearFilter = () => {
+    formik.setFieldValue('fromDateFilter', null);
+    formik.setFieldValue('toDateFilter', null);
+    formik.setFieldValue('reportType', null);
+    formik.setFieldValue('merchant', null);
+    formik.setFieldValue('status', null);
+  };
+
   return (
     <>
       <div style={{ display: 'none' }}>
@@ -704,7 +712,7 @@ const Reports = () => {
                 <div className="relative mt-2 flex w-full items-center justify-between rounded-lg border border-gray-300">
                   <div className="w-full 2xl:w-[80%]">
                     <FormDatePicker
-                      name={'startDate'}
+                      name={'fromDateFilter'}
                       formik={formik}
                       label="Start Date"
                       placeholder="DD/MM/YY"
@@ -717,7 +725,7 @@ const Reports = () => {
                   <div className="h-[2px] w-[8px] bg-gray-300"></div>
                   <div className="w-full 2xl:w-[80%]">
                     <FormDatePicker
-                      name={'endDate'}
+                      name={'toDateFilter'}
                       formik={formik}
                       label="End Date"
                       placeholder="DD/MM/YY"
@@ -750,7 +758,7 @@ const Reports = () => {
                 <FormSelect labelFor="status" label="Status" formik={formik} options={itemStatus} />
               </div>
             </div>
-            <div className="flex w-full items-center justify-end py-1">
+            <div className="flex w-full items-center justify-end gap-3 py-1">
               <ButtonComponent
                 variant="contained"
                 color="white"
@@ -769,6 +777,15 @@ const Reports = () => {
                   }
                 }}
               />
+              <button
+                type="button"
+                onClick={() => {
+                  clearFilter();
+                }}
+                className={`rounded-lg bg-[#f3dad9] px-[1.2rem] py-[0.65rem] font-semibold text-[#B42318] hover:bg-[#f8efed]`}
+              >
+                Clear Filter
+              </button>
             </div>
           </div>
           {showFilteredReport &&
