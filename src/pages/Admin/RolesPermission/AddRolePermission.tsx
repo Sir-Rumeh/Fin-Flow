@@ -74,26 +74,11 @@ const AddRolePermission = () => {
     queryFn: ({ queryKey }) => getRoles(queryKey[1] as QueryParams),
   });
 
-  //
-  function removeUnwantedProperties(data: any[]) {
-    return data.map(
-      ({ id, isActive, createdBy, createdAt, updatedBy, updatedAt, isDeleted, ...rest }) => rest,
-    );
-  }
-
   useEffect(() => {
     const role = data?.responseData?.items.filter(
       (role: any) => role.id === formik.values.groupId,
     )[0];
-    const getRolePermissions = async () => {
-      const res = await getRolePermissionByRoleId(formik.values.groupId);
-      if (res) {
-        const formattedRes = removeUnwantedProperties(res.responseData);
-        formik.setFieldValue('permissions', formattedRes);
-      }
-    };
     setSelectedRole(role);
-    getRolePermissions();
   }, [formik.values.groupId]);
 
   const addRolePermissionRequestMutation = useMutation({
@@ -216,7 +201,7 @@ const AddRolePermission = () => {
         if (permissionToAssignAccess) {
           (permissionToAssignAccess[accessTag as keyof PermissionInterface] as boolean) =
             event.target.checked;
-          console.log('event', event.target.checked);
+          // console.log('event', event.target.checked);
         }
       }
     };
@@ -246,28 +231,28 @@ const AddRolePermission = () => {
     }
   };
 
-  const handleSelectAll = () => {
-    if (!selectedRole) return formik.setFieldError('groupRoleId', 'Role name is required');
-    let permissionsToAssign: PermissionInterface[] = [];
-    const availableRights =
-      selectedRole?.designation === Designation.Merchant ? merchantAccessRights : adminAccessRights;
-    availableRights.forEach((right) => {
-      const permission: PermissionInterface = {
-        module: right.moduleValue,
-        canList: true,
-        canListAll: true,
-        canDelete: true,
-        canRead: true,
-        canCreate: true,
-        canUpdate: true,
-        canEnable: true,
-        canDisable: true,
-        canApprove: true,
-      };
-      permissionsToAssign.push(permission);
-    });
-    formik.setFieldValue('permissions', permissionsToAssign);
-  };
+  // const handleSelectAll = () => {
+  //   if (!selectedRole) return formik.setFieldError('groupRoleId', 'Role name is required');
+  //   let permissionsToAssign: PermissionInterface[] = [];
+  //   const availableRights =
+  //     selectedRole?.designation === Designation.Merchant ? merchantAccessRights : adminAccessRights;
+  //   availableRights.forEach((right) => {
+  //     const permission: PermissionInterface = {
+  //       module: right.moduleValue,
+  //       canList: true,
+  //       canListAll: true,
+  //       canDelete: true,
+  //       canRead: true,
+  //       canCreate: true,
+  //       canUpdate: true,
+  //       canEnable: true,
+  //       canDisable: true,
+  //       canApprove: true,
+  //     };
+  //     permissionsToAssign.push(permission);
+  //   });
+  //   formik.setFieldValue('permissions', permissionsToAssign);
+  // };
 
   return (
     <>
@@ -313,7 +298,7 @@ const AddRolePermission = () => {
                   <h3>{`${Designation.StaffUser} Permissions`}</h3>
                 )}
               </div>
-              <div className="w-auto">
+              {/* <div className="w-auto">
                 <ButtonComponent
                   variant="contained"
                   color="white"
@@ -328,7 +313,7 @@ const AddRolePermission = () => {
                     handleSelectAll();
                   }}
                 />
-              </div>
+              </div> */}
             </div>
 
             <div className="mt-2 grid grid-cols-2 gap-20 rounded-lg border p-2 md:grid-cols-3 xl:grid-cols-4 xl:p-4 2xl:p-5">
@@ -406,11 +391,6 @@ const AddRolePermission = () => {
                           >
                             <span>{access.accessName}</span>
                             <Checkbox
-                              checked={formik.values.permissions.some(
-                                (permission: PermissionInterface) =>
-                                  permission.module === right.moduleValue &&
-                                  permission[access.accessTag as keyof PermissionInterface],
-                              )}
                               onChange={handleChecked(
                                 right.moduleValue,
                                 access.accessTag as keyof PermissionInterface,
@@ -462,11 +442,6 @@ const AddRolePermission = () => {
                           >
                             <span>{access.accessName}</span>
                             <Checkbox
-                              checked={formik.values.permissions.some(
-                                (permission: PermissionInterface) =>
-                                  permission.module === right.moduleValue &&
-                                  permission[access.accessTag as keyof PermissionInterface],
-                              )}
                               onChange={handleChecked(
                                 right.moduleValue,
                                 access.accessTag as keyof PermissionInterface,

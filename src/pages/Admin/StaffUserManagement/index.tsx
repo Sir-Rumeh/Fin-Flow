@@ -378,13 +378,13 @@ const StaffUserManagement = () => {
                   data={data?.responseData?.items}
                   printPdfRef={printPdfRef}
                   headers={excelHeaders}
-                  fileName="Staff-Uers.csv"
+                  fileName="Staff-Users.csv"
                 />
               </div>
             </div>
 
             <div className="mt-6 w-full">
-              <div className="w-full">
+              <div ref={printPdfRef} className="w-full">
                 <CustomTable
                   tableData={data?.responseData?.items}
                   columns={columns}

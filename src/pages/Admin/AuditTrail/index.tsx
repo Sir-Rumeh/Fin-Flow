@@ -52,16 +52,7 @@ const AuditTrail = () => {
       setQueryParams((prev) => ({
         ...prev,
         searchFilter: formik.values.searchFilter,
-        pageNo:
-          formik.values.searchFilter?.length > 0 || formik.values.statusFilter?.length > 0
-            ? undefined
-            : paginationData.pageNumber,
-        pageSize:
-          formik.values.searchFilter?.length > 0 || formik.values.statusFilter?.length > 0
-            ? 100
-            : paginationData.pageSize,
       }));
-      getAuditTrailRecords();
     },
   });
 
@@ -180,12 +171,7 @@ const AuditTrail = () => {
           formik.values.searchFilter?.length > 0 || formik.values.statusFilter?.length > 0
             ? undefined
             : paginationData.pageNumber,
-        pageSize:
-          formik.values.searchFilter?.length > 0 || formik.values.statusFilter?.length > 0
-            ? 100
-            : paginationData.pageSize,
       }));
-      getAuditTrailRecords();
     }
   }, [queryParams.pageNo]);
 
@@ -194,6 +180,10 @@ const AuditTrail = () => {
     formik.setFieldValue('endDate', null);
     formik.setFieldValue('searchFilter', null);
   };
+
+  useEffect(() => {
+    getAuditTrailRecords();
+  }, [queryParams.searchFilter, queryParams.startDate, queryParams.endDate, queryParams.pageNo]);
 
   return (
     <>
@@ -253,22 +243,15 @@ const AuditTrail = () => {
                     setQueryParams((prev) => ({
                       ...prev,
                       searchFilter: formik.values.searchFilter,
-                      pageNo:
-                        formik.values.searchFilter?.length > 0 ||
-                        formik.values.statusFilter?.length > 0
-                          ? undefined
-                          : paginationData.pageNumber,
-                      pageSize:
-                        formik.values.searchFilter?.length > 0 ||
-                        formik.values.statusFilter?.length > 0
-                          ? 100
-                          : paginationData.pageSize,
+                      pageNo: paginationData.pageNumber,
+                      // pageNo:
+                      //   formik.values.searchFilter?.length > 0 ||
+                      //   formik.values.statusFilter?.length > 0
+                      //     ? undefined
+                      //     : paginationData.pageNumber,
                       startDate: formik.values.startDate,
                       endDate: formik.values.endDate,
                     }));
-                    setTimeout(() => {
-                      getAuditTrailRecords();
-                    }, 0);
                   }}
                 />
               </div>
