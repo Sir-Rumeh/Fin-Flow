@@ -303,8 +303,13 @@ const MandatetManagement = () => {
                   View Details
                 </button>
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     setSelectedMandateCode(params.row.mandateCode);
+                    setTransactionsQueryParams((prev) => ({
+                      ...prev,
+                      mandateCode: params.row.mandateCode,
+                    }));
+                    await refecthMandateTransactions();
                     openModal('openTransactionHistory');
                   }}
                   type="button"
@@ -458,7 +463,7 @@ const MandatetManagement = () => {
   const {
     isLoading: isTransactionsLoading,
     data: transactionsData,
-    refetch: refetchTransactions,
+    refetch: refecthMandateTransactions,
   } = useQuery({
     queryKey: ['transactions', transactionsQueryParams],
     queryFn: ({ queryKey }) => getTransactions(queryKey[1] as QueryParams),

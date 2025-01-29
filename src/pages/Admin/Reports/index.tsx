@@ -114,23 +114,12 @@ const Reports = () => {
     onSubmit: (values) => {
       setQueryParams((prev) => ({
         ...prev,
-        startDate: values.fromDateFilter,
-        endDate: values.toDateFilter,
-        pageNo: paginationData.pageNumber,
-        pageSize: paginationData.pageSize,
         searchFilter: values.searchMandateCode,
       }));
-
       setMandateTransactionsQueryParams((prev) => ({
         ...prev,
-        startDate: values.transacFromDateFilter,
-        endDate: values.transacToDateFilter,
-        pageNo: transactionPaginationData.pageNumber,
-        pageSize: transactionPaginationData.pageSize,
         searchFilter: values.searchMandateTransactionAccountNumber,
       }));
-
-      getMandateReports();
       refecthMandateTransactions();
     },
   });
@@ -151,13 +140,8 @@ const Reports = () => {
         status: formik.values.transacStatusFilter
           ? formik.values.transacStatusFilter
           : activeTransactionTab,
-        startDate: values.transacFromDateFilter,
-        endDate: values.transacToDateFilter,
-        pageNo: transactionPaginationData.pageNumber,
-        pageSize: transactionPaginationData.pageSize,
         searchFilter: values.searchTransactionAccountNumber,
       }));
-      getTransactionsReport();
     },
   });
 
@@ -351,8 +335,13 @@ const Reports = () => {
                   View Details
                 </button>
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     setSelectedMandateCode(params.row.mandateCode);
+                    setMandateTransactionsQueryParams((prev) => ({
+                      ...prev,
+                      mandateCode: params.row.mandateCode,
+                    }));
+                    await refecthMandateTransactions();
                     openModal('openTransactionHistory');
                   }}
                   type="button"
@@ -578,6 +567,7 @@ const Reports = () => {
       setShowFilteredReport(true);
     }
   };
+
   const getTransactionsReport = async () => {
     const res =
       formik.values.merchant.length > 0
@@ -593,23 +583,18 @@ const Reports = () => {
   };
 
   useEffect(() => {
+    setIsFirstRender(false);
+  }, []);
+
+  useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
-      status: formik.values.status,
       pageNo:
         formik.values.searchMandateCode?.length > 0 || formik.values.statusFilter?.length > 0
           ? undefined
           : paginationData.pageNumber,
-      pageSize:
-        formik.values.searchMandateCode?.length > 0 || formik.values.statusFilter?.length > 0
-          ? 100
-          : paginationData.pageSize,
-      searchFilter: formik.values.searchMandateCode,
-      startDate: formik.values.fromDateFilter,
-      endDate: formik.values.toDateFilter,
     }));
-    setIsFirstRender(false);
-  }, [paginationData.pageNumber]);
+  }, [paginationData]);
 
   useEffect(() => {
     setMandateTransactionsQueryParams((prev) => ({
@@ -622,14 +607,8 @@ const Reports = () => {
         formik.values.statusFilter?.length > 0
           ? undefined
           : transactionPaginationData.pageNumber,
-      pageSize:
-        formik.values.searchMandateTransactionAccountNumber?.length > 0 ||
-        formik.values.statusFilter?.length > 0
-          ? 100
-          : transactionPaginationData.pageSize,
     }));
-    setIsFirstRender(false);
-  }, [transactionPaginationData.pageNumber, activeTransactionTab]);
+  }, [mandateTransactionsPaginationData.pageNumber, activeTransactionTab]);
 
   useEffect(() => {
     setTransactionsQueryParams((prev) => ({
@@ -642,14 +621,36 @@ const Reports = () => {
         transactionsFormik.values.statusFilter?.length > 0
           ? undefined
           : transactionPaginationData.pageNumber,
-      pageSize:
-        transactionsFormik.values.searchTransactionAccountNumber?.length > 0 ||
-        transactionsFormik.values.statusFilter?.length > 0
-          ? 100
-          : transactionPaginationData.pageSize,
     }));
-    setIsFirstRender(false);
-  }, [transactionPaginationData.pageNumber, activeTransactionTab]);
+  }, [
+    transactionPaginationData,
+    transactionsFormik.values.transacStatusFilter,
+    activeTransactionTab,
+  ]);
+
+  useEffect(() => {
+    if (queryParams.pageNo !== undefined && !isFirstRender) {
+      getMandateReports();
+    }
+  }, [
+    queryParams.pageNo,
+    queryParams.status,
+    queryParams.startDate,
+    queryParams.endDate,
+    queryParams.searchFilter,
+  ]);
+
+  useEffect(() => {
+    if (transactionsQueryParams.pageNo !== undefined && !isFirstRender) {
+      getTransactionsReport();
+    }
+  }, [
+    transactionsQueryParams.pageNo,
+    transactionsQueryParams.status,
+    transactionsQueryParams.startDate,
+    transactionsQueryParams.endDate,
+    transactionsQueryParams.searchFilter,
+  ]);
 
   const handleOptionsFilter = () => {
     setQueryParams((prev) => ({
@@ -670,34 +671,6 @@ const Reports = () => {
       endDate: transactionsFormik.values.transacToDateFilter,
     }));
   };
-
-  useEffect(() => {
-    if (queryParams.pageNo && !isFirstRender) {
-      getMandateReports();
-    }
-  }, [
-    queryParams.pageNo,
-    queryParams.status,
-    queryParams.startDate,
-    queryParams.endDate,
-    queryParams.searchFilter,
-    paginationData,
-    formik.values.statusFilter,
-  ]);
-  useEffect(() => {
-    if (transactionsQueryParams.pageNo && !isFirstRender) {
-      getTransactionsReport();
-    }
-  }, [
-    transactionsQueryParams.pageNo,
-    transactionsQueryParams.status,
-    transactionsQueryParams.startDate,
-    transactionsQueryParams.endDate,
-    transactionsQueryParams.searchFilter,
-    transactionPaginationData,
-    formik.values.transacStatusFilter,
-    activeTransactionTab,
-  ]);
 
   const updateMandateMutation = useMutation({
     mutationFn: (requestId: string | undefined) =>
@@ -854,117 +827,113 @@ const Reports = () => {
               </button>
             </div>
           </div>
-          {showFilteredReport &&
-            formik.values.reportType === 'Mandate Status Reports' &&
-            mandateRecords?.responseData.items?.length > 0 && (
-              <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
-                <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
-                  <h2 className="text-xl font-bold">
-                    {` Mandate Status Report: ${getDateRange(mandateRecords?.responseData.items)}`}
-                  </h2>
+          {showFilteredReport && formik.values.reportType === 'Mandate Status Reports' && (
+            <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
+              <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
+                <h2 className="text-xl font-bold">
+                  {` Mandate Status Report: ${getDateRange(mandateRecords?.responseData.items)}`}
+                </h2>
+                <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
+                  <ExportBUtton
+                    data={mandateRecords?.responseData.items}
+                    printPdfRef={printPdfRef}
+                    headers={mandateExcelHeaders}
+                    fileName="Mandate-Reports.csv"
+                  />
+                </div>
+              </div>
+              <div className="mt-1 w-full rounded-md border px-3 pt-2">
+                <div className="flex w-full flex-col justify-between gap-y-4 border-b 2xl:flex-row 2xl:items-center">
+                  <h3 className="w-full text-xl font-semibold tracking-wide lg:w-[50%]">
+                    All Mandates Reports
+                  </h3>
                   <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
-                    <ExportBUtton
-                      data={mandateRecords?.responseData.items}
-                      printPdfRef={printPdfRef}
-                      headers={mandateExcelHeaders}
-                      fileName="Mandate-Reports.csv"
-                    />
-                  </div>
-                </div>
-                <div className="mt-1 w-full rounded-md border px-3 pt-2">
-                  <div className="flex w-full flex-col justify-between gap-y-4 border-b 2xl:flex-row 2xl:items-center">
-                    <h3 className="w-full text-xl font-semibold tracking-wide lg:w-[50%]">
-                      All Mandates Reports
-                    </h3>
-                    <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
-                      <div>
-                        <TableFilter
-                          name={'searchMandateCode'}
-                          placeholder={'Search Mandate Code'}
-                          label={'Search'}
-                          value={searchTerm}
-                          setSearch={setSearchTerm}
-                          handleOptionsFilter={handleOptionsFilter}
-                          formik={formik}
-                          fromDateName={'fromDateFilter'}
-                          toDateName={'toDateFilter'}
-                          selectName={'statusFilter'}
-                          translationX={isLargeWidth ? 300 : undefined}
-                          dropdownOptions={statusDropdownOptions}
-                        />
-                      </div>
-                    </div>
-                  </div>
-                  <div className="w-full">
-                    <div ref={printPdfRef} className="w-full">
-                      <CustomTable
-                        tableData={mandateRecords?.responseData.items}
-                        columns={mandateColumns}
-                        rowCount={mandateRecords?.responseData.totalCount}
-                        defaultAnimation={false}
-                        paginationData={paginationData}
-                        setPaginationData={setPaginationData}
+                    <div>
+                      <TableFilter
+                        name={'searchMandateCode'}
+                        placeholder={'Search Mandate Code'}
+                        label={'Search'}
+                        value={searchTerm}
+                        setSearch={setSearchTerm}
+                        handleOptionsFilter={handleOptionsFilter}
+                        formik={formik}
+                        fromDateName={'fromDateFilter'}
+                        toDateName={'toDateFilter'}
+                        selectName={'statusFilter'}
+                        translationX={isLargeWidth ? 300 : undefined}
+                        dropdownOptions={statusDropdownOptions}
                       />
                     </div>
                   </div>
                 </div>
-              </div>
-            )}
-          {showFilteredReport &&
-            formik.values.reportType === 'Transaction Reports' &&
-            transactionRecords?.responseData?.items.length > 0 && (
-              <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
-                <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
-                  <h2 className="text-xl font-bold">
-                    {`Transaction Report Details: ${getDateRange(transactionRecords?.responseData?.items)}`}
-                  </h2>
-                  <div className="flex w-full items-center lg:w-[20%] lg:justify-end">
-                    <ExportBUtton />
-                  </div>
-                </div>
-                <div className="mt-1 w-full rounded-md border px-3 pt-2">
-                  <div className="slide-down flex w-full flex-col justify-between border-b pb-1 lg:flex-row lg:items-center">
-                    <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10">
-                      <CustomTabs
-                        tabs={tabsList}
-                        activeTab={activeTransactionTab}
-                        setActiveTab={setActiveTransactionTab}
-                        showTabTotal={false}
-                      />
-                    </div>
-                    <div className="flex w-full items-center lg:justify-end">
-                      <div className="">
-                        <TableFilter
-                          name={'searchTransactionAccountNumber'}
-                          placeholder={'Search Account Number'}
-                          label={'Search Transactions'}
-                          value={searchTerm}
-                          setSearch={setSearchTerm}
-                          handleOptionsFilter={handleTransactionsOptionsFilter}
-                          formik={transactionsFormik}
-                          fromDateName={'transacFromDateFilter'}
-                          toDateName={'transacToDateFilter'}
-                          selectName={'transacStatusFilter'}
-                          translationX={isLargeWidth ? 300 : undefined}
-                          dropdownOptions={transactionsStatusDropdownOptions}
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  <div className="mt-4 w-full">
+                <div className="w-full">
+                  <div ref={printPdfRef} className="w-full">
                     <CustomTable
-                      tableData={transactionRecords?.responseData.items}
-                      columns={transactionsReportColumn}
-                      rowCount={transactionRecords?.responseData.totalCount}
+                      tableData={mandateRecords?.responseData.items}
+                      columns={mandateColumns}
+                      rowCount={mandateRecords?.responseData.totalCount}
                       defaultAnimation={false}
-                      paginationData={transactionPaginationData}
-                      setPaginationData={setTransactionPaginationData}
+                      paginationData={paginationData}
+                      setPaginationData={setPaginationData}
                     />
                   </div>
                 </div>
               </div>
-            )}
+            </div>
+          )}
+          {showFilteredReport && formik.values.reportType === 'Transaction Reports' && (
+            <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
+              <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
+                <h2 className="text-xl font-bold">
+                  {`Transaction Report Details: ${getDateRange(transactionRecords?.responseData?.items)}`}
+                </h2>
+                <div className="flex w-full items-center lg:w-[20%] lg:justify-end">
+                  <ExportBUtton />
+                </div>
+              </div>
+              <div className="mt-1 w-full rounded-md border px-3 pt-2">
+                <div className="slide-down flex w-full flex-col justify-between border-b pb-1 lg:flex-row lg:items-center">
+                  <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10">
+                    <CustomTabs
+                      tabs={tabsList}
+                      activeTab={activeTransactionTab}
+                      setActiveTab={setActiveTransactionTab}
+                      showTabTotal={false}
+                    />
+                  </div>
+                  <div className="flex w-full items-center lg:justify-end">
+                    <div className="">
+                      <TableFilter
+                        name={'searchTransactionAccountNumber'}
+                        placeholder={'Search Account Number'}
+                        label={'Search Transactions'}
+                        value={searchTerm}
+                        setSearch={setSearchTerm}
+                        handleOptionsFilter={handleTransactionsOptionsFilter}
+                        formik={transactionsFormik}
+                        fromDateName={'transacFromDateFilter'}
+                        toDateName={'transacToDateFilter'}
+                        selectName={'transacStatusFilter'}
+                        translationX={isLargeWidth ? 300 : undefined}
+                        dropdownOptions={transactionsStatusDropdownOptions}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="mt-4 w-full">
+                  <CustomTable
+                    tableData={transactionRecords?.responseData.items}
+                    columns={transactionsReportColumn}
+                    rowCount={transactionRecords?.responseData.totalCount}
+                    defaultAnimation={false}
+                    paginationData={transactionPaginationData}
+                    setPaginationData={setTransactionPaginationData}
+                  />
+                </div>
+              </div>
+            </div>
+          )}
         </div>
       </section>
       {modals.confirmDisable && (
@@ -1170,12 +1139,12 @@ const Reports = () => {
                 </div>
                 <div className="flexitems-center justify-end">
                   <TableFilter
-                    name={'searchTransactionHistory'}
+                    name={'searchMandateTransactionAccountNumber'}
                     placeholder={'Search By Account Number'}
                     label={'Search Transactions'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
-                    handleOptionsFilter={() => handleOptionsFilter()}
+                    handleOptionsFilter={() => handleTransactionsOptionsFilter()}
                     formik={formik}
                     fromDateName={'transacFromDateFilter'}
                     toDateName={'transacToDateFilter'}

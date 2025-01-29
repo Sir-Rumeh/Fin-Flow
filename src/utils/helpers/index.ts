@@ -132,6 +132,9 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
     params.append('PageSize', formattedQueryParams.pageSize.toString());
   if (formattedQueryParams.sortBy) params.append('SortBy', formattedQueryParams.sortBy);
   if (formattedQueryParams.sortOrder) params.append('SortOrder', formattedQueryParams.sortOrder);
+  if (formattedQueryParams.mandateCode) {
+    params.append('MandateCode', formattedQueryParams.mandateCode);
+  }
   if (formattedQueryParams.searchFilter) {
     if (formattedQueryParams.searchType === SearchTypes.SearchRoles) {
       params.append('Name', formattedQueryParams.searchFilter);
