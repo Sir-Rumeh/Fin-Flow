@@ -24,18 +24,18 @@ const ResetPassword = () => {
     },
     validationSchema: resetPasswordValidationSchema,
     onSubmit: (values) => {
-      sendPasswordResetMailMutation(values.email);
+      sendPasswordResetMailMutation({ email: values.email });
     },
   });
 
-  const sendPasswordResetMailMutation = async (email: string | undefined) => {
-    const res = await sendPasswordResetMail(email);
+  const sendPasswordResetMailMutation = async (payload: { email: string } | undefined) => {
+    const res = await sendPasswordResetMail(payload);
     if (res) {
       notifySuccess('Password reset mail sent successfully');
-      formik.resetForm();
       setTimeout(() => {
+        formik.resetForm();
         navigate(`${appRoutes.login}`);
-      }, 300);
+      }, 1000);
     }
   };
 

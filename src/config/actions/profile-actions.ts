@@ -150,9 +150,9 @@ export const getProfileStatistics = async () => {
   }
 };
 
-export const sendPasswordResetMail = async (email: string | undefined) => {
+export const sendPasswordResetMail = async (payload: { email: string } | undefined) => {
   try {
-    const response = await AxiosClient.get(`/profiles/forgot-password/${email}`);
+    const response = await AxiosClient.post(`/profiles/forgot-password`, payload);
     return response.data;
   } catch (error) {
     throw error;

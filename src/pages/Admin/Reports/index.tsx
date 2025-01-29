@@ -552,21 +552,23 @@ const Reports = () => {
   });
 
   const getMandateReports = async () => {
-    const res = formik.values.merchant
-      ? await getMandatesByMerchantId(formik.values.merchant, queryParams as QueryParams)
-      : await getMandates(queryParams as QueryParams);
+    const res =
+      formik.values.merchant.length > 0
+        ? await getMandatesByMerchantId(formik.values.merchant, queryParams as QueryParams)
+        : await getMandates(queryParams as QueryParams);
     if (res) {
       setMandateRecords(res);
       setShowFilteredReport(true);
     }
   };
   const getTransactionsReport = async () => {
-    const res = formik.values.merchant
-      ? await getTransactionsByMerchantId(
-          formik.values.merchant,
-          transactionsQueryParams as QueryParams,
-        )
-      : await getTransactions(transactionsQueryParams as QueryParams);
+    const res =
+      formik.values.merchant.length > 0
+        ? await getTransactionsByMerchantId(
+            formik.values.merchant,
+            transactionsQueryParams as QueryParams,
+          )
+        : await getTransactions(transactionsQueryParams as QueryParams);
     if (res) {
       setTransactionRecords(res);
       setShowFilteredReport(true);
@@ -769,113 +771,117 @@ const Reports = () => {
               />
             </div>
           </div>
-          {showFilteredReport && formik.values.reportType === 'Mandate Status Reports' && (
-            <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
-              <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
-                <h2 className="text-xl font-bold">
-                  {` Mandate Status Report: ${getDateRange(mandateRecords?.responseData.items)}`}
-                </h2>
-                <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
-                  <ExportBUtton
-                    data={mandateRecords?.responseData.items}
-                    printPdfRef={printPdfRef}
-                    headers={mandateExcelHeaders}
-                    fileName="Mandate-Reports.csv"
-                  />
-                </div>
-              </div>
-              <div className="mt-1 w-full rounded-md border px-3 pt-2">
-                <div className="flex w-full flex-col justify-between gap-y-4 border-b 2xl:flex-row 2xl:items-center">
-                  <h3 className="w-full text-xl font-semibold tracking-wide lg:w-[50%]">
-                    All Mandates Reports
-                  </h3>
+          {showFilteredReport &&
+            formik.values.reportType === 'Mandate Status Reports' &&
+            mandateRecords?.responseData.items?.length > 0 && (
+              <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
+                <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
+                  <h2 className="text-xl font-bold">
+                    {` Mandate Status Report: ${getDateRange(mandateRecords?.responseData.items)}`}
+                  </h2>
                   <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
-                    <div>
-                      <TableFilter
-                        name={'searchMandateReport'}
-                        placeholder={'Search Account Number'}
-                        label={'Search'}
-                        value={searchTerm}
-                        setSearch={setSearchTerm}
-                        handleOptionsFilter={handleOptionsFilter}
-                        formik={formik}
-                        fromDateName={'fromDateFilter'}
-                        toDateName={'toDateFilter'}
-                        selectName={'statusFilter'}
-                        translationX={isLargeWidth ? 300 : undefined}
-                        dropdownOptions={statusDropdownOptions}
+                    <ExportBUtton
+                      data={mandateRecords?.responseData.items}
+                      printPdfRef={printPdfRef}
+                      headers={mandateExcelHeaders}
+                      fileName="Mandate-Reports.csv"
+                    />
+                  </div>
+                </div>
+                <div className="mt-1 w-full rounded-md border px-3 pt-2">
+                  <div className="flex w-full flex-col justify-between gap-y-4 border-b 2xl:flex-row 2xl:items-center">
+                    <h3 className="w-full text-xl font-semibold tracking-wide lg:w-[50%]">
+                      All Mandates Reports
+                    </h3>
+                    <div className="flex w-full items-center lg:w-[50%] lg:justify-end">
+                      <div>
+                        <TableFilter
+                          name={'searchMandateReport'}
+                          placeholder={'Search Account Number'}
+                          label={'Search'}
+                          value={searchTerm}
+                          setSearch={setSearchTerm}
+                          handleOptionsFilter={handleOptionsFilter}
+                          formik={formik}
+                          fromDateName={'fromDateFilter'}
+                          toDateName={'toDateFilter'}
+                          selectName={'statusFilter'}
+                          translationX={isLargeWidth ? 300 : undefined}
+                          dropdownOptions={statusDropdownOptions}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="w-full">
+                    <div ref={printPdfRef} className="w-full">
+                      <CustomTable
+                        tableData={mandateRecords?.responseData.items}
+                        columns={mandateColumns}
+                        rowCount={mandateRecords?.responseData.totalCount}
+                        defaultAnimation={false}
+                        paginationData={paginationData}
+                        setPaginationData={setPaginationData}
                       />
                     </div>
                   </div>
                 </div>
-                <div className="w-full">
-                  <div ref={printPdfRef} className="w-full">
-                    <CustomTable
-                      tableData={mandateRecords?.responseData.items}
-                      columns={mandateColumns}
-                      rowCount={mandateRecords?.responseData.totalCount}
-                      defaultAnimation={false}
-                      paginationData={paginationData}
-                      setPaginationData={setPaginationData}
-                    />
+              </div>
+            )}
+          {showFilteredReport &&
+            formik.values.reportType === 'Transaction Reports' &&
+            transactionRecords?.responseData?.items.length > 0 && (
+              <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
+                <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
+                  <h2 className="text-xl font-bold">
+                    {`Transaction Report Details: ${getDateRange(transactionRecords?.responseData?.items)}`}
+                  </h2>
+                  <div className="flex w-full items-center lg:w-[20%] lg:justify-end">
+                    <ExportBUtton />
                   </div>
                 </div>
-              </div>
-            </div>
-          )}
-          {showFilteredReport && formik.values.reportType === 'Transaction Reports' && (
-            <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
-              <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
-                <h2 className="text-xl font-bold">
-                  {`Transaction Report Details: ${getDateRange(transactionRecords?.responseData?.items)}`}
-                </h2>
-                <div className="flex w-full items-center lg:w-[20%] lg:justify-end">
-                  <ExportBUtton />
-                </div>
-              </div>
-              <div className="mt-1 w-full rounded-md border px-3 pt-2">
-                <div className="slide-down flex w-full flex-col justify-between border-b pb-1 lg:flex-row lg:items-center">
-                  <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10">
-                    <CustomTabs
-                      tabs={tabsList}
-                      activeTab={activeTransactionTab}
-                      setActiveTab={setActiveTransactionTab}
-                      showTabTotal={false}
-                    />
-                  </div>
-                  <div className="flex w-full items-center lg:justify-end">
-                    <div className="">
-                      <TableFilter
-                        name={'searchTransactionHistory'}
-                        placeholder={'Search Account Number'}
-                        label={'Search Transactions'}
-                        value={searchTerm}
-                        setSearch={setSearchTerm}
-                        handleOptionsFilter={handleOptionsFilter}
-                        formik={formik}
-                        fromDateName={'transacFromDateFilter'}
-                        toDateName={'transacToDateFilter'}
-                        selectName={'transacStatusFilter'}
-                        translationX={isLargeWidth ? 300 : undefined}
-                        dropdownOptions={transactionsStatusDropdownOptions}
+                <div className="mt-1 w-full rounded-md border px-3 pt-2">
+                  <div className="slide-down flex w-full flex-col justify-between border-b pb-1 lg:flex-row lg:items-center">
+                    <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10">
+                      <CustomTabs
+                        tabs={tabsList}
+                        activeTab={activeTransactionTab}
+                        setActiveTab={setActiveTransactionTab}
+                        showTabTotal={false}
                       />
                     </div>
+                    <div className="flex w-full items-center lg:justify-end">
+                      <div className="">
+                        <TableFilter
+                          name={'searchTransactionHistory'}
+                          placeholder={'Search Account Number'}
+                          label={'Search Transactions'}
+                          value={searchTerm}
+                          setSearch={setSearchTerm}
+                          handleOptionsFilter={handleOptionsFilter}
+                          formik={formik}
+                          fromDateName={'transacFromDateFilter'}
+                          toDateName={'transacToDateFilter'}
+                          selectName={'transacStatusFilter'}
+                          translationX={isLargeWidth ? 300 : undefined}
+                          dropdownOptions={transactionsStatusDropdownOptions}
+                        />
+                      </div>
+                    </div>
                   </div>
-                </div>
 
-                <div className="mt-4 w-full">
-                  <CustomTable
-                    tableData={transactionRecords?.responseData.items}
-                    columns={transactionsReportColumn}
-                    rowCount={transactionRecords?.responseData.totalCount}
-                    defaultAnimation={false}
-                    paginationData={transactionPaginationData}
-                    setPaginationData={setTransactionPaginationData}
-                  />
+                  <div className="mt-4 w-full">
+                    <CustomTable
+                      tableData={transactionRecords?.responseData.items}
+                      columns={transactionsReportColumn}
+                      rowCount={transactionRecords?.responseData.totalCount}
+                      defaultAnimation={false}
+                      paginationData={transactionPaginationData}
+                      setPaginationData={setTransactionPaginationData}
+                    />
+                  </div>
                 </div>
               </div>
-            </div>
-          )}
+            )}
         </div>
       </section>
       {modals.confirmDisable && (

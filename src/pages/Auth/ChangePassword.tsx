@@ -5,10 +5,10 @@ import { useFormik } from 'formik';
 import appRoutes from 'utils/constants/routes';
 import { changePasswordValidationSchema } from 'utils/formValidators';
 import CustomInput from 'components/FormElements/CustomInput';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { changeMerchantPassword } from 'config/actions/authentication-actions';
-import { notifySuccess } from 'utils/helpers';
+import { notifyError, notifySuccess } from 'utils/helpers';
 import { encrypt } from 'utils/helpers/security';
 import { UserLoginRoles } from 'utils/enums';
 
@@ -31,6 +31,13 @@ const ChangePassword = () => {
   const onHandleInputType = () => {
     setInputTypeState(!inputTypeState);
   };
+
+  useEffect(() => {
+    if (!(requestEmail && requestReset)) {
+      notifyError('Please use a valid link');
+      navigate(`/${appRoutes.merchantLogin}`);
+    }
+  }, [requestEmail, requestReset]);
 
   const formik = useFormik({
     initialValues: {

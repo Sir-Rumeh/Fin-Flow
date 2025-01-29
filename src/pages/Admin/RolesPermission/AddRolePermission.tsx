@@ -74,6 +74,7 @@ const AddRolePermission = () => {
     queryFn: ({ queryKey }) => getRoles(queryKey[1] as QueryParams),
   });
 
+  //
   function removeUnwantedProperties(data: any[]) {
     return data.map(
       ({ id, isActive, createdBy, createdAt, updatedBy, updatedAt, isDeleted, ...rest }) => rest,
@@ -215,6 +216,7 @@ const AddRolePermission = () => {
         if (permissionToAssignAccess) {
           (permissionToAssignAccess[accessTag as keyof PermissionInterface] as boolean) =
             event.target.checked;
+          console.log('event', event.target.checked);
         }
       }
     };

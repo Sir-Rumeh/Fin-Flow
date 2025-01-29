@@ -54,6 +54,7 @@ export const logoutMerchant = async (payload: any | undefined) => {
     throw error;
   }
 };
+
 export const changeMerchantPassword = async (payload: any | undefined) => {
   try {
     const response = await AxiosClient.post('/authenticate/profile/change-password', payload);
@@ -62,6 +63,7 @@ export const changeMerchantPassword = async (payload: any | undefined) => {
     throw error;
   }
 };
+
 export const resetMerchantPassword = async (payload: any | undefined) => {
   try {
     const response = await AxiosClient.post('/authenticate/profile/reset-password', payload);

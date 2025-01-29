@@ -57,9 +57,11 @@ const ChangePasswordOtp = () => {
   const changeMerchantPasswordMutation = useMutation({
     mutationFn: (payload: RequestPayload | undefined) => changeMerchantPassword(payload),
     onSuccess: (data) => {
-      notifySuccess('Password change successful');
-      formik.resetForm();
-      navigate(`/${appRoutes.merchantLogin}`);
+      notifySuccess('Password change successful. Kindly login again to continue');
+      setTimeout(() => {
+        formik.resetForm();
+        navigate(`/${appRoutes.merchantLogin}`);
+      }, 1000);
     },
     onError: (error) => {
       console.log(error);

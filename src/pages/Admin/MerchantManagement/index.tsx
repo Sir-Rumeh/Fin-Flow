@@ -74,7 +74,7 @@ const MerchantManagement = () => {
             ? 100
             : paginationData.pageSize,
       }));
-      refetch();
+      // refetch();
     },
   });
 

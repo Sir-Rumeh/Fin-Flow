@@ -48,7 +48,7 @@ const AccountRequests = () => {
             ? 100
             : paginationData.pageSize,
       }));
-      refetch();
+      // refetch();
     },
   });
 

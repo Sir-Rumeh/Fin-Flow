@@ -51,7 +51,7 @@ const StaffUserRequests = () => {
             ? 100
             : paginationData.pageSize,
       }));
-      refetch();
+      // refetch();
     },
   });
 

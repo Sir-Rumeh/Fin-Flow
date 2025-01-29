@@ -76,7 +76,7 @@ const ProfileManagement = () => {
             ? 100
             : paginationData.pageSize,
       }));
-      refetch();
+      // refetch();
     },
   });
 

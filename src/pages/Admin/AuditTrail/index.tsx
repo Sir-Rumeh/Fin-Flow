@@ -48,7 +48,21 @@ const AuditTrail = () => {
       startDate: '',
       endDate: '',
     },
-    onSubmit: (values) => {},
+    onSubmit: (values) => {
+      setQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchFilter,
+        pageNo:
+          formik.values.searchFilter?.length > 0 || formik.values.statusFilter?.length > 0
+            ? undefined
+            : paginationData.pageNumber,
+        pageSize:
+          formik.values.searchFilter?.length > 0 || formik.values.statusFilter?.length > 0
+            ? 100
+            : paginationData.pageSize,
+      }));
+      getAuditTrailRecords();
+    },
   });
 
   const excelHeaders = [
@@ -144,15 +158,33 @@ const AuditTrail = () => {
     setQueryParams((prev) => ({
       ...prev,
       searchFilter: formik.values.searchFilter,
-      pageNo: paginationData.pageNumber,
-      pageSize: paginationData.pageSize,
+      pageNo:
+        formik.values.searchFilter?.length > 0 || formik.values.statusFilter?.length > 0
+          ? undefined
+          : paginationData.pageNumber,
+      pageSize:
+        formik.values.searchFilter?.length > 0 || formik.values.statusFilter?.length > 0
+          ? 100
+          : paginationData.pageSize,
       startDate: formik.values.startDate,
       endDate: formik.values.endDate,
     }));
-  }, [paginationData, formik.values.searchFilter]);
+    getAuditTrailRecords();
+  }, [paginationData]);
 
   useEffect(() => {
     if (queryParams.pageNo) {
+      setQueryParams((prev) => ({
+        ...prev,
+        pageNo:
+          formik.values.searchFilter?.length > 0 || formik.values.statusFilter?.length > 0
+            ? undefined
+            : paginationData.pageNumber,
+        pageSize:
+          formik.values.searchFilter?.length > 0 || formik.values.statusFilter?.length > 0
+            ? 100
+            : paginationData.pageSize,
+      }));
       getAuditTrailRecords();
     }
   }, [queryParams.pageNo]);
@@ -171,7 +203,7 @@ const AuditTrail = () => {
               <div className="w-full">
                 <CustomInput
                   labelFor="searchFilter"
-                  label="Username/Staff ID"
+                  label="Account Name"
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
@@ -212,7 +244,25 @@ const AuditTrail = () => {
                   width={isSmallWidth ? '10rem' : undefined}
                   height="3rem"
                   onClick={() => {
-                    getAuditTrailRecords();
+                    setQueryParams((prev) => ({
+                      ...prev,
+                      searchFilter: formik.values.searchFilter,
+                      pageNo:
+                        formik.values.searchFilter?.length > 0 ||
+                        formik.values.statusFilter?.length > 0
+                          ? undefined
+                          : paginationData.pageNumber,
+                      pageSize:
+                        formik.values.searchFilter?.length > 0 ||
+                        formik.values.statusFilter?.length > 0
+                          ? 100
+                          : paginationData.pageSize,
+                      startDate: formik.values.startDate,
+                      endDate: formik.values.endDate,
+                    }));
+                    setTimeout(() => {
+                      getAuditTrailRecords();
+                    }, 0);
                   }}
                 />
               </div>

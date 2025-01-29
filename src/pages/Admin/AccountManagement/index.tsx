@@ -73,7 +73,7 @@ const AccountManagement = () => {
             ? 100
             : paginationData.pageSize,
       }));
-      refetch();
+      // refetch();
     },
   });
 
