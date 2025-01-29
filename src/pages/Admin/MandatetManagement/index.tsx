@@ -119,17 +119,14 @@ const MandatetManagement = () => {
           formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
             ? undefined
             : paginationData.pageNumber,
-        pageSize:
-          formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
-            ? 100
-            : paginationData.pageSize,
+        pageSize: paginationData.pageSize,
       }));
       setTransactionsQueryParams((prev) => ({
         ...prev,
         searchFilter: formik.values.searchTransactionHistory,
       }));
-      refetch();
-      refetchTransactions();
+      // refetch();
+      // refetchTransactions();
     },
   });
 
@@ -174,10 +171,7 @@ const MandatetManagement = () => {
         formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
           ? undefined
           : paginationData.pageNumber,
-      pageSize:
-        formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
-          ? 100
-          : paginationData.pageSize,
+      pageSize: paginationData.pageSize,
       searchFilter: formik.values.searchMandate,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
@@ -303,8 +297,13 @@ const MandatetManagement = () => {
                   View Details
                 </button>
                 <button
-                  onClick={() => {
+                  onClick={async () => {
                     setSelectedMandateCode(params.row.mandateCode);
+                    setTransactionsQueryParams((prev) => ({
+                      ...prev,
+                      mandateCode: params.row.mandateCode,
+                    }));
+                    await refecthMandateTransactions();
                     openModal('openTransactionHistory');
                   }}
                   type="button"
@@ -458,7 +457,7 @@ const MandatetManagement = () => {
   const {
     isLoading: isTransactionsLoading,
     data: transactionsData,
-    refetch: refetchTransactions,
+    refetch: refecthMandateTransactions,
   } = useQuery({
     queryKey: ['transactions', transactionsQueryParams],
     queryFn: ({ queryKey }) => getTransactions(queryKey[1] as QueryParams),
@@ -792,7 +791,7 @@ const MandatetManagement = () => {
                 <div className="flex items-center justify-end">
                   <TableFilter
                     name={'searchTransactionHistory'}
-                    placeholder={'Search By Account Number'}
+                    placeholder={'Search By Mandate Code'}
                     label={'Search Transactions'}
                     value={transactionsSearchTerm}
                     setSearch={setTransactionsSearchTerm}

@@ -17,7 +17,11 @@ import {
   QueryParams,
   RolePermissionRequest,
 } from 'utils/interfaces';
-import { addRolePermissionRequest, getRoles } from 'config/actions/role-permission-actions';
+import {
+  addRolePermissionRequest,
+  getRolePermissionByRoleId,
+  getRoles,
+} from 'config/actions/role-permission-actions';
 import { formatApiDataForDropdown, notifyError } from 'utils/helpers';
 import { adminAccessRights, merchantAccessRights } from 'routes/appRoutes';
 import { Designation } from 'utils/enums';
@@ -46,6 +50,7 @@ const AddRolePermission = () => {
   const formik = useFormik({
     initialValues: {
       groupId: '',
+      groupRoleId: '',
       permissions: [] as PermissionInterface[],
     },
     validationSchema: addRolePermissionSchema,
@@ -74,7 +79,6 @@ const AddRolePermission = () => {
       (role: any) => role.id === formik.values.groupId,
     )[0];
     setSelectedRole(role);
-    formik.setFieldValue('permissions', []);
   }, [formik.values.groupId]);
 
   const addRolePermissionRequestMutation = useMutation({
@@ -197,6 +201,7 @@ const AddRolePermission = () => {
         if (permissionToAssignAccess) {
           (permissionToAssignAccess[accessTag as keyof PermissionInterface] as boolean) =
             event.target.checked;
+          // console.log('event', event.target.checked);
         }
       }
     };
@@ -226,6 +231,29 @@ const AddRolePermission = () => {
     }
   };
 
+  // const handleSelectAll = () => {
+  //   if (!selectedRole) return formik.setFieldError('groupRoleId', 'Role name is required');
+  //   let permissionsToAssign: PermissionInterface[] = [];
+  //   const availableRights =
+  //     selectedRole?.designation === Designation.Merchant ? merchantAccessRights : adminAccessRights;
+  //   availableRights.forEach((right) => {
+  //     const permission: PermissionInterface = {
+  //       module: right.moduleValue,
+  //       canList: true,
+  //       canListAll: true,
+  //       canDelete: true,
+  //       canRead: true,
+  //       canCreate: true,
+  //       canUpdate: true,
+  //       canEnable: true,
+  //       canDisable: true,
+  //       canApprove: true,
+  //     };
+  //     permissionsToAssign.push(permission);
+  //   });
+  //   formik.setFieldValue('permissions', permissionsToAssign);
+  // };
+
   return (
     <>
       <div className="p-5">
@@ -244,7 +272,7 @@ const AddRolePermission = () => {
         <div className="slide-down mt-5 rounded-lg bg-white px-2 py-10 sm:px-4 md:px-10">
           <form onSubmit={formik.handleSubmit} noValidate className="relative w-full">
             <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 xl:grid-cols-5">
-              <div className="w-full xl:col-span-2">
+              <div className="relative w-full xl:col-span-2">
                 <FormSelect
                   labelFor="groupId"
                   label="Role Name"
@@ -255,15 +283,39 @@ const AddRolePermission = () => {
                   useTouched
                 />
               </div>
-            </div>
-
-            <div className="mt-4 font-semibold">
-              {selectedRole ? (
-                <h3>{selectedRole?.designation} Permissions</h3>
-              ) : (
-                <h3>{`${Designation.StaffUser} Permissions`}</h3>
+              {formik?.errors['groupRoleId'] && (
+                <p className={`absolute top-20 text-xs italic text-red-400`}>
+                  {formik?.errors['groupRoleId']}
+                </p>
               )}
             </div>
+
+            <div className="mt-4 flex w-full items-center justify-between p-3">
+              <div className="mt-4 font-semibold">
+                {selectedRole ? (
+                  <h3>{selectedRole?.designation} Permissions</h3>
+                ) : (
+                  <h3>{`${Designation.StaffUser} Permissions`}</h3>
+                )}
+              </div>
+              {/* <div className="w-auto">
+                <ButtonComponent
+                  variant="contained"
+                  color="white"
+                  backgroundColor="#5C068C"
+                  hoverBackgroundColor="#2F0248"
+                  type="button"
+                  title="Select All"
+                  customPaddingX="1.2rem"
+                  height="2rem"
+                  width="8rem"
+                  onClick={() => {
+                    handleSelectAll();
+                  }}
+                />
+              </div> */}
+            </div>
+
             <div className="mt-2 grid grid-cols-2 gap-20 rounded-lg border p-2 md:grid-cols-3 xl:grid-cols-4 xl:p-4 2xl:p-5">
               {!selectedRole && (
                 <>

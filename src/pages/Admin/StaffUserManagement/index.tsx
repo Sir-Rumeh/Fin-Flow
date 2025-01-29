@@ -68,12 +68,9 @@ const StaffUserManagement = () => {
           formik.values.searchStaffUser?.length > 0 || formik.values.statusFilter?.length > 0
             ? undefined
             : paginationData.pageNumber,
-        pageSize:
-          formik.values.searchStaffUser?.length > 0 || formik.values.statusFilter?.length > 0
-            ? 100
-            : paginationData.pageSize,
+        pageSize: paginationData.pageSize,
       }));
-      refetch();
+      // refetch();
     },
   });
 
@@ -97,10 +94,7 @@ const StaffUserManagement = () => {
         formik.values.searchStaffUser?.length > 0 || formik.values.statusFilter?.length > 0
           ? undefined
           : paginationData.pageNumber,
-      pageSize:
-        formik.values.searchStaffUser?.length > 0 || formik.values.statusFilter?.length > 0
-          ? 100
-          : paginationData.pageSize,
+      pageSize: paginationData.pageSize,
       searchFilter: formik.values.searchStaffUser,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
@@ -360,7 +354,7 @@ const StaffUserManagement = () => {
                 <div className="">
                   <TableFilter
                     name={'searchStaffUser'}
-                    placeholder={'Search Staff User'}
+                    placeholder={'Search Staff User Email'}
                     label={'Search Staff User'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
@@ -378,13 +372,13 @@ const StaffUserManagement = () => {
                   data={data?.responseData?.items}
                   printPdfRef={printPdfRef}
                   headers={excelHeaders}
-                  fileName="Staff-Uers.csv"
+                  fileName="Staff-Users.csv"
                 />
               </div>
             </div>
 
             <div className="mt-6 w-full">
-              <div className="w-full">
+              <div ref={printPdfRef} className="w-full">
                 <CustomTable
                   tableData={data?.responseData?.items}
                   columns={columns}

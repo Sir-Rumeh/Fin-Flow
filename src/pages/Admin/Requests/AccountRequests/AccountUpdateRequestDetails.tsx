@@ -22,6 +22,7 @@ import { UpdateRequestDisplay } from 'utils/interfaces';
 import { displayUpdateRequestData, formatNumberDisplay } from 'utils/helpers';
 import RejectedIcon from 'assets/icons/RejectedIcon';
 import { RequestStatus } from 'utils/enums';
+import ActionAuthorDetails, { AuthorActionType } from 'components/common/ActionAuthorDetails';
 
 const AccountUpdateRequestDetails = () => {
   const navigate = useNavigate();
@@ -192,42 +193,29 @@ const AccountUpdateRequestDetails = () => {
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Creator Details">
-              <DetailsCard title="ID" content={data?.responseData?.creatorId} />
-              <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
-              <DetailsCard
-                title="Date Created"
-                content={
-                  data?.responseData?.dateCreated &&
-                  new Date(data.responseData.dateCreated).toLocaleDateString()
-                }
+              <ActionAuthorDetails
+                id={data?.responseData?.createdBy}
+                actionType={AuthorActionType.CreatedBy}
+                actionDate={data?.responseData?.dateCreated}
               />
-              <DetailsCard title="Address" content={data?.responseData?.address} />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
             {data?.responseData?.status === 'Approved' && (
               <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
-                <DetailsCard title="ID" content={data?.responseData?.approverId} />
-                <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
-                <DetailsCard
-                  title="Date Approved"
-                  content={
-                    data?.responseData?.dateApproved &&
-                    new Date(data.responseData.dateApproved).toLocaleDateString()
-                  }
+                <ActionAuthorDetails
+                  id={data?.responseData?.approvedBy}
+                  actionType={AuthorActionType.ApprovedBy}
+                  actionDate={data?.responseData?.dateApproved}
                 />
               </ItemDetailsContainer>
             )}
             {data?.responseData?.status === 'Declined' && (
               <ItemDetailsContainer title="Rejector Details" titleExtension={<RejectedIcon />}>
-                <DetailsCard title="ID" content={data?.responseData?.rejectorId} />
-                <DetailsCard title="Rejected By" content={data?.responseData?.rejectedBy} />
-                <DetailsCard
-                  title="Date Rejected"
-                  content={
-                    data?.responseData?.dateRejected &&
-                    new Date(data.responseData.dateRejected).toLocaleDateString()
-                  }
+                <ActionAuthorDetails
+                  id={data?.responseData?.rejectedBy}
+                  actionType={AuthorActionType.RejectedBy}
+                  actionDate={data?.responseData?.dateRejected}
                 />
                 <DetailsCard title="Reason for Rejection" content={data?.responseData?.remark} />
               </ItemDetailsContainer>
@@ -235,14 +223,10 @@ const AccountUpdateRequestDetails = () => {
           </div>
           <div className="mt-10">
             <ItemDetailsContainer title="Requested By">
-              <DetailsCard title="ID" content={data?.responseData?.requesterId} />
-              <DetailsCard title="Requested By" content={data?.responseData?.requestedBy} />
-              <DetailsCard
-                title="Date Requested"
-                content={
-                  data?.responseData?.dateRequested &&
-                  new Date(data.responseData.dateRequested).toLocaleDateString()
-                }
+              <ActionAuthorDetails
+                id={data?.responseData?.requestedBy}
+                actionType={AuthorActionType.RequestedBy}
+                actionDate={data?.responseData?.dateRequested}
               />
             </ItemDetailsContainer>
           </div>

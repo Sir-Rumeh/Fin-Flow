@@ -138,8 +138,8 @@ const MandatetManagement = () => {
         ...prev,
         searchFilter: formik.values.searchTransactionHistory,
       }));
-      refetch();
-      refetchTransactions();
+      // refetch();
+      // refetchTransactions();
     },
   });
 

@@ -48,7 +48,12 @@ const AuditTrail = () => {
       startDate: '',
       endDate: '',
     },
-    onSubmit: (values) => {},
+    onSubmit: (values) => {
+      setQueryParams((prev) => ({
+        ...prev,
+        searchFilter: formik.values.searchFilter,
+      }));
+    },
   });
 
   const excelHeaders = [
@@ -144,18 +149,38 @@ const AuditTrail = () => {
     setQueryParams((prev) => ({
       ...prev,
       searchFilter: formik.values.searchFilter,
-      pageNo: paginationData.pageNumber,
+      pageNo:
+        formik.values.searchFilter?.length > 0 || formik.values.statusFilter?.length > 0
+          ? undefined
+          : paginationData.pageNumber,
       pageSize: paginationData.pageSize,
       startDate: formik.values.startDate,
       endDate: formik.values.endDate,
     }));
-  }, [paginationData, formik.values.searchFilter]);
+    getAuditTrailRecords();
+  }, [paginationData]);
 
   useEffect(() => {
     if (queryParams.pageNo) {
-      getAuditTrailRecords();
+      setQueryParams((prev) => ({
+        ...prev,
+        pageNo:
+          formik.values.searchFilter?.length > 0 || formik.values.statusFilter?.length > 0
+            ? undefined
+            : paginationData.pageNumber,
+      }));
     }
   }, [queryParams.pageNo]);
+
+  const clearFilter = () => {
+    formik.setFieldValue('startDate', null);
+    formik.setFieldValue('endDate', null);
+    formik.setFieldValue('searchFilter', null);
+  };
+
+  useEffect(() => {
+    getAuditTrailRecords();
+  }, [queryParams.searchFilter, queryParams.startDate, queryParams.endDate, queryParams.pageNo]);
 
   return (
     <>
@@ -171,7 +196,7 @@ const AuditTrail = () => {
               <div className="w-full">
                 <CustomInput
                   labelFor="searchFilter"
-                  label="Username/Staff ID"
+                  label="Account Name"
                   inputType="text"
                   placeholder="Enter here"
                   maxW="w-full"
@@ -212,9 +237,33 @@ const AuditTrail = () => {
                   width={isSmallWidth ? '10rem' : undefined}
                   height="3rem"
                   onClick={() => {
-                    getAuditTrailRecords();
+                    setQueryParams((prev) => ({
+                      ...prev,
+                      searchFilter: formik.values.searchFilter,
+                      pageNo:
+                        formik.values.searchFilter?.length > 0 ||
+                        formik.values.statusFilter?.length > 0
+                          ? undefined
+                          : paginationData.pageNumber,
+                      pageSize: paginationData.pageSize,
+                      startDate: formik.values.startDate,
+                      endDate: formik.values.endDate,
+                    }));
                   }}
                 />
+              </div>
+            </div>
+            <div className="flex w-full items-center justify-end gap-3 py-1">
+              <div className="">
+                <button
+                  type="button"
+                  onClick={() => {
+                    clearFilter();
+                  }}
+                  className={`rounded-lg bg-[#f3dad9] px-[1.2rem] py-[0.65rem] font-semibold text-[#B42318] hover:bg-[#f8efed]`}
+                >
+                  Clear Filter
+                </button>
               </div>
             </div>
           </div>
@@ -237,14 +286,18 @@ const AuditTrail = () => {
                 </div>
               </div>
               <h3 className="mt-2 w-full rounded-tl-xl rounded-tr-xl border px-3 py-4 text-lg font-semibold">
-                Activities between:{' '}
-                {formik.values.startDate
-                  ? dayjs(formik.values.startDate).format('D MMMM')
-                  : 'Start Date'}{' '}
-                to{' '}
-                {formik.values.endDate
-                  ? dayjs(formik.values.endDate).format('D MMMM, YYYY')
-                  : 'End Date'}
+                {formik.values.startDate && formik.values.endDate ? (
+                  <>
+                    Activities between:{' '}
+                    {formik.values.startDate
+                      ? dayjs(formik.values.startDate).format('D MMMM')
+                      : 'Start Date'}{' '}
+                    to{' '}
+                    {formik.values.endDate
+                      ? dayjs(formik.values.endDate).format('D MMMM, YYYY')
+                      : 'End Date'}
+                  </>
+                ) : null}
               </h3>
               <div className="w-full">
                 <div ref={printPdfRef} className="w-full">

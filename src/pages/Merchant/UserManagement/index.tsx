@@ -33,7 +33,7 @@ const UserManagement = () => {
         ...prev,
         searchFilter: formik.values.searchUser,
       }));
-      refetch();
+      // refetch();
     },
   });
 

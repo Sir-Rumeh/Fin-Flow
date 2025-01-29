@@ -62,12 +62,22 @@ const RolePermission = () => {
   const rolePermissionColumns: GridColDef[] = [
     {
       field: 'roleId',
-      headerName: 'Group Name',
+      headerName: 'Role Name',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       renderCell: (params: GridRenderCellParams) => {
         return <p className="w-full">{getRoleGroupName(params.row.roleId)}</p>;
+      },
+    },
+    {
+      field: 'groupRoleId',
+      headerName: 'Role ID',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+      renderCell: (params: GridRenderCellParams) => {
+        return <p className="w-full">{params.row.roleId}</p>;
       },
     },
     {
@@ -81,7 +91,7 @@ const RolePermission = () => {
           <div className="w-full flex-wrap whitespace-normal text-wrap break-words">
             {params.row.permissions?.map((permission: PermissionInterface, index: number) => {
               return (
-                <span className={`mr-2`} key={permission.module}>
+                <span className={`mr-2`} key={`${params.row.roleId}${permission.module}`}>
                   {permission.module}
                   {index !== params.row.permissions.length - 1 ? ',' : ''}
                 </span>

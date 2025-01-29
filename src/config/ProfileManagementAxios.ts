@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import store from 'store/index';
-import { AppConfig } from './index';
+import { abortControllers, AppConfig } from './index';
 import {
   generateHeader,
   getUserFromLocalStorage,
@@ -33,8 +33,6 @@ const AxiosClient = axios.create({
 const { dispatch } = store;
 
 const networkErrorMessage = 'Please check your Internet Connection';
-
-const abortControllers = new Map();
 
 const cancelPendingRequests = () => {
   abortControllers.forEach((controller) => controller.abort());
@@ -91,7 +89,6 @@ AxiosClient.interceptors.response.use(
   async (error) => {
     dispatch(uiStopLoading());
     const originalRequest = error.config;
-    abortControllers.delete(originalRequest);
     const controller = abortControllers.get(originalRequest);
     if (error?.response?.status === 401) {
       cancelPendingRequests();

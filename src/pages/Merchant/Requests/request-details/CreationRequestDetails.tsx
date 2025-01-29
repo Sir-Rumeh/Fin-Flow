@@ -23,6 +23,7 @@ import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import CustomInput from 'components/FormElements/CustomInput';
 import { formatNumberDisplay } from 'utils/helpers';
+import ActionAuthorDetails, { AuthorActionType } from 'components/common/ActionAuthorDetails';
 
 const CreationRequestDetails = () => {
   const { id } = useParams();
@@ -239,8 +240,11 @@ const CreationRequestDetails = () => {
           </div>
           <div className="h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
-            <DetailsCard title="ID" content="12345678" />
-            <DetailsCard title="Created By" content={data?.responseData?.createdBy} />
+            <ActionAuthorDetails
+              id={data?.responseData?.createdBy}
+              actionType={AuthorActionType.CreatedBy}
+              actionDate={data?.responseData?.dateCreated}
+            />
           </div>
         </div>
         {data?.responseData?.status === MandateRequestStatus.Approved && (
@@ -254,9 +258,11 @@ const CreationRequestDetails = () => {
             </div>
             <div className="h-[2px] w-full bg-grayPrimary"></div>
             <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
-              <DetailsCard title="ID" content="12345678" />
-              <DetailsCard title="Approved By" content={data?.responseData?.approvedBy} />
-              <DetailsCard title="Date Approved" content={data?.responseData?.dateApproved} />
+              <ActionAuthorDetails
+                id={data?.responseData?.approvedBy}
+                actionType={AuthorActionType.ApprovedBy}
+                actionDate={data?.responseData?.dateApproved}
+              />
             </div>
           </div>
         )}
@@ -271,14 +277,10 @@ const CreationRequestDetails = () => {
             </div>
             <div className="h-[2px] w-full bg-grayPrimary"></div>
             <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
-              <DetailsCard title="ID" content="12345678" />
-              <DetailsCard title="Rejected By" content={data?.responseData?.rejectedBy} />
-              <DetailsCard
-                title="Date Rejected"
-                content={
-                  data?.responseData?.dateRejected &&
-                  new Date(data.responseData.dateRejected).toLocaleDateString()
-                }
+              <ActionAuthorDetails
+                id={data?.responseData?.rejectedBy}
+                actionType={AuthorActionType.RejectedBy}
+                actionDate={data?.responseData?.dateRejected}
               />
               <DetailsCard title="Reason for Rejection" content={data?.responseData?.remark} />
             </div>

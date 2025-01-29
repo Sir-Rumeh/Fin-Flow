@@ -58,7 +58,7 @@ const MandateRequests = () => {
             ? 100
             : paginationData.pageSize,
       }));
-      refetch();
+      // refetch();
     },
   });
 

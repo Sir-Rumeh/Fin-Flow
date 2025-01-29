@@ -49,7 +49,6 @@ function EditProfile() {
       firstName: '',
       lastName: '',
       email: '',
-      password: '',
       role: '',
     },
     validationSchema: createProfileSchema,
@@ -58,7 +57,6 @@ function EditProfile() {
         merchantID: values.merchantID,
         profileID: profileId,
         accountID: values.accountID,
-        password: values.password,
         userName: `${values.firstName} ${values.lastName}`,
         role: values.role,
         firstName: values.firstName,
@@ -81,7 +79,6 @@ function EditProfile() {
       merchantName: profileData?.responseData?.merchantName || '',
       accountID: profileData?.responseData?.accountID || '',
       accountNumber: profileData?.responseData?.accountNumber || '',
-      password: '',
       firstName: profileData?.responseData?.firstName || '',
       lastName: profileData?.responseData?.lastName || '',
       email: profileData?.responseData?.email || '',
@@ -214,14 +211,6 @@ function EditProfile() {
                     labelFor="email"
                     label="Email Address"
                     inputType="text"
-                    placeholder="Enter here"
-                    maxW="w-full"
-                    formik={formik}
-                  />
-                  <CustomInput
-                    labelFor="password"
-                    label="Password"
-                    inputType="password"
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
