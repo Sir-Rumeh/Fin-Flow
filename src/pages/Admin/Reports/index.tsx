@@ -905,7 +905,7 @@ const Reports = () => {
                     <div className="">
                       <TableFilter
                         name={'searchTransactionAccountNumber'}
-                        placeholder={'Search Account Number'}
+                        placeholder={'Search By Mandate Code'}
                         label={'Search Transactions'}
                         value={searchTerm}
                         setSearch={setSearchTerm}
@@ -1140,7 +1140,7 @@ const Reports = () => {
                 <div className="flexitems-center justify-end">
                   <TableFilter
                     name={'searchMandateTransactionAccountNumber'}
-                    placeholder={'Search By Account Number'}
+                    placeholder={'Search By Mandate Code'}
                     label={'Search Transactions'}
                     value={searchTerm}
                     setSearch={setSearchTerm}

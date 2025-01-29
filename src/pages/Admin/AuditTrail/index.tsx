@@ -243,12 +243,16 @@ const AuditTrail = () => {
                     setQueryParams((prev) => ({
                       ...prev,
                       searchFilter: formik.values.searchFilter,
-                      pageNo: paginationData.pageNumber,
-                      // pageNo:
-                      //   formik.values.searchFilter?.length > 0 ||
-                      //   formik.values.statusFilter?.length > 0
-                      //     ? undefined
-                      //     : paginationData.pageNumber,
+                      pageNo:
+                        formik.values.searchFilter?.length > 0 ||
+                        formik.values.statusFilter?.length > 0
+                          ? undefined
+                          : paginationData.pageNumber,
+                      pageSize:
+                        formik.values.searchFilter?.length > 0 ||
+                        formik.values.statusFilter?.length > 0
+                          ? 100
+                          : paginationData.pageSize,
                       startDate: formik.values.startDate,
                       endDate: formik.values.endDate,
                     }));
@@ -289,14 +293,18 @@ const AuditTrail = () => {
                 </div>
               </div>
               <h3 className="mt-2 w-full rounded-tl-xl rounded-tr-xl border px-3 py-4 text-lg font-semibold">
-                Activities between:{' '}
-                {formik.values.startDate
-                  ? dayjs(formik.values.startDate).format('D MMMM')
-                  : 'Start Date'}{' '}
-                to{' '}
-                {formik.values.endDate
-                  ? dayjs(formik.values.endDate).format('D MMMM, YYYY')
-                  : 'End Date'}
+                {formik.values.startDate && formik.values.endDate ? (
+                  <>
+                    Activities between:{' '}
+                    {formik.values.startDate
+                      ? dayjs(formik.values.startDate).format('D MMMM')
+                      : 'Start Date'}{' '}
+                    to{' '}
+                    {formik.values.endDate
+                      ? dayjs(formik.values.endDate).format('D MMMM, YYYY')
+                      : 'End Date'}
+                  </>
+                ) : null}
               </h3>
               <div className="w-full">
                 <div ref={printPdfRef} className="w-full">

@@ -797,7 +797,7 @@ const MandatetManagement = () => {
                 <div className="flex items-center justify-end">
                   <TableFilter
                     name={'searchTransactionHistory'}
-                    placeholder={'Search By Account Number'}
+                    placeholder={'Search By Mandate Code'}
                     label={'Search Transactions'}
                     value={transactionsSearchTerm}
                     setSearch={setTransactionsSearchTerm}

@@ -153,7 +153,7 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
       params.append('AccountNumber', formattedQueryParams.searchFilter);
     }
     if (formattedQueryParams.searchType === SearchTypes.SearchTransactions) {
-      params.append('AccountNumber', formattedQueryParams.searchFilter);
+      params.append('MandateCode', formattedQueryParams.searchFilter);
     }
     if (formattedQueryParams.searchType === SearchTypes.SearchMerchants) {
       params.append('AccountNumber', formattedQueryParams.searchFilter);
