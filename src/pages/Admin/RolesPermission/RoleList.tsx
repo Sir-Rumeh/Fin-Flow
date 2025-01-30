@@ -163,7 +163,7 @@ const RoleList = () => {
           <div>
             <TableFilter
               name={'searchRole'}
-              placeholder={'Search Role'}
+              placeholder={'Search Role Name'}
               label={'Search Role'}
               value={searchTerm}
               setSearch={setSearchTerm}
