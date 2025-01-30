@@ -1257,7 +1257,7 @@ const Reports = () => {
   });
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
-    status: formik.values.statusFilter,
+    status: formik.values.statusFilter ? formik.values.statusFilter : formik.values.status,
     pageNo: paginationData.pageNumber,
     pageSize: paginationData.pageSize,
     searchFilter: formik.values.searchMandateCode,
@@ -1592,10 +1592,7 @@ const Reports = () => {
   useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
-      pageNo:
-        formik.values.searchMandateCode?.length > 0 || formik.values.statusFilter?.length > 0
-          ? undefined
-          : paginationData.pageNumber,
+      pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
     }));
   }, [paginationData]);
@@ -1606,11 +1603,7 @@ const Reports = () => {
       status: formik.values.transacStatusFilter
         ? formik.values.transacStatusFilter
         : activeTransactionTab,
-      pageNo:
-        formik.values.searchMandateTransactionAccountNumber?.length > 0 ||
-        formik.values.statusFilter?.length > 0
-          ? undefined
-          : transactionPaginationData.pageNumber,
+      pageNo: transactionPaginationData.pageNumber,
       pageSize: paginationData.pageSize,
     }));
   }, [mandateTransactionsPaginationData.pageNumber, activeTransactionTab]);
@@ -1621,11 +1614,7 @@ const Reports = () => {
       status: transactionsFormik.values.transacStatusFilter
         ? transactionsFormik.values.transacStatusFilter
         : activeTransactionTab,
-      pageNo:
-        transactionsFormik.values.searchTransactionAccountNumber?.length > 0 ||
-        transactionsFormik.values.statusFilter?.length > 0
-          ? undefined
-          : transactionPaginationData.pageNumber,
+      pageNo: transactionPaginationData.pageNumber,
       pageSize: paginationData.pageSize,
     }));
   }, [
@@ -1812,10 +1801,35 @@ const Reports = () => {
                   onClick={() => {
                     if (!formik.values.reportType)
                       return formik.setFieldError('reportType', 'Report Type is required');
-                    if (formik.values.reportType === 'Mandate Status Reports') {
-                      getMandateReports();
-                    } else if (formik.values.reportType === 'Transaction Reports') {
-                      getTransactionsReport();
+                    if (
+                      formik.values.reportType &&
+                      !(
+                        formik.values.fromDateFilter ||
+                        formik.values.toDateFilter ||
+                        formik.values.status
+                      )
+                    ) {
+                      if (formik.values.reportType === 'Mandate Status Reports') {
+                        getMandateReports();
+                      } else if (formik.values.reportType === 'Transaction Reports') {
+                        getTransactionsReport();
+                      }
+                    } else {
+                      if (formik.values.reportType === 'Mandate Status Reports') {
+                        setQueryParams((prev) => ({
+                          ...prev,
+                          startDate: formik.values.fromDateFilter,
+                          endDate: formik.values.toDateFilter,
+                          status: formik.values.status,
+                        }));
+                      } else if (formik.values.reportType === 'Transaction Reports') {
+                        setTransactionsQueryParams((prev) => ({
+                          ...prev,
+                          startDate: formik.values.fromDateFilter,
+                          endDate: formik.values.toDateFilter,
+                          status: formik.values.status,
+                        }));
+                      }
                     }
                   }}
                 />

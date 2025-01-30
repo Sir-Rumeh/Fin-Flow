@@ -583,10 +583,6 @@ const Reports = () => {
   };
 
   useEffect(() => {
-    setIsFirstRender(false);
-  }, []);
-
-  useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
       pageNo: paginationData.pageNumber,
@@ -624,6 +620,7 @@ const Reports = () => {
     if (queryParams.pageNo !== undefined && !isFirstRender) {
       getMandateReports();
     }
+    setIsFirstRender(false);
   }, [
     queryParams.pageNo,
     queryParams.status,
@@ -801,10 +798,34 @@ const Reports = () => {
                 onClick={() => {
                   if (!formik.values.reportType)
                     return formik.setFieldError('reportType', 'Report Type is required');
-                  if (formik.values.reportType === 'Mandate Status Reports') {
-                    getMandateReports();
-                  } else if (formik.values.reportType === 'Transaction Reports') {
-                    getTransactionsReport();
+                  if (
+                    !(
+                      formik.values.fromDateFilter ||
+                      formik.values.toDateFilter ||
+                      formik.values.status
+                    )
+                  ) {
+                    if (formik.values.reportType === 'Mandate Status Reports') {
+                      getMandateReports();
+                    } else if (formik.values.reportType === 'Transaction Reports') {
+                      getTransactionsReport();
+                    }
+                  } else {
+                    if (formik.values.reportType === 'Mandate Status Reports') {
+                      setQueryParams((prev) => ({
+                        ...prev,
+                        startDate: formik.values.fromDateFilter,
+                        endDate: formik.values.toDateFilter,
+                        status: formik.values.status,
+                      }));
+                    } else if (formik.values.reportType === 'Transaction Reports') {
+                      setTransactionsQueryParams((prev) => ({
+                        ...prev,
+                        startDate: formik.values.fromDateFilter,
+                        endDate: formik.values.toDateFilter,
+                        status: formik.values.status,
+                      }));
+                    }
                   }
                 }}
               />
