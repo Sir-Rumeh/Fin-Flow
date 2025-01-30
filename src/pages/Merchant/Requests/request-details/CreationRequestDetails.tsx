@@ -22,7 +22,7 @@ import { MandateRequestStatus } from 'utils/enums';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
 import CustomInput from 'components/FormElements/CustomInput';
-import { formatNumberDisplay } from 'utils/helpers';
+import { capitalize, formatNumberDisplay } from 'utils/helpers';
 import ActionAuthorDetails, { AuthorActionType } from 'components/common/ActionAuthorDetails';
 
 const CreationRequestDetails = () => {
@@ -69,7 +69,7 @@ const CreationRequestDetails = () => {
       closeModal('confirmApprove');
       openModal('approveSuccess');
     },
-    onError: (error) => {},
+    onError: (error) => console.log(error.message),
   });
 
   const rejectMandateRequestMutation = useMutation({
@@ -85,7 +85,7 @@ const CreationRequestDetails = () => {
       closeModal('confirmReject');
       openModal('rejectSuccess');
     },
-    onError: (error) => {},
+    onError: (error) => console.log(error.message),
   });
 
   const handleProceed = () => {
@@ -146,7 +146,7 @@ const CreationRequestDetails = () => {
               <p>Mandate Type</p>
               <div className="flex items-center gap-2">
                 <UpdateRequestIcon />
-                <p className="text-lightPurple">Variable</p>
+                <p className="text-lightPurple">{capitalize(data?.responseData?.mandateType)}</p>
               </div>
             </div>
           </div>

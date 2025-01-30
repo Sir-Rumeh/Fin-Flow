@@ -64,7 +64,7 @@ const AuditTrail = () => {
 
   const AuditTableColumn: GridColDef[] = [
     {
-      field: 'actorId',
+      field: 'targetId',
       headerName: 'Ref No',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -100,7 +100,7 @@ const AuditTrail = () => {
       valueGetter: (params: any) => new Date(params).toLocaleDateString(),
     },
     {
-      field: '',
+      field: 'actions',
       headerName: 'Action',
       width: 150,
       headerClassName: 'ag-thead',
@@ -108,7 +108,7 @@ const AuditTrail = () => {
         <button
           type="button"
           onClick={() => {
-            setSelectedRowData(params.row);
+            setSelectedRowData(params?.row);
             openModal('viewDetails');
           }}
           className="cursor-pointer font-semibold text-lightPurple"
@@ -295,13 +295,16 @@ const AuditTrail = () => {
                 </div>
                 <div className="h-[2px] w-full bg-grayPrimary"></div>
                 <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-y-[20px]">
-                  <DetailsCard title="Reference" content={selectedRowData?.actorId} />
+                  <DetailsCard title="Reference" content={selectedRowData?.targetId} />
                   <DetailsCard title="Account Name" content={selectedRowData?.actor} />
                   <DetailsCard title="Affected Module" content={selectedRowData?.module} />
                   <DetailsCard title="Performed Action" content={selectedRowData?.action} />
                   <DetailsCard
                     title="Date Performed"
-                    content={new Date(selectedRowData?.dateCreated).toLocaleString()}
+                    content={
+                      selectedRowData.dateCreated &&
+                      new Date(selectedRowData.dateCreated).toLocaleDateString()
+                    }
                   />
                 </div>
               </div>

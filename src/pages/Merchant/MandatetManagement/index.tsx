@@ -341,12 +341,17 @@ const MandatetManagement = () => {
                   View Details
                 </Link>
                 <button
-                  type="button"
-                  onClick={() => {
+                  onClick={async () => {
                     setSelectedMandateCode(params.row.mandateCode);
+                    setTransactionsQueryParams((prev) => ({
+                      ...prev,
+                      mandateCode: params.row.mandateCode,
+                    }));
+                    await refetchTransactions();
                     openModal('openTransactionHistory');
                   }}
-                  className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
+                  type="button"
+                  className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
                 >
                   View Transactions
                 </button>
@@ -398,6 +403,22 @@ const MandatetManagement = () => {
       handlePrintReceipt();
     }, 0);
   };
+
+  const {
+    isLoading: isTransactionsLoading,
+    data: transactionsData,
+    refetch: refetchTransactions,
+  } = useQuery({
+    queryKey: ['transactions', transactionsQueryParams],
+    queryFn: ({ queryKey }) =>
+      getTransactionsByMerchantId(loggedInMerchantId, queryKey[1] as QueryParams),
+  });
+
+  const { data, refetch } = useQuery({
+    queryKey: ['mandates', queryParams],
+    queryFn: ({ queryKey }) =>
+      getMandatesByMerchantId(loggedInMerchantId, queryKey[1] as QueryParams),
+  });
 
   const transactionsTableColumn: GridColDef[] = [
     // {
@@ -457,22 +478,6 @@ const MandatetManagement = () => {
       },
     },
   ];
-
-  const { data, refetch } = useQuery({
-    queryKey: ['mandates', queryParams],
-    queryFn: ({ queryKey }) =>
-      getMandatesByMerchantId(loggedInMerchantId, queryKey[1] as QueryParams),
-  });
-
-  const {
-    isLoading: isTransactionsLoading,
-    data: transactionsData,
-    refetch: refetchTransactions,
-  } = useQuery({
-    queryKey: ['transactions', transactionsQueryParams],
-    queryFn: ({ queryKey }) =>
-      getTransactionsByMerchantId(loggedInMerchantId, queryKey[1] as QueryParams),
-  });
 
   const updateMandateMutation = useMutation({
     mutationFn: ({
