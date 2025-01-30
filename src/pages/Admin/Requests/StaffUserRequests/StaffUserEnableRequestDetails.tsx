@@ -87,7 +87,7 @@ const StaffUserEnableRequestDetails = () => {
           >
             Staff User Requests
           </Link>{' '}
-          <ChevronRight />s
+          <ChevronRight />
           <span className="text-lightPurple">Enable Staff User Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
@@ -130,7 +130,11 @@ const StaffUserEnableRequestDetails = () => {
               <DetailsCard title="Employee ID" content={data?.responseData?.staffId} />
               <DetailsCard
                 title="Full Name"
-                content={`${data?.responseData?.firstName} ${data?.responseData?.lastName}`}
+                content={
+                  data?.responseData
+                    ? `${data?.responseData?.firstName} ${data?.responseData?.lastName}`
+                    : ''
+                }
               />
               <DetailsCard title="User Name" content={data?.responseData?.username} />
               <DetailsCard title="Email Address" content={data?.responseData?.email} />

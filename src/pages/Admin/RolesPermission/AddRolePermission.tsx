@@ -201,7 +201,6 @@ const AddRolePermission = () => {
         if (permissionToAssignAccess) {
           (permissionToAssignAccess[accessTag as keyof PermissionInterface] as boolean) =
             event.target.checked;
-          // console.log('event', event.target.checked);
         }
       }
     };

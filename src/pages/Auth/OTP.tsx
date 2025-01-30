@@ -8,7 +8,12 @@ import CustomInput from 'components/FormElements/CustomInput';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useMutation } from '@tanstack/react-query';
 import { loginMerchant, loginStaff } from 'config/actions/authentication-actions';
-import { notifySuccess } from 'utils/helpers';
+import {
+  decodeToken,
+  navigateAdminOnLogin,
+  navigateMerchantOnLogin,
+  notifySuccess,
+} from 'utils/helpers';
 import { UserLoginRoles } from 'utils/enums';
 
 const OTP = () => {
@@ -48,10 +53,11 @@ const OTP = () => {
   const staffOTPMutation = useMutation({
     mutationFn: (payload: { data: string } | undefined) => loginStaff(payload),
     onSuccess: (data) => {
+      const userDetails = decodeToken(data?.responseData?.token);
       localStorage.setItem('user', JSON.stringify(data?.responseData));
       notifySuccess('Login Successful');
       formik.resetForm();
-      navigate(`/${appRoutes.adminDashboard.dashboard.index}`);
+      navigateAdminOnLogin(userDetails?.permission, navigate);
     },
     onError: (error) => {
       console.log(error);
@@ -61,10 +67,11 @@ const OTP = () => {
   const merchantOTPMutation = useMutation({
     mutationFn: (payload: { data: string } | undefined) => loginMerchant(payload),
     onSuccess: (data) => {
+      const userDetails = decodeToken(data?.responseData?.token);
       localStorage.setItem('user', JSON.stringify(data?.responseData));
       notifySuccess('Login Successful');
       formik.resetForm();
-      navigate(`/${appRoutes.merchantDashboard.dashboard.index}`);
+      navigateMerchantOnLogin(userDetails?.permission, navigate);
     },
     onError: (error) => {
       console.log(error);

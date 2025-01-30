@@ -107,7 +107,6 @@ const BulkUpload = () => {
         ['mandateId', 'mandateCode', 'supportingDocument'],
         ['mandateId', 'mandateCode', 'supportingDocument'],
       );
-      console.log('data array', newDataArray);
       const dataMatch = newDataArray.some((obj) => matchesInterface(obj, referenceObject));
       if (jsonData.length > 0 && !dataMatch) {
         notifyError('Incorrect data format');

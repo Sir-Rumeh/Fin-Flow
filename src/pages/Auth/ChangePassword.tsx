@@ -73,9 +73,7 @@ const ChangePassword = () => {
         state: { data: payloadData, origin: UserLoginRoles.Merchant },
       });
     },
-    onError: (error) => {
-      console.log(error);
-    },
+    onError: (error) => {},
   });
 
   return (

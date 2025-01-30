@@ -589,10 +589,7 @@ const Reports = () => {
   useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
-      pageNo:
-        formik.values.searchMandateCode?.length > 0 || formik.values.statusFilter?.length > 0
-          ? undefined
-          : paginationData.pageNumber,
+      pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
     }));
   }, [paginationData]);
@@ -603,11 +600,7 @@ const Reports = () => {
       status: formik.values.transacStatusFilter
         ? formik.values.transacStatusFilter
         : activeTransactionTab,
-      pageNo:
-        formik.values.searchMandateTransactionAccountNumber?.length > 0 ||
-        formik.values.statusFilter?.length > 0
-          ? undefined
-          : transactionPaginationData.pageNumber,
+      pageNo: transactionPaginationData.pageNumber,
       pageSize: paginationData.pageSize,
     }));
   }, [mandateTransactionsPaginationData.pageNumber, activeTransactionTab]);
@@ -618,11 +611,7 @@ const Reports = () => {
       status: transactionsFormik.values.transacStatusFilter
         ? transactionsFormik.values.transacStatusFilter
         : activeTransactionTab,
-      pageNo:
-        transactionsFormik.values.searchTransactionAccountNumber?.length > 0 ||
-        transactionsFormik.values.statusFilter?.length > 0
-          ? undefined
-          : transactionPaginationData.pageNumber,
+      pageNo: transactionPaginationData.pageNumber,
       pageSize: paginationData.pageSize,
     }));
   }, [
@@ -896,7 +885,7 @@ const Reports = () => {
               </div>
               <div className="mt-1 w-full rounded-md border px-3 pt-2">
                 <div className="slide-down flex w-full flex-col justify-between border-b pb-1 lg:flex-row lg:items-center">
-                  <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10">
+                  <div className="flex flex-row items-center justify-start gap-6 md:gap-10 lg:w-[40%]">
                     <CustomTabs
                       tabs={tabsList}
                       activeTab={activeTransactionTab}
@@ -904,7 +893,7 @@ const Reports = () => {
                       showTabTotal={false}
                     />
                   </div>
-                  <div className="flex w-full items-center lg:justify-end">
+                  <div className="flex items-center lg:w-[60%] lg:justify-end">
                     <div className="">
                       <TableFilter
                         name={'searchTransactionAccountNumber'}

@@ -42,11 +42,6 @@ const MerchantRequests = () => {
       setQueryParams((prev) => ({
         ...prev,
         searchFilter: formik.values.searchMerchantAccount,
-        pageNo:
-          formik.values.searchMerchantAccount?.length > 0 || formik.values.statusFilter?.length > 0
-            ? undefined
-            : paginationData.pageNumber,
-        pageSize: paginationData.pageSize,
       }));
       // refetch();
     },
@@ -69,14 +64,8 @@ const MerchantRequests = () => {
       ...prev,
       status: activeTab,
       requestType: formik.values.statusFilter,
-      pageNo:
-        formik.values.searchMerchantAccount?.length > 0 || formik.values.statusFilter?.length > 0
-          ? undefined
-          : paginationData.pageNumber,
-      pageSize:
-        formik.values.searchMerchantAccount?.length > 0 || formik.values.statusFilter?.length > 0
-          ? 100
-          : paginationData.pageSize,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
       searchFilter: formik.values.searchMerchantAccount,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,

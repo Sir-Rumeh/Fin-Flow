@@ -64,10 +64,7 @@ const StaffUserManagement = () => {
       setQueryParams((prev) => ({
         ...prev,
         searchFilter: formik.values.searchStaffUser,
-        pageNo:
-          formik.values.searchStaffUser?.length > 0 || formik.values.statusFilter?.length > 0
-            ? undefined
-            : paginationData.pageNumber,
+        pageNo: paginationData.pageNumber,
         pageSize: paginationData.pageSize,
       }));
       // refetch();
@@ -90,10 +87,7 @@ const StaffUserManagement = () => {
     setQueryParams((prev) => ({
       ...prev,
       status: formik.values.statusFilter,
-      pageNo:
-        formik.values.searchStaffUser?.length > 0 || formik.values.statusFilter?.length > 0
-          ? undefined
-          : paginationData.pageNumber,
+      pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
       searchFilter: formik.values.searchStaffUser,
       startDate: formik.values.fromDateFilter,

@@ -2,6 +2,7 @@
 import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom';
 import ArrowDownIcon from 'assets/icons/ArrowDownIcon';
 import { useEffect, useState } from 'react';
+import { decodeToken, getUserFromLocalStorage, hasAccessToModule } from 'utils/helpers';
 
 const NestedLink = ({
   route,
@@ -142,8 +143,10 @@ export const SidebarLinks = (props: {
     return routes.map((route) => {
       const isRouteValid = route.layout === '/admin' || route.layout === '/merchant';
       const isRouteActive = activeRoute(route.path, 1);
-
-      if (isRouteValid) {
+      const user = getUserFromLocalStorage();
+      const userDetails = decodeToken(user?.token);
+      const isAccessAllowed = hasAccessToModule(userDetails?.permission, route.moduleValue);
+      if (isRouteValid && isAccessAllowed) {
         const conditionToShowNestedLinks =
           route.willChildLinkShow && route.children && route.children.length > 0;
         if (conditionToShowNestedLinks) {

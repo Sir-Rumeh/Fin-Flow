@@ -52,9 +52,7 @@ const DisableRequestDetails = () => {
         .required('Reason for rejection is required')
         .min(5, 'Reason must be at least 5 characters long'),
     }),
-    onSubmit: (values) => {
-      console.log(values);
-    },
+    onSubmit: (values) => {},
   });
 
   const { data, refetch } = useQuery({

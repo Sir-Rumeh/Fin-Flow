@@ -74,7 +74,7 @@ const AuditTrail = () => {
     },
     {
       field: 'actor',
-      headerName: 'Account Name',
+      headerName: 'Actor',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
@@ -149,38 +149,28 @@ const AuditTrail = () => {
     setQueryParams((prev) => ({
       ...prev,
       searchFilter: formik.values.searchFilter,
-      pageNo:
-        formik.values.searchFilter?.length > 0 || formik.values.statusFilter?.length > 0
-          ? undefined
-          : paginationData.pageNumber,
+      pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
       startDate: formik.values.startDate,
       endDate: formik.values.endDate,
     }));
-    getAuditTrailRecords();
   }, [paginationData]);
 
   useEffect(() => {
-    if (queryParams.pageNo) {
-      setQueryParams((prev) => ({
-        ...prev,
-        pageNo:
-          formik.values.searchFilter?.length > 0 || formik.values.statusFilter?.length > 0
-            ? undefined
-            : paginationData.pageNumber,
-      }));
-    }
-  }, [queryParams.pageNo]);
+    getAuditTrailRecords();
+  }, [
+    queryParams.searchFilter,
+    queryParams.startDate,
+    queryParams.endDate,
+    queryParams.pageNo,
+    queryParams.pageSize,
+  ]);
 
   const clearFilter = () => {
     formik.setFieldValue('startDate', null);
     formik.setFieldValue('endDate', null);
     formik.setFieldValue('searchFilter', null);
   };
-
-  useEffect(() => {
-    getAuditTrailRecords();
-  }, [queryParams.searchFilter, queryParams.startDate, queryParams.endDate, queryParams.pageNo]);
 
   return (
     <>

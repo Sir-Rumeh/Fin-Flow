@@ -28,7 +28,6 @@ const MerchantCreationRequestDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const requestId = searchParams?.get('id') || '';
-  console.log(requestId);
   const merchantId = searchParams?.get('merchantId') || '';
   const queryClient = useQueryClient();
   const [modals, setModals] = useState({

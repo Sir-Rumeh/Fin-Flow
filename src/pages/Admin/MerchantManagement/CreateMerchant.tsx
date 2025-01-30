@@ -44,7 +44,6 @@ const CreateMerchant = () => {
     },
     validationSchema: onboardMerchantSchema,
     onSubmit: (values) => {
-      // console.log(values.merchantCIF);
       const payload = {
         merchantId: '',
         name: values.merchantName,
@@ -213,7 +212,6 @@ const CreateMerchant = () => {
           proceedAction={() => {
             closeModal('confirmOnboardMerchant');
             addMerchantRequestMutation.mutate(merchantRequest);
-            console.log(merchantRequest);
           }}
         />
       )}

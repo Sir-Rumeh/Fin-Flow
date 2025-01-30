@@ -24,14 +24,12 @@ function useActionAuthor(id: string): Author {
   const getAdminDetails = async () => {
     const res = await getStaffUserById(id);
     if (res) {
-      console.log('admin-details', res);
       return res;
     }
   };
   const getMerchantUserDetails = async () => {
     const res = await getProfileById(id);
     if (res) {
-      console.log('merchant-details', res);
       return res;
     }
   };

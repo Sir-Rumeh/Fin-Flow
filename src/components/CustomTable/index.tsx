@@ -55,10 +55,6 @@ function CustomTable({
     }
   }, [rowCount, paginationSplitPosition, paginationData]);
 
-  // const handlePageChange = () => {
-  //   console.log('page no', paginationData?.pageNumber);
-  // };
-
   return (
     <div className={`${defaultAnimation ? 'slide-down' : ''} w-full`}>
       {tableData?.length > 0 ? (
