@@ -375,10 +375,15 @@ export function getSecondSegmentFormatted(href: string): string | null {
 }
 
 export const navigateAdminOnLogin = (userPermissions: string[], navigate: any) => {
+  if (!(userPermissions?.length > 0)) {
+    notifyError('No User permissions exist for this user');
+    return;
+  }
   try {
     const sortedAdminNavItems = [...adminRoutes].reverse();
     sortedAdminNavItems.forEach((route) => {
       if (hasAccessToModule(userPermissions, route.moduleValue)) {
+        notifySuccess('Login Successful');
         navigate(`${route.layout}/${route.path}`);
         return;
       }
@@ -390,10 +395,15 @@ export const navigateAdminOnLogin = (userPermissions: string[], navigate: any) =
   }
 };
 export const navigateMerchantOnLogin = (userPermissions: string[], navigate: any) => {
+  if (!(userPermissions?.length > 0)) {
+    notifyError('No User permissions exist for this user');
+    return;
+  }
   try {
     const sortedMerchantNavItems = [...merchantRoutes].reverse();
     sortedMerchantNavItems.forEach((route) => {
       if (hasAccessToModule(userPermissions, route.moduleValue)) {
+        notifySuccess('Login Successful');
         navigate(`${route.layout}/${route.path}`);
         return;
       }
