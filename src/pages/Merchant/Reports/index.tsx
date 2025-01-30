@@ -1802,7 +1802,6 @@ const Reports = () => {
                     if (!formik.values.reportType)
                       return formik.setFieldError('reportType', 'Report Type is required');
                     if (
-                      formik.values.reportType &&
                       !(
                         formik.values.fromDateFilter ||
                         formik.values.toDateFilter ||
