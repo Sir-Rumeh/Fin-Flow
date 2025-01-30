@@ -221,7 +221,7 @@ export const getTransactionsByMerchantId = async (
   const params = new URLSearchParams();
   appendParams(params, queryParams);
   try {
-    const response = await AxiosClient.get(`/transactions/merchant/${merchantId}`);
+    const response = await AxiosClient.get(`/transactions/merchant/${merchantId}`, { params });
     return response.data;
   } catch (error) {
     throw error;
