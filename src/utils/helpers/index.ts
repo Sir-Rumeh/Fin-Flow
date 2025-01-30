@@ -13,7 +13,7 @@ import { canBeUpdated } from 'utils/constants';
 import { SearchTypes } from 'utils/enums';
 import dayjs from 'dayjs';
 import { jwtDecode } from 'jwt-decode';
-import { adminRoutes } from 'routes/appRoutes';
+import { adminRoutes, merchantRoutes } from 'routes/appRoutes';
 
 export const checkRoute = (pathname: string, pathToCheck: string) => {
   if (pathname.includes(pathToCheck)) {
@@ -376,14 +376,26 @@ export function getSecondSegmentFormatted(href: string): string | null {
 
 export const navigateAdminOnLogin = (userPermissions: string[], navigate: any) => {
   try {
-    // const sortedAdminNavItems = [...AdminSideNavItems].reverse();
-    adminRoutes.forEach((route) => {
-      if (
-        userPermissions.some(
-          (perm) => perm.toLocaleLowerCase() === route.moduleValue.toLocaleLowerCase(),
-        )
-      ) {
-        navigate(`/${route.layout}/${route.path}`);
+    const sortedAdminNavItems = [...adminRoutes].reverse();
+    sortedAdminNavItems.forEach((route) => {
+      if (hasAccessToModule(userPermissions, route.moduleValue)) {
+        navigate(`${route.layout}/${route.path}`);
+        return;
+      }
+    });
+  } catch (error: any) {
+    notifyError('Something went wrong while trying to redirect you to your dashboard');
+    console.log('error occured', error);
+    return;
+  }
+};
+export const navigateMerchantOnLogin = (userPermissions: string[], navigate: any) => {
+  try {
+    const sortedMerchantNavItems = [...merchantRoutes].reverse();
+    sortedMerchantNavItems.forEach((route) => {
+      if (hasAccessToModule(userPermissions, route.moduleValue)) {
+        navigate(`${route.layout}/${route.path}`);
+        return;
       }
     });
   } catch (error: any) {
