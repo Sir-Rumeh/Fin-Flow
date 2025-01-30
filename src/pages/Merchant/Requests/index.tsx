@@ -244,8 +244,6 @@ const MandateRequests = () => {
     }));
   };
 
-  console.log(queryParams.status);
-
   return (
     <>
       <div className="px-5 py-5">

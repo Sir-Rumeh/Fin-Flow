@@ -13,6 +13,8 @@ const UserDetails = () => {
     queryFn: ({ queryKey }) => getProfileById(queryKey[1]),
   });
 
+  const userName = `${data?.responseData?.firstName} ${data?.responseData?.lastName}`;
+
   return (
     <div className="px-5 py-5">
       <div className="flex items-center gap-4 font-semibold">
@@ -33,14 +35,14 @@ const UserDetails = () => {
           </div>
           <div className="h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
-            <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
+            <DetailsCard title="Merchant ID" content={data?.responseData?.merchantID} />
             <DetailsCard
               title="Merchant Name"
-              content={`${data?.responseData?.firstName} ${data?.responseData?.lastName}`}
+              content={data?.responseData ? data?.responseData?.merchantName : ''}
             />
             <DetailsCard title="CIF Number" content="9028272009" />
             <DetailsCard title="Account ID" content={data?.responseData?.accountID} />
-            <DetailsCard title="User Name" content={data?.responseData?.userName} />
+            <DetailsCard title="User Name" content={data?.responseData ? userName : ''} />
             <DetailsCard title="Email" content={data?.responseData?.email} />
             <DetailsCard
               title="Date Requested"
