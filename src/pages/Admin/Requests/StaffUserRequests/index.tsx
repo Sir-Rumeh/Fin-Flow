@@ -236,7 +236,7 @@ const StaffUserRequests = () => {
                 <div className="">
                   <TableFilter
                     name={'searchStaffUser'}
-                    placeholder={'Search Staff User'}
+                    placeholder={'Search Staff User Email'}
                     label={'Search Staff User'}
                     value={searchTerm}
                     setSearch={setSearchTerm}
