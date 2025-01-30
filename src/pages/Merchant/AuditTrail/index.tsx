@@ -603,7 +603,7 @@ const AuditTrail = () => {
             <div className="slide-downward relative mt-8 flex flex-col items-center justify-center rounded-md bg-white p-2 md:p-5">
               <div className="flex w-full flex-col justify-between gap-y-4 pb-3 lg:flex-row lg:items-center">
                 {searchedTerm?.length > 0 ? (
-                  <h2 className="text-xl font-bold text-lightPurple">{`Staff Name: ${searchedTerm.toLocaleUpperCase()}`}</h2>
+                  <h2 className="text-xl font-bold text-lightPurple">{`Actor Email: ${searchedTerm.toLocaleUpperCase()}`}</h2>
                 ) : null}
                 <div
                   className={`flex w-full items-center ${searchedTerm?.length > 0 ? 'lg:w-[50%]' : 'lg:w-full'} lg:justify-end`}
