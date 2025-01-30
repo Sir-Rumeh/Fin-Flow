@@ -67,11 +67,6 @@ const ProfileManagement = () => {
       setQueryParams((prev) => ({
         ...prev,
         searchFilter: formik.values.searchProfile,
-        pageNo:
-          formik.values.searchProfile?.length > 0 || formik.values.statusFilter?.length > 0
-            ? undefined
-            : paginationData.pageNumber,
-        pageSize: paginationData.pageSize,
       }));
       // refetch();
     },
@@ -94,14 +89,8 @@ const ProfileManagement = () => {
     setQueryParams((prev) => ({
       ...prev,
       status: formik.values.statusFilter,
-      pageNo:
-        formik.values.searchProfile?.length > 0 || formik.values.statusFilter?.length > 0
-          ? undefined
-          : paginationData.pageNumber,
-      pageSize:
-        formik.values.searchProfile?.length > 0 || formik.values.statusFilter?.length > 0
-          ? 100
-          : paginationData.pageSize,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
       searchFilter: formik.values.searchProfile,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,

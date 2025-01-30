@@ -589,10 +589,7 @@ const Reports = () => {
   useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
-      pageNo:
-        formik.values.searchMandateCode?.length > 0 || formik.values.statusFilter?.length > 0
-          ? undefined
-          : paginationData.pageNumber,
+      pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
     }));
   }, [paginationData]);
@@ -603,11 +600,7 @@ const Reports = () => {
       status: formik.values.transacStatusFilter
         ? formik.values.transacStatusFilter
         : activeTransactionTab,
-      pageNo:
-        formik.values.searchMandateTransactionAccountNumber?.length > 0 ||
-        formik.values.statusFilter?.length > 0
-          ? undefined
-          : transactionPaginationData.pageNumber,
+      pageNo: transactionPaginationData.pageNumber,
       pageSize: paginationData.pageSize,
     }));
   }, [mandateTransactionsPaginationData.pageNumber, activeTransactionTab]);
@@ -618,11 +611,7 @@ const Reports = () => {
       status: transactionsFormik.values.transacStatusFilter
         ? transactionsFormik.values.transacStatusFilter
         : activeTransactionTab,
-      pageNo:
-        transactionsFormik.values.searchTransactionAccountNumber?.length > 0 ||
-        transactionsFormik.values.statusFilter?.length > 0
-          ? undefined
-          : transactionPaginationData.pageNumber,
+      pageNo: transactionPaginationData.pageNumber,
       pageSize: paginationData.pageSize,
     }));
   }, [

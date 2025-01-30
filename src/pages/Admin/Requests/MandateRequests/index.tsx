@@ -39,8 +39,6 @@ const MandateRequests = () => {
       setQueryParams((prev) => ({
         ...prev,
         searchFilter: formik.values.searchMandate,
-        pageNo: paginationData.pageNumber,
-        pageSize: paginationData.pageSize,
       }));
       // refetch();
     },
