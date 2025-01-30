@@ -1725,6 +1725,46 @@ const Reports = () => {
     formik.setFieldValue('status', null);
   };
 
+  const generateReport = () => {
+    if (!formik.values.reportType)
+      return formik.setFieldError('reportType', 'Report Type is required');
+    if (formik.values.reportType === 'Mandate Status Reports') {
+      if (formik.values.status) {
+        setQueryParams((prev) => ({
+          ...prev,
+          startDate: formik.values.fromDateFilter,
+          endDate: formik.values.toDateFilter,
+          status: formik.values.status,
+        }));
+      } else if (!(formik.values.status.length > 0)) {
+        getMandateReports();
+        setTimeout(() => {
+          setQueryParams((prev) => ({
+            ...prev,
+            status: '',
+          }));
+        }, 500);
+      }
+    } else if (formik.values.reportType === 'Transaction Reports') {
+      if (formik.values.status) {
+        setTransactionsQueryParams((prev) => ({
+          ...prev,
+          startDate: formik.values.fromDateFilter,
+          endDate: formik.values.toDateFilter,
+          status: formik.values.status,
+        }));
+      } else if (!(formik.values.status.length > 0)) {
+        getTransactionsReport();
+        setTimeout(() => {
+          setTransactionsQueryParams((prev) => ({
+            ...prev,
+            status: '',
+          }));
+        }, 500);
+      }
+    }
+  };
+
   return (
     <>
       <div style={{ display: 'none' }}>
@@ -1778,6 +1818,7 @@ const Reports = () => {
                     label="Report Type"
                     formik={formik}
                     options={reportTypes}
+                    performExtraAction={() => setShowFilteredReport(false)}
                   />
                 </div>
                 <div className="w-full">
@@ -1799,37 +1840,7 @@ const Reports = () => {
                   title="Generate Report"
                   customPaddingX="1.4rem"
                   onClick={() => {
-                    if (!formik.values.reportType)
-                      return formik.setFieldError('reportType', 'Report Type is required');
-                    if (
-                      !(
-                        formik.values.fromDateFilter ||
-                        formik.values.toDateFilter ||
-                        formik.values.status
-                      )
-                    ) {
-                      if (formik.values.reportType === 'Mandate Status Reports') {
-                        getMandateReports();
-                      } else if (formik.values.reportType === 'Transaction Reports') {
-                        getTransactionsReport();
-                      }
-                    } else {
-                      if (formik.values.reportType === 'Mandate Status Reports') {
-                        setQueryParams((prev) => ({
-                          ...prev,
-                          startDate: formik.values.fromDateFilter,
-                          endDate: formik.values.toDateFilter,
-                          status: formik.values.status,
-                        }));
-                      } else if (formik.values.reportType === 'Transaction Reports') {
-                        setTransactionsQueryParams((prev) => ({
-                          ...prev,
-                          startDate: formik.values.fromDateFilter,
-                          endDate: formik.values.toDateFilter,
-                          status: formik.values.status,
-                        }));
-                      }
-                    }
+                    generateReport();
                   }}
                 />
                 <button

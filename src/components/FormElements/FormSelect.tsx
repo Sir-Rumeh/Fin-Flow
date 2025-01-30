@@ -17,6 +17,7 @@ type CustomInputProps = {
   scrollableOptions?: boolean;
   scrollableHeight?: string;
   labelFontWeight?: string;
+  performExtraAction?: () => void;
 };
 
 const FormSelect = ({
@@ -29,6 +30,7 @@ const FormSelect = ({
   scrollableOptions = false,
   scrollableHeight = 'h-[10rem]',
   labelFontWeight,
+  performExtraAction,
 }: CustomInputProps) => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState('');
@@ -41,8 +43,10 @@ const FormSelect = ({
   useEffect(() => {
     const selectedOptionLabel = getTextToDisplay(formik.values[labelFor]);
     if (!formik.values[labelFor]) {
+      formik.setFieldValue(labelFor, '');
       setSelectedOption('Select here');
     } else if (selectedOptionLabel) {
+      formik.setFieldValue(labelFor, formik.values[labelFor]);
       setSelectedOption(selectedOptionLabel);
     }
   }, [formik.values[labelFor]]);
@@ -66,6 +70,7 @@ const FormSelect = ({
   const handleChange = (option: DropdownOption) => {
     setSelectedOption(option.label);
     formik.setFieldValue(labelFor, option.value);
+    performExtraAction?.();
     setIsOpen(false);
   };
 
