@@ -205,7 +205,7 @@ const ProfileManagement = () => {
             <CustomPopover
               popoverId={params?.row.id}
               buttonIcon={<PopoverTitle title="Actions" />}
-              translationX={-10}
+              translationX={-40}
               translationY={45}
             >
               <div className="flex flex-col rounded-md p-1">
