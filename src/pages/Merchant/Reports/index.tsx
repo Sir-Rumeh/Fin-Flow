@@ -1257,7 +1257,7 @@ const Reports = () => {
   });
 
   const [queryParams, setQueryParams] = useState<QueryParams>({
-    status: formik.values.statusFilter,
+    status: formik.values.statusFilter ? formik.values.statusFilter : formik.values.status,
     pageNo: paginationData.pageNumber,
     pageSize: paginationData.pageSize,
     searchFilter: formik.values.searchMandateCode,
@@ -1592,10 +1592,7 @@ const Reports = () => {
   useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
-      pageNo:
-        formik.values.searchMandateCode?.length > 0 || formik.values.statusFilter?.length > 0
-          ? undefined
-          : paginationData.pageNumber,
+      pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
     }));
   }, [paginationData]);
@@ -1606,11 +1603,7 @@ const Reports = () => {
       status: formik.values.transacStatusFilter
         ? formik.values.transacStatusFilter
         : activeTransactionTab,
-      pageNo:
-        formik.values.searchMandateTransactionAccountNumber?.length > 0 ||
-        formik.values.statusFilter?.length > 0
-          ? undefined
-          : transactionPaginationData.pageNumber,
+      pageNo: transactionPaginationData.pageNumber,
       pageSize: paginationData.pageSize,
     }));
   }, [mandateTransactionsPaginationData.pageNumber, activeTransactionTab]);
@@ -1621,11 +1614,7 @@ const Reports = () => {
       status: transactionsFormik.values.transacStatusFilter
         ? transactionsFormik.values.transacStatusFilter
         : activeTransactionTab,
-      pageNo:
-        transactionsFormik.values.searchTransactionAccountNumber?.length > 0 ||
-        transactionsFormik.values.statusFilter?.length > 0
-          ? undefined
-          : transactionPaginationData.pageNumber,
+      pageNo: transactionPaginationData.pageNumber,
       pageSize: paginationData.pageSize,
     }));
   }, [
@@ -1736,6 +1725,46 @@ const Reports = () => {
     formik.setFieldValue('status', null);
   };
 
+  const generateReport = () => {
+    if (!formik.values.reportType)
+      return formik.setFieldError('reportType', 'Report Type is required');
+    if (formik.values.reportType === 'Mandate Status Reports') {
+      if (formik.values.status) {
+        setQueryParams((prev) => ({
+          ...prev,
+          startDate: formik.values.fromDateFilter,
+          endDate: formik.values.toDateFilter,
+          status: formik.values.status,
+        }));
+      } else if (!(formik.values.status.length > 0)) {
+        getMandateReports();
+        setTimeout(() => {
+          setQueryParams((prev) => ({
+            ...prev,
+            status: '',
+          }));
+        }, 500);
+      }
+    } else if (formik.values.reportType === 'Transaction Reports') {
+      if (formik.values.status) {
+        setTransactionsQueryParams((prev) => ({
+          ...prev,
+          startDate: formik.values.fromDateFilter,
+          endDate: formik.values.toDateFilter,
+          status: formik.values.status,
+        }));
+      } else if (!(formik.values.status.length > 0)) {
+        getTransactionsReport();
+        setTimeout(() => {
+          setTransactionsQueryParams((prev) => ({
+            ...prev,
+            status: '',
+          }));
+        }, 500);
+      }
+    }
+  };
+
   return (
     <>
       <div style={{ display: 'none' }}>
@@ -1789,6 +1818,7 @@ const Reports = () => {
                     label="Report Type"
                     formik={formik}
                     options={reportTypes}
+                    performExtraAction={() => setShowFilteredReport(false)}
                   />
                 </div>
                 <div className="w-full">
@@ -1810,13 +1840,7 @@ const Reports = () => {
                   title="Generate Report"
                   customPaddingX="1.4rem"
                   onClick={() => {
-                    if (!formik.values.reportType)
-                      return formik.setFieldError('reportType', 'Report Type is required');
-                    if (formik.values.reportType === 'Mandate Status Reports') {
-                      getMandateReports();
-                    } else if (formik.values.reportType === 'Transaction Reports') {
-                      getTransactionsReport();
-                    }
+                    generateReport();
                   }}
                 />
                 <button

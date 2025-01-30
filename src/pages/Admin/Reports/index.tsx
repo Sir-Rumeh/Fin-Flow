@@ -583,10 +583,6 @@ const Reports = () => {
   };
 
   useEffect(() => {
-    setIsFirstRender(false);
-  }, []);
-
-  useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
       pageNo: paginationData.pageNumber,
@@ -619,6 +615,10 @@ const Reports = () => {
     transactionsFormik.values.transacStatusFilter,
     activeTransactionTab,
   ]);
+
+  useEffect(() => {
+    setIsFirstRender(false);
+  }, []);
 
   useEffect(() => {
     if (queryParams.pageNo !== undefined && !isFirstRender) {
@@ -716,9 +716,48 @@ const Reports = () => {
   const clearFilter = () => {
     formik.setFieldValue('fromDateFilter', null);
     formik.setFieldValue('toDateFilter', null);
-    formik.setFieldValue('reportType', null);
     formik.setFieldValue('merchant', null);
     formik.setFieldValue('status', null);
+  };
+
+  const generateReport = () => {
+    if (!formik.values.reportType)
+      return formik.setFieldError('reportType', 'Report Type is required');
+    if (formik.values.reportType === 'Mandate Status Reports') {
+      if (formik.values.status) {
+        setQueryParams((prev) => ({
+          ...prev,
+          startDate: formik.values.fromDateFilter,
+          endDate: formik.values.toDateFilter,
+          status: formik.values.status,
+        }));
+      } else if (!(formik.values.status.length > 0)) {
+        getMandateReports();
+        setTimeout(() => {
+          setQueryParams((prev) => ({
+            ...prev,
+            status: '',
+          }));
+        }, 500);
+      }
+    } else if (formik.values.reportType === 'Transaction Reports') {
+      if (formik.values.status) {
+        setTransactionsQueryParams((prev) => ({
+          ...prev,
+          startDate: formik.values.fromDateFilter,
+          endDate: formik.values.toDateFilter,
+          status: formik.values.status,
+        }));
+      } else if (!(formik.values.status.length > 0)) {
+        getTransactionsReport();
+        setTimeout(() => {
+          setTransactionsQueryParams((prev) => ({
+            ...prev,
+            status: '',
+          }));
+        }, 500);
+      }
+    }
   };
 
   return (
@@ -773,6 +812,7 @@ const Reports = () => {
                   label="Report Type"
                   formik={formik}
                   options={reportTypes}
+                  performExtraAction={() => setShowFilteredReport(false)}
                 />
               </div>
               <div className="w-full">
@@ -799,13 +839,7 @@ const Reports = () => {
                 title="Generate Report"
                 customPaddingX="1.4rem"
                 onClick={() => {
-                  if (!formik.values.reportType)
-                    return formik.setFieldError('reportType', 'Report Type is required');
-                  if (formik.values.reportType === 'Mandate Status Reports') {
-                    getMandateReports();
-                  } else if (formik.values.reportType === 'Transaction Reports') {
-                    getTransactionsReport();
-                  }
+                  generateReport();
                 }}
               />
               <button

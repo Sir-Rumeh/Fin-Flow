@@ -74,7 +74,7 @@ const AuditTrail = () => {
     },
     {
       field: 'actor',
-      headerName: 'Actor',
+      headerName: 'Actor Email',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
@@ -169,7 +169,7 @@ const AuditTrail = () => {
   const clearFilter = () => {
     formik.setFieldValue('startDate', null);
     formik.setFieldValue('endDate', null);
-    formik.setFieldValue('searchFilter', null);
+    formik.setFieldValue('searchFilter', '');
   };
 
   return (
@@ -329,7 +329,7 @@ const AuditTrail = () => {
                 <div className="h-[2px] w-full bg-grayPrimary"></div>
                 <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-y-[20px]">
                   <DetailsCard title="Reference" content={selectedAudit.targetId} />
-                  <DetailsCard title="Account Name" content={selectedAudit.actor} />
+                  <DetailsCard title="Actor Email" content={selectedAudit.actor} />
                   <DetailsCard title="Affected Module" content={selectedAudit.module} />
                   <DetailsCard title="Performed Action" content={selectedAudit.action} />
                   <DetailsCard

@@ -72,7 +72,7 @@ const AuditTrail = () => {
     },
     {
       field: 'actor',
-      headerName: 'Account Name',
+      headerName: 'Actor Email',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
@@ -176,6 +176,12 @@ const AuditTrail = () => {
     }
   }, [queryParams.pageNo]);
 
+  const clearFilter = () => {
+    formik.setFieldValue('startDate', null);
+    formik.setFieldValue('endDate', null);
+    formik.setFieldValue('searchFilter', '');
+  };
+
   return (
     <>
       <div className="px-5 py-5">
@@ -229,6 +235,19 @@ const AuditTrail = () => {
                   getAuditTrailRecords();
                 }}
               />
+            </div>
+          </div>
+          <div className="flex w-full items-center justify-end gap-3 py-1">
+            <div className="">
+              <button
+                type="button"
+                onClick={() => {
+                  clearFilter();
+                }}
+                className={`rounded-lg bg-[#f3dad9] px-[1.2rem] py-[0.65rem] font-semibold text-[#B42318] hover:bg-[#f8efed]`}
+              >
+                Clear Filter
+              </button>
             </div>
           </div>
         </div>
@@ -296,7 +315,7 @@ const AuditTrail = () => {
                 <div className="h-[2px] w-full bg-grayPrimary"></div>
                 <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-y-[20px]">
                   <DetailsCard title="Reference" content={selectedRowData?.targetId} />
-                  <DetailsCard title="Account Name" content={selectedRowData?.actor} />
+                  <DetailsCard title="Actor Email" content={selectedRowData?.actor} />
                   <DetailsCard title="Affected Module" content={selectedRowData?.module} />
                   <DetailsCard title="Performed Action" content={selectedRowData?.action} />
                   <DetailsCard
