@@ -13,6 +13,7 @@ import { canBeUpdated } from 'utils/constants';
 import { SearchTypes } from 'utils/enums';
 import dayjs from 'dayjs';
 import { jwtDecode } from 'jwt-decode';
+import { adminRoutes } from 'routes/appRoutes';
 
 export const checkRoute = (pathname: string, pathToCheck: string) => {
   if (pathname.includes(pathToCheck)) {
@@ -143,7 +144,6 @@ export const appendParams = (params: URLSearchParams, queryParams: QueryParams |
       params.append('AccountNumber', formattedQueryParams.searchFilter);
     }
     if (formattedQueryParams.searchType === SearchTypes.SearchAudits) {
-      console.log('queryParams', formattedQueryParams);
       params.append('Actor', formattedQueryParams.searchFilter);
     }
     if (formattedQueryParams.searchType === SearchTypes.SearchMandates) {
@@ -289,7 +289,6 @@ export const convertExcelArrayToObjects = (
           header.toLocaleLowerCase().includes('startdate') ||
           header.toLocaleLowerCase().includes('enddate')
         ) {
-          // console.log('date value', header.toLocaleLowerCase());
           const formattedDateIsoDate = new Date(value).toISOString().split('T')[0] + 'T00:00:00';
           obj[header] = formattedDateIsoDate;
         } else if (header.toLocaleLowerCase().includes('amount')) {
@@ -374,3 +373,22 @@ export function getSecondSegmentFormatted(href: string): string | null {
     )
     .join('');
 }
+
+export const navigateAdminOnLogin = (userPermissions: string[], navigate: any) => {
+  try {
+    // const sortedAdminNavItems = [...AdminSideNavItems].reverse();
+    adminRoutes.forEach((route) => {
+      if (
+        userPermissions.some(
+          (perm) => perm.toLocaleLowerCase() === route.moduleValue.toLocaleLowerCase(),
+        )
+      ) {
+        navigate(`/${route.layout}/${route.path}`);
+      }
+    });
+  } catch (error: any) {
+    notifyError('Something went wrong while trying to redirect you to your dashboard');
+    console.log('error occured', error);
+    return;
+  }
+};

@@ -24,7 +24,6 @@ const ProfileDetails = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const profileId = searchParams?.get('id') || '';
-  console.log(profileId);
 
   const [modals, setModals] = useState({
     confirmDisable: false,

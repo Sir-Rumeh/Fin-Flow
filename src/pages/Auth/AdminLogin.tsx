@@ -48,9 +48,7 @@ const AdminLogin = () => {
         state: { data: enccryptedData, origin: UserLoginRoles.Admin },
       });
     },
-    onError: (error) => {
-      console.log(error);
-    },
+    onError: (error) => {},
   });
 
   return (

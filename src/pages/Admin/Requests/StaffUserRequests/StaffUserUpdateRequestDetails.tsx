@@ -168,7 +168,11 @@ const StaffUserUpdateRequestDetails = () => {
               <DetailsCard title="Employee ID" content={data?.responseData?.staffId} />
               <DetailsCard
                 title="Full Name"
-                content={`${data?.responseData?.firstName} ${data?.responseData?.lastName}`}
+                content={
+                  data?.responseData
+                    ? `${data?.responseData?.firstName} ${data?.responseData?.lastName}`
+                    : ''
+                }
               />
               <DetailsCard title="User Name" content={data?.responseData?.username} />
               <DetailsCard title="Email Address" content={data?.responseData?.email} />

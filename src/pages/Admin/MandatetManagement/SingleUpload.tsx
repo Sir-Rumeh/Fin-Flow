@@ -124,15 +124,11 @@ const SingleUpload = () => {
         billerAccountNumber: `${values.billerAccountNumber}`,
         bankName: values.billerBankName,
       };
-      // console.log('encoded document', values.supportingDocument);
-      // Convert the payload to a JSON string
       const jsonString = JSON.stringify(payload);
 
       // Use TextEncoder to calculate the byte size of the JSON string
       const encoder = new TextEncoder();
       const byteSize = encoder.encode(jsonString).length;
-
-      console.log(`Payload size: ${byteSize} bytes`);
 
       setMandateRequest(payload);
       openModal('confirmCreate');

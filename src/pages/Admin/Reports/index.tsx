@@ -885,7 +885,7 @@ const Reports = () => {
               </div>
               <div className="mt-1 w-full rounded-md border px-3 pt-2">
                 <div className="slide-down flex w-full flex-col justify-between border-b pb-1 lg:flex-row lg:items-center">
-                  <div className="flex w-full flex-row items-center justify-start gap-6 md:gap-10">
+                  <div className="flex flex-row items-center justify-start gap-6 md:gap-10 lg:w-[40%]">
                     <CustomTabs
                       tabs={tabsList}
                       activeTab={activeTransactionTab}
@@ -893,7 +893,7 @@ const Reports = () => {
                       showTabTotal={false}
                     />
                   </div>
-                  <div className="flex w-full items-center lg:justify-end">
+                  <div className="flex items-center lg:w-[60%] lg:justify-end">
                     <div className="">
                       <TableFilter
                         name={'searchTransactionAccountNumber'}

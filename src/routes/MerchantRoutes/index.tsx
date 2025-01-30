@@ -10,7 +10,16 @@ import {
 } from 'utils/helpers';
 import { useEffect, useRef, useState } from 'react';
 
+const CustomNotFoundPage = ({ isLoadingPermissions }: { isLoadingPermissions: boolean }) => {
+  return isLoadingPermissions ? (
+    <div className="fixed inset-0 z-[9999] flex size-full bg-[#00000066]" />
+  ) : (
+    <NotFoundPage />
+  );
+};
+
 function MerchantRoutes() {
+  const [isLoadingPermissions, setIsLoadingPermissions] = useState(true);
   const user = getUserFromLocalStorage();
   const userDetails = decodeToken(user?.token);
   const getMerchantRoutes = (routes: RoutesType[]) => {
@@ -22,9 +31,18 @@ function MerchantRoutes() {
       if (hasMatchingModuleValue) {
         setHasModuleAccess(true);
       }
+      setTimeout(() => {
+        setIsLoadingPermissions(false);
+      }, 1000);
     });
     if (!userDetails?.permission || !hasModuleAccess) {
-      return <Route path="*" element={<NotFoundPage />} key={'*'} />;
+      return (
+        <Route
+          path="*"
+          element={<CustomNotFoundPage isLoadingPermissions={isLoadingPermissions} />}
+          key={'*'}
+        />
+      );
     }
     return routes.map((route) => {
       const isAccessAllowed = hasAccessToModule(userDetails?.permission, route.moduleValue);
