@@ -74,7 +74,7 @@ const AuditTrail = () => {
     },
     {
       field: 'actor',
-      headerName: 'Actor',
+      headerName: 'Actor Email',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
