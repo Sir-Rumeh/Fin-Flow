@@ -43,7 +43,7 @@ const CustomFileUpload = ({
     <>
       <div className="relative mb-4 mt-6 h-auto w-full">
         <label htmlFor={labelFor} className="absolute bottom-16 font-semibold">
-          {label}${fileTypes.join(', ')}
+          {label} {`( ${fileTypes.join(', ')} )`}
         </label>
 
         <div
