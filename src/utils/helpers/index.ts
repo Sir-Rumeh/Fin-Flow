@@ -375,10 +375,20 @@ export function getSecondSegmentFormatted(href: string): string | null {
 }
 
 export const navigateAdminOnLogin = (userPermissions: string[], navigate: any) => {
+  if (!(userPermissions?.length > 0)) {
+    notifyError('No User permissions exist for this user');
+    return;
+  }
+  notifySuccess('Login Successful');
+  let isNavigated = false;
+
   try {
-    const sortedAdminNavItems = [...adminRoutes].reverse();
+    // const sortedAdminNavItems = [...adminRoutes].reverse();
+    const sortedAdminNavItems = [...adminRoutes];
+
     sortedAdminNavItems.forEach((route) => {
-      if (hasAccessToModule(userPermissions, route.moduleValue)) {
+      if (hasAccessToModule(userPermissions, route.moduleValue) && !isNavigated) {
+        isNavigated = true;
         navigate(`${route.layout}/${route.path}`);
         return;
       }
@@ -389,11 +399,23 @@ export const navigateAdminOnLogin = (userPermissions: string[], navigate: any) =
     return;
   }
 };
+
 export const navigateMerchantOnLogin = (userPermissions: string[], navigate: any) => {
+  if (!(userPermissions?.length > 0)) {
+    notifyError('No User permissions exist for this user');
+    return;
+  }
+
+  notifySuccess('Login Successful');
+  let isNavigated = false;
+
   try {
-    const sortedMerchantNavItems = [...merchantRoutes].reverse();
+    // const sortedMerchantNavItems = [...merchantRoutes].reverse();
+    const sortedMerchantNavItems = [...merchantRoutes];
+
     sortedMerchantNavItems.forEach((route) => {
-      if (hasAccessToModule(userPermissions, route.moduleValue)) {
+      if (hasAccessToModule(userPermissions, route.moduleValue) && !isNavigated) {
+        isNavigated = true;
         navigate(`${route.layout}/${route.path}`);
         return;
       }

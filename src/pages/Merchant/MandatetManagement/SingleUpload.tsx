@@ -108,7 +108,6 @@ const SingleUpload = () => {
         accountNumber: `${values.accountNumber}`,
         bankCode: values.bankCode,
         supportingDocument: 'supportingDoc.pdf',
-        // supportingDocument: values.supportingDocument,
         narration: values.narration,
         payerName: values.payerName,
         payeeName: values.payeeName,

@@ -55,7 +55,6 @@ const OTP = () => {
     onSuccess: (data) => {
       const userDetails = decodeToken(data?.responseData?.token);
       localStorage.setItem('user', JSON.stringify(data?.responseData));
-      notifySuccess('Login Successful');
       formik.resetForm();
       navigateAdminOnLogin(userDetails?.permission, navigate);
     },
@@ -69,7 +68,6 @@ const OTP = () => {
     onSuccess: (data) => {
       const userDetails = decodeToken(data?.responseData?.token);
       localStorage.setItem('user', JSON.stringify(data?.responseData));
-      notifySuccess('Login Successful');
       formik.resetForm();
       navigateMerchantOnLogin(userDetails?.permission, navigate);
     },
