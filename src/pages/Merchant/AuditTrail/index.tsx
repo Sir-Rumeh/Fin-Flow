@@ -571,11 +571,7 @@ const AuditTrail = () => {
                     setQueryParams((prev) => ({
                       ...prev,
                       searchFilter: formik.values.searchFilter,
-                      pageNo:
-                        formik.values.searchFilter?.length > 0 ||
-                        formik.values.statusFilter?.length > 0
-                          ? undefined
-                          : paginationData.pageNumber,
+                      pageNo: paginationData.pageNumber,
                       pageSize: paginationData.pageSize,
                       startDate: formik.values.startDate,
                       endDate: formik.values.endDate,
