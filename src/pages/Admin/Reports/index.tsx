@@ -39,7 +39,7 @@ import {
   getTransactions,
   getTransactionsByMerchantId,
 } from 'config/actions/dashboard-actions';
-import { formatApiDataForDropdown, getDateRange } from 'utils/helpers';
+import { formatApiDataForDropdown, getDateRange, notifyError } from 'utils/helpers';
 import { getMerchants } from 'config/actions/merchant-actions';
 import { SearchTypes, TransactionsTabsListTabNames } from 'utils/enums';
 import { useReactToPrint } from 'react-to-print';
@@ -736,6 +736,8 @@ const Reports = () => {
         setTimeout(() => {
           setQueryParams((prev) => ({
             ...prev,
+            startDate: formik.values.fromDateFilter,
+            endDate: formik.values.toDateFilter,
             status: '',
           }));
         }, 500);
@@ -753,12 +755,24 @@ const Reports = () => {
         setTimeout(() => {
           setTransactionsQueryParams((prev) => ({
             ...prev,
+            startDate: formik.values.fromDateFilter,
+            endDate: formik.values.toDateFilter,
             status: '',
           }));
         }, 500);
       }
     }
   };
+
+  useEffect(() => {
+    if (formik.values.fromDateFilter && formik.values.toDateFilter) {
+      const startDate = new Date(formik.values.fromDateFilter);
+      const endDate = new Date(formik.values.toDateFilter);
+      if (startDate > endDate) {
+        notifyError('Start date should be less than end date');
+      }
+    }
+  }, [formik.values.fromDateFilter, formik.values.toDateFilter]);
 
   return (
     <>
