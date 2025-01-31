@@ -146,16 +146,16 @@ export const createMandateSchema = Yup.object().shape({
   payeeEmailAddress: Yup.string().required('Payee email address is required'),
   payeePhoneNumber: Yup.string().required('Payee phone number is required'),
   payeeAddress: Yup.string().required('Payee address is required'),
-  biller: Yup.string().required('Biller is required'),
-  billerId: Yup.string().required('Biller id is required'),
-  billerCode: Yup.string().required('Biller Code is required'),
-  billerAccountNumber: Yup.string()
-    .min(10, 'Invalid Account Number')
-    .max(10, 'Invalid Account Number')
-    .required('Biller account number is required'),
+  // biller: Yup.string().required('Biller is required'),
+  // billerId: Yup.string().required('Biller id is required'),
+  // billerCode: Yup.string().required('Biller Code is required'),
+  // billerAccountNumber: Yup.string()
+  //   .min(10, 'Invalid Account Number')
+  //   .max(10, 'Invalid Account Number')
+  //   .required('Biller account number is required'),
+  //   billerBankCode: Yup.string().required('Biller bank code id is required'),
+  //   billerBankName: Yup.string().required('Biller bank name id is required'),
   // billerAccountName: Yup.string().required('Biller account name id is required'),
-  billerBankCode: Yup.string().required('Biller bank code id is required'),
-  billerBankName: Yup.string().required('Biller bank name id is required'),
 });
 
 export const updateMandateSchema = Yup.object().shape({
@@ -200,7 +200,6 @@ export const createAccountSchema = Yup.object().shape({
     .min(10, 'Invalid Account Number')
     .max(10, 'Invalid Account Number')
     .required('Account number is required'),
-  cif: Yup.string().required('CIF number is required'),
 });
 
 export const addRoleSchema = Yup.object().shape({

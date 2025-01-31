@@ -167,28 +167,33 @@ const SingleUpload = () => {
     queryFn: ({ queryKey }) => getMerchants(queryKey[1] as QueryParams),
   });
 
-  const { data: accountData, refetch: refetchAccountsOptions } = useQuery({
-    queryKey: ['accounts', queryParams],
-    queryFn: ({ queryKey }) =>
-      formik.values.merchantId
-        ? getAccountsByMerchantId(formik.values.merchantId)
-        : getAccounts(queryKey[1] as QueryParams),
-  });
+  // const { data: accountData, refetch: refetchAccountsOptions } = useQuery({
+  //   queryKey: ['accounts', queryParams],
+  //   queryFn: ({ queryKey }) =>
+  //     formik.values.merchantId
+  //       ? getAccountsByMerchantId(formik.values.merchantId)
+  //       : getAccounts(queryKey[1] as QueryParams),
+  // });
 
-  const refetchAccountRef = useRef(false);
+  // const refetchAccountRef = useRef(false);
 
-  useEffect(() => {
-    if (!refetchAccountRef.current) {
-      refetchAccountRef.current = true;
-      return;
-    } else {
-      refetchAccountsOptions();
-    }
-  }, [formik.values.merchantId]);
+  // useEffect(() => {
+  //   if (!refetchAccountRef.current) {
+  //     refetchAccountRef.current = true;
+  //     return;
+  //   } else {
+  //     refetchAccountsOptions();
+  //   }
+  // }, [formik.values.merchantId]);
 
   const minStartDate = () => {
     const date = new Date();
-    return date.setDate(date.getDate() + 30);
+    return date.setDate(date.getDate() + 7);
+  };
+
+  const minEndDate = () => {
+    const startDate = new Date(minStartDate());
+    return startDate.setDate(startDate.getDate() + 7);
   };
 
   return (
@@ -288,6 +293,7 @@ const SingleUpload = () => {
                   label="End Date"
                   placeholder="Select date"
                   useTouched
+                  minDate={minEndDate()}
                 />
               </div>
               <div className="md:col-span-1">
@@ -321,68 +327,38 @@ const SingleUpload = () => {
                 />
               </div>
               <div className="w-full md:col-span-1">
-                <FormSelect
+                <CustomInput
                   labelFor="accountName"
                   label="Account Name"
-                  formik={formik}
                   useTouched
-                  options={formatApiDataForDropdown(
-                    accountData?.responseData?.items,
-                    'accountName',
-                    'accountName',
-                  )}
-                  scrollableOptions
-                  scrollableHeight="max-h-[15rem]"
+                  placeholder="Enter here"
+                  maxW="w-full"
+                  formik={formik}
+                  inputType="text"
                 />
               </div>
               <div className="w-full md:col-span-1">
-                <FormSelect
+                <CustomInput
                   labelFor="accountNumber"
                   label="Account Number"
-                  formik={formik}
                   useTouched
-                  options={
-                    formik.values.accountName?.length > 0
-                      ? formatApiDataForDropdown(
-                          filterSelectedOption(
-                            formik.values.accountName,
-                            'accountName',
-                            accountData?.responseData?.items,
-                          ),
-                          'accountNumber',
-                          'accountNumber',
-                        )
-                      : formatApiDataForDropdown(
-                          accountData?.responseData?.items,
-                          'accountNumber',
-                          'accountNumber',
-                        )
-                  }
-                  scrollableOptions
-                  scrollableHeight="max-h-[15rem]"
+                  placeholder="Enter here"
+                  maxW="w-full"
+                  formik={formik}
+                  inputType="text"
+                  mode="numeric"
+                  pattern="\d*"
                 />
               </div>
               <div className="w-full md:col-span-1">
-                <FormSelect
+                <CustomInput
                   labelFor="accountId"
                   label="Account Id"
-                  formik={formik}
                   useTouched
-                  options={
-                    formik.values.accountName?.length > 0
-                      ? formatApiDataForDropdown(
-                          filterSelectedOption(
-                            formik.values.accountName,
-                            'accountName',
-                            accountData?.responseData?.items,
-                          ),
-                          'id',
-                          'id',
-                        )
-                      : formatApiDataForDropdown(accountData?.responseData?.items, 'id', 'id')
-                  }
-                  scrollableOptions
-                  scrollableHeight="max-h-[15rem]"
+                  placeholder="Enter here"
+                  maxW="w-full"
+                  formik={formik}
+                  inputType="text"
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -507,7 +483,7 @@ const SingleUpload = () => {
             </FormContentContainer>
           </div>
           <div className="mt-10">
-            <FormContentContainer title="Biller Details">
+            <FormContentContainer title={`Biller Details - ( Optional )`}>
               <div className="w-full md:col-span-1">
                 <CustomInput
                   labelFor="biller"

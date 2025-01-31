@@ -38,7 +38,6 @@ function CreateAccount() {
       merchantName: '',
       accountName: '',
       accountNumber: '',
-      cif: '',
     },
     validationSchema: createAccountSchema,
     onSubmit: (values) => {
@@ -48,7 +47,6 @@ function CreateAccount() {
         merchantName: values.merchantName,
         accountName: values.accountName,
         accountNumber: `${values.accountNumber}`,
-        cif: values.cif,
       };
       setAccountRequest(payload);
       openModal('confirmCreate');
@@ -126,27 +124,6 @@ function CreateAccount() {
                     scrollableOptions
                     scrollableHeight="max-h-[15rem]"
                   />
-                  <FormSelect
-                    labelFor="cif"
-                    label="CIF"
-                    formik={formik}
-                    useTouched
-                    options={
-                      formik.values.merchantId?.length > 0
-                        ? formatApiDataForDropdown(
-                            filterSelectedOption(
-                              formik.values.merchantId,
-                              'id',
-                              data?.responseData?.items,
-                            ),
-                            'cif',
-                            'cif',
-                          )
-                        : formatApiDataForDropdown(data?.responseData?.items, 'cif', 'cif')
-                    }
-                    scrollableOptions
-                    scrollableHeight="max-h-[15rem]"
-                  />
                   <CustomInput
                     labelFor="accountName"
                     label="Account Name"
@@ -155,18 +132,16 @@ function CreateAccount() {
                     maxW="w-full"
                     formik={formik}
                   />
-                  <div className="md:col-span-2">
-                    <CustomInput
-                      labelFor="accountNumber"
-                      label="Account Number"
-                      inputType="text"
-                      mode="numeric"
-                      pattern="\d*"
-                      placeholder="Enter here"
-                      maxW="w-full"
-                      formik={formik}
-                    />
-                  </div>
+                  <CustomInput
+                    labelFor="accountNumber"
+                    label="Account Number"
+                    inputType="text"
+                    mode="numeric"
+                    pattern="\d*"
+                    placeholder="Enter here"
+                    maxW="w-full"
+                    formik={formik}
+                  />
                 </div>
                 <div className="mt-6 flex items-center justify-end">
                   <ButtonComponent

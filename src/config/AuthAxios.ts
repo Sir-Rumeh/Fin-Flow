@@ -85,11 +85,13 @@ AxiosClient.interceptors.response.use(
       dispatch(uiStopLoading());
       localStorage.clear();
     } else if (error?.response?.status === 400) {
-      notifyError(
-        error?.response?.data?.responseMessage ||
-          error?.response?.data?.message ||
-          'Invalid Request.',
-      );
+      error?.response?.data?.errors
+        ? notifyError(`${error?.response?.data?.errors[0]}. ${error?.response?.data?.errors[1]}`)
+        : notifyError(
+            error?.response?.data?.responseMessage ||
+              error?.response?.data?.message ||
+              'Invalid Request.',
+          );
       return Promise.reject(error);
     } else if (error?.response?.status === 404) {
       notifyError(

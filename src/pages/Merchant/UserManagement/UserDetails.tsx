@@ -40,7 +40,6 @@ const UserDetails = () => {
               title="Merchant Name"
               content={data?.responseData ? data?.responseData?.merchantName : ''}
             />
-            <DetailsCard title="CIF Number" content="9028272009" />
             <DetailsCard title="Account ID" content={data?.responseData?.accountID} />
             <DetailsCard title="User Name" content={data?.responseData ? userName : ''} />
             <DetailsCard title="Email" content={data?.responseData?.email} />
