@@ -84,7 +84,7 @@ AxiosClient.interceptors.response.use(
       notifyError('Session expired. Please log in again.');
       dispatch(uiStopLoading());
       localStorage.clear();
-    } else if (error?.response?.status === 400) {
+    } else if (error?.response?.status === 400 || 424) {
       error?.response?.data?.errors
         ? notifyError(`${error?.response?.data?.errors[0]}. ${error?.response?.data?.errors[1]}`)
         : notifyError(

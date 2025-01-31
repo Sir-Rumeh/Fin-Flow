@@ -180,7 +180,7 @@ AxiosClient.interceptors.response.use(
           localStorage.clear();
         }
       }
-    } else if (error?.response?.status === 400) {
+    } else if (error?.response?.status === 400 || 424) {
       if (controller) controller.abort();
       error?.response?.data?.errors
         ? notifyError(`${error?.response?.data?.errors[0]}. ${error?.response?.data?.errors[1]}`)
