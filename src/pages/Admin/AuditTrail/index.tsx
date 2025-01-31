@@ -13,7 +13,7 @@ import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import DetailsCard from 'components/common/DashboardCards/DetailsCard';
 import { useQuery } from '@tanstack/react-query';
 import { QueryParams } from 'utils/interfaces';
-import { getDateRange } from 'utils/helpers';
+import { getDateRange, notifyError } from 'utils/helpers';
 import { getAuditTrails } from 'config/actions/audit-trail-actions';
 import { SearchTypes } from 'utils/enums';
 import dayjs from 'dayjs';
@@ -171,6 +171,16 @@ const AuditTrail = () => {
     formik.setFieldValue('endDate', null);
     formik.setFieldValue('searchFilter', '');
   };
+
+  useEffect(() => {
+    if (formik.values.startDate && formik.values.endDate) {
+      const startDate = new Date(formik.values.startDate);
+      const endDate = new Date(formik.values.endDate);
+      if (startDate > endDate) {
+        notifyError('Start date should be less than end date');
+      }
+    }
+  }, [formik.values.startDate, formik.values.endDate]);
 
   return (
     <>
