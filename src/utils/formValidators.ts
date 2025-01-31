@@ -200,7 +200,6 @@ export const createAccountSchema = Yup.object().shape({
     .min(10, 'Invalid Account Number')
     .max(10, 'Invalid Account Number')
     .required('Account number is required'),
-  cif: Yup.string().required('CIF number is required'),
 });
 
 export const addRoleSchema = Yup.object().shape({

@@ -103,9 +103,9 @@ const AccountManagement = () => {
   };
 
   const excelHeaders = [
+    { label: 'Merchant Name', key: 'merchantName' },
     { label: 'Merchant ID', key: 'merchantId' },
     { label: 'Account Number', key: 'accountNumber' },
-    { label: 'CIF Number', key: 'cif' },
     { label: 'Active Status', key: 'isActive' },
     { label: 'Date Requested', key: 'dateCreated' },
   ];

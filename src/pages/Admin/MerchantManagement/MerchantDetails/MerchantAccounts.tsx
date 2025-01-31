@@ -102,7 +102,6 @@ const MerchantAccounts = () => {
   const excelHeaders = [
     { label: 'Merchant ID', key: 'merchantId' },
     { label: 'Account Number', key: 'accountNumber' },
-    { label: 'CIF Number', key: 'cif' },
     { label: 'Active Status', key: 'isActive' },
     { label: 'Date Requested', key: 'dateCreated' },
   ];
@@ -121,14 +120,6 @@ const MerchantAccounts = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
-    },
-    {
-      field: 'cif',
-      headerName: 'CIF',
-      width: screen.width < 1000 ? 200 : undefined,
-      flex: screen.width >= 1000 ? 1 : undefined,
-      headerClassName: 'ag-thead',
-      sortable: false,
     },
     {
       field: 'status',
