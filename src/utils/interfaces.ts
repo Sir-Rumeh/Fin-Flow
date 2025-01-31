@@ -137,11 +137,11 @@ export interface MandateRequest {
   payeeEmailAddress: string;
   payeePhoneNumber: string;
   payeeAddress: string;
-  biller: string;
-  billerID: string;
-  billerCode: string;
-  billerAccountNumber: string;
-  bankName: string;
+  biller?: string;
+  billerID?: string;
+  billerCode?: string;
+  billerAccountNumber?: string;
+  bankName?: string;
 }
 
 export interface QueryParams {
