@@ -17,7 +17,7 @@ import FormDatePicker from 'components/FormElements/FormDatePicker';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import CustomPopover from 'hoc/PopOverWrapper';
 import PopoverTitle from 'components/common/PopoverTitle';
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { createSearchParams, Link, useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
 import FormSelect from 'components/FormElements/FormSelect';
 import DownloadIcon from 'assets/icons/DownloadIcon';
@@ -326,18 +326,12 @@ const Reports = () => {
               translationY={45}
             >
               <div className="flex flex-col rounded-md p-1">
-                <button
-                  onClick={() =>
-                    navigate({
-                      pathname: `/${appRoutes.merchantDashboard.mandateManagement.mandateDetails}`,
-                      search: `?${createSearchParams({ id: params?.row.id })}`,
-                    })
-                  }
-                  type="button"
-                  className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
+                <Link
+                  to={`/${appRoutes.merchantDashboard.mandateManagement.mandateDetails}/${params.id}`}
+                  className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
                 >
                   View Details
-                </button>
+                </Link>
                 <button
                   onClick={async () => {
                     setSelectedMandateCode(params.row.mandateCode);
