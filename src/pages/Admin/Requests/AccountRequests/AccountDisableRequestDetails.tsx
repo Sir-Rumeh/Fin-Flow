@@ -128,7 +128,6 @@ const AccountDisableRequestDetails = () => {
             <ItemDetailsContainer title="Request Details">
               <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
               <DetailsCard title="Merchant Name" content={data?.responseData?.merchantName} />
-              <DetailsCard title="CIF Number" content={data?.responseData?.cif} />
               <DetailsCard title="Account Name" content={data?.responseData?.accountName} />
               <DetailsCard title="Account Number" content={data?.responseData?.accountNumber} />
               <DetailsCard

@@ -238,7 +238,6 @@ const MerchantDetails = () => {
               <DetailsCard title="Merchant ID" content={data?.responseData?.id} />
               <DetailsCard title="Merchant Name" content={data?.responseData?.name} />
               <DetailsCard title="Merchant Code" content={data?.responseData?.merchantCode} />
-              {/* <DetailsCard title="CIF Number" content={data?.responseData?.cif} /> */}
               <DetailsCard
                 title="Merchant Fee"
                 content={`\u20A6${formatNumberDisplay(data?.responseData?.internalChargeFee)}`}

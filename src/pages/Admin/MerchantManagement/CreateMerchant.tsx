@@ -34,7 +34,6 @@ const CreateMerchant = () => {
 
   const formik = useFormik({
     initialValues: {
-      // merchantCIF: '',
       merchantName: '',
       accountNumber: '',
       rcNumber: '',
@@ -147,14 +146,6 @@ const CreateMerchant = () => {
                       maxW="w-full"
                       formik={formik}
                     />
-                    {/* <CustomInput
-                      labelFor="merchantCIF"
-                      label="Merchant CIF"
-                      inputType="text"
-                      placeholder="Enter here"
-                      maxW="w-full"
-                      formik={formik}
-                    /> */}
                     <CustomInput
                       labelFor="rcNumber"
                       label="RC Number"
