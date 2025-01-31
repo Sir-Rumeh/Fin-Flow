@@ -732,10 +732,12 @@ const Reports = () => {
           status: formik.values.status,
         }));
       } else if (!(formik.values.status.length > 0)) {
-        getMandateReports();
+        // getMandateReports();
         setTimeout(() => {
           setQueryParams((prev) => ({
             ...prev,
+            startDate: formik.values.fromDateFilter,
+            endDate: formik.values.toDateFilter,
             status: '',
           }));
         }, 500);
@@ -749,10 +751,12 @@ const Reports = () => {
           status: formik.values.status,
         }));
       } else if (!(formik.values.status.length > 0)) {
-        getTransactionsReport();
+        // getTransactionsReport();
         setTimeout(() => {
           setTransactionsQueryParams((prev) => ({
             ...prev,
+            startDate: formik.values.fromDateFilter,
+            endDate: formik.values.toDateFilter,
             status: '',
           }));
         }, 500);
