@@ -184,11 +184,7 @@ AxiosClient.interceptors.response.use(
       if (controller) controller.abort();
       error?.response?.data?.errors
         ? notifyError(`${error?.response?.data?.errors[0]}. ${error?.response?.data?.errors[1]}`)
-        : notifyError(
-            error?.response?.data?.responseMessage ||
-              error?.response?.data?.message ||
-              'Invalid Request.',
-          );
+        : notifyError(error?.response?.data?.responseMessage || error?.response?.data?.message);
       return Promise.reject(error);
     } else if (error?.response?.status === 404) {
       if (controller) controller.abort();
