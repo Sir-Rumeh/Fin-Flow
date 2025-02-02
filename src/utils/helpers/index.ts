@@ -293,6 +293,16 @@ export const convertExcelArrayToObjects = (
           obj[header] = formattedDateIsoDate;
         } else if (header.toLocaleLowerCase().includes('amount')) {
           obj[header] = value || null;
+        } else if (
+          header.toLocaleLowerCase().includes('accountnumber') &&
+          String(value)?.length < 10
+        ) {
+          obj[header] = `0${String(value)}` || '';
+        } else if (
+          header.toLocaleLowerCase().includes('phonenumber') &&
+          String(value)?.length < 11
+        ) {
+          obj[header] = `0${String(value)}` || '';
         } else {
           obj[header] = String(value) || '';
         }

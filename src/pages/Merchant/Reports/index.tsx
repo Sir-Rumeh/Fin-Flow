@@ -223,9 +223,7 @@ const Reports = () => {
   );
 
   const [transactionsQueryParams, setTransactionsQueryParams] = useState<QueryParams>({
-    status: transactionsFormik.values.transacStatusFilter
-      ? transactionsFormik.values.transacStatusFilter
-      : activeTransactionTab,
+    status: activeTransactionTab,
     pageNo: transactionPaginationData.pageNumber,
     pageSize: transactionPaginationData.pageSize,
     searchFilter: transactionsFormik.values.searchTransactionAccountNumber,
@@ -540,8 +538,8 @@ const Reports = () => {
       status: formik.values.transacStatusFilter
         ? formik.values.transacStatusFilter
         : activeTransactionTab,
-      pageNo: transactionPaginationData.pageNumber,
-      pageSize: paginationData.pageSize,
+      pageNo: mandateTransactionsPaginationData.pageNumber,
+      pageSize: mandateTransactionsPaginationData.pageSize,
     }));
   }, [mandateTransactionsPaginationData.pageNumber, activeTransactionTab]);
 
@@ -552,7 +550,7 @@ const Reports = () => {
         ? transactionsFormik.values.transacStatusFilter
         : activeTransactionTab,
       pageNo: transactionPaginationData.pageNumber,
-      pageSize: paginationData.pageSize,
+      pageSize: transactionPaginationData.pageSize,
     }));
   }, [
     transactionPaginationData,
@@ -700,7 +698,7 @@ const Reports = () => {
             ...prev,
             startDate: formik.values.fromDateFilter,
             endDate: formik.values.toDateFilter,
-            status: '',
+            status: 'Successful',
           }));
         }, 500);
       }

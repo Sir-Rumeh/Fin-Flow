@@ -188,7 +188,7 @@ const SingleUpload = () => {
 
   const minStartDate = () => {
     const date = new Date();
-    return date.setDate(date.getDate() + 7);
+    return date.setDate(date.getDate() + 1);
   };
 
   const minEndDate = () => {
