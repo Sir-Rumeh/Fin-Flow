@@ -22,6 +22,7 @@ import {
   enableProfile,
   getProfiles,
   resendPasswordChangeMail,
+  sendPasswordResetMail,
 } from 'config/actions/profile-actions';
 import { SearchTypes } from 'utils/enums';
 import { statusDropdownOptions } from 'utils/constants';
@@ -257,12 +258,21 @@ const ProfileManagement = () => {
                 </button>
                 <button
                   onClick={() => {
-                    resendChangePaaswordMailMutation(params?.row.id);
+                    resendResetPasswordMailMutation({ email: params?.row.email });
                   }}
                   type="button"
                   className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
                 >
                   Send Reset Password Mail
+                </button>
+                <button
+                  onClick={() => {
+                    resendChangePasswordMailMutation(params?.row.id);
+                  }}
+                  type="button"
+                  className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
+                >
+                  Send Onboarding Password Mail
                 </button>
               </div>
             </CustomPopover>
@@ -310,12 +320,20 @@ const ProfileManagement = () => {
     },
   });
 
-  const resendChangePaaswordMailMutation = async (profileId: string | undefined) => {
+  const resendChangePasswordMailMutation = async (profileId: string | undefined) => {
     const res = await resendPasswordChangeMail(profileId);
     if (res) {
       notifySuccess('Password reset mail sent successfully');
     }
   };
+
+  const resendResetPasswordMailMutation = async (payload: { email: string } | undefined) => {
+    const res = await sendPasswordResetMail(payload);
+    if (res) {
+      notifySuccess('Password reset mail sent successfully');
+    }
+  };
+
   return (
     <>
       <section className="p-2 md:p-4">
