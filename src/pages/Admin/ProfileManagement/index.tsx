@@ -22,6 +22,7 @@ import {
   enableProfile,
   getProfiles,
   resendPasswordChangeMail,
+  sendPasswordResetMail,
 } from 'config/actions/profile-actions';
 import { SearchTypes } from 'utils/enums';
 import { statusDropdownOptions } from 'utils/constants';
@@ -257,7 +258,7 @@ const ProfileManagement = () => {
                 </button>
                 <button
                   onClick={() => {
-                    resendChangePaaswordMailMutation(params?.row.id);
+                    resendChangePaaswordMailMutation({ email: params?.row.email });
                   }}
                   type="button"
                   className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
@@ -310,12 +311,20 @@ const ProfileManagement = () => {
     },
   });
 
-  const resendChangePaaswordMailMutation = async (profileId: string | undefined) => {
-    const res = await resendPasswordChangeMail(profileId);
+  // const resendChangePaaswordMailMutation = async (profileId: string | undefined) => {
+  //   const res = await resendPasswordChangeMail(profileId);
+  //   if (res) {
+  //     notifySuccess('Password reset mail sent successfully');
+  //   }
+  // };
+
+  const resendChangePaaswordMailMutation = async (payload: { email: string } | undefined) => {
+    const res = await sendPasswordResetMail(payload);
     if (res) {
       notifySuccess('Password reset mail sent successfully');
     }
   };
+
   return (
     <>
       <section className="p-2 md:p-4">
