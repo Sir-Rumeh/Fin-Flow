@@ -258,12 +258,21 @@ const ProfileManagement = () => {
                 </button>
                 <button
                   onClick={() => {
-                    resendChangePaaswordMailMutation({ email: params?.row.email });
+                    resendResetPasswordMailMutation({ email: params?.row.email });
                   }}
                   type="button"
                   className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
                 >
                   Send Reset Password Mail
+                </button>
+                <button
+                  onClick={() => {
+                    resendChangePasswordMailMutation(params?.row.id);
+                  }}
+                  type="button"
+                  className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
+                >
+                  Send Onboarding Password Mail
                 </button>
               </div>
             </CustomPopover>
@@ -311,14 +320,14 @@ const ProfileManagement = () => {
     },
   });
 
-  // const resendChangePaaswordMailMutation = async (profileId: string | undefined) => {
-  //   const res = await resendPasswordChangeMail(profileId);
-  //   if (res) {
-  //     notifySuccess('Password reset mail sent successfully');
-  //   }
-  // };
+  const resendChangePasswordMailMutation = async (profileId: string | undefined) => {
+    const res = await resendPasswordChangeMail(profileId);
+    if (res) {
+      notifySuccess('Password reset mail sent successfully');
+    }
+  };
 
-  const resendChangePaaswordMailMutation = async (payload: { email: string } | undefined) => {
+  const resendResetPasswordMailMutation = async (payload: { email: string } | undefined) => {
     const res = await sendPasswordResetMail(payload);
     if (res) {
       notifySuccess('Password reset mail sent successfully');
