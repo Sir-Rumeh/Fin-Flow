@@ -108,6 +108,9 @@ AxiosClient.interceptors.response.use(
     } else if (error.message === networkErrorMessage) {
       notifyError(error.message);
       return Promise.reject(error);
+    } else if (!error?.response?.status) {
+      notifyError('Network error. Failed to receive response');
+      return Promise.reject(error);
     }
     return Promise.reject(error);
   },
