@@ -297,7 +297,13 @@ export const convertExcelArrayToObjects = (
           header.toLocaleLowerCase().includes('accountnumber') &&
           String(value)?.length < 10
         ) {
-          obj[header] = `0${String(value)}` || '';
+          if (String(value)?.length === 9) {
+            obj[header] = `0${String(value)}` || '';
+          } else if (String(value)?.length === 8) {
+            obj[header] = `00${String(value)}` || '';
+          } else if (String(value)?.length === 7) {
+            obj[header] = `000${String(value)}` || '';
+          }
         } else if (
           header.toLocaleLowerCase().includes('phonenumber') &&
           String(value)?.length < 11
