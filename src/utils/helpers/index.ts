@@ -346,9 +346,23 @@ export const filterSelectedOption = (filter: any, filterId: any, options: any) =
   return options?.filter((opt: any) => opt[filterId] === filter);
 };
 
-export const hasAccessToModule = (permissions: string[], module: string): boolean => {
-  // Check if the array contains any entry starting with the module name followed by a dot (.)
-  return permissions?.some((permission) => permission.startsWith(`${module}.`));
+// export const hasAccessToModule = (permissions: string[], module: string): boolean => {
+//   // Check if the array contains any entry starting with the module name followed by a dot (.)
+//   return permissions?.some((permission) => permission.startsWith(`${module}.`));
+// };
+
+export const hasAccessToModule = (
+  permissions: string | string[] | undefined | null,
+  module: string,
+): boolean => {
+  if (!permissions) return false;
+  if (typeof permissions === 'string') {
+    return permissions.startsWith(`${module}.`);
+  }
+  if (Array.isArray(permissions)) {
+    return permissions.some((permission) => permission.startsWith(`${module}.`));
+  }
+  return false;
 };
 
 export const decodeToken = (token?: string) => {

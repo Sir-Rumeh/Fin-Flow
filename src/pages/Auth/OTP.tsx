@@ -12,6 +12,7 @@ import {
   decodeToken,
   navigateAdminOnLogin,
   navigateMerchantOnLogin,
+  notifyError,
   notifySuccess,
 } from 'utils/helpers';
 import { UserLoginRoles } from 'utils/enums';
@@ -56,7 +57,11 @@ const OTP = () => {
       const userDetails = decodeToken(data?.responseData?.token);
       localStorage.setItem('user', JSON.stringify(data?.responseData));
       formik.resetForm();
-      navigateAdminOnLogin(userDetails?.permission, navigate);
+      if (userDetails?.permission) {
+        navigateAdminOnLogin(userDetails?.permission, navigate);
+      } else {
+        notifyError('No User permissions exist for this user');
+      }
     },
     onError: (error) => {
       console.log(error);
@@ -69,7 +74,11 @@ const OTP = () => {
       const userDetails = decodeToken(data?.responseData?.token);
       localStorage.setItem('user', JSON.stringify(data?.responseData));
       formik.resetForm();
-      navigateMerchantOnLogin(userDetails?.permission, navigate);
+      if (userDetails?.permission) {
+        navigateAdminOnLogin(userDetails?.permission, navigate);
+      } else {
+        notifyError('No User permissions exist for this user');
+      }
     },
     onError: (error) => {
       console.log(error);
