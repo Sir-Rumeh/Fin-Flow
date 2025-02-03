@@ -148,11 +148,11 @@ const AuditTrail = () => {
   useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
-      searchFilter: formik.values.searchFilter,
+      // searchFilter: formik.values.searchFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
-      startDate: formik.values.startDate,
-      endDate: formik.values.endDate,
+      // startDate: formik.values.startDate,
+      // endDate: formik.values.endDate,
     }));
   }, [paginationData]);
 
