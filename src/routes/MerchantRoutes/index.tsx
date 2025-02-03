@@ -25,9 +25,18 @@ function MerchantRoutes() {
   const getMerchantRoutes = (routes: RoutesType[]) => {
     const [hasModuleAccess, setHasModuleAccess] = useState(false);
     useEffect(() => {
-      const hasMatchingModuleValue = routes.some((route) =>
-        userDetails?.permission?.some((string: any) => string.includes(route.moduleValue)),
-      );
+      const hasMatchingModuleValue = routes.some((route) => {
+        const permissions = userDetails?.permission;
+        if (!permissions) return false;
+        if (typeof permissions === 'string') {
+          return permissions.includes(route.moduleValue);
+        }
+        if (Array.isArray(permissions)) {
+          return permissions.some((perm) => perm.includes(route.moduleValue)); // Handle array case
+        }
+        return false;
+        // userDetails?.permission?.some((string: any) => string.includes(route.moduleValue))
+      });
       if (hasMatchingModuleValue) {
         setHasModuleAccess(true);
       }

@@ -346,9 +346,23 @@ export const filterSelectedOption = (filter: any, filterId: any, options: any) =
   return options?.filter((opt: any) => opt[filterId] === filter);
 };
 
-export const hasAccessToModule = (permissions: string[], module: string): boolean => {
-  // Check if the array contains any entry starting with the module name followed by a dot (.)
-  return permissions?.some((permission) => permission.startsWith(`${module}.`));
+// export const hasAccessToModule = (permissions: string[], module: string): boolean => {
+//   // Check if the array contains any entry starting with the module name followed by a dot (.)
+//   return permissions?.some((permission) => permission.startsWith(`${module}.`));
+// };
+
+export const hasAccessToModule = (
+  permissions: string | string[] | undefined | null,
+  module: string,
+): boolean => {
+  if (!permissions) return false;
+  if (typeof permissions === 'string') {
+    return permissions.startsWith(`${module}.`);
+  }
+  if (Array.isArray(permissions)) {
+    return permissions.some((permission) => permission.startsWith(`${module}.`));
+  }
+  return false;
 };
 
 export const decodeToken = (token?: string) => {
@@ -401,7 +415,6 @@ export const navigateAdminOnLogin = (userPermissions: string[], navigate: any) =
   try {
     // const sortedAdminNavItems = [...adminRoutes].reverse();
     const sortedAdminNavItems = [...adminRoutes];
-
     sortedAdminNavItems.forEach((route) => {
       if (hasAccessToModule(userPermissions, route.moduleValue) && !isNavigated) {
         isNavigated = true;
@@ -421,14 +434,12 @@ export const navigateMerchantOnLogin = (userPermissions: string[], navigate: any
     notifyError('No User permissions exist for this user');
     return;
   }
-
   notifySuccess('Login Successful');
   let isNavigated = false;
 
   try {
     // const sortedMerchantNavItems = [...merchantRoutes].reverse();
     const sortedMerchantNavItems = [...merchantRoutes];
-
     sortedMerchantNavItems.forEach((route) => {
       if (hasAccessToModule(userPermissions, route.moduleValue) && !isNavigated) {
         isNavigated = true;
