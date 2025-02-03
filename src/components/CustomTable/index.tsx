@@ -224,7 +224,7 @@ function CustomTable({
                 handlePageChange?.();
               }}
             >
-              {paginationCount.toString()}
+              {paginationCount ? paginationCount?.toString() : '0'}
             </button>
           </div>
         )}
