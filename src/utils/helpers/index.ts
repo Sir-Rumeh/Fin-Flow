@@ -409,7 +409,6 @@ export const navigateAdminOnLogin = (userPermissions: string[], navigate: any) =
     notifyError('No User permissions exist for this user');
     return;
   }
-  notifySuccess('Login Successful');
   let isNavigated = false;
 
   try {
@@ -417,6 +416,7 @@ export const navigateAdminOnLogin = (userPermissions: string[], navigate: any) =
     const sortedAdminNavItems = [...adminRoutes];
     sortedAdminNavItems.forEach((route) => {
       if (hasAccessToModule(userPermissions, route.moduleValue) && !isNavigated) {
+        notifySuccess('Login Successful');
         isNavigated = true;
         navigate(`${route.layout}/${route.path}`);
         return;
@@ -434,7 +434,6 @@ export const navigateMerchantOnLogin = (userPermissions: string[], navigate: any
     notifyError('No User permissions exist for this user');
     return;
   }
-  notifySuccess('Login Successful');
   let isNavigated = false;
 
   try {
@@ -442,6 +441,7 @@ export const navigateMerchantOnLogin = (userPermissions: string[], navigate: any
     const sortedMerchantNavItems = [...merchantRoutes];
     sortedMerchantNavItems.forEach((route) => {
       if (hasAccessToModule(userPermissions, route.moduleValue) && !isNavigated) {
+        notifySuccess('Login Successful');
         isNavigated = true;
         navigate(`${route.layout}/${route.path}`);
         return;
