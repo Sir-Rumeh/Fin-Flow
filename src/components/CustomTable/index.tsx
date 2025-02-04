@@ -180,54 +180,57 @@ function CustomTable({
           </div>
         )}
 
-        <div className="no-scrollbar flex w-auto scale-[85%] items-center justify-evenly gap-x-5 overflow-x-scroll 2xl:scale-100">
-          {paginationCountArray?.map((count: number | any, index) => {
-            return (
+        {tableData?.length > 0 && (
+          <div className="no-scrollbar flex w-auto scale-[85%] items-center justify-evenly gap-x-5 overflow-x-scroll 2xl:scale-100">
+            {paginationCountArray?.map((count: number | any, index) => {
+              return (
+                <button
+                  key={index}
+                  className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData?.pageNumber === count ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
+                  onClick={() => {
+                    setPaginationData?.((prev) => {
+                      return {
+                        ...prev,
+                        pageSize: 10,
+                        pageNumber: count,
+                      };
+                    });
+                    handlePageChange?.();
+                  }}
+                >
+                  {count}
+                </button>
+              );
+            })}
+          </div>
+        )}
+
+        {paginationCount &&
+          paginationCountArray[paginationCountArray?.length - 1] !== paginationCount && (
+            <div className="relative flex scale-[85%] items-center justify-evenly gap-x-5 2xl:scale-100">
+              <span className="flex h-full items-end text-2xl">...</span>
               <button
-                key={index}
-                className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData?.pageNumber === count ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
+                className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData?.pageNumber === paginationCount ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
                 onClick={() => {
                   setPaginationData?.((prev) => {
                     return {
                       ...prev,
-                      pageSize: 10,
-                      pageNumber: count,
+                      pageNumber: paginationCount,
+                    };
+                  });
+                  setPaginationSplitPosition((prev) => {
+                    return {
+                      x1: paginationCount - 5,
+                      x2: prev.x2,
                     };
                   });
                   handlePageChange?.();
                 }}
               >
-                {count}
+                {paginationCount ? paginationCount?.toString() : '0'}
               </button>
-            );
-          })}
-        </div>
-
-        {paginationCountArray[paginationCountArray?.length - 1] !== paginationCount && (
-          <div className="relative flex scale-[85%] items-center justify-evenly gap-x-5 2xl:scale-100">
-            <span className="flex h-full items-end text-2xl">...</span>
-            <button
-              className={`flex cursor-pointer items-center rounded-[3.5px] border border-gray-300 ${paginationData?.pageNumber === paginationCount ? 'bg-[#783593] text-white' : 'hover:bg-[#a772c4]'} px-3 py-[4px] text-center`}
-              onClick={() => {
-                setPaginationData?.((prev) => {
-                  return {
-                    ...prev,
-                    pageNumber: paginationCount,
-                  };
-                });
-                setPaginationSplitPosition((prev) => {
-                  return {
-                    x1: paginationCount - 5,
-                    x2: prev.x2,
-                  };
-                });
-                handlePageChange?.();
-              }}
-            >
-              {paginationCount ? paginationCount?.toString() : '0'}
-            </button>
-          </div>
-        )}
+            </div>
+          )}
 
         <button
           disabled={paginationCountArray[paginationCountArray?.length - 1] === paginationCount}

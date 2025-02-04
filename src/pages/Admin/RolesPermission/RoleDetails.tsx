@@ -12,6 +12,7 @@ import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import GoodCheckMark from 'assets/icons/GoodCheckMark';
 import ErrorCheckMark from 'assets/icons/ErrorCheckMark';
+import { capitalize } from 'utils/helpers';
 
 const RoleDetails = () => {
   const [searchParams] = useSearchParams();
@@ -64,7 +65,7 @@ const RoleDetails = () => {
           <div className="">
             <ItemDetailsContainer title="Role Details">
               <DetailsCard title="Role ID" content={data?.responseData?.id} />
-              <DetailsCard title="Role Name" content={data?.responseData?.name} />
+              <DetailsCard title="Role Name" content={capitalize(data?.responseData?.name)} />
               <DetailsCard title="Role Description" content={data?.responseData?.description} />
               <DetailsCard title="Designation" content={data?.responseData?.designation} />
               <DetailsCard

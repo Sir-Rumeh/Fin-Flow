@@ -47,10 +47,10 @@ AxiosClient.interceptors.request.use(
       throw networkError;
     }
     dispatch(uiStartLoading());
-
     // Attach a new AbortController for this request
     const controller = new AbortController();
-    abortControllers.set(axiosConfig, controller);
+    const requestKey = `${axiosConfig.method?.toUpperCase()} ${axiosConfig.url}`;
+    abortControllers.set(requestKey, controller);
     axiosConfig.signal = controller.signal;
 
     const user = getUserFromLocalStorage();
@@ -83,13 +83,28 @@ AxiosClient.interceptors.response.use(
       return Promise.reject(response);
     }
     dispatch(uiStopLoading());
-    abortControllers.delete(response.config);
+    const requestKey = `${response.config.method?.toUpperCase()} ${response.config.url}`;
+    abortControllers.delete(requestKey);
     return response;
   },
   async (error) => {
     dispatch(uiStopLoading());
     const originalRequest = error.config;
-    const controller = abortControllers.get(originalRequest);
+    const requestKey = `${error.config.method?.toUpperCase()} ${error.config.url}`;
+    const controller = abortControllers.get(requestKey);
+    if (controller) {
+      controller.abort();
+      abortControllers.delete(requestKey);
+    }
+    const clearUserSession = () => {
+      localStorage.clear();
+      notifyError('User session expired. Please log in again.');
+      dispatch(uiStopLoading());
+    };
+    if (!error.response) {
+      notifyError('Network error. Failed to receive response');
+      return Promise.reject(error);
+    }
     if (error?.response?.status === 401) {
       cancelPendingRequests();
       const user = getUserFromLocalStorage();
@@ -114,26 +129,18 @@ AxiosClient.interceptors.response.use(
             localStorage.clear();
           } catch (error) {
             console.error(error);
-            dispatch(uiStopLoading());
-            localStorage.clear();
+            clearUserSession();
           }
         } else {
-          notifyError('User is not authenticated.');
-          dispatch(uiStopLoading());
-          localStorage.clear();
+          clearUserSession();
         }
       };
-      // const isRequestRetried = store.getState().axios.isRequestRetried;
-      // if (isRequestRetried) {
       if (originalRequest._isRetry) {
-        if (controller) controller.abort();
         originalRequest._isRetry = false;
-        // dispatch(disableIsRetried());
         await logoutUser();
         return Promise.reject(new Error('Token refresh failed. User logged out.'));
       } else {
         originalRequest._isRetry = true;
-        // dispatch(enableIsRetried());
         if (user) {
           try {
             let newToken;
@@ -152,7 +159,6 @@ AxiosClient.interceptors.response.use(
               newToken = res?.responseData?.token;
               newRefreshToken = res?.responseData?.refreshToken;
               originalRequest._isRetry = false;
-              // dispatch(disableIsRetried());
               if (newToken) {
                 localStorage.setItem(
                   'user',
@@ -169,25 +175,23 @@ AxiosClient.interceptors.response.use(
           } catch (err) {
             dispatch(uiStopLoading());
             originalRequest._isRetry = false;
-            // dispatch(disableIsRetried());
             await logoutUser();
           }
         } else {
-          notifyError('User is not authenticated');
-          dispatch(uiStopLoading());
           originalRequest._isRetry = false;
-          // dispatch(disableIsRetried());
-          localStorage.clear();
+          clearUserSession();
         }
       }
-    } else if (error?.response?.status === 400 || 424) {
-      if (controller) controller.abort();
+    } else if (error?.response?.status === 400 || error?.response?.status === 424) {
       error?.response?.data?.errors
         ? notifyError(`${error?.response?.data?.errors[0]}. ${error?.response?.data?.errors[1]}`)
-        : notifyError(error?.response?.data?.responseMessage || error?.response?.data?.message);
+        : notifyError(
+            error?.response?.data?.responseMessage ||
+              error?.response?.data?.message ||
+              'Invalid request',
+          );
       return Promise.reject(error);
     } else if (error?.response?.status === 404) {
-      if (controller) controller.abort();
       notifyError(
         error?.response?.data?.responseMessage ||
           error?.response?.data?.message ||
@@ -195,7 +199,7 @@ AxiosClient.interceptors.response.use(
       );
       return Promise.reject(error);
     } else if (error?.response?.status === 403) {
-      if (controller) controller.abort();
+      console.log('error 403', error?.response);
       notifyError('You do not have permission to perform this action. Please contact an admin');
       return Promise.reject(error);
     } else if (error?.response?.status === 500) {
@@ -206,9 +210,6 @@ AxiosClient.interceptors.response.use(
       return Promise.reject(error);
     } else if (error.message === networkErrorMessage) {
       notifyError(error.message);
-      return Promise.reject(error);
-    } else if (!error?.response?.status) {
-      notifyError('Network error. Failed to receive response');
       return Promise.reject(error);
     }
     return Promise.reject(error);

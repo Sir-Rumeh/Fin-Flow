@@ -80,14 +80,22 @@ AxiosClient.interceptors.response.use(
   },
   async (error) => {
     dispatch(uiStopLoading());
+    if (!error.response) {
+      notifyError('Network error. Failed to receive response');
+      return Promise.reject(error);
+    }
     if (error?.response?.status === 401) {
       notifyError('Session expired. Please log in again.');
       dispatch(uiStopLoading());
       localStorage.clear();
-    } else if (error?.response?.status === 400 || 424) {
+    } else if (error?.response?.status === 400 || error?.response?.status === 424) {
       error?.response?.data?.errors
         ? notifyError(`${error?.response?.data?.errors[0]}. ${error?.response?.data?.errors[1]}`)
-        : notifyError(error?.response?.data?.responseMessage || error?.response?.data?.message);
+        : notifyError(
+            error?.response?.data?.responseMessage ||
+              error?.response?.data?.message ||
+              'Invalid request',
+          );
       return Promise.reject(error);
     } else if (error?.response?.status === 404) {
       notifyError(
