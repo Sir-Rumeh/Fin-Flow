@@ -75,7 +75,7 @@ const OTP = () => {
       localStorage.setItem('user', JSON.stringify(data?.responseData));
       formik.resetForm();
       if (userDetails?.permission) {
-        navigateAdminOnLogin(userDetails?.permission, navigate);
+        navigateMerchantOnLogin(userDetails?.permission, navigate);
       } else {
         notifyError('No User permissions exist for this user');
       }
