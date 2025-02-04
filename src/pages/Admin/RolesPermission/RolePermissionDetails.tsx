@@ -8,6 +8,7 @@ import { getRoleById, getRolePermissionByRoleId } from 'config/actions/role-perm
 import { PermissionInterface } from 'utils/interfaces';
 import GoodCheckMark from 'assets/icons/GoodCheckMark';
 import ErrorCheckMark from 'assets/icons/ErrorCheckMark';
+import { capitalize } from 'utils/helpers';
 
 const RolePermissionDetails = () => {
   const [searchParams] = useSearchParams();
@@ -59,7 +60,7 @@ const RolePermissionDetails = () => {
           <div className="">
             <ItemDetailsContainer title="Role Permission Details">
               <DetailsCard title="Role / Group Id" content={permissionRoleId} />
-              <DetailsCard title="Role Name" content={roleData?.responseData?.name} />
+              <DetailsCard title="Role Name" content={capitalize(roleData?.responseData?.name)} />
               <DetailsCard title="Role Description" content={roleData?.responseData?.description} />
               <DetailsCard title="Designation" content={roleData?.responseData?.designation} />
               <DetailsCard

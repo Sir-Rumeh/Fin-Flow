@@ -2,7 +2,12 @@ import NotificationIcon from 'assets/icons/NotificationIcon';
 import dayjs from 'dayjs';
 import LocalizedTime from 'dayjs/plugin/localizedFormat';
 import Hamburger from 'assets/icons/Hamburger';
-import { getUserFromLocalStorage, isAdminAuthData, isMerchantAuthData } from 'utils/helpers';
+import {
+  capitalize,
+  getUserFromLocalStorage,
+  isAdminAuthData,
+  isMerchantAuthData,
+} from 'utils/helpers';
 import { useEffect, useState } from 'react';
 
 const Navbar = (props: { onOpenSidenav: () => void }) => {
@@ -47,7 +52,9 @@ const Navbar = (props: { onOpenSidenav: () => void }) => {
         <div className="flex items-center justify-between">
           <div className="flex flex-col items-start justify-between text-sm font-semibold">
             <p className="flex flex-1 justify-start md:flex">User Role</p>
-            <p className="flex flex-1 justify-start text-[#78350F] md:flex">{user?.roleName}</p>
+            <p className="flex flex-1 justify-start text-[#78350F] md:flex">
+              {user?.roleName && capitalize(user?.roleName)}
+            </p>
           </div>
         </div>
 
