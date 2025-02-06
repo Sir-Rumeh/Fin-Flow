@@ -239,9 +239,9 @@ const DisableRequestDetails = () => {
           <div className="h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
             <ActionAuthorDetails
-              id={data?.responseData?.requestedBy}
+              id={data?.responseData?.createdBy}
               actionType={AuthorActionType.RequestedBy}
-              actionDate={data?.responseData?.dateRequested}
+              actionDate={data?.responseData?.dateCreated}
             />
           </div>
         </div>

@@ -173,7 +173,7 @@ const StaffUserEnableRequestDetails = () => {
               </ItemDetailsContainer>
             )}
           </div>
-          <div className="mt-10">
+          {/* <div className="mt-10">
             <ItemDetailsContainer title="Requested By">
               <ActionAuthorDetails
                 id={data?.responseData?.requestedBy}
@@ -181,7 +181,7 @@ const StaffUserEnableRequestDetails = () => {
                 actionDate={data?.responseData?.dateRequested}
               />
             </ItemDetailsContainer>
-          </div>
+          </div> */}
         </div>
       </div>
       {modals.confirmApproveRequest && (

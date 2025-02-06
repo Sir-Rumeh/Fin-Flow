@@ -49,8 +49,8 @@ AxiosClient.interceptors.request.use(
     dispatch(uiStartLoading());
     // Attach a new AbortController for this request
     const controller = new AbortController();
-    const requestKey = `${axiosConfig.method?.toUpperCase()} ${axiosConfig.url}`;
-    abortControllers.set(requestKey, controller);
+    // const requestKey = `${axiosConfig.method?.toUpperCase()} ${axiosConfig.url}`;
+    abortControllers.set(axiosConfig, controller);
     axiosConfig.signal = controller.signal;
 
     const user = getUserFromLocalStorage();
@@ -83,18 +83,18 @@ AxiosClient.interceptors.response.use(
       return Promise.reject(response);
     }
     dispatch(uiStopLoading());
-    const requestKey = `${response.config.method?.toUpperCase()} ${response.config.url}`;
-    abortControllers.delete(requestKey);
+    // const requestKey = `${response.config.method?.toUpperCase()} ${response.config.url}`;
+    abortControllers.delete(response.config);
     return response;
   },
   async (error) => {
     dispatch(uiStopLoading());
     const originalRequest = error.config;
-    const requestKey = `${error.config.method?.toUpperCase()} ${error.config.url}`;
-    const controller = abortControllers.get(requestKey);
+    // const requestKey = `${error.config.method?.toUpperCase()} ${error.config.url}`;
+    const controller = abortControllers.get(error.config);
     if (controller) {
       controller.abort();
-      abortControllers.delete(requestKey);
+      abortControllers.delete(error.config);
     }
     const clearUserSession = () => {
       localStorage.clear();

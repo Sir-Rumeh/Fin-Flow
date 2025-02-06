@@ -183,7 +183,6 @@ const MerchantDisableRequestDetails = () => {
             <ItemDetailsContainer title="Request Details">
               <DetailsCard title="Merchant ID" content={data?.responseData?.id} />
               <DetailsCard title="Merchant Name" content={data?.responseData?.name} />
-              <DetailsCard title="Merchant Code" content={data?.responseData?.merchantCode} />
               <DetailsCard
                 title="Merchant Fee"
                 content={`\u20A6${data?.responseData?.internalChargeFee ? formatNumberDisplay(data?.responseData?.internalChargeFee) : ''}`}
@@ -228,7 +227,7 @@ const MerchantDisableRequestDetails = () => {
               </ItemDetailsContainer>
             )}
           </div>
-          <div className="mt-10">
+          {/* <div className="mt-10">
             <ItemDetailsContainer title="Requested By">
               <ActionAuthorDetails
                 id={data?.responseData?.requestedBy}
@@ -236,7 +235,7 @@ const MerchantDisableRequestDetails = () => {
                 actionDate={data?.responseData?.dateRequested}
               />
             </ItemDetailsContainer>
-          </div>
+          </div> */}
         </div>
       </div>
       {modals.confirmApproveRequest && (

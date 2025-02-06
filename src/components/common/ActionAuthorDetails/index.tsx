@@ -1,7 +1,8 @@
 import useActionAuthor from 'hooks/useActionAuthor';
 import React from 'react';
 import DetailsCard from '../DashboardCards/DetailsCard';
-import { getUserFromLocalStorage, isAdminAuthData } from 'utils/helpers';
+import { checkRoute, getUserFromLocalStorage, isAdminAuthData } from 'utils/helpers';
+import { useLocation } from 'react-router-dom';
 
 export enum AuthorActionType {
   CreatedBy = 'CreatedBy',
@@ -14,14 +15,17 @@ const ActionAuthorDetails = ({
   id,
   actionType,
   actionDate,
+  requestType,
 }: {
   id: string;
   actionType: AuthorActionType;
   actionDate: string;
+  requestType?: string;
 }) => {
   const details = useActionAuthor(id);
   const user = getUserFromLocalStorage();
-
+  const { pathname } = useLocation();
+  const isRequestRoute = checkRoute(pathname, 'requests');
   const detailsDisplay = () => {
     switch (actionType) {
       case AuthorActionType.CreatedBy:

@@ -248,6 +248,7 @@ const MandateCreationRequestDetails = () => {
                   id={data?.responseData?.createdBy}
                   actionType={AuthorActionType.CreatedBy}
                   actionDate={data?.responseData?.dateCreated}
+                  requestType={data?.responseData?.requestType}
                 />
               </ItemDetailsContainer>
             </div>
