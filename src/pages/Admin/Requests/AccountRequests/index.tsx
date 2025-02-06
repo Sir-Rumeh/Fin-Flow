@@ -19,6 +19,7 @@ import { useMediaQuery } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { getAccountsRequests, getAccountsRequestsStatistics } from 'config/actions/account-actions';
 import { requestTypeDropdownOptions } from 'utils/constants';
+import { capitalize } from 'utils/helpers';
 
 const AccountRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -79,6 +80,16 @@ const AccountRequests = () => {
   };
 
   const columns: GridColDef[] = [
+    {
+      field: 'merchantName',
+      headerName: 'Merchant Name',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+      renderCell: (params: GridRenderCellParams) => {
+        return <span>{`${capitalize(params?.row?.merchantName)}`}</span>;
+      },
+    },
     {
       field: 'merchantId',
       headerName: 'Merchant ID',

@@ -22,6 +22,7 @@ import {
   getMerchantsRequests,
   getMerchantsRequestsStatistics,
 } from 'config/actions/merchant-actions';
+import { capitalize } from 'utils/helpers';
 
 const MerchantRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -95,6 +96,9 @@ const MerchantRequests = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      renderCell: (params: GridRenderCellParams) => {
+        return <span>{`${capitalize(params?.row?.name)}`}</span>;
+      },
     },
     {
       field: 'accountNumber',

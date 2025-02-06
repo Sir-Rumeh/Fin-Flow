@@ -22,6 +22,7 @@ import {
 } from 'config/actions/staff-user-actions';
 import { useQuery } from '@tanstack/react-query';
 import { requestTypeDropdownOptions } from 'utils/constants';
+import { capitalize } from 'utils/helpers';
 
 const StaffUserRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -96,7 +97,9 @@ const StaffUserRequests = () => {
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       renderCell: (params: GridRenderCellParams) => {
-        return <>{`${params?.row.firstName} ${params?.row.lastName}`}</>;
+        return (
+          <span>{`${capitalize(params?.row?.firstName)} ${capitalize(params?.row?.lastName)}`}</span>
+        );
       },
     },
     {

@@ -123,6 +123,7 @@ const EditMerchant = () => {
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
+                    disabled
                   />
                   <CustomInput
                     labelFor="rcNumber"
@@ -131,6 +132,7 @@ const EditMerchant = () => {
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
+                    disabled
                   />
                   <CustomInput
                     labelFor="address"

@@ -9,6 +9,7 @@ import CustomPopover from 'hoc/PopOverWrapper';
 import { useEffect, useState } from 'react';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import appRoutes from 'utils/constants/routes';
+import { capitalize } from 'utils/helpers';
 import { PermissionInterface, QueryParams } from 'utils/interfaces';
 
 const RolePermission = () => {
@@ -56,7 +57,7 @@ const RolePermission = () => {
   }, [roles]);
 
   const getRoleGroupName = (roleId: string) => {
-    return allRoles?.find((role) => role.id === roleId)?.name;
+    return capitalize(allRoles?.find((role) => role.id === roleId)?.name);
   };
 
   const rolePermissionColumns: GridColDef[] = [

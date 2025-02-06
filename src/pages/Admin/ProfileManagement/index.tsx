@@ -26,7 +26,7 @@ import {
 } from 'config/actions/profile-actions';
 import { SearchTypes } from 'utils/enums';
 import { statusDropdownOptions } from 'utils/constants';
-import { notifySuccess } from 'utils/helpers';
+import { capitalize, notifySuccess } from 'utils/helpers';
 
 const ProfileManagement = () => {
   const queryClient = useQueryClient();
@@ -123,6 +123,9 @@ const ProfileManagement = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      renderCell: (params: GridRenderCellParams) => {
+        return <span>{`${capitalize(params?.row?.merchantName)}`}</span>;
+      },
     },
     {
       field: 'accountID',
@@ -138,7 +141,9 @@ const ProfileManagement = () => {
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       renderCell: (params: GridRenderCellParams) => {
-        return <div>{`${params.row.firstName} ${params.row.lastName}`}</div>;
+        return (
+          <div>{`${capitalize(params.row.firstName)} ${capitalize(params.row.lastName)}`}</div>
+        );
       },
     },
     {

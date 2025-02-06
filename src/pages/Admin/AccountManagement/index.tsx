@@ -24,6 +24,7 @@ import {
   getAccounts,
 } from 'config/actions/account-actions';
 import { SearchTypes } from 'utils/enums';
+import { capitalize } from 'utils/helpers';
 
 const AccountManagement = () => {
   const printPdfRef = useRef(null);
@@ -117,6 +118,9 @@ const AccountManagement = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      renderCell: (params: GridRenderCellParams) => {
+        return <span>{`${capitalize(params?.row?.merchantName)}`}</span>;
+      },
     },
     {
       field: 'merchantId',

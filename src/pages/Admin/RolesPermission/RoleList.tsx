@@ -58,7 +58,7 @@ const RoleList = () => {
 
   const roleColumns: GridColDef[] = [
     {
-      field: 'roleName',
+      field: 'name',
       headerName: 'Role Name',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,

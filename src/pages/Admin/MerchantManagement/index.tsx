@@ -24,6 +24,7 @@ import {
 } from 'config/actions/merchant-actions';
 import { SearchTypes } from 'utils/enums';
 import { statusDropdownOptions } from 'utils/constants';
+import { capitalize } from 'utils/helpers';
 
 const MerchantManagement = () => {
   const printPdfRef = useRef(null);
@@ -125,6 +126,9 @@ const MerchantManagement = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      renderCell: (params: GridRenderCellParams) => {
+        return <span>{`${capitalize(params?.row?.name)}`}</span>;
+      },
     },
     {
       field: 'accountNumber',
