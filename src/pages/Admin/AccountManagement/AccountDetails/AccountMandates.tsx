@@ -45,6 +45,7 @@ import { Typography } from '@mui/material';
 import CustomTabs from 'hoc/CustomTabs';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
+import { useReactToPrint } from 'react-to-print';
 
 const AccountMandates = () => {
   const [searchParams] = useSearchParams();
@@ -118,12 +119,8 @@ const AccountMandates = () => {
   useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
-      status: formik.values.statusFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchMandate,
-      startDate: formik.values.fromDateFilter,
-      endDate: formik.values.toDateFilter,
     }));
   }, [paginationData]);
 
@@ -316,6 +313,20 @@ const AccountMandates = () => {
     },
   ];
 
+  const [transactionDetails, setTransactionDetails] = useState<any>();
+  const receiptRef = useRef<HTMLDivElement>(null);
+
+  const handlePrintReceipt = useReactToPrint({
+    content: () => receiptRef.current,
+  });
+
+  const handleDownloadReceipt = (row: any) => {
+    setTransactionDetails(row);
+    setTimeout(() => {
+      handlePrintReceipt();
+    }, 0);
+  };
+
   const transactionsTableColumn: GridColDef[] = [
     {
       field: 'accountId',
@@ -347,7 +358,12 @@ const AccountMandates = () => {
       width: 180,
       renderCell: (params) => {
         return (
-          <button className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple">
+          <button
+            onClick={() => {
+              handleDownloadReceipt(params?.row);
+            }}
+            className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple"
+          >
             <DownloadIcon />
             Download Receipt
           </button>

@@ -33,10 +33,7 @@ const UserManagement = () => {
       setQueryParams((prev) => ({
         ...prev,
         searchFilter: formik.values.searchUser,
-        pageNo:
-          formik.values.searchUser?.length > 0 || formik.values.statusFilter?.length > 0
-            ? undefined
-            : paginationData.pageNumber,
+        pageNo: paginationData.pageNumber,
         pageSize: paginationData.pageSize,
       }));
       // refetch();
@@ -174,18 +171,8 @@ const UserManagement = () => {
   useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
-      status: formik.values.statusFilter,
-      pageNo:
-        formik.values.searchUser?.length > 0 || formik.values.statusFilter?.length > 0
-          ? undefined
-          : paginationData.pageNumber,
-      pageSize:
-        formik.values.searchUser?.length > 0 || formik.values.statusFilter?.length > 0
-          ? 100
-          : paginationData.pageSize,
-      searchFilter: formik.values.searchUser,
-      startDate: formik.values.fromDateFilter,
-      endDate: formik.values.toDateFilter,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
     }));
   }, [paginationData]);
 

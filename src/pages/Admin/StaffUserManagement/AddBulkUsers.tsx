@@ -104,7 +104,7 @@ function AddUser() {
   useEffect(() => {
     try {
       const newDataArray = convertExcelArrayToObjects(jsonData);
-      const dataMatch = newDataArray.some((obj) => matchesInterface(obj, referenceObject));
+      const dataMatch = newDataArray?.every((obj) => matchesInterface(obj, referenceObject));
       if (jsonData.length > 0 && !dataMatch) {
         notifyError('Incorrect data format');
         clearFiles();

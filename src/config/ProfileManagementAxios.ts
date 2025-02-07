@@ -101,7 +101,7 @@ AxiosClient.interceptors.response.use(
       notifyError('User session expired. Please log in again.');
       dispatch(uiStopLoading());
     };
-    if (!error.response) {
+    if (!error.response && originalRequest.method?.toLowerCase() === 'post') {
       notifyError('Network error. Failed to receive response');
       return Promise.reject(error);
     }

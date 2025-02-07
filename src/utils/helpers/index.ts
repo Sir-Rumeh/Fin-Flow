@@ -19,6 +19,7 @@ export const checkRoute = (pathname: string, pathToCheck: string) => {
   if (pathname.includes(pathToCheck)) {
     return true;
   }
+  return false;
 };
 
 export const handleNextPageChange = (
@@ -281,55 +282,68 @@ export const convertExcelArrayToObjects = (
   if (data.length < 2) return [];
   const headers = data[0].map(convertToCamelCase);
   const rows = data.slice(1);
-  return rows.map((row) => {
-    const rowObject = headers.reduce(
-      (obj, header, index) => {
-        const value = row[index];
-        if (
-          header.toLocaleLowerCase().includes('startdate') ||
-          header.toLocaleLowerCase().includes('enddate')
-        ) {
-          const formattedDateIsoDate = new Date(value).toISOString().split('T')[0] + 'T00:00:00';
-          obj[header] = formattedDateIsoDate;
-        } else if (header.toLocaleLowerCase().includes('amount')) {
-          obj[header] = value || null;
-        } else if (
-          header.toLocaleLowerCase().includes('accountnumber') &&
-          String(value)?.length < 10
-        ) {
-          if (String(value)?.length === 9) {
-            obj[header] = `0${String(value)}` || '';
-          } else if (String(value)?.length === 8) {
-            obj[header] = `00${String(value)}` || '';
-          } else if (String(value)?.length === 7) {
-            obj[header] = `000${String(value)}` || '';
+  try {
+    return rows.map((row, rowIndex) => {
+      const rowObject = headers.reduce(
+        (obj, header, index) => {
+          const value = row[index];
+          if (
+            value === null ||
+            value === undefined ||
+            (typeof value === 'string' && value.trim() === '')
+          ) {
+            throw new Error(
+              `Invalid value at property: ${header} on row ${rowIndex + 2} of excel sheet`,
+            );
           }
-        } else if (
-          header.toLocaleLowerCase().includes('phonenumber') &&
-          String(value)?.length < 11
-        ) {
-          obj[header] = `0${String(value)}` || '';
-        } else {
-          obj[header] = String(value) || '';
-        }
-        return obj;
-      },
-      {} as Record<string, any>,
-    );
-    if (extraFields && extraFields.length > 0) {
-      extraFields?.forEach((newField, index) => {
-        const valueFields = extraValues?.[index];
-        if (valueFields) {
-          const fieldsToConcatenate = valueFields.split(',').map((field) => field.trim());
-          rowObject[newField] = fieldsToConcatenate
-            .map((field) => rowObject[field])
-            .filter(Boolean)
-            .join(' ');
-        }
-      });
-    }
-    return rowObject;
-  });
+          if (
+            header.toLocaleLowerCase().includes('startdate') ||
+            header.toLocaleLowerCase().includes('enddate')
+          ) {
+            const formattedDateIsoDate = new Date(value).toISOString().split('T')[0] + 'T00:00:00';
+            obj[header] = formattedDateIsoDate;
+          } else if (header.toLocaleLowerCase().includes('amount')) {
+            obj[header] = value || null;
+          } else if (
+            header.toLocaleLowerCase().includes('accountnumber') &&
+            String(value)?.length < 10
+          ) {
+            if (String(value)?.length === 9) {
+              obj[header] = `0${String(value)}` || '';
+            } else if (String(value)?.length === 8) {
+              obj[header] = `00${String(value)}` || '';
+            } else if (String(value)?.length === 7) {
+              obj[header] = `000${String(value)}` || '';
+            }
+          } else if (
+            header.toLocaleLowerCase().includes('phonenumber') &&
+            String(value)?.length < 11
+          ) {
+            obj[header] = `0${String(value)}` || '';
+          } else {
+            obj[header] = String(value) || '';
+          }
+          return obj;
+        },
+        {} as Record<string, any>,
+      );
+      if (extraFields && extraFields.length > 0) {
+        extraFields?.forEach((newField, index) => {
+          const valueFields = extraValues?.[index];
+          if (valueFields) {
+            const fieldsToConcatenate = valueFields.split(',').map((field) => field.trim());
+            rowObject[newField] = fieldsToConcatenate
+              .map((field) => rowObject[field])
+              .filter(Boolean)
+              .join(' ');
+          }
+        });
+      }
+      return rowObject;
+    });
+  } catch (error: any) {
+    notifyError(error?.message);
+  }
 };
 
 export function matchesInterface<T extends object>(obj: any, reference: T): obj is T {
@@ -341,6 +355,27 @@ export function matchesInterface<T extends object>(obj: any, reference: T): obj 
     return true;
   });
 }
+
+// export function matchesInterface<T extends object>(obj: any, reference: T): obj is T {
+//   return Object.keys(reference).every((key) => {
+//     if (!(key in obj)) {
+//       notifyError(`Mismatch at property: ${key}`);
+//       console.log(`Mismatch at property: ${key}`);
+//       return false;
+//     }
+//     const value = obj[key];
+//     if (
+//       value === null ||
+//       value === undefined ||
+//       (typeof value === 'string' && value.trim() === '')
+//     ) {
+//       notifyError(`Invalid value at property: ${key}`);
+//       return false;
+//     }
+
+//     return true;
+//   });
+// }
 
 export const filterSelectedOption = (filter: any, filterId: any, options: any) => {
   return options?.filter((opt: any) => opt[filterId] === filter);

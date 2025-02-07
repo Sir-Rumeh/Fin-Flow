@@ -64,12 +64,8 @@ const MerchantRequests = () => {
     setQueryParams((prev) => ({
       ...prev,
       status: activeTab,
-      requestType: formik.values.statusFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchMerchantAccount,
-      startDate: formik.values.fromDateFilter,
-      endDate: formik.values.toDateFilter,
     }));
   }, [activeTab, paginationData]);
 

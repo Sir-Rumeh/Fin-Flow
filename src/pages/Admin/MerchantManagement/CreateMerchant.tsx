@@ -145,6 +145,7 @@ const CreateMerchant = () => {
                       placeholder="Enter here"
                       maxW="w-full"
                       formik={formik}
+                      disabled={merchantAccountValidated && formik.values.merchantName.length > 0}
                     />
                     <CustomInput
                       labelFor="rcNumber"
@@ -153,6 +154,7 @@ const CreateMerchant = () => {
                       placeholder="Enter here"
                       maxW="w-full"
                       formik={formik}
+                      disabled={merchantAccountValidated && formik.values.rcNumber.length > 0}
                     />
                     <CustomInput
                       labelFor="merchantFee"

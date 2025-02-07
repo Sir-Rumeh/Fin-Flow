@@ -52,7 +52,6 @@ const RoleList = () => {
       ...prev,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchRole,
     }));
   }, [paginationData]);
 
