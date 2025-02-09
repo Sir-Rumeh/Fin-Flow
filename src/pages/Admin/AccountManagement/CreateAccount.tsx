@@ -3,7 +3,7 @@ import appRoutes from 'utils/constants/routes';
 import ChevronRight from 'assets/icons/ChevronRight';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
@@ -11,14 +11,21 @@ import { useFormik } from 'formik';
 import { AccountRequest, QueryParams } from 'utils/interfaces';
 import { createAccountSchema } from 'utils/formValidators';
 import FormSelect from 'components/FormElements/FormSelect';
-import { filterSelectedOption, formatApiDataForDropdown } from 'utils/helpers';
+import {
+  filterSelectedOption,
+  formatApiDataForDropdown,
+  notifyError,
+  notifySuccess,
+} from 'utils/helpers';
 import { useMutation, useQuery } from '@tanstack/react-query';
-import { getMerchants } from 'config/actions/merchant-actions';
+import { getMerchants, validateMerchantCif } from 'config/actions/merchant-actions';
 import { addAccountRequest, getAccounts } from 'config/actions/account-actions';
 
 function CreateAccount() {
-  const [accountRequest, setAccountRequest] = useState<AccountRequest | undefined>();
   const navigate = useNavigate();
+  const [accountRequest, setAccountRequest] = useState<AccountRequest | undefined>();
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const [merchantAccountValidated, setMerchantAccountValidated] = useState(false);
   const [modals, setModals] = useState({
     confirmCreate: false,
     creationSuccessful: false,
@@ -73,6 +80,40 @@ function CreateAccount() {
     },
   });
 
+  const validateAccountNumber = async () => {
+    formik.setFieldValue('accountName', '');
+    setMerchantAccountValidated(false);
+    const res = await validateMerchantCif(formik.values.accountNumber);
+    if (res && res.responseData?.businessName.length > 0) {
+      setMerchantAccountValidated(true);
+      formik.setFieldValue('accountName', res.responseData?.businessName || '');
+      notifySuccess('Account name retrieved successfully');
+    }
+  };
+
+  useEffect(() => {
+    if (formik.values.merchantName?.length > 0) {
+      const merchantDetails = data?.responseData?.items.find((item: any) => {
+        return item.name === formik.values.merchantName;
+      });
+      formik.setFieldValue('merchantId', merchantDetails?.id);
+    }
+  }, [formik.values.merchantName]);
+
+  useEffect(() => {
+    const accountNumber = formik.values.accountNumber;
+    if (accountNumber.length === 10) {
+      if (timeoutId) clearTimeout(timeoutId);
+      const newTimeoutId = setTimeout(() => {
+        validateAccountNumber();
+      }, 1000);
+      setTimeoutId(newTimeoutId);
+    }
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [formik.values.accountNumber]);
+
   return (
     <>
       <div className="px-5 py-1">
@@ -95,42 +136,24 @@ function CreateAccount() {
               <div className="slide-down">
                 <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
                   <FormSelect
-                    labelFor="merchantId"
-                    label="Merchant ID"
-                    formik={formik}
-                    useTouched
-                    options={formatApiDataForDropdown(data?.responseData?.items, 'id', 'id')}
-                    scrollableOptions
-                    scrollableHeight="max-h-[15rem]"
-                  />
-                  <FormSelect
                     labelFor="merchantName"
                     label="Merchant Name"
                     formik={formik}
                     useTouched
-                    options={
-                      formik.values.merchantId?.length > 0
-                        ? formatApiDataForDropdown(
-                            filterSelectedOption(
-                              formik.values.merchantId,
-                              'id',
-                              data?.responseData?.items,
-                            ),
-                            'name',
-                            'name',
-                          )
-                        : formatApiDataForDropdown(data?.responseData?.items, 'name', 'name')
-                    }
+                    options={formatApiDataForDropdown(data?.responseData?.items, 'name', 'name')}
                     scrollableOptions
                     scrollableHeight="max-h-[15rem]"
                   />
                   <CustomInput
-                    labelFor="accountName"
-                    label="Account Name"
+                    labelFor="merchantId"
+                    label="Merchant ID"
                     inputType="text"
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
+                    disabled={
+                      formik.values.merchantName?.length > 0 && formik.values.merchantId?.length > 0
+                    }
                   />
                   <CustomInput
                     labelFor="accountNumber"
@@ -141,6 +164,15 @@ function CreateAccount() {
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
+                  />
+                  <CustomInput
+                    labelFor="accountName"
+                    label="Account Name"
+                    inputType="text"
+                    placeholder="Enter here"
+                    maxW="w-full"
+                    formik={formik}
+                    disabled={merchantAccountValidated && formik.values.accountName?.length > 0}
                   />
                 </div>
                 <div className="mt-6 flex items-center justify-end">

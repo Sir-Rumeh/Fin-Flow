@@ -141,6 +141,8 @@ function EditProfile() {
         return item.name === formik.values.merchantName;
       });
       formik.setFieldValue('merchantID', merchantDetails?.id);
+      formik.setFieldValue('accountNumber', '');
+      formik.setFieldValue('accountID', '');
     }
   }, [formik.values.merchantName]);
 
@@ -153,8 +155,6 @@ function EditProfile() {
         await refetchAccountsOptions();
       };
       getData();
-      formik.setFieldValue('accountNumber', '');
-      formik.setFieldValue('accountID', '');
     }
   }, [formik.values.merchantID]);
 
@@ -204,7 +204,9 @@ function EditProfile() {
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
-                    disabled={formik.values.merchantID?.length > 0}
+                    disabled={
+                      formik.values.merchantName?.length > 0 && formik.values.merchantID?.length > 0
+                    }
                   />
                   <FormSelect
                     labelFor="accountNumber"
@@ -226,7 +228,9 @@ function EditProfile() {
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
-                    disabled={formik.values.accountID?.length > 0}
+                    disabled={
+                      formik.values.accountNumber?.length > 0 && formik.values.accountID?.length > 0
+                    }
                   />
                   <CustomInput
                     labelFor="firstName"
