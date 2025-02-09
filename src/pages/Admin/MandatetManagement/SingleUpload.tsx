@@ -12,7 +12,7 @@ import appRoutes from 'utils/constants/routes';
 import CustomFileUpload from 'components/FormElements/CustomFileUpload';
 import { createMandateSchema } from 'utils/formValidators';
 import FormSelect from 'components/FormElements/FormSelect';
-import { MandateRequest, QueryParams } from 'utils/interfaces';
+import { DoNameEnquiryRequest, MandateRequest, QueryParams } from 'utils/interfaces';
 import { useMutation, useQuery } from '@tanstack/react-query';
 import { addMandateRequest } from 'config/actions/dashboard-actions';
 import { filterSelectedOption, formatApiDataForDropdown, notifyError } from 'utils/helpers';
@@ -26,10 +26,13 @@ import {
 } from 'utils/constants';
 import { getAccounts, getAccountsByMerchantId } from 'config/actions/account-actions';
 import { getMerchants } from 'config/actions/merchant-actions';
+import { doNameEnquiry } from 'config/actions/do-name-enquiry';
 
 const SingleUpload = () => {
   const navigate = useNavigate();
   const [mandateRequest, setMandateRequest] = useState<MandateRequest>();
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const [acquiredAccountName, setAcquiredAccountName] = useState(false);
 
   const [modals, setModals] = useState({
     confirmCreate: false,
@@ -54,6 +57,7 @@ const SingleUpload = () => {
       closeModal('confirmCreate');
     },
   });
+
   const formik = useFormik({
     initialValues: {
       mandateType: '',
@@ -134,6 +138,44 @@ const SingleUpload = () => {
     },
   });
 
+  const doNameEnquiryMutation = useMutation({
+    mutationFn: (payload: DoNameEnquiryRequest | undefined) => doNameEnquiry(payload),
+    onSuccess: (data) => {
+      if (data?.data?.accountName?.length > 0) {
+        formik.setFieldValue('payerName', data?.data?.accountName || '');
+        setAcquiredAccountName(true);
+      } else {
+        formik.setFieldValue('bankCode', '');
+        formik.setFieldValue('accountNumber', '');
+        formik.setFieldValue('payerName', '');
+        setAcquiredAccountName(false);
+      }
+    },
+    onError: (error) => {
+      formik.setFieldValue('payerName', '');
+      setAcquiredAccountName(false);
+      console.log('Do Name Enquiry Error', error);
+    },
+  });
+
+  useEffect(() => {
+    const accountNumber = formik.values.accountNumber;
+    if (accountNumber.length === 10 && formik.values.bankCode.length > 1) {
+      if (timeoutId) clearTimeout(timeoutId);
+      const newTimeoutId = setTimeout(() => {
+        doNameEnquiryMutation.mutate({
+          destinationInstitutionCode: formik.values.bankCode,
+          accountNumber: accountNumber,
+          channelCode: '1',
+        });
+      }, 1000);
+      setTimeoutId(newTimeoutId);
+    }
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [formik.values.accountNumber, formik.values.bankCode]);
+
   const getDayToApplyOptions = () => {
     if (formik.values.frequency === 'Daily') {
       return dailyFrequencyOptions;
@@ -167,24 +209,24 @@ const SingleUpload = () => {
     queryFn: ({ queryKey }) => getMerchants(queryKey[1] as QueryParams),
   });
 
-  // const { data: accountData, refetch: refetchAccountsOptions } = useQuery({
-  //   queryKey: ['accounts', queryParams],
-  //   queryFn: ({ queryKey }) =>
-  //     formik.values.merchantId
-  //       ? getAccountsByMerchantId(formik.values.merchantId)
-  //       : getAccounts(queryKey[1] as QueryParams),
-  // });
+  const { data: accountData, refetch: refetchAccountsOptions } = useQuery({
+    queryKey: ['accounts', queryParams],
+    queryFn: ({ queryKey }) =>
+      formik.values.merchantId
+        ? getAccountsByMerchantId(formik.values.merchantId)
+        : getAccounts(queryKey[1] as QueryParams),
+  });
 
-  // const refetchAccountRef = useRef(false);
+  const refetchAccountRef = useRef(false);
 
-  // useEffect(() => {
-  //   if (!refetchAccountRef.current) {
-  //     refetchAccountRef.current = true;
-  //     return;
-  //   } else {
-  //     refetchAccountsOptions();
-  //   }
-  // }, [formik.values.merchantId]);
+  useEffect(() => {
+    if (!refetchAccountRef.current) {
+      refetchAccountRef.current = true;
+      return;
+    } else {
+      refetchAccountsOptions();
+    }
+  }, [formik.values.merchantId]);
 
   const minStartDate = () => {
     const date = new Date();
@@ -329,7 +371,7 @@ const SingleUpload = () => {
               <div className="w-full md:col-span-1">
                 <CustomInput
                   labelFor="accountName"
-                  label="Account Name"
+                  label="Customer Account Name"
                   useTouched
                   placeholder="Enter here"
                   maxW="w-full"
@@ -340,7 +382,7 @@ const SingleUpload = () => {
               <div className="w-full md:col-span-1">
                 <CustomInput
                   labelFor="accountNumber"
-                  label="Account Number"
+                  label="Customer Account Number"
                   useTouched
                   placeholder="Enter here"
                   maxW="w-full"
@@ -351,7 +393,7 @@ const SingleUpload = () => {
                 />
               </div>
               <div className="w-full md:col-span-1">
-                <CustomInput
+                {/* <CustomInput
                   labelFor="accountId"
                   label="Account Id"
                   useTouched
@@ -359,6 +401,15 @@ const SingleUpload = () => {
                   maxW="w-full"
                   formik={formik}
                   inputType="text"
+                /> */}
+                <FormSelect
+                  labelFor="accountId"
+                  label="Merchant Account Id"
+                  formik={formik}
+                  useTouched
+                  options={formatApiDataForDropdown(accountData?.responseData?.items, 'id', 'id')}
+                  scrollableOptions
+                  scrollableHeight="max-h-[15rem]"
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -400,6 +451,7 @@ const SingleUpload = () => {
                   placeholder="Enter here"
                   maxW="w-full"
                   formik={formik}
+                  disabled={acquiredAccountName && formik.values.payerName.length > 0}
                 />
               </div>
               <div className="w-full md:col-span-1">

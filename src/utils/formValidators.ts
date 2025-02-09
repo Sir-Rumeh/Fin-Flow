@@ -133,7 +133,9 @@ export const createMandateSchema = Yup.object().shape({
     .max(10, 'Invalid Account Number')
     .required('Account number is required'),
   accountId: Yup.string().required('Account ID is required'),
-  bankCode: Yup.string().required('Bank code is required'),
+  bankCode: Yup.string()
+    .required('Destination Bank code is required')
+    .matches(/^\d{3}$|^\d{6}$/, 'Destination Institution Code must be 3 or 6 digit'),
   supportingDocument: Yup.string().required('File is required'),
   narration: Yup.string().required('Narration is required'),
   payerName: Yup.string().required('Payer name is required'),

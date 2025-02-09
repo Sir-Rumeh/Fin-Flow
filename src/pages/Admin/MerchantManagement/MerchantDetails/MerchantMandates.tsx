@@ -37,6 +37,7 @@ import CustomTabs from 'hoc/CustomTabs';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
 import { useReactToPrint } from 'react-to-print';
+import TransactionReceipt from 'components/TransactionReceipt';
 
 const MerchantMandates = () => {
   const [searchParams] = useSearchParams();
@@ -422,6 +423,9 @@ const MerchantMandates = () => {
 
   return (
     <>
+      <div style={{ display: 'none' }}>
+        <TransactionReceipt ref={receiptRef} data={transactionDetails} />
+      </div>
       <section className="p-2 md:p-4">
         <div className="flex items-center gap-2 text-lg">
           <Link

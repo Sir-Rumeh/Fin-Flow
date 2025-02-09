@@ -82,7 +82,7 @@ export const notifyWarning = (msg: string) => {
   toast.warn(msg);
 };
 
-export const isFileSizeValid = (size: number, limit: number = 50) => {
+export const isFileSizeValid = (size: number, limit: number = 5) => {
   return size / 1024 ** 2 <= limit;
 };
 

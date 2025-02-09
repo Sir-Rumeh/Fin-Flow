@@ -87,7 +87,7 @@ const StaffUserDisableRequestDetails = () => {
           >
             Staff User Requests
           </Link>{' '}
-          <ChevronRight />s
+          <ChevronRight />
           <span className="text-lightPurple">Disable Staff User Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">

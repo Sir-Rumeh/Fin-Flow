@@ -52,8 +52,8 @@ function AddUser() {
     try {
       acceptedFiles.forEach((file: FileWithPath) => {
         if (file) {
-          if (!isFileSizeValid(file.size, 100)) {
-            throw 'File should be lesser than or equal to 100MB';
+          if (!isFileSizeValid(file.size, 5)) {
+            throw 'File should be lesser than or equal to 5MB';
           }
           const reader = new FileReader();
           reader.onload = (e) => {
@@ -183,6 +183,9 @@ function AddUser() {
                           <UploadIcon /> Browse Document
                         </button>
                       </div>
+                    </div>
+                    <div className="mt-1 flex w-full items-center justify-center">
+                      <p className="text-center opacity-60">File size limit: 5MB</p>
                     </div>
                   </div>
                   <div className="mt-10">

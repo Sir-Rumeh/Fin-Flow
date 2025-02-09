@@ -116,7 +116,16 @@ function CreateProfile() {
       refetchAccountRef.current = true;
       return;
     } else {
-      refetchAccountsOptions();
+      const getData = async () => {
+        await refetchAccountsOptions();
+      };
+      getData();
+      formik.setFieldValue(
+        'merchantName',
+        data?.responseData?.items.filter((item: any) => {
+          item.id === formik.values.merchantID;
+        })[0]?.name,
+      );
     }
   }, [formik.values.merchantID]);
 

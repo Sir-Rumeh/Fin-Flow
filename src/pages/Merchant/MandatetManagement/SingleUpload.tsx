@@ -332,7 +332,7 @@ const SingleUpload = () => {
               <div className="w-full md:col-span-1">
                 <CustomInput
                   labelFor="accountName"
-                  label="Account Name"
+                  label="Customer Account Name"
                   useTouched
                   placeholder="Enter here"
                   maxW="w-full"
@@ -343,7 +343,7 @@ const SingleUpload = () => {
               <div className="w-full md:col-span-1">
                 <CustomInput
                   labelFor="accountNumber"
-                  label="Account Number"
+                  label="Customer Account Number"
                   useTouched
                   placeholder="Enter here"
                   maxW="w-full"
@@ -356,7 +356,7 @@ const SingleUpload = () => {
               <div className="w-full md:col-span-1">
                 <CustomInput
                   labelFor="accountId"
-                  label="Account Id"
+                  label="Merchant Account Id"
                   useTouched
                   placeholder="Enter here"
                   maxW="w-full"
