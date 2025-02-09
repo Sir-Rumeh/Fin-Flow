@@ -342,6 +342,18 @@ const AuditTrail = () => {
                       new Date(selectedAudit.dateCreated).toLocaleDateString()
                     }
                   />
+                  <DetailsCard
+                    title="Time of Action"
+                    content={
+                      selectedAudit.dateCreated &&
+                      new Date(selectedAudit.dateCreated).toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: true,
+                      })
+                    }
+                  />
                 </div>
               </div>
             </div>

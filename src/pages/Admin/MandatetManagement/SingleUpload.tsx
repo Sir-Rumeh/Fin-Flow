@@ -52,6 +52,11 @@ const SingleUpload = () => {
     setModals((prev) => ({ ...prev, [modalName]: false }));
   };
 
+  const [queryParams, setQueryParams] = useState<QueryParams>({
+    sortBy: 'asc',
+    sortOrder: 'desc',
+  });
+
   const addMandateRequestMutation = useMutation({
     mutationFn: (payload: MandateRequest | undefined) => addMandateRequest(payload),
     onSuccess: () => {
@@ -164,6 +169,16 @@ const SingleUpload = () => {
     },
   });
 
+  const { data: accountData, refetch: refetchAccountsOptions } = useQuery({
+    queryKey: ['accounts', queryParams],
+    queryFn: ({ queryKey }) =>
+      formik.values.merchantId
+        ? getAccountsByMerchantId(formik.values.merchantId, queryKey[1] as QueryParams)
+        : getAccounts(queryKey[1] as QueryParams),
+  });
+
+  const refetchAccountRef = useRef(false);
+
   useEffect(() => {
     const getPayeeName = () => {
       const selectedMerchant = merchantData?.responseData?.items?.find(
@@ -182,6 +197,7 @@ const SingleUpload = () => {
     } else {
       refetchAccountsOptions();
       getPayeeName();
+      formik.setFieldValue('accountId', '');
     }
   }, [formik.values.merchantId]);
 
@@ -226,25 +242,10 @@ const SingleUpload = () => {
 
   const dayToApplyOptions = getDayToApplyOptions();
 
-  const [queryParams, setQueryParams] = useState<QueryParams>({
-    sortBy: 'asc',
-    sortOrder: 'desc',
-  });
-
   const { data: merchantData } = useQuery({
     queryKey: ['merchants', queryParams],
     queryFn: ({ queryKey }) => getMerchants(queryKey[1] as QueryParams),
   });
-
-  const { data: accountData, refetch: refetchAccountsOptions } = useQuery({
-    queryKey: ['accounts', queryParams],
-    queryFn: ({ queryKey }) =>
-      formik.values.merchantId
-        ? getAccountsByMerchantId(formik.values.merchantId, queryKey[1] as QueryParams)
-        : getAccounts(queryKey[1] as QueryParams),
-  });
-
-  const refetchAccountRef = useRef(false);
 
   const minStartDate = () => {
     const date = new Date();
@@ -390,11 +391,11 @@ const SingleUpload = () => {
                 <CustomInput
                   labelFor="accountName"
                   label="Customer Account Name"
-                  useTouched
                   placeholder="Enter here"
                   maxW="w-full"
                   formik={formik}
                   inputType="text"
+                  useTouched
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -463,7 +464,7 @@ const SingleUpload = () => {
                   placeholder="Enter here"
                   maxW="w-full"
                   formik={formik}
-                  disabled={acquiredAccountName && formik.values.payerName.length > 0}
+                  disabled={acquiredAccountName && formik.values.payerName?.length > 0}
                 />
               </div>
               <div className="w-full md:col-span-1">
@@ -511,7 +512,7 @@ const SingleUpload = () => {
                   maxW="w-full"
                   formik={formik}
                   disabled={
-                    formik.values.merchantId.length > 0 && formik.values.payeeName.length > 0
+                    formik.values.merchantId?.length > 0 && formik.values.payeeName?.length > 0
                   }
                 />
               </div>
@@ -546,7 +547,7 @@ const SingleUpload = () => {
                   maxW="w-full"
                   formik={formik}
                   disabled={
-                    formik.values.merchantId.length > 0 && formik.values.payeeAddress.length > 0
+                    formik.values.merchantId?.length > 0 && formik.values.payeeAddress?.length > 0
                   }
                 />
               </div>

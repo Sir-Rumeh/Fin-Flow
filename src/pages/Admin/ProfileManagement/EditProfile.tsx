@@ -3,7 +3,7 @@ import appRoutes from 'utils/constants/routes';
 import ChevronRight from 'assets/icons/ChevronRight';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import RedAlertIcon from 'assets/icons/RedAlertIcon';
 import { ModalWrapper } from 'hoc/ModalWrapper';
 import ActionSuccessIcon from 'assets/icons/ActionSuccessIcon';
@@ -12,7 +12,7 @@ import FormSelect from 'components/FormElements/FormSelect';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getMerchants } from 'config/actions/merchant-actions';
 import { ProfileRequest, QueryParams, Role } from 'utils/interfaces';
-import { getAccounts } from 'config/actions/account-actions';
+import { getAccounts, getAccountsByMerchantId } from 'config/actions/account-actions';
 import { formatApiDataForDropdown } from 'utils/helpers';
 import { getProfileById, updateProfile } from 'config/actions/profile-actions';
 import { createProfileSchema } from 'utils/formValidators';
@@ -96,9 +96,12 @@ function EditProfile() {
     queryFn: ({ queryKey }) => getMerchants(queryKey[1] as QueryParams),
   });
 
-  const { data: accountData } = useQuery({
+  const { data: accountData, refetch: refetchAccountsOptions } = useQuery({
     queryKey: ['accounts', queryParams],
-    queryFn: ({ queryKey }) => getAccounts(queryKey[1] as QueryParams),
+    queryFn: ({ queryKey }) =>
+      formik.values.merchantID
+        ? getAccountsByMerchantId(formik.values.merchantID)
+        : getAccounts(queryKey[1] as QueryParams),
   });
 
   const { data: roles } = useQuery({
@@ -123,12 +126,46 @@ function EditProfile() {
     },
   });
 
+  const refetchAccountRef = useRef(false);
+
   useEffect(() => {
     const filteredRoles = roles?.responseData?.items?.filter(
       (role: Role) => role.designation === Designation.Merchant,
     );
     setMerchantRoles(filteredRoles);
   }, [roles]);
+
+  useEffect(() => {
+    if (formik.values.merchantName?.length > 0) {
+      const merchantDetails = data?.responseData?.items.find((item: any) => {
+        return item.name === formik.values.merchantName;
+      });
+      formik.setFieldValue('merchantID', merchantDetails?.id);
+    }
+  }, [formik.values.merchantName]);
+
+  useEffect(() => {
+    if (!refetchAccountRef.current) {
+      refetchAccountRef.current = true;
+      return;
+    } else {
+      const getData = async () => {
+        await refetchAccountsOptions();
+      };
+      getData();
+      formik.setFieldValue('accountNumber', '');
+      formik.setFieldValue('accountID', '');
+    }
+  }, [formik.values.merchantID]);
+
+  useEffect(() => {
+    if (formik.values.accountNumber?.length > 0) {
+      const accountDetails = accountData?.responseData?.items.find((item: any) => {
+        return item.accountNumber === formik.values.accountNumber;
+      });
+      formik.setFieldValue('accountID', accountDetails?.id);
+    }
+  }, [formik.values.accountNumber]);
 
   return (
     <>
@@ -152,15 +189,6 @@ function EditProfile() {
               <div className="">
                 <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
                   <FormSelect
-                    labelFor="merchantID"
-                    label="Merchant ID"
-                    formik={formik}
-                    useTouched
-                    options={formatApiDataForDropdown(data?.responseData?.items, 'id', 'id')}
-                    scrollableOptions
-                    scrollableHeight="max-h-[15rem]"
-                  />
-                  <FormSelect
                     labelFor="merchantName"
                     label="Merchant Name"
                     formik={formik}
@@ -169,14 +197,14 @@ function EditProfile() {
                     scrollableOptions
                     scrollableHeight="max-h-[15rem]"
                   />
-                  <FormSelect
-                    labelFor="accountID"
-                    label="Account Id"
+                  <CustomInput
+                    labelFor="merchantID"
+                    label="Merchant ID"
+                    inputType="text"
+                    placeholder="Enter here"
+                    maxW="w-full"
                     formik={formik}
-                    useTouched
-                    options={formatApiDataForDropdown(accountData?.responseData?.items, 'id', 'id')}
-                    scrollableOptions
-                    scrollableHeight="max-h-[15rem]"
+                    disabled={formik.values.merchantID?.length > 0}
                   />
                   <FormSelect
                     labelFor="accountNumber"
@@ -190,6 +218,15 @@ function EditProfile() {
                     )}
                     scrollableOptions
                     scrollableHeight="max-h-[15rem]"
+                  />
+                  <CustomInput
+                    labelFor="accountID"
+                    label="Account Id"
+                    inputType="text"
+                    placeholder="Enter here"
+                    maxW="w-full"
+                    formik={formik}
+                    disabled={formik.values.accountID?.length > 0}
                   />
                   <CustomInput
                     labelFor="firstName"
