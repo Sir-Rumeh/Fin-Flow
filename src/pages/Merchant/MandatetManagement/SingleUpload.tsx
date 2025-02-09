@@ -175,7 +175,7 @@ const SingleUpload = () => {
   //   queryKey: ['accounts', queryParams],
   //   queryFn: ({ queryKey }) =>
   //     formik.values.merchantId
-  //       ? getAccountsByMerchantId(formik.values.merchantId)
+  //       ? getAccountsByMerchantId(formik.values.merchantId, queryKey[1] as QueryParams)
   //       : getAccounts(queryKey[1] as QueryParams),
   // });
 

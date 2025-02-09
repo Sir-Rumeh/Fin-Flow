@@ -93,11 +93,11 @@ const BulkUpload = () => {
     payeeAddress: '',
     payeeEmailAddress: '',
     payeePhoneNumber: '',
-    biller: '',
-    billerID: '',
-    billerCode: '',
-    billerAccountNumber: '',
-    bankName: '',
+    // biller: '',
+    // billerID: '',
+    // billerCode: '',
+    // billerAccountNumber: '',
+    // bankName: '',
   };
 
   useEffect(() => {
