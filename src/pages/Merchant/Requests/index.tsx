@@ -243,7 +243,7 @@ const MandateRequests = () => {
   return (
     <>
       <div className="px-5 py-5">
-        <h2 className="text-2xl font-semibold">Requests</h2>
+        <h2 className="text-2xl font-semibold">Mandate Requests</h2>
 
         <div className="mt-5 w-full rounded-lg bg-white px-5 py-5">
           <div className="flex flex-col items-center justify-between gap-4 lg:flex-row lg:gap-0">

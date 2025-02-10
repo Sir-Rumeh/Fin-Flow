@@ -150,7 +150,7 @@ function EditProfile() {
     if (!refetchAccountRef.current) {
       refetchAccountRef.current = true;
       return;
-    } else {
+    } else if (formik.values.merchantID?.length > 0) {
       const getData = async () => {
         await refetchAccountsOptions();
       };
@@ -204,9 +204,10 @@ function EditProfile() {
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
-                    disabled={
-                      formik.values.merchantName?.length > 0 && formik.values.merchantID?.length > 0
-                    }
+                    disabled
+                    // disabled={
+                    //   formik.values.merchantName?.length > 0 && formik.values.merchantID?.length > 0
+                    // }
                   />
                   <FormSelect
                     labelFor="accountNumber"
@@ -228,9 +229,10 @@ function EditProfile() {
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
-                    disabled={
-                      formik.values.accountNumber?.length > 0 && formik.values.accountID?.length > 0
-                    }
+                    disabled
+                    // disabled={
+                    //   formik.values.accountNumber?.length > 0 && formik.values.accountID?.length > 0
+                    // }
                   />
                   <CustomInput
                     labelFor="firstName"

@@ -439,7 +439,6 @@ const MandatetManagement = () => {
       headerClassName: 'ag-thead ',
       sortable: false,
       width: 180,
-
       renderCell: (params) => {
         return (
           <>

@@ -168,11 +168,12 @@ AxiosClient.interceptors.response.use(
           } catch (err) {
             dispatch(uiStopLoading());
             originalRequest._isRetry = false;
-            await logoutUser();
+            // await logoutUser();
+            return AxiosClient(originalRequest);
           }
         } else {
           originalRequest._isRetry = false;
-          clearUserSession();
+          // clearUserSession();
         }
       }
     } else if (error?.response?.status === 400 || error?.response?.status === 424) {

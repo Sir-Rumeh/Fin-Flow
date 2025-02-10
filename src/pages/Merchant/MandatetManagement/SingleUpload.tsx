@@ -634,7 +634,7 @@ const SingleUpload = () => {
                   customPaddingX="1.5rem"
                   width="10rem"
                   onClick={() => {
-                    navigate(`/${appRoutes.adminDashboard.mandateManagement.index}`);
+                    navigate(`/${appRoutes.merchantDashboard.mandateManagement.index}`);
                   }}
                 />
               </div>
@@ -681,7 +681,7 @@ const SingleUpload = () => {
           proceedAction={() => {
             formik.resetForm();
             closeModal('creationSuccessful');
-            navigate(`/${appRoutes.adminDashboard.mandateManagement.index}`);
+            navigate(`/${appRoutes.merchantDashboard.mandateManagement.index}`);
           }}
         />
       )}

@@ -174,9 +174,10 @@ function EditAccount() {
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
-                    disabled={
-                      formik.values.merchantName?.length > 0 && formik.values.merchantId?.length > 0
-                    }
+                    disabled
+                    // disabled={
+                    //   formik.values.merchantName?.length > 0 && formik.values.merchantId?.length > 0
+                    // }
                   />
                   <CustomInput
                     labelFor="accountNumber"

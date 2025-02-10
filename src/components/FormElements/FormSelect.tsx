@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { DarkArrowDown } from 'assets/icons';
+import { useAppSelector } from 'store/index';
 
 export interface DropdownOption {
   id?: string | number;
@@ -36,20 +37,18 @@ const FormSelect = ({
   const [selectedOption, setSelectedOption] = useState('');
 
   const getTextToDisplay = (stringValue: string) => {
-    const object = options.find((option) => option.value === stringValue);
+    const object = options?.find((option) => option.value === stringValue);
     return object?.label;
   };
 
   useEffect(() => {
-    const selectedOptionLabel = getTextToDisplay(formik.values[labelFor]);
-    if (!formik.values[labelFor]) {
-      formik.setFieldValue(labelFor, '');
-      setSelectedOption('Select here');
-    } else if (selectedOptionLabel) {
-      formik.setFieldValue(labelFor, formik.values[labelFor]);
-      setSelectedOption(selectedOptionLabel);
+    if (formik.values[labelFor].length > 0 && options.length > 0) {
+      const selectedOptionLabel = getTextToDisplay(formik.values[labelFor]);
+      if (selectedOptionLabel) {
+        setSelectedOption(selectedOptionLabel);
+      }
     }
-  }, [formik.values[labelFor]]);
+  }, [options, formik.values[labelFor]]);
 
   const formSelectRef = useRef<HTMLDivElement>(null);
 
@@ -59,9 +58,7 @@ const FormSelect = ({
         setIsOpen(false);
       }
     };
-
     document.addEventListener('mousedown', handleClickOutside);
-
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
     };
@@ -83,7 +80,6 @@ const FormSelect = ({
         >
           {label}
         </label>
-
         <div
           className={`flex w-full ${height ? height : 'h-[50px]'} items-center justify-between rounded-lg border border-gray-300 px-1 ${
             useTouched && formik?.touched[labelFor] && formik?.errors[labelFor]
