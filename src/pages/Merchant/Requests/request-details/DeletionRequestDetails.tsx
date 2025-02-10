@@ -213,7 +213,7 @@ const DeletionRequestDetails = () => {
             <DetailsCard title="Phone Number" content={data?.responseData?.payeePhoneNumber} />
           </div>
         </div>
-        <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+        <div className="mt-8 hidden rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
           <div className="flex items-center justify-between">
             <p className="my-3 text-lg font-semibold">Biller Details</p>
             <div className="flex items-center gap-2">

@@ -437,7 +437,7 @@ const MandateDetails = () => {
                 <DetailsCard title="Phone Number" content={data?.responseData?.payeePhoneNumber} />
               </ItemDetailsContainer>
             </div>
-            <div className="mt-10">
+            <div className="mt-10 hidden">
               <ItemDetailsContainer
                 title="Biller Details"
                 titleExtension={

@@ -47,6 +47,11 @@ function EditAccount() {
     },
     validationSchema: createAccountSchema,
     onSubmit: (values) => {
+      if (!merchantAccountValidated) {
+        return notifyError(
+          'Account number needs to be validated successfully before you can proceed',
+        );
+      }
       const payload = {
         accountId: accountId,
         merchantId: values.merchantId,
@@ -101,7 +106,6 @@ function EditAccount() {
   });
 
   const validateAccountNumber = async () => {
-    formik.setFieldValue('accountName', '');
     setMerchantAccountValidated(false);
     const res = await validateMerchantCif(formik.values.accountNumber);
     if (res && res.responseData?.businessName.length > 0) {

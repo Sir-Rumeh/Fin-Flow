@@ -48,6 +48,11 @@ function CreateAccount() {
     },
     validationSchema: createAccountSchema,
     onSubmit: (values) => {
+      if (!merchantAccountValidated) {
+        return notifyError(
+          'Account number needs to be validated successfully before you can proceed',
+        );
+      }
       const payload = {
         accountId: '',
         merchantId: values.merchantId,
@@ -172,7 +177,7 @@ function CreateAccount() {
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
-                    disabled={merchantAccountValidated && formik.values.accountName?.length > 0}
+                    // disabled={merchantAccountValidated && formik.values.accountName?.length > 0}
                   />
                 </div>
                 <div className="mt-6 flex items-center justify-end">
