@@ -56,12 +56,12 @@ const MerchantDetails = () => {
   };
 
   const { data, refetch } = useQuery({
-    queryKey: ['merchants', merchantId],
+    queryKey: ['merchants-details', merchantId],
     queryFn: ({ queryKey }) => getMerchantById(queryKey[1]),
   });
 
   const { data: merchantDetailsStatistics } = useQuery({
-    queryKey: ['merchant-details', merchantId],
+    queryKey: ['merchant-details-statistics', merchantId],
     queryFn: ({ queryKey }) => getMerchantDetailsStatistics(queryKey[1]),
   });
 

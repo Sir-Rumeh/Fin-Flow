@@ -64,7 +64,17 @@ const MerchantProfiles = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setPaginationData((prev) => {
+        return {
+          ...prev,
+          pageNumber: 1,
+        };
+      });
+      setQueryParams((prev) => ({
+        ...prev,
+        pageNo: 1,
+        searchFilter: formik.values.searchProfile,
+      }));
     },
   });
 
@@ -89,6 +99,12 @@ const MerchantProfiles = () => {
   }, [paginationData]);
 
   const handleOptionsFilter = () => {
+    setPaginationData((prev) => {
+      return {
+        ...prev,
+        pageNumber: 1,
+      };
+    });
     setQueryParams((prev) => ({
       ...prev,
       status: formik.values.statusFilter,

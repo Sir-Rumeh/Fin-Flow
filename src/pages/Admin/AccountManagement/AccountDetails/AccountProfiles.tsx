@@ -64,7 +64,17 @@ const AccountProfiles = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setPaginationData((prev) => {
+        return {
+          ...prev,
+          pageNumber: 1,
+        };
+      });
+      setQueryParams((prev) => ({
+        ...prev,
+        pageNo: 1,
+        searchFilter: formik.values.searchProfile,
+      }));
     },
   });
 
@@ -89,8 +99,15 @@ const AccountProfiles = () => {
   }, [paginationData]);
 
   const handleOptionsFilter = () => {
+    setPaginationData((prev) => {
+      return {
+        ...prev,
+        pageNumber: 1,
+      };
+    });
     setQueryParams((prev) => ({
       ...prev,
+      pageNo: 1,
       status: formik.values.statusFilter,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,

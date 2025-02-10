@@ -83,7 +83,17 @@ const MerchantMandates = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setPaginationData((prev) => {
+        return {
+          ...prev,
+          pageNumber: 1,
+        };
+      });
+      setQueryParams((prev) => ({
+        ...prev,
+        pageNo: 1,
+        searchFilter: formik.values.searchMandate,
+      }));
     },
   });
 
@@ -118,8 +128,15 @@ const MerchantMandates = () => {
   }, [paginationData]);
 
   const handleOptionsFilter = () => {
+    setPaginationData((prev) => {
+      return {
+        ...prev,
+        pageNumber: 1,
+      };
+    });
     setQueryParams((prev) => ({
       ...prev,
+      pageNo: 1,
       status: formik.values.statusFilter,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
@@ -232,7 +249,7 @@ const MerchantMandates = () => {
                 >
                   View Details
                 </button>
-                <button
+                {/* <button
                   onClick={() => {
                     openModal('openTransactionHistory');
                   }}
@@ -240,7 +257,7 @@ const MerchantMandates = () => {
                   className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
                 >
                   View Transactions
-                </button>
+                </button> */}
                 {params?.row.mandateType === 'Variable' && (
                   <button
                     onClick={() => {
