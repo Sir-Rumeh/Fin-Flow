@@ -19,6 +19,7 @@ import { useMediaQuery } from '@mui/material';
 import { useQuery } from '@tanstack/react-query';
 import { getProfileRequests, getProfileStatistics } from 'config/actions/profile-actions';
 import { requestTypeDropdownOptions } from 'utils/constants';
+import { capitalize } from 'utils/helpers';
 
 const ProfileRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -38,8 +39,15 @@ const ProfileRequests = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
+      setPaginationData((prev) => {
+        return {
+          ...prev,
+          pageNumber: 1,
+        };
+      });
       setQueryParams((prev) => ({
         ...prev,
+        pageNo: 1,
         searchFilter: formik.values.searchProfile,
       }));
       // refetch();
@@ -63,18 +71,21 @@ const ProfileRequests = () => {
     setQueryParams((prev) => ({
       ...prev,
       status: activeTab,
-      requestType: formik.values.statusFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchProfile,
-      startDate: formik.values.fromDateFilter,
-      endDate: formik.values.toDateFilter,
     }));
   }, [activeTab, paginationData]);
 
   const handleOptionsFilter = () => {
+    setPaginationData((prev) => {
+      return {
+        ...prev,
+        pageNumber: 1,
+      };
+    });
     setQueryParams((prev) => ({
       ...prev,
+      pageNo: 1,
       requestType: formik.values.statusFilter,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
@@ -82,6 +93,16 @@ const ProfileRequests = () => {
   };
 
   const columns: GridColDef[] = [
+    {
+      field: 'merchantName',
+      headerName: 'Merchant Name',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+      renderCell: (params: GridRenderCellParams) => {
+        return <span>{`${capitalize(params?.row?.merchantName)}`}</span>;
+      },
+    },
     {
       field: 'accountID',
       headerName: 'Account ID',

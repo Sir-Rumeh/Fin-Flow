@@ -87,7 +87,7 @@ const StaffUserDisableRequestDetails = () => {
           >
             Staff User Requests
           </Link>{' '}
-          <ChevronRight />s
+          <ChevronRight />
           <span className="text-lightPurple">Disable Staff User Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
@@ -136,11 +136,9 @@ const StaffUserDisableRequestDetails = () => {
                     : ''
                 }
               />
-              <DetailsCard title="User Name" content={data?.responseData?.username} />
               <DetailsCard title="Email Address" content={data?.responseData?.email} />
               <DetailsCard title="Phone Number" content={data?.responseData?.phoneNumber} />
               <DetailsCard title="Role" content={data?.responseData?.role} />
-              <DetailsCard title="Category" content={data?.responseData?.userLevel} />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
@@ -173,7 +171,7 @@ const StaffUserDisableRequestDetails = () => {
               </ItemDetailsContainer>
             )}
           </div>
-          <div className="mt-10">
+          {/* <div className="mt-10">
             <ItemDetailsContainer title="Requested By">
               <ActionAuthorDetails
                 id={data?.responseData?.requestedBy}
@@ -181,7 +179,7 @@ const StaffUserDisableRequestDetails = () => {
                 actionDate={data?.responseData?.dateRequested}
               />
             </ItemDetailsContainer>
-          </div>
+          </div> */}
         </div>
       </div>
       {modals.confirmApproveRequest && (

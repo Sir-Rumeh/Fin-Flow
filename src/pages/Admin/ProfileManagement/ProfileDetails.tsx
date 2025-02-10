@@ -178,15 +178,6 @@ const ProfileDetails = () => {
               />
             </ItemDetailsContainer>
           </div>
-          <div className="mt-10">
-            <ItemDetailsContainer title="Approver Details" titleExtension={<ApprovedIcon />}>
-              <ActionAuthorDetails
-                id={data?.responseData?.approvedBy}
-                actionType={AuthorActionType.ApprovedBy}
-                actionDate={data?.responseData?.dateApproved}
-              />
-            </ItemDetailsContainer>
-          </div>
         </div>
       </div>
       {modals.confirmDisable && (

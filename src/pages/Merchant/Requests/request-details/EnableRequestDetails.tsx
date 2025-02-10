@@ -152,7 +152,7 @@ const EnableRequestDetails = () => {
           <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
             <DetailsCard title="Account ID" content={data?.responseData?.accountId} />
             <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
-            <DetailsCard title="Merchant Code" content={data?.responseData?.mandateCode} />
+            <DetailsCard title="Mandate Code" content={data?.responseData?.mandateCode} />
             <DetailsCard
               title="Date Created"
               content={
@@ -213,7 +213,7 @@ const EnableRequestDetails = () => {
             <DetailsCard title="Phone Number" content={data?.responseData?.payeePhoneNumber} />
           </div>
         </div>
-        <div className="mt-8 rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
+        <div className="mt-8 hidden rounded-[5px] border-[3px] border-grayPrimary px-6 py-4">
           <div className="flex items-center justify-between">
             <p className="my-3 text-lg font-semibold">Biller Details</p>
             <div className="flex items-center gap-2">
@@ -239,9 +239,9 @@ const EnableRequestDetails = () => {
           <div className="h-[2px] w-full bg-grayPrimary"></div>
           <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
             <ActionAuthorDetails
-              id={data?.responseData?.requestedBy}
+              id={data?.responseData?.createdBy}
               actionType={AuthorActionType.RequestedBy}
-              actionDate={data?.responseData?.dateRequested}
+              actionDate={data?.responseData?.dateCreated}
             />
           </div>
         </div>

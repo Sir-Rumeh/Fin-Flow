@@ -22,6 +22,7 @@ import {
 } from 'config/actions/staff-user-actions';
 import { useQuery } from '@tanstack/react-query';
 import { requestTypeDropdownOptions } from 'utils/constants';
+import { capitalize } from 'utils/helpers';
 
 const StaffUserRequests = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -39,8 +40,15 @@ const StaffUserRequests = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
+      setPaginationData((prev) => {
+        return {
+          ...prev,
+          pageNumber: 1,
+        };
+      });
       setQueryParams((prev) => ({
         ...prev,
+        pageNo: 1,
         searchFilter: formik.values.searchStaffUser,
       }));
       // refetch();
@@ -63,18 +71,21 @@ const StaffUserRequests = () => {
     setQueryParams((prev) => ({
       ...prev,
       status: activeTab,
-      requestType: formik.values.statusFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchStaffUser,
-      startDate: formik.values.fromDateFilter,
-      endDate: formik.values.toDateFilter,
     }));
   }, [activeTab, paginationData]);
 
   const handleOptionsFilter = () => {
+    setPaginationData((prev) => {
+      return {
+        ...prev,
+        pageNumber: 1,
+      };
+    });
     setQueryParams((prev) => ({
       ...prev,
+      pageNo: 1,
       requestType: formik.values.statusFilter,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
@@ -96,7 +107,9 @@ const StaffUserRequests = () => {
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       renderCell: (params: GridRenderCellParams) => {
-        return <>{`${params?.row.firstName} ${params?.row.lastName}`}</>;
+        return (
+          <span>{`${capitalize(params?.row?.firstName)} ${capitalize(params?.row?.lastName)}`}</span>
+        );
       },
     },
     {

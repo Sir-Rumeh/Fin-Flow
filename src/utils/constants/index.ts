@@ -48,7 +48,6 @@ export const userLevel = [
 export const canBeUpdated: any = {
   name: true,
   accountNumber: true,
-  rcNumber: true,
   address: true,
   amount: true,
   merchantName: true,

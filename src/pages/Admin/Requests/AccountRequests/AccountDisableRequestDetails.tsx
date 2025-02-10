@@ -169,15 +169,15 @@ const AccountDisableRequestDetails = () => {
               </ItemDetailsContainer>
             )}
           </div>
-          <div className="mt-10">
+          {/* <div className="mt-10">
             <ItemDetailsContainer title="Requested By">
               <ActionAuthorDetails
-                id={data?.responseData?.requestedBy}
+                id={data?.responseData?.createdBy}
                 actionType={AuthorActionType.RequestedBy}
-                actionDate={data?.responseData?.dateRequested}
+                actionDate={data?.responseData?.dateCreated}
               />
             </ItemDetailsContainer>
-          </div>
+          </div> */}
         </div>
       </div>
       {modals.confirmApproveRequest && (

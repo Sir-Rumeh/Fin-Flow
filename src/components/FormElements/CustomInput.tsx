@@ -17,6 +17,7 @@ type CustomInputProps = {
   useTouched?: boolean;
   verticalMargin?: boolean;
   passwordInput?: boolean;
+  validateOnInput?: boolean;
   iconState?: boolean;
   handleInputType?: (e: any) => void;
   disabled?: boolean;
@@ -38,6 +39,7 @@ const CustomInput: React.FC<CustomInputProps & React.InputHTMLAttributes<HTMLInp
   useTouched = true,
   verticalMargin = true,
   passwordInput = false,
+  validateOnInput = false,
   iconState,
   handleInputType = () => {},
   disabled,
@@ -82,7 +84,8 @@ const CustomInput: React.FC<CustomInputProps & React.InputHTMLAttributes<HTMLInp
   const handleInput = (event: React.FormEvent<HTMLInputElement>) => {
     const value = event.currentTarget.value;
     // Remove any non-numeric characters (in case pasted)
-    event.currentTarget.value = value.replace(/\D/g, '');
+    event.currentTarget.value = mode === 'numeric' ? value.replace(/\D/g, '') : value;
+    validateOnInput && formik.setFieldTouched(labelFor, true, false);
   };
 
   return (
@@ -143,7 +146,7 @@ const CustomInput: React.FC<CustomInputProps & React.InputHTMLAttributes<HTMLInp
             onBlur={() => formik?.handleBlur}
             disabled={disabled}
             inputMode={getInputMode()}
-            onInput={mode === 'numeric' ? handleInput : undefined}
+            onInput={handleInput}
             {...rest}
           />
           {icon}

@@ -112,13 +112,36 @@ function CreateProfile() {
   const refetchAccountRef = useRef(false);
 
   useEffect(() => {
+    if (formik.values.merchantName?.length > 0) {
+      const merchantDetails = data?.responseData?.items.find((item: any) => {
+        return item.name === formik.values.merchantName;
+      });
+      formik.setFieldValue('merchantID', merchantDetails?.id);
+      formik.setFieldValue('accountNumber', '');
+      formik.setFieldValue('accountID', '');
+    }
+  }, [formik.values.merchantName]);
+
+  useEffect(() => {
     if (!refetchAccountRef.current) {
       refetchAccountRef.current = true;
       return;
     } else {
-      refetchAccountsOptions();
+      const getData = async () => {
+        await refetchAccountsOptions();
+      };
+      getData();
     }
   }, [formik.values.merchantID]);
+
+  useEffect(() => {
+    if (formik.values.accountNumber?.length > 0) {
+      const accountDetails = accountData?.responseData?.items.find((item: any) => {
+        return item.accountNumber === formik.values.accountNumber;
+      });
+      formik.setFieldValue('accountID', accountDetails?.id);
+    }
+  }, [formik.values.accountNumber]);
 
   return (
     <>
@@ -142,68 +165,48 @@ function CreateProfile() {
               <div className="">
                 <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
                   <FormSelect
-                    labelFor="merchantID"
-                    label="Merchant ID"
-                    formik={formik}
-                    useTouched
-                    options={formatApiDataForDropdown(data?.responseData?.items, 'id', 'id')}
-                    scrollableOptions
-                    scrollableHeight="max-h-[15rem]"
-                  />
-                  <FormSelect
                     labelFor="merchantName"
                     label="Merchant Name"
                     formik={formik}
                     useTouched
-                    options={
-                      formik.values.merchantID?.length > 0
-                        ? formatApiDataForDropdown(
-                            filterSelectedOption(
-                              formik.values.merchantID,
-                              'id',
-                              data?.responseData?.items,
-                            ),
-                            'name',
-                            'name',
-                          )
-                        : formatApiDataForDropdown(data?.responseData?.items, 'name', 'name')
-                    }
+                    options={formatApiDataForDropdown(data?.responseData?.items, 'name', 'name')}
                     scrollableOptions
                     scrollableHeight="max-h-[15rem]"
                   />
-                  <FormSelect
-                    labelFor="accountID"
-                    label="Account Id"
+                  <CustomInput
+                    labelFor="merchantID"
+                    label="Merchant ID"
+                    inputType="text"
+                    placeholder="Enter here"
+                    maxW="w-full"
                     formik={formik}
-                    useTouched
-                    options={formatApiDataForDropdown(accountData?.responseData?.items, 'id', 'id')}
-                    scrollableOptions
-                    scrollableHeight="max-h-[15rem]"
+                    disabled={
+                      formik.values.merchantName?.length > 0 && formik.values.merchantID?.length > 0
+                    }
                   />
                   <FormSelect
                     labelFor="accountNumber"
                     label="Account Number"
                     formik={formik}
                     useTouched
-                    options={
-                      formik.values.accountID?.length > 0
-                        ? formatApiDataForDropdown(
-                            filterSelectedOption(
-                              formik.values.accountID,
-                              'id',
-                              accountData?.responseData?.items,
-                            ),
-                            'accountNumber',
-                            'accountNumber',
-                          )
-                        : formatApiDataForDropdown(
-                            accountData?.responseData?.items,
-                            'accountNumber',
-                            'accountNumber',
-                          )
-                    }
+                    options={formatApiDataForDropdown(
+                      accountData?.responseData?.items,
+                      'accountNumber',
+                      'accountNumber',
+                    )}
                     scrollableOptions
                     scrollableHeight="max-h-[15rem]"
+                  />
+                  <CustomInput
+                    labelFor="accountID"
+                    label="Account Id"
+                    inputType="text"
+                    placeholder="Enter here"
+                    maxW="w-full"
+                    formik={formik}
+                    disabled={
+                      formik.values.accountNumber?.length > 0 && formik.values.accountID?.length > 0
+                    }
                   />
                   <CustomInput
                     labelFor="firstName"

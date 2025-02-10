@@ -12,9 +12,9 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { AccountRequest, QueryParams } from 'utils/interfaces';
 import { createAccountSchema } from 'utils/formValidators';
 import { getAccountById, updateAccountRequest } from 'config/actions/account-actions';
-import { getMerchants } from 'config/actions/merchant-actions';
+import { getMerchants, validateMerchantCif } from 'config/actions/merchant-actions';
 import FormSelect from 'components/FormElements/FormSelect';
-import { formatApiDataForDropdown } from 'utils/helpers';
+import { formatApiDataForDropdown, notifyError, notifySuccess } from 'utils/helpers';
 
 function EditAccount() {
   const navigate = useNavigate();
@@ -22,6 +22,8 @@ function EditAccount() {
   const [searchParams] = useSearchParams();
   const accountId = searchParams?.get('id') || undefined;
   const [accountRequest, setAccountRequest] = useState<AccountRequest>();
+  const [timeoutId, setTimeoutId] = useState<NodeJS.Timeout | null>(null);
+  const [merchantAccountValidated, setMerchantAccountValidated] = useState(false);
 
   const [modals, setModals] = useState({
     confirmEdit: false,
@@ -45,6 +47,11 @@ function EditAccount() {
     },
     validationSchema: createAccountSchema,
     onSubmit: (values) => {
+      if (!merchantAccountValidated) {
+        return notifyError(
+          'Account number needs to be validated successfully before you can proceed',
+        );
+      }
       const payload = {
         accountId: accountId,
         merchantId: values.merchantId,
@@ -97,6 +104,39 @@ function EditAccount() {
       closeModal('editSuccessful');
     },
   });
+
+  const validateAccountNumber = async () => {
+    setMerchantAccountValidated(false);
+    const res = await validateMerchantCif(formik.values.accountNumber);
+    if (res && res.responseData?.businessName.length > 0) {
+      setMerchantAccountValidated(true);
+      formik.setFieldValue('accountName', res.responseData?.businessName || '');
+      notifySuccess('Account name retrieved successfully');
+    }
+  };
+
+  useEffect(() => {
+    if (formik.values.merchantName?.length > 0) {
+      const merchantDetails = data?.responseData?.items.find((item: any) => {
+        return item.name === formik.values.merchantName;
+      });
+      formik.setFieldValue('merchantId', merchantDetails?.id);
+    }
+  }, [formik.values.merchantName]);
+
+  useEffect(() => {
+    const accountNumber = formik.values.accountNumber;
+    if (accountNumber.length === 10) {
+      if (timeoutId) clearTimeout(timeoutId);
+      const newTimeoutId = setTimeout(() => {
+        validateAccountNumber();
+      }, 1000);
+      setTimeoutId(newTimeoutId);
+    }
+    return () => {
+      if (timeoutId) clearTimeout(timeoutId);
+    };
+  }, [formik.values.accountNumber]);
   return (
     <>
       <div className="px-5 py-1">
@@ -119,15 +159,6 @@ function EditAccount() {
               <div className="slide-down">
                 <div className="relative grid w-full grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-2">
                   <FormSelect
-                    labelFor="merchantId"
-                    label="Merchant ID"
-                    formik={formik}
-                    useTouched
-                    options={formatApiDataForDropdown(data?.responseData?.items, 'id', 'id')}
-                    scrollableOptions
-                    scrollableHeight="max-h-[15rem]"
-                  />
-                  <FormSelect
                     labelFor="merchantName"
                     label="Merchant Name"
                     formik={formik}
@@ -137,12 +168,16 @@ function EditAccount() {
                     scrollableHeight="max-h-[15rem]"
                   />
                   <CustomInput
-                    labelFor="accountName"
-                    label="Account Name"
+                    labelFor="merchantId"
+                    label="Merchant ID"
                     inputType="text"
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}
+                    disabled
+                    // disabled={
+                    //   formik.values.merchantName?.length > 0 && formik.values.merchantId?.length > 0
+                    // }
                   />
                   <CustomInput
                     labelFor="accountNumber"
@@ -150,6 +185,14 @@ function EditAccount() {
                     inputType="text"
                     mode="numeric"
                     pattern="\d*"
+                    placeholder="Enter here"
+                    maxW="w-full"
+                    formik={formik}
+                  />
+                  <CustomInput
+                    labelFor="accountName"
+                    label="Account Name"
+                    inputType="text"
                     placeholder="Enter here"
                     maxW="w-full"
                     formik={formik}

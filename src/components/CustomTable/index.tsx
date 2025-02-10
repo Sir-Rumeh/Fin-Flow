@@ -5,6 +5,7 @@ import { CircularProgress, useMediaQuery } from '@mui/material';
 import 'assets/fonts/Gotham.css';
 import ChevronLeft from 'assets/icons/ChevronLeft';
 import ChevronRightIcon from 'assets/icons/ChevronRightIcon';
+import { useAppSelector } from 'store/index';
 
 interface PaginationProps {
   pageNumber: number;
@@ -34,7 +35,7 @@ function CustomTable({
   ...props
 }: CustomTableProps): JSX.Element {
   const isSmallWidth = useMediaQuery('(max-width:1440px)');
-
+  const { isLoading } = useAppSelector((state) => state.loading);
   const [paginationCountArray, setPaginationCountArray] = useState<number[]>([]);
   const [paginationCount, setPaginationCount] = useState(0);
   const [paginationSplitPosition, setPaginationSplitPosition] = useState({
@@ -109,6 +110,10 @@ function CustomTable({
             <div className="flex h-[100&] w-full justify-center py-40">
               <CircularProgress sx={{ color: '#5C068C', zIndex: 999 }} />
             </div>
+          </>
+        ) : isLoading ? (
+          <>
+            <div className="flex h-[100&] w-full justify-center py-40"></div>
           </>
         ) : (
           <div className="slide-down mt-8 flex h-[30vh] flex-col items-center justify-center p-4 pb-8">

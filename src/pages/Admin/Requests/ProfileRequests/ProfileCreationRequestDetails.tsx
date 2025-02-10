@@ -169,6 +169,7 @@ const ProfileCreationRequestDetails = () => {
                 id={data?.responseData?.createdBy}
                 actionType={AuthorActionType.CreatedBy}
                 actionDate={data?.responseData?.createdAt}
+                requestType={data?.responseData?.requestType}
               />
             </ItemDetailsContainer>
           </div>

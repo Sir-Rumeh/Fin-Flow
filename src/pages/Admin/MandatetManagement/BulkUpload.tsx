@@ -29,8 +29,8 @@ const BulkUpload = () => {
     try {
       acceptedFiles.forEach((file: FileWithPath) => {
         if (file) {
-          if (!isFileSizeValid(file.size, 500)) {
-            throw 'File should be lesser than or equal to 100MB';
+          if (!isFileSizeValid(file.size, 5)) {
+            throw 'File should be lesser than or equal to 5MB';
           }
           const reader = new FileReader();
           reader.onload = (e) => {
@@ -93,11 +93,11 @@ const BulkUpload = () => {
     payeeAddress: '',
     payeeEmailAddress: '',
     payeePhoneNumber: '',
-    biller: '',
-    billerID: '',
-    billerCode: '',
-    billerAccountNumber: '',
-    bankName: '',
+    // biller: '',
+    // billerID: '',
+    // billerCode: '',
+    // billerAccountNumber: '',
+    // bankName: '',
   };
 
   useEffect(() => {
@@ -107,7 +107,7 @@ const BulkUpload = () => {
         ['mandateId', 'mandateCode', 'supportingDocument'],
         ['mandateId', 'mandateCode', 'supportingDocument'],
       );
-      const dataMatch = newDataArray.some((obj) => matchesInterface(obj, referenceObject));
+      const dataMatch = newDataArray?.every((obj) => matchesInterface(obj, referenceObject));
       if (jsonData.length > 0 && !dataMatch) {
         notifyError('Incorrect data format');
         clearFiles();
@@ -186,6 +186,9 @@ const BulkUpload = () => {
                         <UploadIcon /> Browse Document
                       </button>
                     </div>
+                  </div>
+                  <div className="mt-1 flex w-full items-center justify-center">
+                    <p className="text-center opacity-60">File size limit: 5MB</p>
                   </div>
                 </div>
                 <div className="mt-10">

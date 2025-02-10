@@ -309,3 +309,9 @@ export interface Role {
   isDeleted: boolean;
   isActive: boolean;
 }
+
+export interface DoNameEnquiryRequest {
+  destinationInstitutionCode: string;
+  accountNumber: string;
+  channelCode: string;
+}

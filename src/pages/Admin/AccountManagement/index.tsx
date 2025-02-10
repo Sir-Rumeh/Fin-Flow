@@ -24,6 +24,7 @@ import {
   getAccounts,
 } from 'config/actions/account-actions';
 import { SearchTypes } from 'utils/enums';
+import { capitalize } from 'utils/helpers';
 
 const AccountManagement = () => {
   const printPdfRef = useRef(null);
@@ -61,8 +62,15 @@ const AccountManagement = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
+      setPaginationData((prev) => {
+        return {
+          ...prev,
+          pageNumber: 1,
+        };
+      });
       setQueryParams((prev) => ({
         ...prev,
+        pageNo: 1,
         searchFilter: formik.values.searchAccount,
       }));
       // refetch();
@@ -84,18 +92,21 @@ const AccountManagement = () => {
   useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
-      status: formik.values.statusFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchAccount,
-      startDate: formik.values.fromDateFilter,
-      endDate: formik.values.toDateFilter,
     }));
   }, [paginationData]);
 
   const handleOptionsFilter = () => {
+    setPaginationData((prev) => {
+      return {
+        ...prev,
+        pageNumber: 1,
+      };
+    });
     setQueryParams((prev) => ({
       ...prev,
+      pageNo: 1,
       status: formik.values.statusFilter,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
@@ -117,6 +128,9 @@ const AccountManagement = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      renderCell: (params: GridRenderCellParams) => {
+        return <span>{`${capitalize(params?.row?.merchantName)}`}</span>;
+      },
     },
     {
       field: 'merchantId',

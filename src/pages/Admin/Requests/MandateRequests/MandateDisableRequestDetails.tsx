@@ -218,7 +218,7 @@ const MandateDisableRequestDetails = () => {
                 <DetailsCard title="Phone Number" content={data?.responseData?.payeePhoneNumber} />
               </ItemDetailsContainer>
             </div>
-            <div className="mt-10">
+            <div className="mt-10 hidden">
               <ItemDetailsContainer
                 title="Biller Details"
                 titleExtension={
@@ -273,7 +273,7 @@ const MandateDisableRequestDetails = () => {
                 </ItemDetailsContainer>
               )}
             </div>
-            <div className="mt-10">
+            {/* <div className="mt-10">
               <ItemDetailsContainer title="Requested By">
                 <ActionAuthorDetails
                   id={data?.responseData?.requestedBy}
@@ -281,7 +281,7 @@ const MandateDisableRequestDetails = () => {
                   actionDate={data?.responseData?.dateRequested}
                 />
               </ItemDetailsContainer>
-            </div>
+            </div> */}
           </div>
         </>
       </div>

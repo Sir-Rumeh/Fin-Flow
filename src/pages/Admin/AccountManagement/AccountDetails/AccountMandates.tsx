@@ -45,6 +45,8 @@ import { Typography } from '@mui/material';
 import CustomTabs from 'hoc/CustomTabs';
 import CustomInput from 'components/FormElements/CustomInput';
 import ButtonComponent from 'components/FormElements/Button';
+import { useReactToPrint } from 'react-to-print';
+import TransactionReceipt from 'components/TransactionReceipt';
 
 const AccountMandates = () => {
   const [searchParams] = useSearchParams();
@@ -90,7 +92,17 @@ const AccountMandates = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
-      setSearchTerm('');
+      setPaginationData((prev) => {
+        return {
+          ...prev,
+          pageNumber: 1,
+        };
+      });
+      setQueryParams((prev) => ({
+        ...prev,
+        pageNo: 1,
+        searchFilter: formik.values.searchMandate,
+      }));
     },
   });
 
@@ -118,18 +130,21 @@ const AccountMandates = () => {
   useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
-      status: formik.values.statusFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchMandate,
-      startDate: formik.values.fromDateFilter,
-      endDate: formik.values.toDateFilter,
     }));
   }, [paginationData]);
 
   const handleOptionsFilter = () => {
+    setPaginationData((prev) => {
+      return {
+        ...prev,
+        pageNumber: 1,
+      };
+    });
     setQueryParams((prev) => ({
       ...prev,
+      pageNo: 1,
       status: formik.values.statusFilter,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
@@ -242,7 +257,7 @@ const AccountMandates = () => {
                 >
                   View Details
                 </button>
-                <button
+                {/* <button
                   onClick={() => {
                     openModal('openTransactionHistory');
                   }}
@@ -250,7 +265,7 @@ const AccountMandates = () => {
                   className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
                 >
                   View Transactions
-                </button>
+                </button> */}
                 {params?.row.mandateType === 'Variable' && (
                   <button
                     onClick={() => {
@@ -316,6 +331,20 @@ const AccountMandates = () => {
     },
   ];
 
+  const [transactionDetails, setTransactionDetails] = useState<any>();
+  const receiptRef = useRef<HTMLDivElement>(null);
+
+  const handlePrintReceipt = useReactToPrint({
+    content: () => receiptRef.current,
+  });
+
+  const handleDownloadReceipt = (row: any) => {
+    setTransactionDetails(row);
+    setTimeout(() => {
+      handlePrintReceipt();
+    }, 0);
+  };
+
   const transactionsTableColumn: GridColDef[] = [
     {
       field: 'accountId',
@@ -347,7 +376,12 @@ const AccountMandates = () => {
       width: 180,
       renderCell: (params) => {
         return (
-          <button className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple">
+          <button
+            onClick={() => {
+              handleDownloadReceipt(params?.row);
+            }}
+            className="flex cursor-pointer items-center gap-3 font-medium text-lightPurple"
+          >
             <DownloadIcon />
             Download Receipt
           </button>
@@ -414,6 +448,9 @@ const AccountMandates = () => {
 
   return (
     <>
+      <div style={{ display: 'none' }}>
+        <TransactionReceipt ref={receiptRef} data={transactionDetails} />
+      </div>
       <section className="p-2 md:p-4">
         <div className="flex items-center gap-2 text-lg">
           <Link

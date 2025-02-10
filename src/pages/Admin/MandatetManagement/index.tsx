@@ -112,12 +112,26 @@ const MandatetManagement = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
+      setPaginationData((prev) => {
+        return {
+          ...prev,
+          pageNumber: 1,
+        };
+      });
       setQueryParams((prev) => ({
         ...prev,
+        pageNo: 1,
         searchFilter: formik.values.searchMandate,
       }));
+      setTransactionPaginationData((prev) => {
+        return {
+          ...prev,
+          pageNumber: 1,
+        };
+      });
       setTransactionsQueryParams((prev) => ({
         ...prev,
+        pageNo: 1,
         searchFilter: formik.values.searchTransactionHistory,
       }));
       // refetch();
@@ -161,12 +175,8 @@ const MandatetManagement = () => {
   useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
-      status: formik.values.statusFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchMandate,
-      startDate: formik.values.fromDateFilter,
-      endDate: formik.values.toDateFilter,
     }));
   }, [paginationData]);
 
@@ -180,8 +190,15 @@ const MandatetManagement = () => {
   }, [activeTransactionTab, transactionPaginationData]);
 
   const handleOptionsFilter = () => {
+    setPaginationData((prev) => {
+      return {
+        ...prev,
+        pageNumber: 1,
+      };
+    });
     setQueryParams((prev) => ({
       ...prev,
+      pageNo: 1,
       status: formik.values.statusFilter,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
@@ -422,7 +439,6 @@ const MandatetManagement = () => {
       headerClassName: 'ag-thead ',
       sortable: false,
       width: 180,
-
       renderCell: (params) => {
         return (
           <>

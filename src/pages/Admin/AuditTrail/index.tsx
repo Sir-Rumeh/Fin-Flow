@@ -49,8 +49,15 @@ const AuditTrail = () => {
       endDate: '',
     },
     onSubmit: (values) => {
+      setPaginationData((prev) => {
+        return {
+          ...prev,
+          pageNumber: 1,
+        };
+      });
       setQueryParams((prev) => ({
         ...prev,
+        pageNo: 1,
         searchFilter: formik.values.searchFilter,
       }));
     },
@@ -148,11 +155,8 @@ const AuditTrail = () => {
   useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
-      // searchFilter: formik.values.searchFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
-      // startDate: formik.values.startDate,
-      // endDate: formik.values.endDate,
     }));
   }, [paginationData]);
 
@@ -343,6 +347,18 @@ const AuditTrail = () => {
                     content={
                       selectedAudit.dateCreated &&
                       new Date(selectedAudit.dateCreated).toLocaleDateString()
+                    }
+                  />
+                  <DetailsCard
+                    title="Time of Action"
+                    content={
+                      selectedAudit.dateCreated &&
+                      new Date(selectedAudit.dateCreated).toLocaleTimeString('en-US', {
+                        hour: '2-digit',
+                        minute: '2-digit',
+                        second: '2-digit',
+                        hour12: true,
+                      })
                     }
                   />
                 </div>

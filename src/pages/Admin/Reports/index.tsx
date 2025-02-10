@@ -112,12 +112,26 @@ const Reports = () => {
       transacToDateFilter: '',
     },
     onSubmit: (values) => {
+      setPaginationData((prev) => {
+        return {
+          ...prev,
+          pageNumber: 1,
+        };
+      });
       setQueryParams((prev) => ({
         ...prev,
+        pageNo: 1,
         searchFilter: values.searchMandateCode,
       }));
-      setMandateTransactionsQueryParams((prev) => ({
+      setTransactionPaginationData((prev) => {
+        return {
+          ...prev,
+          pageNumber: 1,
+        };
+      });
+      setTransactionsQueryParams((prev) => ({
         ...prev,
+        pageNo: 1,
         searchFilter: values.searchMandateTransactionAccountNumber,
       }));
       refecthMandateTransactions();
@@ -135,8 +149,15 @@ const Reports = () => {
       transacToDateFilter: '',
     },
     onSubmit: (values) => {
+      setTransactionPaginationData((prev) => {
+        return {
+          ...prev,
+          pageNumber: 1,
+        };
+      });
       setTransactionsQueryParams((prev) => ({
         ...prev,
+        pageNo: 1,
         status: formik.values.transacStatusFilter
           ? formik.values.transacStatusFilter
           : activeTransactionTab,
@@ -643,6 +664,12 @@ const Reports = () => {
   ]);
 
   const handleOptionsFilter = () => {
+    setPaginationData((prev) => {
+      return {
+        ...prev,
+        pageNumber: 1,
+      };
+    });
     setQueryParams((prev) => ({
       ...prev,
       status: formik.values.statusFilter,

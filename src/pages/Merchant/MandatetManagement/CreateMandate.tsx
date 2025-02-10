@@ -40,7 +40,7 @@ const CreateMandate = () => {
       <div className="px-5 py-1">
         <div className="slide-down mt-2 flex items-center gap-2 text-lg">
           <Link
-            to={`/${appRoutes.adminDashboard.mandateManagement.index}`}
+            to={`/${appRoutes.merchantDashboard.mandateManagement.index}`}
             className="cursor-pointer text-darkgray"
           >
             Mandate Management

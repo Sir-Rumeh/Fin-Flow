@@ -48,17 +48,16 @@ const MandateRequests = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
+      setPaginationData((prev) => {
+        return {
+          ...prev,
+          pageNumber: 1,
+        };
+      });
       setQueryParams((prev) => ({
         ...prev,
+        pageNo: 1,
         searchFilter: formik.values.searchMandate,
-        pageNo:
-          formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
-            ? undefined
-            : paginationData.pageNumber,
-        pageSize:
-          formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
-            ? 100
-            : paginationData.pageSize,
       }));
       // refetch();
     },
@@ -220,24 +219,21 @@ const MandateRequests = () => {
     setQueryParams((prev) => ({
       ...prev,
       status: activeTab,
-      requestType: formik.values.statusFilter,
-      pageNo:
-        formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
-          ? undefined
-          : paginationData.pageNumber,
-      pageSize:
-        formik.values.searchMandate?.length > 0 || formik.values.statusFilter?.length > 0
-          ? 100
-          : paginationData.pageSize,
-      searchFilter: formik.values.searchMandate,
-      startDate: formik.values.fromDateFilter,
-      endDate: formik.values.toDateFilter,
+      pageNo: paginationData.pageNumber,
+      pageSize: paginationData.pageSize,
     }));
   }, [activeTab, paginationData]);
 
   const handleOptionsFilter = () => {
+    setPaginationData((prev) => {
+      return {
+        ...prev,
+        pageNumber: 1,
+      };
+    });
     setQueryParams((prev) => ({
       ...prev,
+      pageNo: 1,
       requestType: formik.values.statusFilter,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
@@ -247,7 +243,7 @@ const MandateRequests = () => {
   return (
     <>
       <div className="px-5 py-5">
-        <h2 className="text-2xl font-semibold">Requests</h2>
+        <h2 className="text-2xl font-semibold">Mandate Requests</h2>
 
         <div className="mt-5 w-full rounded-lg bg-white px-5 py-5">
           <div className="flex flex-col items-center justify-between gap-4 lg:flex-row lg:gap-0">

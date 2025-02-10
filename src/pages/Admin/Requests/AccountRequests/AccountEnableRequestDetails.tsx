@@ -87,7 +87,8 @@ const AccountEnableRequestDetails = () => {
           >
             Account Requests
           </Link>{' '}
-          <ChevronRight />s<span className="text-lightPurple">Enable Account Request Details</span>
+          <ChevronRight />
+          <span className="text-lightPurple">Enable Account Request Details</span>
         </div>
         <div className="slide-down mt-6 flex flex-col items-end justify-between gap-y-3 sm:flex-row md:items-center">
           <h2 className="text-lg font-semibold md:text-2xl">{`Account ID : ${data?.responseData?.id}`}</h2>
@@ -169,15 +170,15 @@ const AccountEnableRequestDetails = () => {
               </ItemDetailsContainer>
             )}
           </div>
-          <div className="mt-10">
+          {/* <div className="mt-10">
             <ItemDetailsContainer title="Requested By">
               <ActionAuthorDetails
-                id={data?.responseData?.requestedBy}
+                id={data?.responseData?.createdBy}
                 actionType={AuthorActionType.RequestedBy}
-                actionDate={data?.responseData?.dateRequested}
+                actionDate={data?.responseData?.dateCreated}
               />
             </ItemDetailsContainer>
-          </div>
+          </div> */}
         </div>
       </div>
       {modals.confirmApproveRequest && (

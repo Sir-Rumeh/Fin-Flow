@@ -137,7 +137,6 @@ const MerchantCreationRequestDetails = () => {
             <ItemDetailsContainer title="Merchant Creation Details">
               <DetailsCard title="Merchant ID" content={data?.responseData?.id} />
               <DetailsCard title="Merchant Name" content={data?.responseData?.name} />
-              <DetailsCard title="Merchant Code" content={data?.responseData?.merchantCode} />
               <DetailsCard
                 title="Merchant Fee"
                 content={`\u20A6${data?.responseData?.internalChargeFee ? formatNumberDisplay(data?.responseData?.internalChargeFee) : ''}`}
@@ -158,6 +157,7 @@ const MerchantCreationRequestDetails = () => {
                 id={data?.responseData?.createdBy}
                 actionType={AuthorActionType.CreatedBy}
                 actionDate={data?.responseData?.createdAt}
+                requestType={data?.responseData?.requestType}
               />
             </ItemDetailsContainer>
           </div>

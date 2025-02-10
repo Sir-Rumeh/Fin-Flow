@@ -218,7 +218,7 @@ const MandateCreationRequestDetails = () => {
                 <DetailsCard title="Phone Number" content={data?.responseData?.payeePhoneNumber} />
               </ItemDetailsContainer>
             </div>
-            <div className="mt-10">
+            <div className="mt-10 hidden">
               <ItemDetailsContainer
                 title="Biller Details"
                 titleExtension={
@@ -248,6 +248,7 @@ const MandateCreationRequestDetails = () => {
                   id={data?.responseData?.createdBy}
                   actionType={AuthorActionType.CreatedBy}
                   actionDate={data?.responseData?.dateCreated}
+                  requestType={data?.responseData?.requestType}
                 />
               </ItemDetailsContainer>
             </div>

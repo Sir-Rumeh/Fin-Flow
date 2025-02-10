@@ -118,7 +118,7 @@ const RoleDetails = () => {
                         </div>
                         <div className="mt-8 text-center">
                           <h3 className="text-2xl font-bold">
-                            Oops! No Permissions Exist for This Role. Add Permissions to Roles Below
+                            Oops! No Permissions Exist for This Role. Add Permissions to Role Below
                           </h3>
                         </div>
                         <div className="mt-8 text-center">

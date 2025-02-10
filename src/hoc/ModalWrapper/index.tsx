@@ -1,6 +1,8 @@
 import { SetStateAction, Dispatch } from 'react';
 import CustomModal from 'hoc/ModalWrapper/CustomModal';
 import ButtonComponent from 'components/FormElements/Button';
+import { useAppSelector } from 'store/index';
+import { CircularProgress } from '@mui/material';
 
 interface PopupProps {
   isOpen: boolean;
@@ -31,6 +33,7 @@ export const ModalWrapper = ({
   hoverBackgroundColor,
   loading,
 }: PopupProps) => {
+  const { isLoading } = useAppSelector((state) => state.loading);
   return (
     <>
       <CustomModal isOpen={isOpen} setIsOpen={setIsOpen} width={width}>
@@ -43,31 +46,39 @@ export const ModalWrapper = ({
           {feedback && <div className="mt-20 w-full">{feedback}</div>}
           <div className="mt-10 w-full">
             {type === 'confirmation' && (
-              <div className="flex items-center justify-between gap-x-5">
-                <ButtonComponent
-                  color="#5C068C"
-                  borderColor="#5C068C"
-                  border={0.5}
-                  width="15rem"
-                  height="3rem"
-                  onClick={() => setIsOpen(false)}
-                  title="No, Cancel"
-                  fontWeight={900}
-                  disabled={loading}
-                />
-                <ButtonComponent
-                  color="white"
-                  width="15rem"
-                  height="3rem"
-                  variant="contained"
-                  backgroundColor={proceedBackgroundColor ? proceedBackgroundColor : '#5C068C'}
-                  hoverBackgroundColor={hoverBackgroundColor ? hoverBackgroundColor : '#2F0248'}
-                  onClick={proceedAction}
-                  title="Yes, Proceed"
-                  fontWeight={900}
-                  disabled={loading}
-                />
-              </div>
+              <>
+                {isLoading ? (
+                  <div className="flex w-full items-center justify-center">
+                    <CircularProgress sx={{ color: '#5C068C', zIndex: 999 }} />
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between gap-x-5">
+                    <ButtonComponent
+                      color="#5C068C"
+                      borderColor="#5C068C"
+                      border={0.5}
+                      width="15rem"
+                      height="3rem"
+                      onClick={() => setIsOpen(false)}
+                      title="No, Cancel"
+                      fontWeight={900}
+                      disabled={loading}
+                    />
+                    <ButtonComponent
+                      color="white"
+                      width="15rem"
+                      height="3rem"
+                      variant="contained"
+                      backgroundColor={proceedBackgroundColor ? proceedBackgroundColor : '#5C068C'}
+                      hoverBackgroundColor={hoverBackgroundColor ? hoverBackgroundColor : '#2F0248'}
+                      onClick={proceedAction}
+                      title="Yes, Proceed"
+                      fontWeight={900}
+                      disabled={loading}
+                    />
+                  </div>
+                )}
+              </>
             )}
             {type === 'completed' && (
               <ButtonComponent

@@ -26,7 +26,7 @@ import {
 } from 'config/actions/profile-actions';
 import { SearchTypes } from 'utils/enums';
 import { statusDropdownOptions } from 'utils/constants';
-import { notifySuccess } from 'utils/helpers';
+import { capitalize, notifySuccess } from 'utils/helpers';
 
 const ProfileManagement = () => {
   const queryClient = useQueryClient();
@@ -65,8 +65,15 @@ const ProfileManagement = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
+      setPaginationData((prev) => {
+        return {
+          ...prev,
+          pageNumber: 1,
+        };
+      });
       setQueryParams((prev) => ({
         ...prev,
+        pageNo: 1,
         searchFilter: formik.values.searchProfile,
       }));
       // refetch();
@@ -89,18 +96,21 @@ const ProfileManagement = () => {
   useEffect(() => {
     setQueryParams((prev) => ({
       ...prev,
-      status: formik.values.statusFilter,
       pageNo: paginationData.pageNumber,
       pageSize: paginationData.pageSize,
-      searchFilter: formik.values.searchProfile,
-      startDate: formik.values.fromDateFilter,
-      endDate: formik.values.toDateFilter,
     }));
   }, [paginationData]);
 
   const handleOptionsFilter = () => {
+    setPaginationData((prev) => {
+      return {
+        ...prev,
+        pageNumber: 1,
+      };
+    });
     setQueryParams((prev) => ({
       ...prev,
+      pageNo: 1,
       status: formik.values.statusFilter,
       startDate: formik.values.fromDateFilter,
       endDate: formik.values.toDateFilter,
@@ -123,6 +133,9 @@ const ProfileManagement = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      renderCell: (params: GridRenderCellParams) => {
+        return <span>{`${capitalize(params?.row?.merchantName)}`}</span>;
+      },
     },
     {
       field: 'accountID',
@@ -138,7 +151,9 @@ const ProfileManagement = () => {
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
       renderCell: (params: GridRenderCellParams) => {
-        return <div>{`${params.row.firstName} ${params.row.lastName}`}</div>;
+        return (
+          <div>{`${capitalize(params.row.firstName)} ${capitalize(params.row.lastName)}`}</div>
+        );
       },
     },
     {

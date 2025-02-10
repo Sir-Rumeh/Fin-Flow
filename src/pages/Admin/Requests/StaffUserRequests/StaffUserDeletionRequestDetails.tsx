@@ -136,11 +136,9 @@ const StaffUserDeletionRequestDetails = () => {
                     : ''
                 }
               />
-              <DetailsCard title="User Name" content={data?.responseData?.username} />
               <DetailsCard title="Email Address" content={data?.responseData?.email} />
               <DetailsCard title="Phone Number" content={data?.responseData?.phoneNumber} />
               <DetailsCard title="Role" content={data?.responseData?.role} />
-              <DetailsCard title="Category" content={data?.responseData?.userLevel} />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
@@ -173,7 +171,7 @@ const StaffUserDeletionRequestDetails = () => {
               </ItemDetailsContainer>
             )}
           </div>
-          <div className="mt-10">
+          {/* <div className="mt-10">
             <ItemDetailsContainer title="Requested By">
               <ActionAuthorDetails
                 id={data?.responseData?.requestedBy}
@@ -181,7 +179,7 @@ const StaffUserDeletionRequestDetails = () => {
                 actionDate={data?.responseData?.dateRequested}
               />
             </ItemDetailsContainer>
-          </div>
+          </div> */}
         </div>
       </div>
       {modals.confirmApproveRequest && (
