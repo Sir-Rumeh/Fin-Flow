@@ -124,15 +124,11 @@ AxiosClient.interceptors.response.use(
                     refreshToken: user.refreshToken,
                   })
                 : null;
-            dispatch(uiStopLoading());
-            notifyError('Token refresh failed. Please log in again to continue.');
-            localStorage.clear();
+            clearUserSession();
           } catch (error) {
             console.error(error);
             clearUserSession();
           }
-        } else {
-          clearUserSession();
         }
       };
       if (originalRequest._isRetry) {
@@ -168,9 +164,6 @@ AxiosClient.interceptors.response.use(
                 originalRequest.headers['Authorization'] = `Bearer ${newToken}`;
                 return AxiosClient(originalRequest);
               }
-            } else {
-              dispatch(uiStopLoading());
-              return Promise.reject(new Error('Token refresh failed. User logged out.'));
             }
           } catch (err) {
             dispatch(uiStopLoading());

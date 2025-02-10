@@ -152,7 +152,7 @@ const DisableRequestDetails = () => {
           <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-3 md:gap-[50px]">
             <DetailsCard title="Account ID" content={data?.responseData?.accountId} />
             <DetailsCard title="Merchant ID" content={data?.responseData?.merchantId} />
-            <DetailsCard title="Merchant Code" content={data?.responseData?.mandateCode} />
+            <DetailsCard title="Mandate Code" content={data?.responseData?.mandateCode} />
             <DetailsCard
               title="Date Created"
               content={
