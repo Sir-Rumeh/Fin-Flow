@@ -187,7 +187,7 @@ const MandatetManagement = () => {
       pageNo: transactionPaginationData.pageNumber,
       pageSize: transactionPaginationData.pageSize,
     }));
-  }, [transactionPaginationData]);
+  }, [activeTransactionTab, transactionPaginationData]);
 
   const handleOptionsFilter = () => {
     setPaginationData((prev) => {

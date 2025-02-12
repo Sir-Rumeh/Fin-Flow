@@ -16,7 +16,8 @@ interface Props {
   showLabel?: boolean;
   customPicker?: boolean;
   hideBorder?: boolean;
-  minDate?: number | string;
+  minDate?: number | string | any;
+  maxDate?: number | string | any;
 }
 
 const FormDatePicker = (props: Props) => {
@@ -33,6 +34,7 @@ const FormDatePicker = (props: Props) => {
     customPicker = false,
     hideBorder = false,
     minDate,
+    maxDate,
   } = props;
 
   const getPickerBorder = () => {
@@ -103,6 +105,7 @@ const FormDatePicker = (props: Props) => {
           label={!formik.values[props.name] && placeholder ? placeholder : null}
           format="DD/MM/YYYY"
           minDate={minDate ? dayjs(minDate) : undefined}
+          maxDate={maxDate ? dayjs(maxDate) : undefined}
           value={formik.values[props.name] ? dayjs(formik.values[name]) : null}
           onChange={(newValue) => {
             formik.setFieldValue(name, dayjs(newValue).format('YYYY-MM-DDTHH:mm:ss'));

@@ -99,7 +99,7 @@ const ChangePassword = () => {
               <div className="mt-[4rem] w-full">
                 <CustomInput
                   labelFor="oldPassword"
-                  label="Enter old password"
+                  label="Enter default password"
                   placeholder="Enter password"
                   maxW="w-full"
                   formik={formik}

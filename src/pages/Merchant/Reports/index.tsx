@@ -736,6 +736,12 @@ const Reports = () => {
     }
   }, [formik.values.fromDateFilter, formik.values.toDateFilter]);
 
+  const maxDate = () => {
+    return new Date();
+  };
+
+  const maxAllowedDate = maxDate();
+
   return (
     <>
       <div style={{ display: 'none' }}>
@@ -767,6 +773,7 @@ const Reports = () => {
                         customPicker
                         width="100%"
                         hideBorder
+                        maxDate={maxAllowedDate}
                       />
                     </div>
                     <div className="h-[2px] w-[8px] bg-gray-300"></div>
@@ -779,6 +786,7 @@ const Reports = () => {
                         showLabel={false}
                         customPicker
                         hideBorder
+                        maxDate={maxAllowedDate}
                       />
                     </div>
                   </div>

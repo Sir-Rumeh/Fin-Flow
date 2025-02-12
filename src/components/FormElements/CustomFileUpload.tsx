@@ -20,6 +20,7 @@ const CustomFileUpload = ({
 }: CustomInputProps) => {
   const [uploadedfileName, setUploadedfileName] = useState('');
   const fileRef = useRef<HTMLInputElement>(null);
+  const fileSizeLimit = 5;
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     try {
@@ -27,9 +28,9 @@ const CustomFileUpload = ({
       if (file) {
         if (!isFileTypeValid(file[0].name, fileTypes))
           throw `Invalid file type. File should be ${fileTypes?.join(', ')}`;
-        if (!isFileSizeValid(file[0].size, 10)) {
+        if (!isFileSizeValid(file[0].size, fileSizeLimit)) {
           setUploadedfileName('');
-          throw 'File should be lesser than or equal to 10MB';
+          throw `File should be lesser than or equal to ${fileSizeLimit}MB`;
         }
         const base64 = await convertBase64(file[0]);
         formik.setFieldValue(labelFor, base64);
@@ -42,8 +43,9 @@ const CustomFileUpload = ({
   return (
     <>
       <div className="relative mb-4 mt-6 h-auto w-full">
-        <label htmlFor={labelFor} className="absolute bottom-16 font-semibold">
-          {label} {`( ${fileTypes.join(', ')} )`}
+        <label htmlFor={labelFor} className="absolute bottom-16 w-full font-semibold">
+          {label}
+          <span className="absolute left-0 top-5 w-full text-[8px] font-light">{`( ${fileTypes.join(', ')} )`}</span>
         </label>
 
         <div
@@ -77,6 +79,7 @@ const CustomFileUpload = ({
             {uploadedfileName ? uploadedfileName : 'No file chosen'}
           </span>
         </div>
+
         {useTouched
           ? formik?.touched[labelFor] &&
             formik?.errors[labelFor] && (
@@ -89,6 +92,7 @@ const CustomFileUpload = ({
                 {formik?.errors[labelFor]}
               </p>
             )}
+        <span className="absolute left-0 top-[50px] w-full text-[10px] font-light">{`File size limit: ${fileSizeLimit}MB`}</span>
       </div>
     </>
   );

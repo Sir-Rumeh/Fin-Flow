@@ -158,6 +158,7 @@ function EditUser() {
                     placeholder="Enter employee ID"
                     maxW="w-full"
                     formik={formik}
+                    disabled
                   />
                   <CustomInput
                     labelFor="email"

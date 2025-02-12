@@ -129,7 +129,15 @@ const ProfileRequests = () => {
       headerClassName: 'ag-thead',
       sortable: false,
     },
-
+    {
+      field: 'roleName',
+      headerName: 'Role Name',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+      valueGetter: (params: any) => capitalize(params),
+      sortable: false,
+    },
     {
       field: 'requestType',
       headerName: 'Request Type',

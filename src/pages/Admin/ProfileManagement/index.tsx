@@ -122,6 +122,7 @@ const ProfileManagement = () => {
     { label: 'Account ID', key: 'accountId' },
     { label: 'User Name', key: 'userName' },
     { label: 'Email', key: 'email' },
+    { label: 'Role Name', key: 'roleName' },
     { label: 'Active Status', key: 'isActive' },
     { label: 'Date Requested', key: 'createdAt' },
   ];
@@ -162,6 +163,15 @@ const ProfileManagement = () => {
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
+      sortable: false,
+    },
+    {
+      field: 'roleName',
+      headerName: 'Role Name',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+      valueGetter: (params: any) => capitalize(params),
       sortable: false,
     },
     {

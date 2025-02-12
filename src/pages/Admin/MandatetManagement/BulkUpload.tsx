@@ -29,8 +29,8 @@ const BulkUpload = () => {
     try {
       acceptedFiles.forEach((file: FileWithPath) => {
         if (file) {
-          if (!isFileSizeValid(file.size, 5)) {
-            throw 'File should be lesser than or equal to 5MB';
+          if (!isFileSizeValid(file.size, 1)) {
+            throw 'File should be lesser than or equal to 1MB';
           }
           const reader = new FileReader();
           reader.onload = (e) => {
@@ -60,6 +60,7 @@ const BulkUpload = () => {
 
   const clearFiles = () => {
     setUploadedFiles([]);
+    setFormattedBulkData([]);
     acceptedFiles = [];
   };
 
@@ -244,7 +245,7 @@ const BulkUpload = () => {
                   customPaddingX="1.5rem"
                   width="12rem"
                   onClick={() => {
-                    if (!(jsonData.length > 0)) {
+                    if (!(formattedBulkData.length > 0)) {
                       notifyError(
                         'Kindly upload excel file with the right data format to continue',
                       );

@@ -73,7 +73,7 @@ const AuditTrail = () => {
 
   const columns: GridColDef[] = [
     {
-      field: 'targetId',
+      field: 'id',
       headerName: 'Ref No',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
@@ -186,6 +186,12 @@ const AuditTrail = () => {
     }
   }, [formik.values.startDate, formik.values.endDate]);
 
+  const maxDate = () => {
+    return new Date();
+  };
+
+  const maxAllowedDate = maxDate();
+
   return (
     <>
       <section className="p-2 md:p-4">
@@ -217,6 +223,7 @@ const AuditTrail = () => {
                     placeholder="DD/MM/YY"
                     showLabel={false}
                     width="100%"
+                    maxDate={maxAllowedDate}
                   />
                 </div>
                 <div className="w-full">
@@ -226,6 +233,7 @@ const AuditTrail = () => {
                     label="End Date"
                     placeholder="DD/MM/YY"
                     showLabel={false}
+                    maxDate={maxAllowedDate}
                   />
                 </div>
               </div>
@@ -241,11 +249,16 @@ const AuditTrail = () => {
                   width={isSmallWidth ? '10rem' : undefined}
                   height="3rem"
                   onClick={() => {
+                    setPaginationData((prev) => {
+                      return {
+                        ...prev,
+                        pageNumber: 1,
+                      };
+                    });
                     setQueryParams((prev) => ({
                       ...prev,
+                      pageNo: 1,
                       searchFilter: formik.values.searchFilter,
-                      pageNo: paginationData.pageNumber,
-                      pageSize: paginationData.pageSize,
                       startDate: formik.values.startDate,
                       endDate: formik.values.endDate,
                     }));
@@ -338,7 +351,7 @@ const AuditTrail = () => {
                 </div>
                 <div className="h-[2px] w-full bg-grayPrimary"></div>
                 <div className="mt-4 grid grid-cols-1 gap-[20px] md:grid-cols-2 md:gap-y-[20px]">
-                  <DetailsCard title="Reference" content={selectedAudit.targetId} />
+                  <DetailsCard title="Reference No" content={selectedAudit.targetId} />
                   <DetailsCard title="Actor Email" content={selectedAudit.actor} />
                   <DetailsCard title="Affected Module" content={selectedAudit.module} />
                   <DetailsCard title="Performed Action" content={selectedAudit.action} />

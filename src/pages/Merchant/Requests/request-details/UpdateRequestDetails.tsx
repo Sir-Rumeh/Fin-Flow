@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowRightIcon,
   CreationRequestIcon,
@@ -28,6 +28,7 @@ import { UpdateRequestDisplay } from 'utils/interfaces';
 import ActionAuthorDetails, { AuthorActionType } from 'components/common/ActionAuthorDetails';
 
 const UpdateRequestDetails = () => {
+  const navigate = useNavigate();
   const { id } = useParams();
   const [updateDataList, setUpdateDataList] = useState<UpdateRequestDisplay[]>();
 
@@ -387,7 +388,10 @@ const UpdateRequestDetails = () => {
           info={'You have successfully approved this new request'}
           icon={<SuccessModalIcon />}
           type={'completed'}
-          proceedAction={() => closeModal('approveSuccess')}
+          proceedAction={() => {
+            closeModal('approveSuccess');
+            navigate(`/${appRoutes.merchantDashboard.requests.index}`);
+          }}
         />
       )}
       {modals.rejectSuccess && (
@@ -398,7 +402,10 @@ const UpdateRequestDetails = () => {
           info={'You have successfully rejected this new request'}
           icon={<SuccessModalIcon />}
           type={'completed'}
-          proceedAction={() => closeModal('rejectSuccess')}
+          proceedAction={() => {
+            closeModal('rejectSuccess');
+            navigate(`/${appRoutes.merchantDashboard.requests.index}`);
+          }}
         />
       )}
     </div>

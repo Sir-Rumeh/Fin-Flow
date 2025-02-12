@@ -141,8 +141,8 @@ const StaffUserManagement = () => {
       sortable: false,
     },
     {
-      field: 'role',
-      headerName: 'Role',
+      field: 'roleName',
+      headerName: 'Role Name',
       width: screen.width < 1000 ? 200 : undefined,
       flex: screen.width >= 1000 ? 1 : undefined,
       headerClassName: 'ag-thead',
@@ -270,7 +270,7 @@ const StaffUserManagement = () => {
     { label: 'employee ID', key: 'employeeId' },
     { label: 'Name', key: 'userName' },
     { label: 'Email', key: 'email' },
-    { label: 'Role', key: 'role' },
+    { label: 'Role Name', key: 'roleName' },
     { label: 'Active Status', key: 'isActive' },
     { label: 'Date Requested', key: 'createdAt' },
   ];
