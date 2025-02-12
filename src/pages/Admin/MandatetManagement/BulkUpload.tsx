@@ -189,7 +189,7 @@ const BulkUpload = () => {
                     </div>
                   </div>
                   <div className="mt-1 flex w-full items-center justify-center">
-                    <p className="text-center opacity-60">File size limit: 5MB</p>
+                    <p className="text-center opacity-60">File size limit: 1MB</p>
                   </div>
                 </div>
                 <div className="mt-10">
