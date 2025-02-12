@@ -57,7 +57,7 @@ export const canBeUpdated: any = {
   firstName: true,
   lastName: true,
   userName: true,
-  staffId: true,
+  // staffId: true,
   phoneNumber: true,
   branch: true,
   email: true,

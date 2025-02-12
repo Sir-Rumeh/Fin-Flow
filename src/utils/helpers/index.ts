@@ -14,6 +14,7 @@ import { SearchTypes } from 'utils/enums';
 import dayjs from 'dayjs';
 import { jwtDecode } from 'jwt-decode';
 import { adminRoutes, merchantRoutes } from 'routes/appRoutes';
+import React from 'react';
 
 export const checkRoute = (pathname: string, pathToCheck: string) => {
   if (pathname.includes(pathToCheck)) {
@@ -66,19 +67,19 @@ export const generateHeader = () => {
   return apiHeader;
 };
 
-export const notifySuccess = (msg: string) => {
+export const notifySuccess = (msg: string | React.ReactNode) => {
   toast.success(msg);
 };
 
-export const notifyError = (msg: string) => {
+export const notifyError = (msg: string | React.ReactNode) => {
   toast.error(msg);
 };
 
-export const notifyInfo = (msg: string) => {
+export const notifyInfo = (msg: string | React.ReactNode) => {
   toast.info(msg);
 };
 
-export const notifyWarning = (msg: string) => {
+export const notifyWarning = (msg: string | React.ReactNode) => {
   toast.warn(msg);
 };
 
@@ -292,9 +293,15 @@ export const convertExcelArrayToObjects = (
             value === undefined ||
             (typeof value === 'string' && value.trim() === '')
           ) {
-            throw new Error(
-              `Invalid value at property: ${header} on row ${rowIndex + 2} of excel sheet`,
+            const errorMessage = React.createElement(
+              'div',
+              null,
+              'Invalid value at property: ',
+              React.createElement('strong', null, header),
+              ` on Row ${rowIndex + 2}, Column ${index + 1} of the uploaded excel sheet`,
             );
+            notifyError(errorMessage);
+            return {};
           }
           if (
             header.toLocaleLowerCase().includes('startdate') ||

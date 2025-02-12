@@ -86,8 +86,15 @@ const MandateDetails = () => {
       endDate: '',
     },
     onSubmit: (values: any) => {
+      setTransactionPaginationData((prev) => {
+        return {
+          ...prev,
+          pageNumber: 1,
+        };
+      });
       setTransactionsQueryParams((prev) => ({
         ...prev,
+        pageNo: 1,
         searchFilter: formik.values.searchTransactionHistory,
       }));
       refetchTransactions();

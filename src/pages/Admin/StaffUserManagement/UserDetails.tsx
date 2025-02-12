@@ -184,7 +184,8 @@ const UserDetails = () => {
                   new Date(data.responseData.createdAt).toLocaleDateString()
                 }
               />
-              <DetailsCard title="Role" content={data?.responseData?.role} />
+              <DetailsCard title="Role Name" content={data?.responseData?.roleName} />
+              <DetailsCard title="Role ID" content={data?.responseData?.role} />
             </ItemDetailsContainer>
           </div>
         </div>

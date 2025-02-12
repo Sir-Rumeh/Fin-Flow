@@ -159,7 +159,8 @@ const ProfileDetails = () => {
               <DetailsCard title="Merchant Name" content={data?.responseData?.merchantName} />
               <DetailsCard title="Account Id" content={data?.responseData?.accountID} />
               <DetailsCard title="Email" content={data?.responseData?.email} />
-              <DetailsCard title="Role" content={data?.responseData?.role} />
+              <DetailsCard title="Role Name" content={data?.responseData?.roleName} />
+              <DetailsCard title="Role ID" content={data?.responseData?.role} />
               <DetailsCard
                 title="Date Requested"
                 content={

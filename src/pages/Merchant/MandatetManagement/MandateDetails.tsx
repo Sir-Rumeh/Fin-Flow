@@ -211,8 +211,15 @@ const MandateDetails = () => {
       statusFilter: '',
     },
     onSubmit: (values) => {
+      setTransactionPaginationData((prev) => {
+        return {
+          ...prev,
+          pageNumber: 1,
+        };
+      });
       setTransactionsQueryParams((prev) => ({
         ...prev,
+        pageNo: 1,
         searchFilter: formik.values.searchTransactionHistory,
       }));
       refetchTransactions();
@@ -242,7 +249,7 @@ const MandateDetails = () => {
       pageNo: transactionPaginationData.pageNumber,
       pageSize: transactionPaginationData.pageSize,
     }));
-  }, [transactionPaginationData]);
+  }, [activeTransactionTab, transactionPaginationData]);
 
   const handleOptionsFilter = () => {
     setTransactionsQueryParams((prev) => ({

@@ -138,7 +138,8 @@ const StaffUserDeletionRequestDetails = () => {
               />
               <DetailsCard title="Email Address" content={data?.responseData?.email} />
               <DetailsCard title="Phone Number" content={data?.responseData?.phoneNumber} />
-              <DetailsCard title="Role" content={data?.responseData?.role} />
+              <DetailsCard title="Role Name" content={data?.responseData?.roleName} />
+              <DetailsCard title="Role ID" content={data?.responseData?.role} />
             </ItemDetailsContainer>
           </div>
           <div className="mt-10">
