@@ -328,7 +328,13 @@ const MandateDetails = () => {
 
                   {data?.responseData?.mandateType === 'Variable' && (
                     <button
-                      onClick={() => openModal('editMandate')}
+                      onClick={() => {
+                        modifyMandateFormik.setFieldValue(
+                          'amount',
+                          parseInt(data?.responseData.amount),
+                        );
+                        openModal('editMandate');
+                      }}
                       type="button"
                       className="w-full px-3 py-2 text-start font-[600] hover:bg-purpleSecondary"
                     >

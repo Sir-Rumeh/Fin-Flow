@@ -730,7 +730,13 @@ const MandateDetails = () => {
             </button>
             <button
               type="button"
-              onClick={() => openModal('openModifyMandate')}
+              onClick={() => {
+                modifyMandateValidation.setFieldValue(
+                  'amount',
+                  parseInt(data?.responseData.amount),
+                );
+                openModal('openModifyMandate');
+              }}
               className="w-full px-3 py-2 text-start font-semibold opacity-75 hover:bg-purpleSecondary"
             >
               Update Amount
