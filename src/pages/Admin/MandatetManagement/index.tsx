@@ -323,6 +323,7 @@ const MandatetManagement = () => {
                 {params?.row.mandateType === 'Variable' && (
                   <button
                     onClick={() => {
+                      modifyMandateFormik.setFieldValue('amount', parseInt(params.row.amount));
                       setSelectedMandate({
                         id: params.row.id,
                         mandateType: params.row.mandateType,

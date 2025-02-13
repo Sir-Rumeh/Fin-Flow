@@ -106,6 +106,7 @@ const MandatetManagement = () => {
   };
 
   const excelHeaders = [
+    { label: 'Account ID', key: 'accountId' },
     { label: 'Merchant ID', key: 'merchantId' },
     { label: 'Mandate Code', key: 'mandateCode' },
     { label: 'Mandate Type', key: 'mandateType' },
@@ -235,13 +236,13 @@ const MandatetManagement = () => {
   ];
 
   const MandateTableColumn: GridColDef[] = [
-    // {
-    //   field: 'accountId',
-    //   headerName: 'Account ID',
-    //   width: screen.width < 1000 ? 200 : undefined,
-    //   flex: screen.width >= 1000 ? 1 : undefined,
-    //   headerClassName: 'ag-thead',
-    // },
+    {
+      field: 'accountId',
+      headerName: 'Account ID',
+      width: screen.width < 1000 ? 200 : undefined,
+      flex: screen.width >= 1000 ? 1 : undefined,
+      headerClassName: 'ag-thead',
+    },
     {
       field: 'merchantId',
       headerName: 'Merchant ID',
@@ -361,6 +362,7 @@ const MandatetManagement = () => {
                 <button
                   type="button"
                   onClick={() => {
+                    modifyMandateValidation.setFieldValue('amount', parseInt(params.row.amount));
                     setSelectedMandateId(params.row.id);
                     openModal('openModifyMandate');
                   }}

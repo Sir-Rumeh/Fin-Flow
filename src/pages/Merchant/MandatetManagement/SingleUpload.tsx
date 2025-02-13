@@ -147,7 +147,7 @@ const SingleUpload = () => {
         accountName: values.accountName,
         accountNumber: `${values.accountNumber}`,
         bankCode: values.bankCode,
-        supportingDocument: 'supportingDoc.pdf',
+        supportingDocument: `${values.supportingDocument}`,
         narration: values.narration,
         payerName: values.payerName,
         payeeName: values.payeeName,
@@ -183,6 +183,7 @@ const SingleUpload = () => {
     onSuccess: (data) => {
       if (data?.data?.accountName?.length > 0) {
         formik.setFieldValue('payerName', data?.data?.accountName || '');
+        formik.setFieldValue('accountName', data?.data?.accountName || '');
         setAcquiredAccountName(true);
         notifySuccess('Successfully retrieved payer name');
       } else {

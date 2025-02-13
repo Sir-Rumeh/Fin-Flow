@@ -116,6 +116,22 @@ export function capitalize(string: string) {
     .join(' ');
 }
 
+export function capitalizeCamelCase(string: string) {
+  if (!string) return '';
+  const isCamelCase = /^[a-z]+([A-Z][a-z]*)*$/.test(string);
+  if (isCamelCase) {
+    return string
+      .replace(/([A-Z])/g, ' $1')
+      .split(' ')
+      .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+      .join('');
+  }
+  return string
+    .split(' ')
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
 export function removeFalsyValuesFromObj(obj: Record<string, any>): Record<string, any> {
   return Object.entries(obj).reduce((acc: any, [key, value]) => {
     if (value !== undefined && value !== null && value) {
@@ -297,7 +313,7 @@ export const convertExcelArrayToObjects = (
               'div',
               null,
               'Invalid value at property: ',
-              React.createElement('strong', null, header),
+              React.createElement('strong', null, capitalizeCamelCase(header)),
               ` on Row ${rowIndex + 2}, Column ${index + 1} of the uploaded excel sheet`,
             );
             notifyError(errorMessage);
