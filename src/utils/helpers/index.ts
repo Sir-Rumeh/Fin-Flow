@@ -464,7 +464,7 @@ export function getSecondSegmentFormatted(href: string): string | null {
 
 export const navigateAdminOnLogin = (userPermissions: string[], navigate: any) => {
   if (!(userPermissions?.length > 0)) {
-    notifyError('No User permissions exist for this user');
+    notifyError('No User permissions exists for this user');
     return;
   }
   let isNavigated = false;
@@ -489,7 +489,7 @@ export const navigateAdminOnLogin = (userPermissions: string[], navigate: any) =
 
 export const navigateMerchantOnLogin = (userPermissions: string[], navigate: any) => {
   if (!(userPermissions?.length > 0)) {
-    notifyError('No User permissions exist for this user');
+    notifyError('No User permissions exists for this user');
     return;
   }
   let isNavigated = false;

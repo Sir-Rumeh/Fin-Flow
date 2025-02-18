@@ -183,7 +183,7 @@ const SingleUpload = () => {
     onSuccess: (data) => {
       if (data?.data?.accountName?.length > 0) {
         formik.setFieldValue('payerName', data?.data?.accountName || '');
-        formik.setFieldValue('accountName', data?.data?.accountName || '');
+        // formik.setFieldValue('accountName', data?.data?.accountName || '');
         setAcquiredAccountName(true);
         notifySuccess('Successfully retrieved payer name');
       } else {

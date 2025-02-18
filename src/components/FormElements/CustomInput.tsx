@@ -76,9 +76,11 @@ const CustomInput: React.FC<CustomInputProps & React.InputHTMLAttributes<HTMLInp
       ? mode
       : inputType === 'text'
         ? 'text'
-        : inputType === 'number'
-          ? 'numeric'
-          : undefined;
+        : inputType === 'password'
+          ? 'text'
+          : inputType === 'number'
+            ? 'numeric'
+            : undefined;
   };
 
   const handleInput = (event: React.FormEvent<HTMLInputElement>) => {
@@ -118,6 +120,8 @@ const CustomInput: React.FC<CustomInputProps & React.InputHTMLAttributes<HTMLInp
             onChange={formik?.handleChange}
             value={formik?.values[labelFor]}
             onBlur={() => formik?.handleBlur}
+            inputMode={getInputMode()}
+            onInput={handleInput}
           />
           <div onClick={handleInputType} className="cursor-pointer pr-1">
             {!iconState ? <EyeIcon /> : <EyeSlashIcon />}
