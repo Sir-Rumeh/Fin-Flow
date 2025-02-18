@@ -171,6 +171,8 @@ const ResetPasswordOtp = () => {
                   inputType={inputTypeState ? 'text' : 'password'}
                   iconState={inputTypeState}
                   handleInputType={onHandleInputType}
+                  mode="numeric"
+                  pattern="\d*"
                 />
               </div>
               <div className="mt-[2.5rem] w-full">
@@ -195,7 +197,9 @@ const ResetPasswordOtp = () => {
                 >
                   Click to Resend?
                 </button>
-                <span className="cursor-pointer px-3 text-xs text-black/40">Resend available</span>
+                <span className="cursor-pointer px-3 text-xs text-black/40">
+                  Resend available in
+                </span>
                 {resendOTPContent}
               </div>
             </form>

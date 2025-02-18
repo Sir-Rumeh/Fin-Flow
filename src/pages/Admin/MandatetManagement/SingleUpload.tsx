@@ -152,8 +152,8 @@ const SingleUpload = () => {
     mutationFn: (payload: DoNameEnquiryRequest | undefined) => doNameEnquiry(payload),
     onSuccess: (data) => {
       if (data?.data?.accountName?.length > 0) {
-        formik.setFieldValue('accountName', data?.data?.accountName || '');
         formik.setFieldValue('payerName', data?.data?.accountName || '');
+        // formik.setFieldValue('accountName', data?.data?.accountName || '');
         setAcquiredAccountName(true);
         notifySuccess('Successfully retrieved payer name');
       } else {
