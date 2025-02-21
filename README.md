@@ -1,4 +1,4 @@
-# EasyPay Admin Portal
+# FinFlow Admin Portal
 
 ## Overview
 
