@@ -77,11 +77,11 @@ Ensure you have the following installed:
 
 3. **Start the Development Server:**
    ```sh
-   npm start
+   npm run dev
    ```
    or
    ```sh
-   yarn start
+   yarn run dev
    ```
 
 4. **Access the Application:**
