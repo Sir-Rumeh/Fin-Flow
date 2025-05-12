@@ -10,7 +10,7 @@ Ensure you have the following installed:
 1. **Clone the Repository:**
    ```sh
    git clone {{REPO_URL}}
-   cd easypay-admin
+   cd finflow-admin
    ```
 
 2. **Install Dependencies:**
